@@ -1,0 +1,2 @@
+Attribution 2.0 Generic
+CC BY 2.0
