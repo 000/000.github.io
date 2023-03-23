@@ -1,0 +1,8 @@
+{
+  "components": [
+    {
+      "title": "New Component",
+      "code": "<button className='btn'>I'm a lonely button</button>"
+    }
+  ]
+}
