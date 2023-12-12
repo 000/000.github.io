@@ -1,0 +1,831 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 900px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+             #config {
+                 float: left;
+                 width: 400px;
+                 height: 600px;
+             }
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="a representative of the bureau of the budget">a representative of the bureau of the budget</option>
+                                
+                                    <option value="sub-committee in charge of supervising and appraising educational institutions participating with the fund">sub-committee in charge of supervising and appraising educational institutions participating with the fund</option>
+                                
+                                    <option value="a representative of the comptroller-general’s department">a representative of the comptroller-general’s department</option>
+                                
+                                    <option value="academic subjects, educational institutions or educational levels and study programmes">academic subjects, educational institutions or educational levels and study programmes</option>
+                                
+                                    <option value="educational institution">educational institution</option>
+                                
+                                    <option value="student loans">student loans</option>
+                                
+                                    <option value="accounting report">accounting report</option>
+                                
+                                    <option value="annual report">annual report</option>
+                                
+                                    <option value="manager">manager</option>
+                                
+                                    <option value="accounting report, annual report, action plans, projects, annual operating plans, finance plans, annual budget">accounting report, annual report, action plans, projects, annual operating plans, finance plans, annual budget</option>
+                                
+                                    <option value="accounting year">accounting year</option>
+                                
+                                    <option value="financial year">financial year</option>
+                                
+                                    <option value="fund">fund</option>
+                                
+                                    <option value="acting manager">acting manager</option>
+                                
+                                    <option value="board">board</option>
+                                
+                                    <option value="affairs">affairs</option>
+                                
+                                    <option value="board members">board members</option>
+                                
+                                    <option value="annual expenditure budget">annual expenditure budget</option>
+                                
+                                    <option value="operation and administration of work of the fund">operation and administration of work of the fund</option>
+                                
+                                    <option value="student loans to students">student loans to students</option>
+                                
+                                    <option value="annual reports on work performance of the fund for public dissemination">annual reports on work performance of the fund for public dissemination</option>
+                                
+                                    <option value="office">office</option>
+                                
+                                    <option value="appointment">appointment</option>
+                                
+                                    <option value="appointment of new qualified members">appointment of new qualified members</option>
+                                
+                                    <option value="qualified member">qualified member</option>
+                                
+                                    <option value="appropriate accounting systems">appropriate accounting systems</option>
+                                
+                                    <option value="financial standing and operational outcomes of the fund">financial standing and operational outcomes of the fund</option>
+                                
+                                    <option value="assistant secretary">assistant secretary</option>
+                                
+                                    <option value="student loan board">student loan board</option>
+                                
+                                    <option value="student loan fund">student loan fund</option>
+                                
+                                    <option value="student loan fund act, b.e. 2541 (1998)">student loan fund act, b.e. 2541 (1998)</option>
+                                
+                                    <option value="sub-committee">sub-committee</option>
+                                
+                                    <option value="manager under paragraph one">manager under paragraph one</option>
+                                
+                                    <option value="auditor-general">auditor-general</option>
+                                
+                                    <option value="bankrupt">bankrupt</option>
+                                
+                                    <option value="borrower">borrower</option>
+                                
+                                    <option value="competence">competence</option>
+                                
+                                    <option value="disqualified">disqualified</option>
+                                
+                                    <option value="expelled, dismissed or removed from employment by reason of dishonesty in the performance of duties or grave misconduct">expelled, dismissed or removed from employment by reason of dishonesty in the performance of duties or grave misconduct</option>
+                                
+                                    <option value="full-time basis">full-time basis</option>
+                                
+                                    <option value="government agencies and organisations concerned">government agencies and organisations concerned</option>
+                                
+                                    <option value="incompetent person or a quasi-incompetent person">incompetent person or a quasi-incompetent person</option>
+                                
+                                    <option value="lack of competence">lack of competence</option>
+                                
+                                    <option value="loan agreement">loan agreement</option>
+                                
+                                    <option value="manager or any other person">manager or any other person</option>
+                                
+                                    <option value="minister">minister</option>
+                                
+                                    <option value="newly appointed board members">newly appointed board members</option>
+                                
+                                    <option value="officials and employees of the fund">officials and employees of the fund</option>
+                                
+                                    <option value="policies">policies</option>
+                                
+                                    <option value="prohibitions">prohibitions</option>
+                                
+                                    <option value="qualifications">qualifications</option>
+                                
+                                    <option value="remaining term">remaining term</option>
+                                
+                                    <option value="sentenced by a final judgment to a term of imprisonment">sentenced by a final judgment to a term of imprisonment</option>
+                                
+                                    <option value="sixty-five years of age">sixty-five years of age</option>
+                                
+                                    <option value="strategies">strategies</option>
+                                
+                                    <option value="student">student</option>
+                                
+                                    <option value="student loan">student loan</option>
+                                
+                                    <option value="surety">surety</option>
+                                
+                                    <option value="term of office">term of office</option>
+                                
+                                    <option value="thai nationality">thai nationality</option>
+                                
+                                    <option value="third parties">third parties</option>
+                                
+                                    <option value="vacated office">vacated office</option>
+                                
+                                    <option value="licenced auditor">licenced auditor</option>
+                                
+                                    <option value="board, sub-committee">board, sub-committee</option>
+                                
+                                    <option value="chairperson, members, secretary and assistant secretaries">chairperson, members, secretary and assistant secretaries</option>
+                                
+                                    <option value="borrow">borrow</option>
+                                
+                                    <option value="interest">interest</option>
+                                
+                                    <option value="payer of the assessable incomes">payer of the assessable incomes</option>
+                                
+                                    <option value="section 47">section 47</option>
+                                
+                                    <option value="section 48">section 48</option>
+                                
+                                    <option value="section 49">section 49</option>
+                                
+                                    <option value="borrower's duties">borrower's duties</option>
+                                
+                                    <option value="liabilities towards the fund">liabilities towards the fund</option>
+                                
+                                    <option value="budgetary appropriation for the contribution into the fund">budgetary appropriation for the contribution into the fund</option>
+                                
+                                    <option value="chairperson">chairperson</option>
+                                
+                                    <option value="preside over the meeting">preside over the meeting</option>
+                                
+                                    <option value="continue to be in force">continue to be in force</option>
+                                
+                                    <option value="regulations, rules and notifications issued under the student loan fund act">regulations, rules and notifications issued under the student loan fund act</option>
+                                
+                                    <option value="court">court</option>
+                                
+                                    <option value="student loan fund under this act">student loan fund under this act</option>
+                                
+                                    <option value="death">death</option>
+                                
+                                    <option value="details of holding office, vacation of office, and work probation">details of holding office, vacation of office, and work probation</option>
+                                
+                                    <option value="director of the office for national education standards and quality assessment">director of the office for national education standards and quality assessment</option>
+                                
+                                    <option value="disqualification or being under any of the prohibitions under section 15">disqualification or being under any of the prohibitions under section 15</option>
+                                
+                                    <option value="dissemination of notification">dissemination of notification</option>
+                                
+                                    <option value="duties">duties</option>
+                                
+                                    <option value="education">education</option>
+                                
+                                    <option value="living expenses">living expenses</option>
+                                
+                                    <option value="expenses incidental to education">expenses incidental to education</option>
+                                
+                                    <option value="general public">general public</option>
+                                
+                                    <option value="memorandum of understanding">memorandum of understanding</option>
+                                
+                                    <option value="nature of student loans">nature of student loans</option>
+                                
+                                    <option value="notification">notification</option>
+                                
+                                    <option value="participation with the fund">participation with the fund</option>
+                                
+                                    <option value="revocation of participation">revocation of participation</option>
+                                
+                                    <option value="scope of granting of student loans">scope of granting of student loans</option>
+                                
+                                    <option value="tuition fees">tuition fees</option>
+                                
+                                    <option value="educational institutions">educational institutions</option>
+                                
+                                    <option value="operation of work">operation of work</option>
+                                
+                                    <option value="execution of this act">execution of this act</option>
+                                
+                                    <option value="minister of finance">minister of finance</option>
+                                
+                                    <option value="expiration of term under section 16">expiration of term under section 16</option>
+                                
+                                    <option value="financial institutions or juristic persons">financial institutions or juristic persons</option>
+                                
+                                    <option value="financial statements">financial statements</option>
+                                
+                                    <option value="the fund">the fund</option>
+                                
+                                    <option value="debts arising under this act">debts arising under this act</option>
+                                
+                                    <option value="office of the student loan fund">office of the student loan fund</option>
+                                
+                                    <option value="revenue department">revenue department</option>
+                                
+                                    <option value="section 26">section 26</option>
+                                
+                                    <option value="money">money</option>
+                                
+                                    <option value="money and property as follows">money and property as follows</option>
+                                
+                                    <option value="government gazette">government gazette</option>
+                                
+                                    <option value="such ministerial regulations">such ministerial regulations</option>
+                                
+                                    <option value="granting of student loans">granting of student loans</option>
+                                
+                                    <option value="granting of student loans under section 37">granting of student loans under section 37</option>
+                                
+                                    <option value="student loans under section 37">student loans under section 37</option>
+                                
+                                    <option value="insofar as they are not contrary to or inconsistent with this act">insofar as they are not contrary to or inconsistent with this act</option>
+                                
+                                    <option value="issued under this act">issued under this act</option>
+                                
+                                    <option value="ministerial regulations, regulations, rules or notifications">ministerial regulations, regulations, rules or notifications</option>
+                                
+                                    <option value="judgment creditor">judgment creditor</option>
+                                
+                                    <option value="king maha vajiralongkorn bodindradebayavarangkun">king maha vajiralongkorn bodindradebayavarangkun</option>
+                                
+                                    <option value="national legislative assembly">national legislative assembly</option>
+                                
+                                    <option value="need for student loans">need for student loans</option>
+                                
+                                    <option value="repayment of student loans">repayment of student loans</option>
+                                
+                                    <option value="vacation of office">vacation of office</option>
+                                
+                                    <option value="wages, remuneration, or benefits">wages, remuneration, or benefits</option>
+                                
+                                    <option value="manager under the student loan fund act, b.e. 2541 (1998)">manager under the student loan fund act, b.e. 2541 (1998)</option>
+                                
+                                    <option value="manager under this act">manager under this act</option>
+                                
+                                    <option value="measures">measures</option>
+                                
+                                    <option value="administration of the fund">administration of the fund</option>
+                                
+                                    <option value="meeting">meeting</option>
+                                
+                                    <option value="quorum">quorum</option>
+                                
+                                    <option value="member">member</option>
+                                
+                                    <option value="casting vote">casting vote</option>
+                                
+                                    <option value="memorandum of understanding on participation with the fund under section 38">memorandum of understanding on participation with the fund under section 38</option>
+                                
+                                    <option value="ministerial regulations">ministerial regulations</option>
+                                
+                                    <option value="section 5">section 5</option>
+                                
+                                    <option value="results">results</option>
+                                
+                                    <option value="not being a person directly or indirectly interested in the operation of the fund">not being a person directly or indirectly interested in the operation of the fund</option>
+                                
+                                    <option value="person directly or indirectly interested in the operation of the fund">person directly or indirectly interested in the operation of the fund</option>
+                                
+                                    <option value="permanent secretary for education as chairman">permanent secretary for education as chairman</option>
+                                
+                                    <option value="removal by minister on ground of neglect of duties, misbehaviour or lack of competence">removal by minister on ground of neglect of duties, misbehaviour or lack of competence</option>
+                                
+                                    <option value="resignation">resignation</option>
+                                
+                                    <option value="regulations">regulations</option>
+                                
+                                    <option value="personnel administration, finance, procurement, accounting and auditing">personnel administration, finance, procurement, accounting and auditing</option>
+                                
+                                    <option value="rule of the ministry of finance on administration of the student loan fund">rule of the ministry of finance on administration of the student loan fund</option>
+                                
+                                    <option value="treasury balance act">treasury balance act</option>
+                                
+                                    <option value="rules, procedures and conditions in connection with the granting">rules, procedures and conditions in connection with the granting</option>
+                                
+                                    <option value="rules, procedures and conditions in connection with the repayment of money to the fund">rules, procedures and conditions in connection with the repayment of money to the fund</option>
+                                
+                                    <option value="secretary-general of the basic education commission">secretary-general of the basic education commission</option>
+                                
+                                    <option value="secretary-general of the higher education commission">secretary-general of the higher education commission</option>
+                                
+                                    <option value="secretary-general of the vocational education commission">secretary-general of the vocational education commission</option>
+                                
+                                    <option value="state agency under superintendence by the minister">state agency under superintendence by the minister</option>
+                                
+                                    <option value="expedient">expedient</option>
+                                
+                                    <option value="student loan fund board">student loan fund board</option>
+                                
+                                    <option value="student loan fund office">student loan fund office</option>
+                                
+                                    <option value="student loan fund act, b.e. 2560 (2017)">student loan fund act, b.e. 2560 (2017)</option>
+                                
+                                    <option value="student loan fund under the student loan fund act, b.e. 2541 (1998)">student loan fund under the student loan fund act, b.e. 2541 (1998)</option>
+                                
+                                    <option value="student loan fund which is associated with future incomes">student loan fund which is associated with future incomes</option>
+                                
+                                    <option value="student loans to destitute students">student loans to destitute students</option>
+                                
+                                    <option value="student loans to students pursuing a study in a field in which shortage is encountered or a field specifically intended to be promoted by the fund">student loans to students pursuing a study in a field in which shortage is encountered or a field specifically intended to be promoted by the fund</option>
+                                
+                                    <option value="student loans to students pursuing a study in a field indicating the apparently principal need for the production of manpower and the need for national development">student loans to students pursuing a study in a field indicating the apparently principal need for the production of manpower and the need for national development</option>
+                                
+                                    <option value="student loans to students with good academic performance">student loans to students with good academic performance</option>
+                                
+                                    <option value="three qualified members appointed by the board">three qualified members appointed by the board</option>
+                                
+                                    <option value="proceeding">proceeding</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+            <div id="config"></div>
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 1, "id": "a representative of the bureau of the budget", "label": "a representative of the bureau of the budget", "shape": "dot", "size": 1}, {"group": 1, "id": "sub-committee in charge of supervising and appraising educational institutions participating with the fund", "label": "sub-committee in charge of supervising and appraising educational institutions participating with the fund", "shape": "dot", "size": 8}, {"group": 1, "id": "a representative of the comptroller-general\u2019s department", "label": "a representative of the comptroller-general\u2019s department", "shape": "dot", "size": 1}, {"group": 2, "id": "academic subjects, educational institutions or educational levels and study programmes", "label": "academic subjects, educational institutions or educational levels and study programmes", "shape": "dot", "size": 2}, {"group": 2, "id": "educational institution", "label": "educational institution", "shape": "dot", "size": 22}, {"group": 2, "id": "student loans", "label": "student loans", "shape": "dot", "size": 26}, {"group": 2, "id": "accounting report", "label": "accounting report", "shape": "dot", "size": 3}, {"group": 2, "id": "annual report", "label": "annual report", "shape": "dot", "size": 4}, {"group": 2, "id": "manager", "label": "manager", "shape": "dot", "size": 33}, {"group": 2, "id": "accounting report, annual report, action plans, projects, annual operating plans, finance plans, annual budget", "label": "accounting report, annual report, action plans, projects, annual operating plans, finance plans, annual budget", "shape": "dot", "size": 1}, {"group": 2, "id": "accounting year", "label": "accounting year", "shape": "dot", "size": 2}, {"group": 2, "id": "financial year", "label": "financial year", "shape": "dot", "size": 2}, {"group": 2, "id": "fund", "label": "fund", "shape": "dot", "size": 39}, {"group": 2, "id": "acting manager", "label": "acting manager", "shape": "dot", "size": 3}, {"group": 2, "id": "board", "label": "board", "shape": "dot", "size": 40}, {"group": 2, "id": "affairs", "label": "affairs", "shape": "dot", "size": 3}, {"group": 2, "id": "board members", "label": "board members", "shape": "dot", "size": 15}, {"group": 4, "id": "annual expenditure budget", "label": "annual expenditure budget", "shape": "dot", "size": 2}, {"group": 4, "id": "operation and administration of work of the fund", "label": "operation and administration of work of the fund", "shape": "dot", "size": 2}, {"group": 4, "id": "student loans to students", "label": "student loans to students", "shape": "dot", "size": 10}, {"group": 2, "id": "annual reports on work performance of the fund for public dissemination", "label": "annual reports on work performance of the fund for public dissemination", "shape": "dot", "size": 3}, {"group": 2, "id": "office", "label": "office", "shape": "dot", "size": 12}, {"group": 2, "id": "appointment", "label": "appointment", "shape": "dot", "size": 2}, {"group": 5, "id": "appointment of new qualified members", "label": "appointment of new qualified members", "shape": "dot", "size": 1}, {"group": 5, "id": "qualified member", "label": "qualified member", "shape": "dot", "size": 8}, {"group": 6, "id": "appropriate accounting systems", "label": "appropriate accounting systems", "shape": "dot", "size": 1}, {"group": 6, "id": "financial standing and operational outcomes of the fund", "label": "financial standing and operational outcomes of the fund", "shape": "dot", "size": 1}, {"group": 7, "id": "assistant secretary", "label": "assistant secretary", "shape": "dot", "size": 8}, {"group": 7, "id": "student loan board", "label": "student loan board", "shape": "dot", "size": 8}, {"group": 7, "id": "student loan fund", "label": "student loan fund", "shape": "dot", "size": 23}, {"group": 7, "id": "student loan fund act, b.e. 2541 (1998)", "label": "student loan fund act, b.e. 2541 (1998)", "shape": "dot", "size": 9}, {"group": 2, "id": "sub-committee", "label": "sub-committee", "shape": "dot", "size": 5}, {"group": 7, "id": "manager under paragraph one", "label": "manager under paragraph one", "shape": "dot", "size": 4}, {"group": 2, "id": "auditor-general", "label": "auditor-general", "shape": "dot", "size": 1}, {"group": 2, "id": "bankrupt", "label": "bankrupt", "shape": "dot", "size": 3}, {"group": 2, "id": "borrower", "label": "borrower", "shape": "dot", "size": 12}, {"group": 2, "id": "competence", "label": "competence", "shape": "dot", "size": 3}, {"group": 2, "id": "disqualified", "label": "disqualified", "shape": "dot", "size": 2}, {"group": 2, "id": "expelled, dismissed or removed from employment by reason of dishonesty in the performance of duties or grave misconduct", "label": "expelled, dismissed or removed from employment by reason of dishonesty in the performance of duties or grave misconduct", "shape": "dot", "size": 3}, {"group": 2, "id": "full-time basis", "label": "full-time basis", "shape": "dot", "size": 3}, {"group": 2, "id": "government agencies and organisations concerned", "label": "government agencies and organisations concerned", "shape": "dot", "size": 3}, {"group": 2, "id": "incompetent person or a quasi-incompetent person", "label": "incompetent person or a quasi-incompetent person", "shape": "dot", "size": 3}, {"group": 2, "id": "lack of competence", "label": "lack of competence", "shape": "dot", "size": 3}, {"group": 2, "id": "loan agreement", "label": "loan agreement", "shape": "dot", "size": 4}, {"group": 2, "id": "manager or any other person", "label": "manager or any other person", "shape": "dot", "size": 1}, {"group": 4, "id": "minister", "label": "minister", "shape": "dot", "size": 4}, {"group": 2, "id": "newly appointed board members", "label": "newly appointed board members", "shape": "dot", "size": 3}, {"group": 2, "id": "officials and employees of the fund", "label": "officials and employees of the fund", "shape": "dot", "size": 3}, {"group": 2, "id": "policies", "label": "policies", "shape": "dot", "size": 2}, {"group": 2, "id": "prohibitions", "label": "prohibitions", "shape": "dot", "size": 5}, {"group": 2, "id": "qualifications", "label": "qualifications", "shape": "dot", "size": 4}, {"group": 2, "id": "remaining term", "label": "remaining term", "shape": "dot", "size": 3}, {"group": 2, "id": "sentenced by a final judgment to a term of imprisonment", "label": "sentenced by a final judgment to a term of imprisonment", "shape": "dot", "size": 3}, {"group": 2, "id": "sixty-five years of age", "label": "sixty-five years of age", "shape": "dot", "size": 3}, {"group": 2, "id": "strategies", "label": "strategies", "shape": "dot", "size": 2}, {"group": 2, "id": "student", "label": "student", "shape": "dot", "size": 12}, {"group": 2, "id": "student loan", "label": "student loan", "shape": "dot", "size": 6}, {"group": 2, "id": "surety", "label": "surety", "shape": "dot", "size": 5}, {"group": 2, "id": "term of office", "label": "term of office", "shape": "dot", "size": 3}, {"group": 2, "id": "thai nationality", "label": "thai nationality", "shape": "dot", "size": 6}, {"group": 2, "id": "third parties", "label": "third parties", "shape": "dot", "size": 3}, {"group": 2, "id": "vacated office", "label": "vacated office", "shape": "dot", "size": 3}, {"group": 2, "id": "licenced auditor", "label": "licenced auditor", "shape": "dot", "size": 1}, {"group": 2, "id": "board, sub-committee", "label": "board, sub-committee", "shape": "dot", "size": 2}, {"group": 2, "id": "chairperson, members, secretary and assistant secretaries", "label": "chairperson, members, secretary and assistant secretaries", "shape": "dot", "size": 2}, {"group": 2, "id": "borrow", "label": "borrow", "shape": "dot", "size": 3}, {"group": 2, "id": "interest", "label": "interest", "shape": "dot", "size": 2}, {"group": 2, "id": "payer of the assessable incomes", "label": "payer of the assessable incomes", "shape": "dot", "size": 2}, {"group": 2, "id": "section 47", "label": "section 47", "shape": "dot", "size": 2}, {"group": 2, "id": "section 48", "label": "section 48", "shape": "dot", "size": 2}, {"group": 2, "id": "section 49", "label": "section 49", "shape": "dot", "size": 2}, {"group": 8, "id": "borrower\u0027s duties", "label": "borrower\u0027s duties", "shape": "dot", "size": 1}, {"group": 8, "id": "liabilities towards the fund", "label": "liabilities towards the fund", "shape": "dot", "size": 1}, {"group": 4, "id": "budgetary appropriation for the contribution into the fund", "label": "budgetary appropriation for the contribution into the fund", "shape": "dot", "size": 2}, {"group": 10, "id": "chairperson", "label": "chairperson", "shape": "dot", "size": 1}, {"group": 10, "id": "preside over the meeting", "label": "preside over the meeting", "shape": "dot", "size": 1}, {"group": 7, "id": "continue to be in force", "label": "continue to be in force", "shape": "dot", "size": 1}, {"group": 7, "id": "regulations, rules and notifications issued under the student loan fund act", "label": "regulations, rules and notifications issued under the student loan fund act", "shape": "dot", "size": 8}, {"group": 11, "id": "court", "label": "court", "shape": "dot", "size": 1}, {"group": 11, "id": "student loan fund under this act", "label": "student loan fund under this act", "shape": "dot", "size": 3}, {"group": 5, "id": "death", "label": "death", "shape": "dot", "size": 1}, {"group": 2, "id": "details of holding office, vacation of office, and work probation", "label": "details of holding office, vacation of office, and work probation", "shape": "dot", "size": 1}, {"group": 1, "id": "director of the office for national education standards and quality assessment", "label": "director of the office for national education standards and quality assessment", "shape": "dot", "size": 1}, {"group": 5, "id": "disqualification or being under any of the prohibitions under section 15", "label": "disqualification or being under any of the prohibitions under section 15", "shape": "dot", "size": 1}, {"group": 2, "id": "dissemination of notification", "label": "dissemination of notification", "shape": "dot", "size": 2}, {"group": 2, "id": "duties", "label": "duties", "shape": "dot", "size": 2}, {"group": 7, "id": "education", "label": "education", "shape": "dot", "size": 2}, {"group": 7, "id": "living expenses", "label": "living expenses", "shape": "dot", "size": 2}, {"group": 2, "id": "expenses incidental to education", "label": "expenses incidental to education", "shape": "dot", "size": 2}, {"group": 2, "id": "general public", "label": "general public", "shape": "dot", "size": 3}, {"group": 2, "id": "memorandum of understanding", "label": "memorandum of understanding", "shape": "dot", "size": 2}, {"group": 2, "id": "nature of student loans", "label": "nature of student loans", "shape": "dot", "size": 2}, {"group": 2, "id": "notification", "label": "notification", "shape": "dot", "size": 3}, {"group": 2, "id": "participation with the fund", "label": "participation with the fund", "shape": "dot", "size": 4}, {"group": 2, "id": "revocation of participation", "label": "revocation of participation", "shape": "dot", "size": 3}, {"group": 2, "id": "scope of granting of student loans", "label": "scope of granting of student loans", "shape": "dot", "size": 2}, {"group": 2, "id": "tuition fees", "label": "tuition fees", "shape": "dot", "size": 2}, {"group": 2, "id": "educational institutions", "label": "educational institutions", "shape": "dot", "size": 3}, {"group": 2, "id": "operation of work", "label": "operation of work", "shape": "dot", "size": 3}, {"group": 7, "id": "execution of this act", "label": "execution of this act", "shape": "dot", "size": 2}, {"group": 7, "id": "minister of finance", "label": "minister of finance", "shape": "dot", "size": 2}, {"group": 5, "id": "expiration of term under section 16", "label": "expiration of term under section 16", "shape": "dot", "size": 1}, {"group": 2, "id": "financial institutions or juristic persons", "label": "financial institutions or juristic persons", "shape": "dot", "size": 2}, {"group": 12, "id": "financial statements", "label": "financial statements", "shape": "dot", "size": 1}, {"group": 12, "id": "the fund", "label": "the fund", "shape": "dot", "size": 1}, {"group": 2, "id": "debts arising under this act", "label": "debts arising under this act", "shape": "dot", "size": 1}, {"group": 2, "id": "office of the student loan fund", "label": "office of the student loan fund", "shape": "dot", "size": 1}, {"group": 2, "id": "revenue department", "label": "revenue department", "shape": "dot", "size": 1}, {"group": 2, "id": "section 26", "label": "section 26", "shape": "dot", "size": 2}, {"group": 2, "id": "money", "label": "money", "shape": "dot", "size": 1}, {"group": 2, "id": "money and property as follows", "label": "money and property as follows", "shape": "dot", "size": 2}, {"group": 7, "id": "government gazette", "label": "government gazette", "shape": "dot", "size": 2}, {"group": 7, "id": "such ministerial regulations", "label": "such ministerial regulations", "shape": "dot", "size": 2}, {"group": 2, "id": "granting of student loans", "label": "granting of student loans", "shape": "dot", "size": 2}, {"group": 4, "id": "granting of student loans under section 37", "label": "granting of student loans under section 37", "shape": "dot", "size": 2}, {"group": 4, "id": "student loans under section 37", "label": "student loans under section 37", "shape": "dot", "size": 2}, {"group": 7, "id": "insofar as they are not contrary to or inconsistent with this act", "label": "insofar as they are not contrary to or inconsistent with this act", "shape": "dot", "size": 1}, {"group": 7, "id": "issued under this act", "label": "issued under this act", "shape": "dot", "size": 2}, {"group": 7, "id": "ministerial regulations, regulations, rules or notifications", "label": "ministerial regulations, regulations, rules or notifications", "shape": "dot", "size": 2}, {"group": 7, "id": "judgment creditor", "label": "judgment creditor", "shape": "dot", "size": 2}, {"group": 13, "id": "king maha vajiralongkorn bodindradebayavarangkun", "label": "king maha vajiralongkorn bodindradebayavarangkun", "shape": "dot", "size": 1}, {"group": 13, "id": "national legislative assembly", "label": "national legislative assembly", "shape": "dot", "size": 1}, {"group": 2, "id": "need for student loans", "label": "need for student loans", "shape": "dot", "size": 3}, {"group": 2, "id": "repayment of student loans", "label": "repayment of student loans", "shape": "dot", "size": 2}, {"group": 2, "id": "vacation of office", "label": "vacation of office", "shape": "dot", "size": 1}, {"group": 2, "id": "wages, remuneration, or benefits", "label": "wages, remuneration, or benefits", "shape": "dot", "size": 1}, {"group": 7, "id": "manager under the student loan fund act, b.e. 2541 (1998)", "label": "manager under the student loan fund act, b.e. 2541 (1998)", "shape": "dot", "size": 4}, {"group": 7, "id": "manager under this act", "label": "manager under this act", "shape": "dot", "size": 4}, {"group": 3, "id": "measures", "label": "measures", "shape": "dot", "size": 1}, {"group": 3, "id": "administration of the fund", "label": "administration of the fund", "shape": "dot", "size": 1}, {"group": 14, "id": "meeting", "label": "meeting", "shape": "dot", "size": 1}, {"group": 14, "id": "quorum", "label": "quorum", "shape": "dot", "size": 1}, {"group": 9, "id": "member", "label": "member", "shape": "dot", "size": 1}, {"group": 9, "id": "casting vote", "label": "casting vote", "shape": "dot", "size": 1}, {"group": 4, "id": "memorandum of understanding on participation with the fund under section 38", "label": "memorandum of understanding on participation with the fund under section 38", "shape": "dot", "size": 2}, {"group": 7, "id": "ministerial regulations", "label": "ministerial regulations", "shape": "dot", "size": 2}, {"group": 7, "id": "section 5", "label": "section 5", "shape": "dot", "size": 2}, {"group": 2, "id": "results", "label": "results", "shape": "dot", "size": 1}, {"group": 5, "id": "not being a person directly or indirectly interested in the operation of the fund", "label": "not being a person directly or indirectly interested in the operation of the fund", "shape": "dot", "size": 2}, {"group": 5, "id": "person directly or indirectly interested in the operation of the fund", "label": "person directly or indirectly interested in the operation of the fund", "shape": "dot", "size": 2}, {"group": 1, "id": "permanent secretary for education as chairman", "label": "permanent secretary for education as chairman", "shape": "dot", "size": 1}, {"group": 5, "id": "removal by minister on ground of neglect of duties, misbehaviour or lack of competence", "label": "removal by minister on ground of neglect of duties, misbehaviour or lack of competence", "shape": "dot", "size": 1}, {"group": 5, "id": "resignation", "label": "resignation", "shape": "dot", "size": 1}, {"group": 15, "id": "regulations", "label": "regulations", "shape": "dot", "size": 1}, {"group": 15, "id": "personnel administration, finance, procurement, accounting and auditing", "label": "personnel administration, finance, procurement, accounting and auditing", "shape": "dot", "size": 1}, {"group": 7, "id": "rule of the ministry of finance on administration of the student loan fund", "label": "rule of the ministry of finance on administration of the student loan fund", "shape": "dot", "size": 2}, {"group": 7, "id": "treasury balance act", "label": "treasury balance act", "shape": "dot", "size": 2}, {"group": 4, "id": "rules, procedures and conditions in connection with the granting", "label": "rules, procedures and conditions in connection with the granting", "shape": "dot", "size": 1}, {"group": 4, "id": "rules, procedures and conditions in connection with the repayment of money to the fund", "label": "rules, procedures and conditions in connection with the repayment of money to the fund", "shape": "dot", "size": 1}, {"group": 1, "id": "secretary-general of the basic education commission", "label": "secretary-general of the basic education commission", "shape": "dot", "size": 1}, {"group": 1, "id": "secretary-general of the higher education commission", "label": "secretary-general of the higher education commission", "shape": "dot", "size": 1}, {"group": 1, "id": "secretary-general of the vocational education commission", "label": "secretary-general of the vocational education commission", "shape": "dot", "size": 1}, {"group": 7, "id": "state agency under superintendence by the minister", "label": "state agency under superintendence by the minister", "shape": "dot", "size": 1}, {"group": 7, "id": "expedient", "label": "expedient", "shape": "dot", "size": 1}, {"group": 7, "id": "student loan fund board", "label": "student loan fund board", "shape": "dot", "size": 2}, {"group": 7, "id": "student loan fund office", "label": "student loan fund office", "shape": "dot", "size": 2}, {"group": 7, "id": "student loan fund act, b.e. 2560 (2017)", "label": "student loan fund act, b.e. 2560 (2017)", "shape": "dot", "size": 1}, {"group": 11, "id": "student loan fund under the student loan fund act, b.e. 2541 (1998)", "label": "student loan fund under the student loan fund act, b.e. 2541 (1998)", "shape": "dot", "size": 1}, {"group": 11, "id": "student loan fund which is associated with future incomes", "label": "student loan fund which is associated with future incomes", "shape": "dot", "size": 1}, {"group": 2, "id": "student loans to destitute students", "label": "student loans to destitute students", "shape": "dot", "size": 1}, {"group": 2, "id": "student loans to students pursuing a study in a field in which shortage is encountered or a field specifically intended to be promoted by the fund", "label": "student loans to students pursuing a study in a field in which shortage is encountered or a field specifically intended to be promoted by the fund", "shape": "dot", "size": 1}, {"group": 2, "id": "student loans to students pursuing a study in a field indicating the apparently principal need for the production of manpower and the need for national development", "label": "student loans to students pursuing a study in a field indicating the apparently principal need for the production of manpower and the need for national development", "shape": "dot", "size": 1}, {"group": 2, "id": "student loans to students with good academic performance", "label": "student loans to students with good academic performance", "shape": "dot", "size": 1}, {"group": 1, "id": "three qualified members appointed by the board", "label": "three qualified members appointed by the board", "shape": "dot", "size": 1}, {"group": 2, "id": "proceeding", "label": "proceeding", "shape": "dot", "size": 1}]);
+                  edges = new vis.DataSet([{"from": "a representative of the bureau of the budget", "title": "is a member,contextual proximity", "to": "sub-committee in charge of supervising and appraising educational institutions participating with the fund", "width": 3.0}, {"from": "a representative of the comptroller-general\u2019s department", "title": "is a member,contextual proximity", "to": "sub-committee in charge of supervising and appraising educational institutions participating with the fund", "width": 3.0}, {"from": "academic subjects, educational institutions or educational levels and study programmes", "title": "contextual proximity", "to": "educational institution", "width": 0.75}, {"from": "academic subjects, educational institutions or educational levels and study programmes", "title": "Section 37 specifies that the Board will determine academic subjects, educational institutions or educational levels and study programmes for which student loans may be granted. This highlights a connection between student loans and these entities.,contextual proximity", "to": "student loans", "width": 1.75}, {"from": "accounting report", "title": "prepared by the Fund for submission to the Board for work performance evaluation", "to": "annual report", "width": 1.0}, {"from": "accounting report", "title": "contextual proximity", "to": "manager", "width": 0.5}, {"from": "accounting report", "title": "contextual proximity", "to": "student loans", "width": 0.75}, {"from": "accounting report, annual report, action plans, projects, annual operating plans, finance plans, annual budget", "title": "The Manager prepares these for submission to the Board as required.,contextual proximity", "to": "manager", "width": 2.5}, {"from": "accounting year", "title": "The accounting year of the Fund shall be by reference to the financial year under the law on budgetary procedures.", "to": "financial year", "width": 1.0}, {"from": "accounting year", "title": "contextual proximity", "to": "fund", "width": 0.5}, {"from": "acting manager", "title": "In the case where the Manager is not present or unable to perform duties, the Board shall appoint an acting Manager.,contextual proximity", "to": "board", "width": 1.5}, {"from": "acting manager", "title": "contextual proximity", "to": "fund", "width": 0.5}, {"from": "acting manager", "title": "contextual proximity", "to": "manager", "width": 0.75}, {"from": "affairs", "title": "contextual proximity", "to": "board", "width": 0.75}, {"from": "affairs", "title": "contextual proximity", "to": "board members", "width": 0.75}, {"from": "affairs", "title": "relation where the Board ensures conformity with the objects of the Fund by monitoring and assessing its affairs", "to": "fund", "width": 1.0}, {"from": "annual expenditure budget", "title": "to consider and approve an annual expenditure budget for the operation and administration of work of the Fund", "to": "operation and administration of work of the fund", "width": 1.0}, {"from": "annual expenditure budget", "title": "contextual proximity", "to": "student loans to students", "width": 0.5}, {"from": "annual report", "title": "contextual proximity", "to": "fund", "width": 0.5}, {"from": "annual report", "title": "contextual proximity", "to": "manager", "width": 0.5}, {"from": "annual report", "title": "contextual proximity", "to": "student loans", "width": 0.75}, {"from": "annual reports on work performance of the fund for public dissemination", "title": "prepare annual reports on work performance of the Fund for public dissemination;,contextual proximity", "to": "board", "width": 1.5}, {"from": "annual reports on work performance of the fund for public dissemination", "title": "contextual proximity", "to": "manager", "width": 2.0}, {"from": "annual reports on work performance of the fund for public dissemination", "title": "contextual proximity", "to": "office", "width": 0.5}, {"from": "appointment", "title": "contextual proximity", "to": "board", "width": 0.75}, {"from": "appointment", "title": "contextual proximity", "to": "board members", "width": 0.75}, {"from": "appointment of new qualified members", "title": "remains in office in the interest of continuance of work until,contextual proximity", "to": "qualified member", "width": 2.5}, {"from": "appropriate accounting systems", "title": "in accordance with generally recognised accounting principles, the Board shall make available appropriate accounting systems capable of controlling as well as administering student loan debtors and preparing financial reports accurately indicating the financial standing and operational outcomes of the Fund.", "to": "financial standing and operational outcomes of the fund", "width": 1.0}, {"from": "assistant secretary", "title": "contextual proximity", "to": "board", "width": 0.75}, {"from": "assistant secretary", "title": "contextual proximity", "to": "fund", "width": 1.0}, {"from": "assistant secretary", "title": "The Manager shall appoint one official of the Fund as assistant secretary.,contextual proximity", "to": "manager", "width": 2.0}, {"from": "assistant secretary", "title": "contextual proximity", "to": "student loan board", "width": 0.5}, {"from": "assistant secretary", "title": "contextual proximity", "to": "student loan fund", "width": 0.5}, {"from": "assistant secretary", "title": "contextual proximity", "to": "student loan fund act, b.e. 2541 (1998)", "width": 0.5}, {"from": "assistant secretary", "title": "contextual proximity", "to": "sub-committee", "width": 1.0}, {"from": "assistant secretary", "title": "appointment of an official as assistant secretary by the Manager mentioned in section 56 and paragraph one", "to": "manager under paragraph one", "width": 1.0}, {"from": "auditor-general", "title": "contextual proximity", "to": "fund", "width": 0.5}, {"from": "bankrupt", "title": "contextual proximity", "to": "board", "width": 0.5}, {"from": "bankrupt", "title": "not being or not having been a bankrupt;,contextual proximity", "to": "manager", "width": 3.0}, {"from": "bankrupt", "title": "contextual proximity", "to": "office", "width": 0.5}, {"from": "board", "title": "contextual proximity", "to": "board members", "width": 2.25}, {"from": "board", "title": "contextual proximity", "to": "borrower", "width": 0.75}, {"from": "board", "title": "contextual proximity", "to": "competence", "width": 0.75}, {"from": "board", "title": "contextual proximity", "to": "disqualified", "width": 0.75}, {"from": "board", "title": "contextual proximity", "to": "educational institution", "width": 1.5}, {"from": "board", "title": "contextual proximity", "to": "expelled, dismissed or removed from employment by reason of dishonesty in the performance of duties or grave misconduct", "width": 0.5}, {"from": "board", "title": "contextual proximity", "to": "full-time basis", "width": 0.5}, {"from": "board", "title": "For the purposes of administering the Fund and following up repayment to the Fund, the Fund shall have the powers to carry out the following activities:,contextual proximity", "to": "fund", "width": 9.25}, {"from": "board", "title": "contextual proximity", "to": "government agencies and organisations concerned", "width": 0.5}, {"from": "board", "title": "contextual proximity", "to": "incompetent person or a quasi-incompetent person", "width": 0.5}, {"from": "board", "title": "contextual proximity", "to": "lack of competence", "width": 0.75}, {"from": "board", "title": "contextual proximity", "to": "loan agreement", "width": 0.75}, {"from": "board", "title": "The Manager\u0027s contract of employment is determined by the Board and can be extended by them for up to four years.,contextual proximity", "to": "manager", "width": 11.25}, {"from": "board", "title": "for carrying out the acts on behalf of the Board", "to": "manager or any other person", "width": 1.0}, {"from": "board", "title": "relationship between the Minister and the Board, indicating that the Board makes recommendations to the Minister regarding budgetary appropriations for contributions into the Fund,contextual proximity", "to": "minister", "width": 1.75}, {"from": "board", "title": "contextual proximity", "to": "newly appointed board members", "width": 0.75}, {"from": "board", "title": "serve as the secretariat of,contextual proximity", "to": "office", "width": 2.0}, {"from": "board", "title": "contextual proximity", "to": "officials and employees of the fund", "width": 0.5}, {"from": "board", "title": "action where the Board lays down policies and strategies for the Fund,contextual proximity", "to": "policies", "width": 1.75}, {"from": "board", "title": "contextual proximity", "to": "prohibitions", "width": 1.5}, {"from": "board", "title": "contextual proximity", "to": "qualifications", "width": 0.75}, {"from": "board", "title": "contextual proximity", "to": "remaining term", "width": 0.75}, {"from": "board", "title": "contextual proximity", "to": "sentenced by a final judgment to a term of imprisonment", "width": 0.5}, {"from": "board", "title": "contextual proximity", "to": "sixty-five years of age", "width": 0.5}, {"from": "board", "title": "action where the Board lays down policies and strategies for the Fund,contextual proximity", "to": "strategies", "width": 1.75}, {"from": "board", "title": "contextual proximity", "to": "student", "width": 3.75}, {"from": "board", "title": "contextual proximity", "to": "student loan", "width": 0.75}, {"from": "board", "title": "The sub-committee in charge of supervising repayment to the Fund has the powers and duties as follows: (1) to give the Board recommendations and advice on the prescription of the rules, procedures and conditions in connection with borrowers\u2019 repayment to the Fund under section 19 (7);,(3) to give the Board recommendations and advice on the performance of duties under section 19 (11) and (14);,contextual proximity", "to": "sub-committee", "width": 5.5}, {"from": "board", "title": "contextual proximity", "to": "surety", "width": 0.75}, {"from": "board", "title": "contextual proximity", "to": "term of office", "width": 0.75}, {"from": "board", "title": "contextual proximity", "to": "thai nationality", "width": 1.25}, {"from": "board", "title": "contextual proximity", "to": "third parties", "width": 0.5}, {"from": "board", "title": "contextual proximity", "to": "vacated office", "width": 0.75}, {"from": "board", "title": "The Board may appoint a licenced auditor, who is not an official or employee of the Fund, for conducting an internal audit of a particular matter, with direct answerability to the Board, in accordance with the Rule prescribed by the Board.", "to": "licenced auditor", "width": 1.0}, {"from": "board members", "title": "contextual proximity", "to": "competence", "width": 0.75}, {"from": "board members", "title": "relation where a Board member may be disqualified for certain reasons as specified in section 15,contextual proximity", "to": "disqualified", "width": 1.75}, {"from": "board members", "title": "contextual proximity", "to": "fund", "width": 0.75}, {"from": "board members", "title": "contextual proximity", "to": "lack of competence", "width": 0.75}, {"from": "board members", "title": "contextual proximity", "to": "minister", "width": 0.75}, {"from": "board members", "title": "contextual proximity", "to": "newly appointed board members", "width": 0.75}, {"from": "board members", "title": "contextual proximity", "to": "policies", "width": 0.75}, {"from": "board members", "title": "relation where a Board member may be under certain prohibitions as specified in section 15,contextual proximity", "to": "prohibitions", "width": 1.75}, {"from": "board members", "title": "contextual proximity", "to": "remaining term", "width": 0.75}, {"from": "board members", "title": "contextual proximity", "to": "strategies", "width": 0.75}, {"from": "board members", "title": "contextual proximity", "to": "term of office", "width": 0.75}, {"from": "board members", "title": "contextual proximity", "to": "vacated office", "width": 0.75}, {"from": "board, sub-committee", "title": "contextual proximity", "to": "fund", "width": 0.5}, {"from": "board, sub-committee", "title": "The same individuals can serve as Chairperson, members, secretary and assistant secretaries of both the Board and a sub-committee.", "to": "chairperson, members, secretary and assistant secretaries", "width": 1.0}, {"from": "borrow", "title": "contextual proximity", "to": "borrower", "width": 1.25}, {"from": "borrow", "title": "contextual proximity", "to": "fund", "width": 1.0}, {"from": "borrow", "title": "Section 47 and borrower\u0027s duty to repay student loan totally received to the Fund.", "to": "student loan", "width": 1.0}, {"from": "borrower", "title": "contextual proximity", "to": "educational institution", "width": 0.5}, {"from": "borrower", "title": "The deduction of the money under paragraph one must be made in a manner first allowing repayment to the Fund after the tax withholding as well as the deductions towards the funds under which deductions are to be made against the borrower under the law on Government Pension Fund, the law on Provident Fund, the law on labour protection and law on social security.,contextual proximity", "to": "fund", "width": 9.25}, {"from": "borrower", "title": "contextual proximity", "to": "interest", "width": 0.75}, {"from": "borrower", "title": "contextual proximity", "to": "manager", "width": 1.0}, {"from": "borrower", "title": "contextual proximity", "to": "payer of the assessable incomes", "width": 0.5}, {"from": "borrower", "title": "The borrower may terminate the loan in writing at any time under Section 47.,contextual proximity", "to": "section 47", "width": 2.25}, {"from": "borrower", "title": "contextual proximity", "to": "section 48", "width": 1.25}, {"from": "borrower", "title": "contextual proximity", "to": "section 49", "width": 1.25}, {"from": "borrower", "title": "contextual proximity", "to": "student", "width": 0.75}, {"from": "borrower", "title": "The money allocated to a borrower for funding tuition fees, expenses incidental to education and living expenses is referred to as \u0027student loan\u0027 in this text.,contextual proximity", "to": "student loan", "width": 2.75}, {"from": "borrower\u0027s duties", "title": "extinguished", "to": "liabilities towards the fund", "width": 1.0}, {"from": "budgetary appropriation for the contribution into the fund", "title": "to make recommendations to the Minister in connection with a request for the budgetary appropriation for the contribution into the Fund", "to": "minister", "width": 1.0}, {"from": "budgetary appropriation for the contribution into the fund", "title": "contextual proximity", "to": "student loans to students", "width": 0.5}, {"from": "chairperson", "title": "In the absence or inability of the Chairperson to perform duties, Section 20 allows for the election of a member to preside over the meeting.", "to": "preside over the meeting", "width": 1.0}, {"from": "chairperson, members, secretary and assistant secretaries", "title": "contextual proximity", "to": "fund", "width": 0.5}, {"from": "competence", "title": "opposition or contrast between two concepts, indicating that \u0027lack of competence\u0027 is the opposite or absence of \u0027competence\u0027", "to": "lack of competence", "width": 1.0}, {"from": "continue to be in force", "title": "As stated in Section 64 of the new Act, Regulations, Rules and Notifications issued under the Student Loan Fund Act will continue to be in force until new Ministerial Regulations, Regulations, Rules or Notifications are issued under this Act.,contextual proximity", "to": "regulations, rules and notifications issued under the student loan fund act", "width": 1.5}, {"from": "court", "title": "contextual proximity", "to": "student loan fund under this act", "width": 0.75}, {"from": "death", "title": "vacates office upon,contextual proximity", "to": "qualified member", "width": 2.5}, {"from": "details of holding office, vacation of office, and work probation", "title": "These are specified in the Manager\u0027s contract of employment.,contextual proximity", "to": "manager", "width": 2.5}, {"from": "director of the office for national education standards and quality assessment", "title": "is a member,contextual proximity", "to": "sub-committee in charge of supervising and appraising educational institutions participating with the fund", "width": 3.0}, {"from": "disqualification or being under any of the prohibitions under section 15", "title": "vacates office upon,contextual proximity", "to": "qualified member", "width": 2.5}, {"from": "dissemination of notification", "title": "Educational institutions are requested to disseminate notifications issued by the Board to the general public through their premises. This highlights a connection between educational institutions and the dissemination of notifications.,contextual proximity", "to": "educational institution", "width": 1.75}, {"from": "dissemination of notification", "title": "contextual proximity", "to": "student loans", "width": 0.75}, {"from": "duties", "title": "performed by the Manager as provided in this Act or as entrusted by the Board, Chairman of the Board, or contract of employment,contextual proximity", "to": "manager", "width": 1.5}, {"from": "duties", "title": "contextual proximity", "to": "student loans", "width": 0.75}, {"from": "education", "title": "contextual proximity", "to": "student loan fund", "width": 0.5}, {"from": "education", "title": "expenses necessary for living during an educational pursuit are related to education", "to": "living expenses", "width": 1.0}, {"from": "educational institution", "title": "contextual proximity", "to": "expenses incidental to education", "width": 0.5}, {"from": "educational institution", "title": "Section 38. Any student who intends to apply for a student loan must pursue a study at an educational institution participating with the Fund under section 38,contextual proximity", "to": "fund", "width": 2.75}, {"from": "educational institution", "title": "contextual proximity", "to": "general public", "width": 0.75}, {"from": "educational institution", "title": "contextual proximity", "to": "loan agreement", "width": 0.5}, {"from": "educational institution", "title": "Educational institutions that are granted approval for participating with the fund under this act must sign a memorandum of understanding with the fund. This suggests a connection between educational institutions and memoranda of understanding.,contextual proximity", "to": "memorandum of understanding", "width": 1.75}, {"from": "educational institution", "title": "contextual proximity", "to": "nature of student loans", "width": 0.75}, {"from": "educational institution", "title": "contextual proximity", "to": "notification", "width": 0.75}, {"from": "educational institution", "title": "contextual proximity", "to": "participation with the fund", "width": 0.75}, {"from": "educational institution", "title": "contextual proximity", "to": "prohibitions", "width": 0.5}, {"from": "educational institution", "title": "contextual proximity", "to": "qualifications", "width": 0.5}, {"from": "educational institution", "title": "contextual proximity", "to": "revocation of participation", "width": 0.75}, {"from": "educational institution", "title": "contextual proximity", "to": "scope of granting of student loans", "width": 0.75}, {"from": "educational institution", "title": "A person studying at an educational institution, which can also include a person granted admission for a study, is called a \u0027student\u0027. An \u0027educational institution\u0027 refers to a school, a higher educational institution or any other State-owned educational institution, a private school obtaining a licence for establishing a formal school under the law on private schools and a private higher educational institution obtaining a licence for the establishment thereof under the law on private higher educational institutions.,pursues a study at an educational institution participating with the Fund under section 38,contextual proximity", "to": "student", "width": 5.5}, {"from": "educational institution", "title": "contextual proximity", "to": "student loan", "width": 1.0}, {"from": "educational institution", "title": "contextual proximity", "to": "student loans", "width": 2.25}, {"from": "educational institution", "title": "contextual proximity", "to": "surety", "width": 0.5}, {"from": "educational institution", "title": "contextual proximity", "to": "thai nationality", "width": 0.5}, {"from": "educational institution", "title": "contextual proximity", "to": "tuition fees", "width": 0.5}, {"from": "educational institutions", "title": "contextual proximity", "to": "manager", "width": 0.5}, {"from": "educational institutions", "title": "coordinated, supervised, and monitored by the Fund to achieve the objectives of the Fund", "to": "operation of work", "width": 1.0}, {"from": "educational institutions", "title": "contextual proximity", "to": "student loans", "width": 0.75}, {"from": "execution of this act", "title": "contextual proximity", "to": "student loan fund", "width": 0.5}, {"from": "execution of this act", "title": "Minister of Finance has charge and control over the execution of this Act", "to": "minister of finance", "width": 1.0}, {"from": "expelled, dismissed or removed from employment by reason of dishonesty in the performance of duties or grave misconduct", "title": "not being a Government official or an official or employee of a Ministry, a sub- Ministry, a Department, local administration, a State enterprise under the law on budgetary procedures or any other State agency;,contextual proximity", "to": "manager", "width": 3.0}, {"from": "expelled, dismissed or removed from employment by reason of dishonesty in the performance of duties or grave misconduct", "title": "contextual proximity", "to": "office", "width": 0.5}, {"from": "expenses incidental to education", "title": "contextual proximity", "to": "student", "width": 0.5}, {"from": "expiration of term under section 16", "title": "vacates office upon,contextual proximity", "to": "qualified member", "width": 2.5}, {"from": "financial institutions or juristic persons", "title": "engaged by the Manager generally or on an ad hoc basis for duties on behalf of the Manager in accordance with the rules, procedures, and conditions prescribed by the Board,contextual proximity", "to": "manager", "width": 1.5}, {"from": "financial institutions or juristic persons", "title": "contextual proximity", "to": "student loans", "width": 0.75}, {"from": "financial statements", "title": "shall prepare financial statements for submission to the auditor within one hundred twenty days as from the end of every accounting year. The accounting year of the Fund shall be by reference to the financial year under the law on budgetary procedures.", "to": "the fund", "width": 1.0}, {"from": "financial year", "title": "contextual proximity", "to": "fund", "width": 0.5}, {"from": "full-time basis", "title": "being able to work for the Fund on a full-time basis;,contextual proximity", "to": "manager", "width": 3.0}, {"from": "full-time basis", "title": "contextual proximity", "to": "office", "width": 0.5}, {"from": "fund", "title": "preferential right over all property of the borrower in the first rank of precedence next to supplies of daily necessities under section 253 (4) of the Civil and Commercial Code", "to": "debts arising under this act", "width": 1.0}, {"from": "fund", "title": "contextual proximity", "to": "interest", "width": 0.5}, {"from": "fund", "title": "contextual proximity", "to": "loan agreement", "width": 0.5}, {"from": "fund", "title": "The Manager shall be a member and secretary;,(5) to perform other duties as entrusted by the Board;,The Manager is responsible for administering affairs of the Fund in accordance with various requirements and submitting reports on work performance and finances to the Board.,The Manager represents the Fund in its affairs dealing with third parties.,contextual proximity", "to": "manager", "width": 13.75}, {"from": "fund", "title": "contextual proximity", "to": "office", "width": 0.5}, {"from": "fund", "title": "The Office of the Student Loan Fund is located at the principal office of the Fund in Bangkok.,contextual proximity", "to": "office of the student loan fund", "width": 1.5}, {"from": "fund", "title": "contextual proximity", "to": "officials and employees of the fund", "width": 0.5}, {"from": "fund", "title": "If the payer of the assessable incomes fails to deduct, makes deduction without remitting or with remitting in a deficient amount not corresponding to that notified by the Fund, they become liable to pay the money required to be remitted on the part of the borrower at the rate of two percent per month starting from the day following the due date.,contextual proximity", "to": "payer of the assessable incomes", "width": 2.5}, {"from": "fund", "title": "contextual proximity", "to": "prohibitions", "width": 0.75}, {"from": "fund", "title": "contextual proximity", "to": "qualifications", "width": 0.5}, {"from": "fund", "title": "The Revenue Department shall, upon receipt of the money from the payer of the assessable incomes under paragraph one, remit the same to the Fund in accordance with the rules, procedures and conditions prescribed by the Revenue Department with the approval of the Ministry of Finance.,contextual proximity", "to": "revenue department", "width": 1.5}, {"from": "fund", "title": "If an educational institution fails to perform its duties properly, the Fund has the authority to revoke its participation. This highlights a connection between the fund and revoking the participation of educational institutions.", "to": "revocation of participation", "width": 1.0}, {"from": "fund", "title": "contextual proximity", "to": "section 26", "width": 0.5}, {"from": "fund", "title": "contextual proximity", "to": "section 47", "width": 1.0}, {"from": "fund", "title": "In case of events mentioned in Section 48, the Fund may terminate a loan agreement of the borrower.,contextual proximity", "to": "section 48", "width": 2.0}, {"from": "fund", "title": "contextual proximity", "to": "section 49", "width": 1.0}, {"from": "fund", "title": "contextual proximity", "to": "student", "width": 2.75}, {"from": "fund", "title": "contextual proximity", "to": "student loan", "width": 1.75}, {"from": "fund", "title": "contextual proximity", "to": "student loans", "width": 1.75}, {"from": "fund", "title": "(1) to monitor, inspect and supervise repayment to the Fund to ensure compliance with the rules, procedures and conditions prescribed by the Board under section 19 (7) and report results thereof to the Board;,(6) to analyze problems and causes of borrowers\u2019 failure to make repayment to the Fund and propose measures for solving problems to the Board;,contextual proximity", "to": "sub-committee", "width": 6.5}, {"from": "fund", "title": "contextual proximity", "to": "surety", "width": 0.75}, {"from": "fund", "title": "contextual proximity", "to": "thai nationality", "width": 0.75}, {"from": "fund", "title": "contextual proximity", "to": "third parties", "width": 0.5}, {"from": "fund", "title": "shall be in accordance with the Rule prescribed by the Board. The Fund shall make available internal audits of its finance, accounting and procurement and report audit results to the Board at least once a year.", "to": "money", "width": 1.0}, {"from": "fund", "title": "The Fund is made up of various sources of money and property, including donations, subsidies, and revenues.", "to": "money and property as follows", "width": 1.0}, {"from": "general public", "title": "contextual proximity", "to": "student loans", "width": 0.75}, {"from": "general public", "title": "Section 38 specifies that notifications will be disseminated to both the Office and the general public through electronic media. This indicates a relationship between notifications and the general public.", "to": "notification", "width": 1.0}, {"from": "government agencies and organisations concerned", "title": "contextual proximity", "to": "manager", "width": 2.0}, {"from": "government agencies and organisations concerned", "title": "carry out work of the Fund and co-ordinate with,contextual proximity", "to": "office", "width": 1.5}, {"from": "government gazette", "title": "contextual proximity", "to": "student loan fund", "width": 0.5}, {"from": "government gazette", "title": "Ministerial Regulations come into force upon their publication in the Government Gazette", "to": "such ministerial regulations", "width": 1.0}, {"from": "granting of student loans", "title": "contextual proximity", "to": "manager", "width": 0.5}, {"from": "granting of student loans", "title": "administered and managed by the Fund,contextual proximity", "to": "student loans", "width": 1.75}, {"from": "granting of student loans under section 37", "title": "contextual proximity", "to": "student loans to students", "width": 0.5}, {"from": "granting of student loans under section 37", "title": "to determine the scope of the granting of student loans under section 37", "to": "student loans under section 37", "width": 1.0}, {"from": "incompetent person or a quasi-incompetent person", "title": "not being or not having been an incompetent person or a quasi-incompetent person;,contextual proximity", "to": "manager", "width": 3.0}, {"from": "incompetent person or a quasi-incompetent person", "title": "contextual proximity", "to": "office", "width": 0.5}, {"from": "insofar as they are not contrary to or inconsistent with this act", "title": "Section 64 of the new Act specifies that Regulations, Rules and Notifications issued under the Student Loan Fund Act will continue to be in force only if they do not contradict or conflict with the provisions of this Act.,contextual proximity", "to": "regulations, rules and notifications issued under the student loan fund act", "width": 1.5}, {"from": "issued under this act", "title": "contextual proximity", "to": "regulations, rules and notifications issued under the student loan fund act", "width": 0.5}, {"from": "issued under this act", "title": "As mentioned in Section 64 of the new Act, new Ministerial Regulations, Regulations, Rules or Notifications will be issued under this Act.", "to": "ministerial regulations, regulations, rules or notifications", "width": 1.0}, {"from": "judgment creditor", "title": "contextual proximity", "to": "regulations, rules and notifications issued under the student loan fund act", "width": 0.5}, {"from": "judgment creditor", "title": "Section 64 of the new Act states that in place of the Student Loan Fund, the judgment creditor will become the creditor instead.", "to": "student loan fund", "width": 1.0}, {"from": "king maha vajiralongkorn bodindradebayavarangkun", "title": "Revision of student loan fund act is enacted by the king with the advice and consent of national legislative assembly.", "to": "national legislative assembly", "width": 1.0}, {"from": "living expenses", "title": "contextual proximity", "to": "student loan fund", "width": 0.5}, {"from": "loan agreement", "title": "contextual proximity", "to": "student", "width": 1.25}, {"from": "manager", "title": "contextual proximity", "to": "need for student loans", "width": 0.5}, {"from": "manager", "title": "contextual proximity", "to": "office", "width": 4.0}, {"from": "manager", "title": "contextual proximity", "to": "officials and employees of the fund", "width": 0.75}, {"from": "manager", "title": "contextual proximity", "to": "operation of work", "width": 0.5}, {"from": "manager", "title": "contextual proximity", "to": "repayment of student loans", "width": 0.5}, {"from": "manager", "title": "contextual proximity", "to": "sentenced by a final judgment to a term of imprisonment", "width": 2.0}, {"from": "manager", "title": "contextual proximity", "to": "sixty-five years of age", "width": 2.0}, {"from": "manager", "title": "contextual proximity", "to": "student loan fund", "width": 0.5}, {"from": "manager", "title": "contextual proximity", "to": "student loans", "width": 1.5}, {"from": "manager", "title": "contextual proximity", "to": "sub-committee", "width": 4.0}, {"from": "manager", "title": "contextual proximity", "to": "thai nationality", "width": 2.0}, {"from": "manager", "title": "contextual proximity", "to": "third parties", "width": 0.75}, {"from": "manager", "title": "contextual proximity", "to": "vacation of office", "width": 1.5}, {"from": "manager", "title": "contextual proximity", "to": "wages, remuneration, or benefits", "width": 1.5}, {"from": "manager under paragraph one", "title": "contextual proximity", "to": "student loan board", "width": 0.5}, {"from": "manager under paragraph one", "title": "contextual proximity", "to": "student loan fund", "width": 0.5}, {"from": "manager under paragraph one", "title": "contextual proximity", "to": "student loan fund act, b.e. 2541 (1998)", "width": 0.5}, {"from": "manager under the student loan fund act, b.e. 2541 (1998)", "title": "continuity of Manager\u0027s position and responsibilities as mentioned in section 57", "to": "manager under this act", "width": 1.0}, {"from": "manager under the student loan fund act, b.e. 2541 (1998)", "title": "contextual proximity", "to": "student loan board", "width": 0.5}, {"from": "manager under the student loan fund act, b.e. 2541 (1998)", "title": "contextual proximity", "to": "student loan fund", "width": 0.5}, {"from": "manager under the student loan fund act, b.e. 2541 (1998)", "title": "contextual proximity", "to": "student loan fund act, b.e. 2541 (1998)", "width": 0.5}, {"from": "manager under this act", "title": "contextual proximity", "to": "student loan board", "width": 0.5}, {"from": "manager under this act", "title": "contextual proximity", "to": "student loan fund", "width": 0.5}, {"from": "manager under this act", "title": "contextual proximity", "to": "student loan fund act, b.e. 2541 (1998)", "width": 0.5}, {"from": "measures", "title": "for the purposes of", "to": "administration of the fund", "width": 1.0}, {"from": "meeting", "title": "Section 20 states that a meeting requires the presence of at least half of total members to constitute a quorum.", "to": "quorum", "width": 1.0}, {"from": "member", "title": "In the event of an equality of votes in decision-making at a meeting, Section 20 grants the person presiding over the meeting with an additional casting vote.", "to": "casting vote", "width": 1.0}, {"from": "memorandum of understanding", "title": "contextual proximity", "to": "student loans", "width": 0.75}, {"from": "memorandum of understanding on participation with the fund under section 38", "title": "to prescribe rules, procedures and conditions for educational institutions\u2019 participation with the Fund and the form of a memorandum of understanding on participation with the Fund under section 38", "to": "participation with the fund", "width": 1.0}, {"from": "memorandum of understanding on participation with the fund under section 38", "title": "contextual proximity", "to": "student loans to students", "width": 0.5}, {"from": "minister", "title": "contextual proximity", "to": "student loans to students", "width": 0.5}, {"from": "minister of finance", "title": "contextual proximity", "to": "student loan fund", "width": 0.5}, {"from": "ministerial regulations", "title": "contextual proximity", "to": "student loan fund", "width": 0.5}, {"from": "ministerial regulations", "title": "Section 5 empowers the Minister of Finance to issue Ministerial Regulations", "to": "section 5", "width": 1.0}, {"from": "ministerial regulations, regulations, rules or notifications", "title": "contextual proximity", "to": "regulations, rules and notifications issued under the student loan fund act", "width": 0.5}, {"from": "money and property as follows", "title": "contextual proximity", "to": "student loans", "width": 1.0}, {"from": "nature of student loans", "title": "Section 37 of the act describes that before each academic year commences, the Board will prescribe the nature of student loans through a notification. This indicates that the nature of student loans is closely related to the notifications issued by the Board.,contextual proximity", "to": "student loans", "width": 1.75}, {"from": "need for student loans", "title": "studied, analyzed, and appraised by the Fund for present and future students for submission to the Board,contextual proximity", "to": "student loans", "width": 1.75}, {"from": "need for student loans", "title": "as submitted by the Manager", "to": "results", "width": 1.0}, {"from": "newly appointed board members", "title": "relation where the newly appointed Board member serves for the remaining term of the already appointed Board members", "to": "remaining term", "width": 1.0}, {"from": "not being a person directly or indirectly interested in the operation of the fund", "title": "contextual proximity", "to": "qualified member", "width": 1.5}, {"from": "not being a person directly or indirectly interested in the operation of the fund", "title": "excluded from holding office as a qualified member", "to": "person directly or indirectly interested in the operation of the fund", "width": 1.0}, {"from": "notification", "title": "contextual proximity", "to": "student loans", "width": 0.75}, {"from": "office", "title": "contextual proximity", "to": "sentenced by a final judgment to a term of imprisonment", "width": 0.5}, {"from": "office", "title": "contextual proximity", "to": "sixty-five years of age", "width": 0.5}, {"from": "office", "title": "contextual proximity", "to": "thai nationality", "width": 0.5}, {"from": "operation and administration of work of the fund", "title": "contextual proximity", "to": "student loans to students", "width": 0.5}, {"from": "operation of work", "title": "contextual proximity", "to": "student loans", "width": 0.75}, {"from": "participation with the fund", "title": "contextual proximity", "to": "student loans", "width": 0.75}, {"from": "participation with the fund", "title": "contextual proximity", "to": "student loans to students", "width": 0.5}, {"from": "permanent secretary for education as chairman", "title": "is a member and holds the position of chairman,contextual proximity", "to": "sub-committee in charge of supervising and appraising educational institutions participating with the fund", "width": 3.0}, {"from": "person directly or indirectly interested in the operation of the fund", "title": "contextual proximity", "to": "qualified member", "width": 1.5}, {"from": "prohibitions", "title": "contextual proximity", "to": "student", "width": 1.25}, {"from": "qualifications", "title": "contextual proximity", "to": "student", "width": 1.25}, {"from": "qualified member", "title": "contextual proximity", "to": "removal by minister on ground of neglect of duties, misbehaviour or lack of competence", "width": 1.5}, {"from": "qualified member", "title": "contextual proximity", "to": "resignation", "width": 1.5}, {"from": "regulations", "title": "as well as other regulations necessary for the operation and administration of work", "to": "personnel administration, finance, procurement, accounting and auditing", "width": 1.0}, {"from": "regulations, rules and notifications issued under the student loan fund act", "title": "contextual proximity", "to": "rule of the ministry of finance on administration of the student loan fund", "width": 0.5}, {"from": "regulations, rules and notifications issued under the student loan fund act", "title": "contextual proximity", "to": "student loan fund", "width": 0.5}, {"from": "regulations, rules and notifications issued under the student loan fund act", "title": "contextual proximity", "to": "treasury balance act", "width": 0.5}, {"from": "repayment of student loans", "title": "monitored and accelerated by the Fund in contracts concluded by borrowers,contextual proximity", "to": "student loans", "width": 1.75}, {"from": "revocation of participation", "title": "contextual proximity", "to": "student loans", "width": 0.75}, {"from": "rule of the ministry of finance on administration of the student loan fund", "title": "The text mentions that the Rule of the Ministry of Finance on Administration of the Student Loan Fund issued under the Treasury Balance Act was in force prior to the new Act coming into effect, but it only remains in force until new Regulations, Rules or Notifications are issued under this Act.", "to": "treasury balance act", "width": 1.0}, {"from": "rules, procedures and conditions in connection with the granting", "title": "contextual proximity", "to": "student loans to students", "width": 0.5}, {"from": "rules, procedures and conditions in connection with the repayment of money to the fund", "title": "contextual proximity", "to": "student loans to students", "width": 0.5}, {"from": "scope of granting of student loans", "title": "Section 37 also mentions that the Board will prescribe the scope of granting of student loans through a notification. This shows that the scope of granting of student loans is linked with the notifications issued by the Board.,contextual proximity", "to": "student loans", "width": 1.75}, {"from": "secretary-general of the basic education commission", "title": "is a member,contextual proximity", "to": "sub-committee in charge of supervising and appraising educational institutions participating with the fund", "width": 3.0}, {"from": "secretary-general of the higher education commission", "title": "is a member,contextual proximity", "to": "sub-committee in charge of supervising and appraising educational institutions participating with the fund", "width": 3.0}, {"from": "secretary-general of the vocational education commission", "title": "is a member,contextual proximity", "to": "sub-committee in charge of supervising and appraising educational institutions participating with the fund", "width": 3.0}, {"from": "section 26", "title": "A sub-committee is appointed under section 26.", "to": "sub-committee", "width": 1.0}, {"from": "section 5", "title": "contextual proximity", "to": "student loan fund", "width": 0.5}, {"from": "state agency under superintendence by the minister", "title": "Student Loan Fund is a State agency under superintendence by the Minister,contextual proximity", "to": "student loan fund", "width": 1.5}, {"from": "student", "title": "contextual proximity", "to": "student loan", "width": 2.0}, {"from": "student", "title": "contextual proximity", "to": "surety", "width": 1.25}, {"from": "student", "title": "possesses Thai nationality,contextual proximity", "to": "thai nationality", "width": 2.25}, {"from": "student", "title": "contextual proximity", "to": "tuition fees", "width": 0.5}, {"from": "student loan board", "title": "initial period composition mentioned in section 58", "to": "student loan board", "width": 1.0}, {"from": "student loan board", "title": "contextual proximity", "to": "student loan fund", "width": 1.0}, {"from": "student loan board", "title": "contextual proximity", "to": "student loan fund act, b.e. 2541 (1998)", "width": 1.0}, {"from": "student loan fund", "title": "Revision of law on student loan fund is expedient for its better functioning.", "to": "expedient", "width": 1.0}, {"from": "student loan fund", "title": "continuity of the Student Loan Fund due to transfer as mentioned in section 56", "to": "student loan fund", "width": 1.0}, {"from": "student loan fund", "title": "contextual proximity", "to": "student loan fund act, b.e. 2541 (1998)", "width": 1.25}, {"from": "student loan fund", "title": "contextual proximity", "to": "student loan fund board", "width": 0.5}, {"from": "student loan fund", "title": "contextual proximity", "to": "student loan fund office", "width": 0.5}, {"from": "student loan fund", "title": "contextual proximity", "to": "such ministerial regulations", "width": 0.5}, {"from": "student loan fund act, b.e. 2541 (1998)", "title": "continuity of the Student Loan Fund under this new act and the previous act", "to": "student loan fund act, b.e. 2541 (1998)", "width": 1.0}, {"from": "student loan fund act, b.e. 2541 (1998)", "title": "Student Loan Fund Act, B.E. 2541 (1998) is repealed and replaced by Student Loan Fund Act, B.E. 2560 (2017).", "to": "student loan fund act, b.e. 2560 (2017)", "width": 1.0}, {"from": "student loan fund board", "title": "Student Loan Fund Office and Student Loan Fund Board both belong to the Student Loan Fund", "to": "student loan fund office", "width": 1.0}, {"from": "student loan fund under the student loan fund act, b.e. 2541 (1998)", "title": "The actions brought before the Court by the Student Loan Fund under the Student Loan Fund Act, B.E. 2541 (1998) are taken over by the Student Loan Fund under this Act.,contextual proximity", "to": "student loan fund under this act", "width": 1.75}, {"from": "student loan fund under this act", "title": "contextual proximity", "to": "student loan fund which is associated with future incomes", "width": 0.75}, {"from": "student loans", "title": "The Fund provides student loans to both destitute and other students.,contextual proximity", "to": "student loans to destitute students", "width": 2.0}, {"from": "student loans", "title": "The Fund provides student loans for studies in fields that encounter a shortage, as well as fields specifically intended for promotion by the Fund.,contextual proximity", "to": "student loans to students pursuing a study in a field in which shortage is encountered or a field specifically intended to be promoted by the fund", "width": 2.0}, {"from": "student loans", "title": "The Fund provides student loans specifically for students pursuing studies that address the principal need for manpower and national development.,contextual proximity", "to": "student loans to students pursuing a study in a field indicating the apparently principal need for the production of manpower and the need for national development", "width": 2.0}, {"from": "student loans", "title": "The Fund provides student loans for students with good academic performance with the aim of building excellence.,contextual proximity", "to": "student loans to students with good academic performance", "width": 2.0}, {"from": "student loans to students", "title": "contextual proximity", "to": "student loans under section 37", "width": 0.5}, {"from": "sub-committee in charge of supervising and appraising educational institutions participating with the fund", "title": "contextual proximity", "to": "three qualified members appointed by the board", "width": 2.0}, {"from": "surety", "title": "in accordance with rules, procedures, and conditions prescribed by the Board in case of death", "to": "proceeding", "width": 1.0}, {"from": "term of office", "title": "relation where the term of office comes to an end due to vacancy", "to": "vacated office", "width": 1.0}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": true,
+        "filter": [
+            "physics"
+        ]
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.015,
+            "damping": 0.4,
+            "gravitationalConstant": -31,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+                  // if this network requires displaying the configure window,
+                  // put it in its div
+                  options.configure["container"] = document.getElementById("config");
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
