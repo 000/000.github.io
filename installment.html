@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python in Browser</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculate Installments</h1>
+        <div class="form-group">
+            <label for="birth_day">Birth Day (dd/mm/yyyy):</label>
+            <input type="text" id="birth_day" placeholder="23/09/2537">
+        </div>
+        <div class="form-group">
+            <label for="total_amt2">Total Amount:</label>
+            <input type="text" id="total_amt2" placeholder="45000.00">
+        </div>
+        <div class="form-group">
+            <label for="r_balance_amt">Remaining Balance Amount:</label>
+            <input type="text" id="r_balance_amt" placeholder="10000.00">
+        </div>
+        <div class="form-group">
+            <label for="r_interest">Interest:</label>
+            <input type="text" id="r_interest" placeholder="500.00">
+        </div>
+        <div class="form-group">
+            <label for="current_age">Current Age:</label>
+            <input type="text" id="current_age" placeholder="30">
+        </div>
+        <div class="form-group">
+            <label for="current_age_month">Current Age Month:</label>
+            <input type="text" id="current_age_month" placeholder="6">
+        </div>
+        <button onclick="runPython()">Calculate</button>
+        <div class="results">
+            <h2>Results:</h2>
+            <pre id="output"></pre>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        async function runPython() {
+            let birth_day = document.getElementById("birth_day").value;
+            let total_amt2 = document.getElementById("total_amt2").value;
+            let r_balance_amt = document.getElementById("r_balance_amt").value;
+            let r_interest = document.getElementById("r_interest").value;
+            let current_age = document.getElementById("current_age").value;
+            let current_age_month = document.getElementById("current_age_month").value;
+
+            let pythonCode = `
+import datetime
+
+def cal_in_stall(birthday, total_amt2, r_balance_amt, r_interest, current_age, current_age_month):
+    birthday = birthday.replace("/", "-")
+    bd = birthday.split("-")
+    birth_day = int(bd[0])
+    birth_month = int(bd[1])
+    birth_year = int(bd[2])
+    bd_year = birth_year + 65
+    rs_age = f"{birth_day}/{birth_month}/{bd_year}"
+
+    Dob = datetime.datetime.now()
+    day_curr = Dob.day
+    month_curr = Dob.month
+    year_curr = Dob.year
+    year_curr_budd = year_curr + 543
+
+    contract = f"{day_curr}-{month_curr}-{year_curr_budd}"
+    ct = contract.split("-")
+    contract_day = int(ct[0])
+    contract_month = int(ct[1])
+    contract_year = int(ct[2])
+
+    age65_year = birth_year + 65
+    age65_string = str(age65_year)
+    birth_month_string = f"{birth_month:02d}"
+    birth_day_string = f"{birth_day:02d}"
+    age65 = age65_string + birth_month_string + birth_day_string
+
+    formatter = "{:,.2f}"
+
+    fp_day = 5
+    fp_month = contract_month + 1
+    fp_year = contract_year
+
+    if contract_month == 12:
+        fp_month = 1
+        fp_year += 1
+
+    rs_fp = f"{fp_day}/{fp_month}/{fp_year}"
+
+    first_payment_year = contract_year
+    first_payment_month = contract_month + 1
+
+    first_payment_year_str = str(first_payment_year)
+    first_payment_month_str = f"{first_payment_month:02d}"
+    first_payment_date = f"{first_payment_year_str}{first_payment_month_str}05"
+
+    if first_payment_month > 12:
+        first_payment_year += 1
+        first_payment_month = 1
+
+    first_payment_date_set = f"05/{first_payment_month}/{first_payment_year}"
+
+    parts = first_payment_date_set.split("/")
+    day = int(parts[0])
+    month = int(parts[1])
+    year = int(parts[2]) - 543
+    formatted_date = f"{year}-{month:02d}-{day:02d}"
+
+    last_payment_date = None
+    i = 0
+
+    for j in range(180):
+        if int(first_payment_date) <= int(age65):
+            i += 1
+            if i == 1:
+                last_payment_date = f"05/{first_payment_month}/{first_payment_year}"
+                first_payment_month += 1
+                if first_payment_month > 12:
+                    first_payment_year += 1
+                    first_payment_month = 1
+
+                first_payment_date = f"{first_payment_year}{first_payment_month:02d}05"
+            else:
+                last_payment_date = f"05/{first_payment_month}/{first_payment_year}"
+                first_payment_month += 1
+                if first_payment_month > 12:
+                    first_payment_year += 1
+                    first_payment_month = 1
+
+                first_payment_year_str = str(first_payment_year)
+                first_payment_month_str = f"{first_payment_month:02d}"
+                first_payment_date = f"{first_payment_year_str}{first_payment_month_str}05"
+
+    balance_param = float(total_amt2.replace(",", ""))
+    r_balance_amt1 = float(r_balance_amt.replace(",", ""))
+    r_interest1 = float(r_interest.replace(",", ""))
+    balance_fur1 = r_balance_amt1
+    cou_month = 0
+
+    if i >= 180:
+        if balance_param <= 45000:
+            balance_fur = balance_param
+            while balance_fur1 > 0:
+                balance_fur1 = balance_fur1 + (((1 / 100) / 12) * balance_fur1) - 270
+                cou_month += 1
+
+            t_balance_fur1 = balance_fur1 + r_interest1
+            while t_balance_fur1 > 0:
+                t_balance_fur1 = t_balance_fur1 - 270
+                cou_month += 1
+
+            today2 = datetime.datetime.strptime(formatted_date, "%Y-%m-%d")
+            today2 = today2 + datetime.timedelta(days=(cou_month - 1) * 30)
+            year = today2.year + 543
+            month = today2.month
+            day = today2.day
+            formatted_date2 = f"{day:02d}/{month:02d}/{year}"
+        else:
+            formatted_date2 = "05/05/2582"
+            cou_month = 180
+    else:
+        if balance_param <= 45000:
+            balance_fur = balance_param
+            while balance_fur1 > 0:
+                balance_fur1 = balance_fur1 + (((1 / 100) / 12) * balance_fur1) - 270
+                cou_month += 1
+
+            t_balance_fur1 = balance_fur1 + r_interest1
+            while t_balance_fur1 > 0:
+                t_balance_fur1 = t_balance_fur1 - 270
+                cou_month += 1
+
+            today3 = datetime.datetime.strptime(formatted_date, "%Y-%m-%d")
+            today3 = today3 + datetime.timedelta(days=(cou_month - 1) * 30)
+            year = today3.year + 543
+            month = today3.month
+            day = today3.day
+            formatted_date3 = f"{day:02d}/{month:02d}/{year}"
+            formatted_date2 = formatted_date3
+        else:
+            formatted_date2 = f"{day_curr}/{month_curr}/{year_curr + 543}"
+
+    max_rent = 65
+    monthy = 12
+    total2 = float(total_amt2.replace(",", ""))
+    pay = 270.00
+    current_age_cal = int(current_age)
+    current_age_month_cal = int(current_age_month)
+
+    for y in range(167):
+        dff1 = 1700000.00 - (10000.00 * y)
+        dff2 = 10180.00 - (60 * y)
+        if y >= 103:
+            dff2 += 20.00
+        elif y >= 37:
+            dff2 += 10.00
+
+        if y == 166:
+            if total2 <= 45000.00 and total2 > 0:
+                pay = 270.00
+            elif total2 == 0:
+                pay = 0.00
+        elif y == 165:
+            if total2 <= 50000.00:
+                pay = 300.00
+        else:
+            if total2 <= dff1:
+                pay = dff2
+
+    if total2 > 1700000:
+        raise ValueError("ยอดหนี้รวม ณ วันทำสัญญา เกินเกณฑ์ที่กำหนด")
+
+    return {
+        "rs_age": rs_age,
+        "rs_fp": rs_fp,
+        "first_payment_date_set": first_payment_date_set,
+        "formatted_date2": formatted_date2,
+        "cou_month": cou_month,
+        "pay": pay
+    }
+
+birth_day = f"{birth_day}"
+total_amt2 = f"{total_amt2}"
+r_balance_amt = f"{r_balance_amt}"
+r_interest = f"{r_interest}"
+current_age = f"{current_age}"
+current_age_month = f"{current_age_month}"
+
+result = cal_in_stall(birth_day, total_amt2, r_balance_amt, r_interest, current_age, current_age_month)
+result
+`;
+
+            let output = await pyodide.runPythonAsync(pythonCode);
+            document.getElementById("output").textContent = JSON.stringify(output, null, 2);
+        }
+    </script>
+</body>
+</html>
