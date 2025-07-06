@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: Architecting the Future of AI Compute</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #003f5c;
+            color: #f1f5f9;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .glassmorphism-card {
+            background: rgba(47, 75, 124, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .flowchart-node {
+            border: 2px solid #ff7c43;
+            background-color: #2f4b7c;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .flowchart-arrow {
+            position: relative;
+            width: 100%;
+            height: 2px;
+            background-color: #ff7c43;
+            margin: 2rem 0;
+        }
+        .flowchart-arrow::after {
+            content: '▼';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff7c43;
+            font-size: 1.5rem;
+        }
+         .flowchart-arrow-horizontal {
+            position: relative;
+            height: 100%;
+            width: 2px;
+            background-color: #ff7c43;
+            margin: 0 2rem;
+        }
+        .flowchart-arrow-horizontal::after {
+            content: '►';
+            position: absolute;
+            right: -0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff7c43;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center py-12">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-4">The 30+ GPU Challenge</h1>
+            <p class="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto">An analysis of commercially available architectures for building next-generation AI and HPC compute nodes, confirming that systems meeting the demand for over 30 GPUs and 1.28 TB of memory are not just feasible—they are a reality.</p>
+        </header>
+
+        <section id="architectures" class="py-16">
+            <h2 class="text-3xl font-bold text-center mb-2 text-white">A Fork in the Road: Two Architectural Philosophies</h2>
+            <p class="text-center text-slate-300 max-w-4xl mx-auto mb-12">The quest for extreme GPU density has led to two distinct design paradigms. The choice between them is a strategic decision that shapes performance, scalability, and cost for any large-scale AI infrastructure.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div class="glassmorphism-card p-6 rounded-xl h-full">
+                    <h3 class="text-2xl font-bold text-center mb-4 text-[#ffa600]">The Monolithic Node (Scale-Up)</h3>
+                    <p class="text-slate-200 mb-6">This approach redefines the "node" as an entire rack, engineering dozens of GPUs to function as a single, coherent supercomputer. By using a proprietary, high-speed fabric, it eliminates inter-node bottlenecks, creating a massive, unified memory pool ideal for training the largest foundation models.</p>
+                    <div class="p-4 bg-gray-900/50 rounded-lg">
+                       <div class="text-center font-mono text-sm p-4 border-2 border-dashed border-[#ff7c43] rounded-lg">
+                           <div class="font-bold text-lg text-white mb-2">Rack = 1 Logical Node</div>
+                           <div class="grid grid-cols-4 gap-2">
+                               <div class="bg-[#f95d6a]/80 p-2 rounded">GPU</div><div class="bg-[#f95d6a]/80 p-2 rounded">GPU</div>
+                               <div class="bg-[#f95d6a]/80 p-2 rounded">GPU</div><div class="bg-[#f95d6a]/80 p-2 rounded">GPU</div>
+                               <div class="bg-[#f95d6a]/80 p-2 rounded">GPU</div><div class="bg-[#f95d6a]/80 p-2 rounded">GPU</div>
+                               <div class="bg-[#f95d6a]/80 p-2 rounded">GPU</div><div class="bg-[#f95d6a]/80 p-2 rounded">GPU</div>
+                               <div class="col-span-4 text-xs mt-2 text-slate-300">... up to 72 GPUs ...</div>
+                           </div>
+                           <div class="my-3 text-2xl text-[#ff7c43]">↕</div>
+                           <div class="bg-[#a05195] p-3 rounded font-bold">Unified NVLink Fabric</div>
+                           <div class="text-xs mt-2 text-slate-300">All GPUs communicate as one.</div>
+                       </div>
+                    </div>
+                </div>
+
+                <div class="glassmorphism-card p-6 rounded-xl h-full">
+                    <h3 class="text-2xl font-bold text-center mb-4 text-[#ffa600]">The Federated Node (Scale-Out)</h3>
+                    <p class="text-slate-200 mb-6">This modular approach uses powerful 8-GPU servers as building blocks. Multiple servers are "federated" into a larger logical node using a high-speed, open-standard Ethernet fabric. This provides flexibility and leverages a competitive hardware ecosystem, ideal for diverse and parallelizable workloads.</p>
+                     <div class="p-4 bg-gray-900/50 rounded-lg">
+                       <div class="text-center font-mono text-sm p-4 border-2 border-dashed border-[#ff7c43] rounded-lg">
+                           <div class="font-bold text-lg text-white mb-2">4x Physical Nodes = 1 Logical Node</div>
+                           <div class="grid grid-cols-2 gap-4">
+                               <div class="bg-[#2f4b7c] p-2 rounded">Node 1 (8 GPUs)</div>
+                               <div class="bg-[#2f4b7c] p-2 rounded">Node 2 (8 GPUs)</div>
+                               <div class="bg-[#2f4b7c] p-2 rounded">Node 3 (8 GPUs)</div>
+                               <div class="bg-[#2f4b7c] p-2 rounded">Node 4 (8 GPUs)</div>
+                           </div>
+                           <div class="my-3 text-2xl text-[#ff7c43]">↔</div>
+                           <div class="bg-[#a05195] p-3 rounded font-bold">Standard Ethernet Fabric</div>
+                            <div class="text-xs mt-2 text-slate-300">Nodes communicate over a network.</div>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="blueprints" class="py-16">
+            <h2 class="text-3xl font-bold text-center mb-2 text-white">The Contenders: Commercial Blueprints</h2>
+            <p class="text-center text-slate-300 max-w-4xl mx-auto mb-12">The world's leading accelerator vendors provide distinct, commercially available pathways to achieve extreme GPU density, each reflecting a unique strategic vision for system architecture and interconnect technology.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="glassmorphism-card p-6 rounded-xl flex flex-col">
+                    <h3 class="text-2xl font-bold text-center mb-1">NVIDIA</h3>
+                    <p class="text-center text-sm font-semibold text-[#ffa600] mb-4">The Coherent Exascale Rack</p>
+                    <p class="text-slate-300 text-sm mb-6 flex-grow">NVIDIA's blueprint delivers a fully integrated, liquid-cooled rack that functions as a single, massive 72-GPU compute node. This turnkey solution is the pinnacle of the monolithic design philosophy.</p>
+                    <div class="text-center mb-6">
+                        <div class="text-6xl font-black text-white">72</div>
+                        <div class="text-lg font-bold text-[#f95d6a]">Blackwell B200 GPUs</div>
+                        <div class="text-sm text-slate-400">in one NVLink Domain</div>
+                    </div>
+                    <div class="chart-container h-64 max-h-64"><canvas id="nvidiaMemoryChart"></canvas></div>
+                </div>
+
+                <div class="glassmorphism-card p-6 rounded-xl flex flex-col">
+                    <h3 class="text-2xl font-bold text-center mb-1">AMD</h3>
+                    <p class="text-center text-sm font-semibold text-[#ffa600] mb-4">The Federated Multi-Server Cluster</p>
+                    <p class="text-slate-300 text-sm mb-6 flex-grow">AMD's strategy relies on clustering multiple 8-GPU servers. Four such servers, equipped with market-leading high-memory accelerators, form a 32-GPU logical node connected by open Ethernet.</p>
+                    <div class="text-center mb-6">
+                         <div class="text-6xl font-black text-white">8.0 <span class="text-4xl">TB</span></div>
+                        <div class="text-lg font-bold text-[#d45087]">Total HBM3E Memory</div>
+                        <div class="text-sm text-slate-400">across a 32-GPU logical node</div>
+                    </div>
+                    <div class="chart-container h-64 max-h-64"><canvas id="amdMemoryChart"></canvas></div>
+                </div>
+                
+                <div class="glassmorphism-card p-6 rounded-xl flex flex-col">
+                    <h3 class="text-2xl font-bold text-center mb-1">Intel</h3>
+                    <p class="text-center text-sm font-semibold text-[#ffa600] mb-4">The Open Scale-Out Cluster</p>
+                     <p class="text-slate-300 text-sm mb-6 flex-grow">Intel champions an open, Ethernet-native approach. By integrating networking directly onto the Gaudi 3 accelerator, it enables seamless scaling with standard switches, aiming to lower TCO.</p>
+                    <div class="text-center mb-6">
+                        <div class="text-6xl font-black text-white">4.8 <span class="text-4xl">Tb/s</span></div>
+                        <div class="text-lg font-bold text-[#665191]">Native Ethernet Bandwidth</div>
+                        <div class="text-sm text-slate-400">per 8-accelerator server</div>
+                    </div>
+                     <div class="chart-container h-64 max-h-64"><canvas id="intelMemoryChart"></canvas></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tech-deep-dive" class="py-16">
+            <h2 class="text-3xl font-bold text-center mb-2 text-white">Under the Hood: Enabling Technologies</h2>
+            <p class="text-center text-slate-300 max-w-4xl mx-auto mb-12">The performance of these systems is built on a foundation of cutting-edge accelerators and high-speed interconnects. This deep dive compares the flagship products at the component level.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="glassmorphism-card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-center mb-4 text-white">Flagship Accelerator Comparison</h3>
+                    <p class="text-center text-sm text-slate-300 mb-4">Each accelerator is a marvel of engineering, with distinct trade-offs in memory capacity, bandwidth, and power draw that inform system-level architecture.</p>
+                    <div class="chart-container"><canvas id="acceleratorRadarChart"></canvas></div>
+                </div>
+                <div class="glassmorphism-card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-center mb-4 text-white">The Interconnect Hierarchy</h3>
+                    <p class="text-center text-sm text-slate-300 mb-4">Communication is key. Performance hinges on a two-tier fabric: an ultra-fast intra-node link for tightly-coupled GPUs and a high-speed inter-node network for scaling out.</p>
+                     <div class="p-4 space-y-4">
+                        <div class="flowchart-node">
+                            <h4 class="font-bold">Tier 1: Intra-Node Fabric</h4>
+                            <p class="text-xs">(Inside the server)</p>
+                            <p class="mt-2 text-sm">Proprietary links like NVLink & Infinity Fabric or on-chip Ethernet provide maximum bandwidth for GPUs to communicate with their closest peers.</p>
+                        </div>
+                        <div class="flowchart-arrow"></div>
+                        <div class="flowchart-node">
+                             <h4 class="font-bold">Tier 2: Inter-Node Fabric</h4>
+                             <p class="text-xs">(Between servers)</p>
+                             <p class="mt-2 text-sm">Standard Ethernet/RoCE or InfiniBand connects multiple servers into a large cluster, creating the logical node. This path has higher latency.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="infrastructure" class="py-16">
+             <h2 class="text-3xl font-bold text-center mb-2 text-white">The Real Bottleneck: Data Center Infrastructure</h2>
+            <p class="text-center text-slate-300 max-w-4xl mx-auto mb-12">The single greatest challenge in deploying a 30+ GPU node is not procuring servers, but engineering the facility to handle their immense power and cooling demands. Success is a data center project as much as an IT project.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
+                <div class="glassmorphism-card p-8 rounded-xl">
+                    <div class="text-6xl text-[#ff7c43] mb-4">⚡</div>
+                    <div class="text-5xl md:text-6xl font-black text-white">120 kW</div>
+                    <div class="text-xl font-bold text-slate-200 mt-2">Power Consumption Per Rack</div>
+                    <p class="text-slate-300 mt-4">An order of magnitude higher than traditional compute racks, mandating high-amperage, 3-phase power distribution and in-rack bus bars.</p>
+                </div>
+                <div class="glassmorphism-card p-8 rounded-xl">
+                    <div class="text-6xl text-[#ff7c43] mb-4">💧</div>
+                     <div class="text-5xl md:text-6xl font-black text-white">Liquid Cooling</div>
+                    <div class="text-xl font-bold text-slate-200 mt-2">Is No Longer Optional</div>
+                    <p class="text-slate-300 mt-4">At these power densities, traditional air cooling is insufficient. Direct-to-chip liquid cooling is mandatory for managing heat dissipation effectively.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="data-pipeline" class="py-16">
+            <h2 class="text-3xl font-bold text-center mb-2 text-white">From Database to DataFrame: The 200TB Oracle Challenge</h2>
+            <p class="text-center text-slate-300 max-w-4xl mx-auto mb-12">To harness this GPU power for big data analytics, a robust and scalable data pipeline is essential. The recommended approach is a staged ETL process that transforms relational data into a GPU-optimized columnar format.</p>
+             <div class="flex flex-col items-center">
+                <div class="flowchart-node w-full max-w-md">
+                    <h3 class="font-bold text-lg">1. Source Database</h3>
+                    <p>200 TB Oracle Database</p>
+                </div>
+                <div class="flowchart-arrow"></div>
+                <div class="flowchart-node w-full max-w-md">
+                    <h3 class="font-bold text-lg">2. ETL Orchestration</h3>
+                    <p>Use tools like Alteryx to automate parallel extraction via Oracle's `DBMS_CLOUD.EXPORT_DATA`.</p>
+                </div>
+                <div class="flowchart-arrow"></div>
+                <div class="flowchart-node w-full max-w-md">
+                    <h3 class="font-bold text-lg">3. Staged Data</h3>
+                    <p>Store data as compressed Parquet files on a high-performance, shared file system.</p>
+                </div>
+                <div class="flowchart-arrow"></div>
+                <div class="grid md:grid-cols-2 gap-8 w-full max-w-4xl mt-8 relative">
+                     <div class="md:col-span-2 flex justify-center items-center absolute top-[-3rem] left-0 w-full">
+                         <div class="w-1/2 h-px bg-[#ff7c43]"></div>
+                         <div class="w-1/2 h-px bg-[#ff7c43]"></div>
+                     </div>
+                     <div class="md:col-span-2 flex justify-center items-center absolute top-[-3.75rem] left-0 w-full">
+                         <div class="w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-[12px] border-t-[#ff7c43] -translate-x-1/4"></div>
+                         <div class="w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-[12px] border-t-[#ff7c43] translate-x-1/4"></div>
+                     </div>
+                     <div class="flowchart-node">
+                        <h3 class="font-bold text-lg">4a. GPU Processing (Python)</h3>
+                        <p>Use Dask-cuDF for out-of-core processing with a familiar pandas-like API.</p>
+                    </div>
+                     <div class="flowchart-node">
+                        <h3 class="font-bold text-lg">4b. GPU Processing (Spark)</h3>
+                        <p>Use the RAPIDS Accelerator for Apache Spark to accelerate existing Spark jobs with minimal code changes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    </div>
+
+    <script>
+        const vibrantBlues = ['#ff7c43', '#f95d6a', '#d45087', '#a05195', '#665191', '#2f4b7c'];
+        const tooltipPlugin = {
+            tooltip: {
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        return Array.isArray(label) ? label.join(' ') : label;
+                    }
+                }
+            }
+        };
+
+        function wrapLabels(labels, maxWidth) {
+            return labels.map(label => {
+                if (label.length <= maxWidth) {
+                    return label;
+                }
+                const words = label.split(' ');
+                let lines = [];
+                let currentLine = '';
+                words.forEach(word => {
+                    if ((currentLine + word).length > maxWidth) {
+                        lines.push(currentLine.trim());
+                        currentLine = '';
+                    }
+                    currentLine += word + ' ';
+                });
+                lines.push(currentLine.trim());
+                return lines;
+            });
+        }
+        
+        new Chart(document.getElementById('nvidiaMemoryChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Total GPU Memory (TB)', 'Requirement (TB)'],
+                datasets: [{
+                    label: 'Memory',
+                    data: [13.5, 1.28],
+                    backgroundColor: ['#ff7c43', '#2f4b7c'],
+                    borderColor: '#003f5c',
+                    borderWidth: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: { display: true, position: 'bottom', labels: { color: '#f1f5f9' }},
+                    title: { display: true, text: 'Total vs. Required GPU Memory', color: '#f1f5f9', font: { size: 16 } },
+                    ...tooltipPlugin
+                }
+            }
+        });
+        
+        new Chart(document.getElementById('amdMemoryChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Total GPU Memory (TB)', 'Requirement (TB)'],
+                datasets: [{
+                    label: 'Memory',
+                    data: [8.0, 1.28],
+                    backgroundColor: ['#d45087', '#2f4b7c'],
+                     borderColor: '#003f5c',
+                    borderWidth: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: { display: true, position: 'bottom', labels: { color: '#f1f5f9' }},
+                    title: { display: true, text: 'Total vs. Required GPU Memory', color: '#f1f5f9', font: { size: 16 } },
+                     ...tooltipPlugin
+                }
+            }
+        });
+        
+        new Chart(document.getElementById('intelMemoryChart'), {
+            type: 'doughnut',
+            data: {
+                 labels: ['Total GPU Memory (TB)', 'Requirement (TB)'],
+                datasets: [{
+                    label: 'Memory',
+                    data: [4.0, 1.28],
+                    backgroundColor: ['#665191', '#2f4b7c'],
+                     borderColor: '#003f5c',
+                    borderWidth: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: { display: true, position: 'bottom', labels: { color: '#f1f5f9' }},
+                    title: { display: true, text: 'Total vs. Required GPU Memory', color: '#f1f5f9', font: { size: 16 } },
+                     ...tooltipPlugin
+                }
+            }
+        });
+        
+        new Chart(document.getElementById('acceleratorRadarChart'), {
+            type: 'radar',
+            data: {
+                labels: wrapLabels(['Memory Capacity (GB)', 'Peak Memory Bandwidth (TB/s)', 'Intra-Node Interconnect (TB/s)', 'Peak Power (W)'], 16),
+                datasets: [
+                    {
+                        label: 'NVIDIA B200',
+                        data: [192, 8.0, 1.8, 1200],
+                        fill: true,
+                        backgroundColor: 'rgba(255, 124, 67, 0.2)',
+                        borderColor: '#ff7c43',
+                        pointBackgroundColor: '#ff7c43',
+                    },
+                    {
+                        label: 'AMD MI325X',
+                        data: [256, 6.0, 1.024, 1000],
+                        fill: true,
+                        backgroundColor: 'rgba(212, 80, 135, 0.2)',
+                        borderColor: '#d45087',
+                        pointBackgroundColor: '#d45087',
+                    },
+                    {
+                        label: 'Intel Gaudi 3',
+                        data: [128, 3.7, 4.2, 900], // 21*200GbE / 8 bits/byte / 1000 = 4.2 TB/s all-to-all
+                        fill: true,
+                        backgroundColor: 'rgba(102, 81, 145, 0.2)',
+                        borderColor: '#665191',
+                        pointBackgroundColor: '#665191',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(241, 245, 249, 0.2)' },
+                        grid: { color: 'rgba(241, 245, 249, 0.2)' },
+                        pointLabels: { color: '#f1f5f9', font: { size: 12 } },
+                        ticks: {
+                            color: '#f1f5f9',
+                            backdropColor: 'rgba(0, 63, 92, 0.8)',
+                            font: { size: 10 }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { color: '#f1f5f9' }
+                    },
+                    ...tooltipPlugin
+                }
+            }
+        });
+    </script>
+</body>
+</html>
