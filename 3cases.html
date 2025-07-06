@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>วิเคราะห์เปรียบเทียบตารางชำระหนี้ กยศ. 3 รูปแบบ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            min-width: 1200px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px 12px;
+            text-align: right;
+            border: 1px solid #e2e8f0;
+            font-size: 0.875rem;
+        }
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        td:first-child, th:first-child {
+            text-align: center;
+            font-weight: 600;
+        }
+        .download-btn {
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .tab-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .tab-btn.active {
+            border-bottom-width: 4px;
+            font-weight: 700;
+        }
+        .social-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .social-card h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .highlight-red { background-color: rgba(239, 68, 68, 0.1); }
+        .highlight-green { background-color: rgba(34, 197, 94, 0.1); }
+        .highlight-orange { background-color: rgba(249, 115, 22, 0.1); }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-3 text-center">
+            <h1 class="text-xl md:text-2xl font-bold text-teal-700">เปรียบเทียบตารางชำระหนี้ กยศ. 3 รูปแบบ</h1>
+            <p class="text-sm text-gray-600">กรณีศึกษา: เงินต้น 100,000 บาท | ชำระปีละ 8,000 บาท</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6">
+        
+        <div class="bg-white rounded-xl shadow p-4 mb-6 sticky top-[70px] z-30">
+            <div class="flex justify-center border-b border-gray-200">
+                <button id="tab-full" class="tab-btn active text-blue-600 border-blue-600 px-6 py-3" onclick="switchView('full')">ฉบับเต็ม (15 งวด)</button>
+                <button id="tab-social" class="tab-btn text-gray-500 border-transparent px-6 py-3" onclick="switchView('social')">สำหรับโซเชียลมีเดีย</button>
+            </div>
+        </div>
+
+        <div id="view-full">
+            <!-- Full 15-installment tables will be rendered here -->
+        </div>
+
+        <div id="view-social" class="hidden">
+            <!-- Concise social media cards will be rendered here -->
+        </div>
+
+    </main>
+
+    <footer class="text-center py-6 text-sm text-gray-500">
+        <p>สร้างสรรค์โดย Canvas Infographics. ข้อมูลจากการวิเคราะห์กรณีศึกษา พ.ร.บ. กยศ. ปี 2566</p>
+    </footer>
+
+    <script>
+        const formatCurrency = (num) => new Intl.NumberFormat('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num || 0);
+
+        const scenarios = {
+            old: {
+                title: 'แบบที่ 1: การตัดหนี้แบบเก่า (ก่อน พ.ร.บ. 2566)',
+                description: '"กับดักหนี้": เมื่อผิดนัดชำระ เงินที่จ่ายจะถูกนำไปตัดเบี้ยปรับและดอกเบี้ยก่อน ทำให้เงินต้นซึ่งเป็นตัวสร้างหนี้แทบไม่ลดลง',
+                color: 'red',
+                data: [
+                    { year: 1, p_start: 100000, interest: 1000, p_due: 1500, total_due: 2500, penalty_accrued: 0, payment: 8000, cut_penalty: 0, cut_interest: 1000, cut_principal: 7000, p_end: 93000, p_due_unpaid: 0 },
+                    { year: 2, p_start: 93000, interest: 930, p_due: 2500, total_due: 3430, penalty_accrued: 0, payment: 8000, cut_penalty: 0, cut_interest: 930, cut_principal: 7070, p_end: 85930, p_due_unpaid: 0 },
+                    { year: 3, p_start: 85930, interest: 859.30, p_due: 3000, total_due: 3859.30, penalty_accrued: 0, payment: 8000, cut_penalty: 0, cut_interest: 859.30, cut_principal: 7140.70, p_end: 78789.30, p_due_unpaid: 0 },
+                    { year: 4, p_start: 78789.30, interest: 787.89, p_due: 3500, total_due: 4287.89, penalty_accrued: 0, payment: 8000, cut_penalty: 0, cut_interest: 787.89, cut_principal: 7212.11, p_end: 71577.19, p_due_unpaid: 0 },
+                    { year: 5, p_start: 71577.19, interest: 715.77, p_due: 4000, total_due: 4715.77, penalty_accrued: 0, payment: 8000, cut_penalty: 0, cut_interest: 715.77, cut_principal: 7284.23, p_end: 64292.96, p_due_unpaid: 0 },
+                    { year: 6, p_start: 64292.96, interest: 642.93, p_due: 4500, total_due: 5142.93, penalty_accrued: 0, payment: 8000, cut_penalty: 0, cut_interest: 642.93, cut_principal: 7357.07, p_end: 56935.89, p_due_unpaid: 0 },
+                    { year: 7, p_start: 56935.89, interest: 569.36, p_due: 5000, total_due: 5569.36, penalty_accrued: 0, payment: 8000, cut_penalty: 0, cut_interest: 569.36, cut_principal: 7430.64, p_end: 49505.25, p_due_unpaid: 0 },
+                    { year: 8, p_start: 49505.25, interest: 495.05, p_due: 6000, total_due: 6495.05, penalty_accrued: 0, payment: 8000, cut_penalty: 0, cut_interest: 495.05, cut_principal: 7504.95, p_end: 42000.30, p_due_unpaid: 0 },
+                    { year: 9, p_start: 42000.30, interest: 420, p_due: 7000, total_due: 7420, penalty_accrued: 0, payment: 8000, cut_penalty: 0, cut_interest: 420, cut_principal: 7580, p_end: 34420.30, p_due_unpaid: 0 },
+                    { year: 10, p_start: 34420.30, interest: 344.20, p_due: 8000, total_due: 8344.20, penalty_accrued: 0, payment: 8000, cut_penalty: 0, cut_interest: 344.20, cut_principal: 7655.80, p_end: 26764.50, p_due_unpaid: 344.20, highlight: true },
+                    { year: 11, p_start: 26764.50, interest: 267.65, p_due: 9000, total_due: 9267.65, penalty_accrued: 1.72, payment: 8000, cut_penalty: 1.72, cut_interest: 267.65, cut_principal: 7730.63, p_end: 19033.87, p_due_unpaid: 1613.57 },
+                    { year: 12, p_start: 19033.87, interest: 190.34, p_due: 10000, total_due: 10190.34, penalty_accrued: 8.07, payment: 8000, cut_penalty: 8.07, cut_interest: 190.34, cut_principal: 7801.59, p_end: 11232.28, p_due_unpaid: 3812.00 },
+                    { year: 13, p_start: 11232.28, interest: 112.32, p_due: 11000, total_due: 11112.32, penalty_accrued: 19.06, payment: 8000, cut_penalty: 19.06, cut_interest: 112.32, cut_principal: 7868.62, p_end: 3363.66, p_due_unpaid: 6943.38 },
+                    { year: 14, p_start: 3363.66, interest: 33.64, p_due: 12000, total_due: 12033.64, penalty_accrued: 34.72, payment: 8000, cut_penalty: 34.72, cut_interest: 33.64, cut_principal: 7931.64, p_end: -4567.98, p_due_unpaid: 11011.74, last_payment: true },
+                ]
+            },
+            interim: {
+                title: "แบบที่ 2: ช่วงปรับระบบ 'ลดแนวดิ่ง' (ข้อมูลชั่วคราว)",
+                description: '"ภาพลวงตา": ระบบนำเงินที่จ่ายไปหักเงินต้นทั้งหมดโดยตรง ทำให้ยอดหนี้ในแอปฯ ดูลดลงเร็ว แต่ดอกเบี้ยและเบี้ยปรับยังคงสะสมอยู่เบื้องหลัง',
+                color: 'orange',
+                data: [
+                    { year: 1, p_start: 100000, interest: 1000, p_due: 1500, payment: 8000, cut_principal: 8000, p_end: 92000, interest_unpaid: 1000, penalty_unpaid: 0 },
+                    { year: 2, p_start: 92000, interest: 920, p_due: 2500, payment: 8000, cut_principal: 8000, p_end: 84000, interest_unpaid: 1920, penalty_unpaid: 0 },
+                    { year: 3, p_start: 84000, interest: 840, p_due: 3000, payment: 8000, cut_principal: 8000, p_end: 76000, interest_unpaid: 2760, penalty_unpaid: 0 },
+                    { year: 4, p_start: 76000, interest: 760, p_due: 3500, payment: 8000, cut_principal: 8000, p_end: 68000, interest_unpaid: 3520, penalty_unpaid: 0 },
+                    { year: 5, p_start: 68000, interest: 680, p_due: 4000, payment: 8000, cut_principal: 8000, p_end: 60000, interest_unpaid: 4200, penalty_unpaid: 0 },
+                    { year: 6, p_start: 60000, interest: 600, p_due: 4500, payment: 8000, cut_principal: 8000, p_end: 52000, interest_unpaid: 4800, penalty_unpaid: 0 },
+                    { year: 7, p_start: 52000, interest: 520, p_due: 5000, payment: 8000, cut_principal: 8000, p_end: 44000, interest_unpaid: 5320, penalty_unpaid: 0 },
+                    { year: 8, p_start: 44000, interest: 440, p_due: 6000, payment: 8000, cut_principal: 8000, p_end: 36000, interest_unpaid: 5760, penalty_unpaid: 0 },
+                    { year: 9, p_start: 36000, interest: 360, p_due: 7000, payment: 8000, cut_principal: 8000, p_end: 28000, interest_unpaid: 6120, penalty_unpaid: 0 },
+                    { year: 10, p_start: 28000, interest: 280, p_due: 8000, payment: 8000, cut_principal: 8000, p_end: 20000, interest_unpaid: 6400, penalty_unpaid: 0 },
+                    { year: 11, p_start: 20000, interest: 200, p_due: 9000, payment: 8000, cut_principal: 8000, p_end: 12000, interest_unpaid: 6600, penalty_unpaid: 0 },
+                    { year: 12, p_start: 12000, interest: 120, p_due: 10000, payment: 8000, cut_principal: 8000, p_end: 4000, interest_unpaid: 6720, penalty_unpaid: 0 },
+                    { year: 13, p_start: 4000, interest: 40, p_due: 11000, payment: 8000, cut_principal: 4000, p_end: 0, interest_unpaid: 6760, penalty_unpaid: 0, last_payment: true },
+                ]
+            },
+            new: {
+                title: 'แบบที่ 3: การตัดหนี้แบบใหม่ (ตาม พ.ร.บ. 2566)',
+                description: '"ปลดหนี้ไว": เงินที่จ่ายถูกนำไปตัด "เงินต้นของงวดนั้น" ก่อนเสมอ ทำให้แม้จะจ่ายไม่ครบงวด เงินต้นก็ยังลดลงอย่างมีประสิทธิภาพ',
+                color: 'green',
+                data: [
+                    { year: 1, p_start: 100000, interest: 1000, p_due: 1500, total_due: 2500, payment: 8000, cut_p_due: 1500, cut_interest: 1000, cut_penalty: 0, cut_p_extra: 5500, p_end: 93000 },
+                    { year: 2, p_start: 93000, interest: 930, p_due: 2500, total_due: 3430, payment: 8000, cut_p_due: 2500, cut_interest: 930, cut_penalty: 0, cut_p_extra: 4570, p_end: 85930 },
+                    { year: 3, p_start: 85930, interest: 859.30, p_due: 3000, total_due: 3859.30, payment: 8000, cut_p_due: 3000, cut_interest: 859.30, cut_penalty: 0, cut_p_extra: 4140.70, p_end: 78789.30 },
+                    { year: 4, p_start: 78789.30, interest: 787.89, p_due: 3500, total_due: 4287.89, payment: 8000, cut_p_due: 3500, cut_interest: 787.89, cut_penalty: 0, cut_p_extra: 3712.11, p_end: 71577.19 },
+                    { year: 5, p_start: 71577.19, interest: 715.77, p_due: 4000, total_due: 4715.77, payment: 8000, cut_p_due: 4000, cut_interest: 715.77, cut_penalty: 0, cut_p_extra: 3284.23, p_end: 64292.96 },
+                    { year: 6, p_start: 64292.96, interest: 642.93, p_due: 4500, total_due: 5142.93, payment: 8000, cut_p_due: 4500, cut_interest: 642.93, cut_penalty: 0, cut_p_extra: 2857.07, p_end: 56935.89 },
+                    { year: 7, p_start: 56935.89, interest: 569.36, p_due: 5000, total_due: 5569.36, payment: 8000, cut_p_due: 5000, cut_interest: 569.36, cut_penalty: 0, cut_p_extra: 2430.64, p_end: 49505.25 },
+                    { year: 8, p_start: 49505.25, interest: 495.05, p_due: 6000, total_due: 6495.05, payment: 8000, cut_p_due: 6000, cut_interest: 495.05, cut_penalty: 0, cut_p_extra: 1504.95, p_end: 42000.30 },
+                    { year: 9, p_start: 42000.30, interest: 420, p_due: 7000, total_due: 7420, payment: 8000, cut_p_due: 7000, cut_interest: 420, cut_penalty: 0, cut_p_extra: 580, p_end: 34420.30 },
+                    { year: 10, p_start: 34420.30, interest: 344.20, p_due: 8000, total_due: 8344.20, payment: 8000, cut_p_due: 8000, cut_interest: 0, cut_penalty: 0, cut_p_extra: 0, p_end: 26420.30, highlight: true },
+                    { year: 11, p_start: 26420.30, interest: 264.20, p_due: 9000, total_due: 9264.20, payment: 8000, cut_p_due: 8000, cut_interest: 0, cut_penalty: 0, cut_p_extra: 0, p_end: 18420.30 },
+                    { year: 12, p_start: 18420.30, interest: 184.20, p_due: 10000, total_due: 10184.20, payment: 8000, cut_p_due: 8000, cut_interest: 0, cut_penalty: 0, cut_p_extra: 0, p_end: 10420.30 },
+                    { year: 13, p_start: 10420.30, interest: 104.20, p_due: 11000, total_due: 11104.20, payment: 8000, cut_p_due: 8000, cut_interest: 0, cut_penalty: 0, cut_p_extra: 0, p_end: 2420.30 },
+                    { year: 14, p_start: 2420.30, interest: 24.20, p_due: 12000, total_due: 12024.20, payment: 8000, cut_p_due: 8000, cut_interest: 0, cut_penalty: 0, cut_p_extra: 0, p_end: -5579.70, last_payment: true },
+                ]
+            }
+        };
+
+        function generateFullTable(scenarioKey) {
+            const scenario = scenarios[scenarioKey];
+            let tableHtml;
+
+            if (scenarioKey === 'old') {
+                tableHtml = `
+                    <section id="infographic-old-full" class="bg-white rounded-2xl shadow-lg p-4 md:p-6 mb-8">
+                        <h2 class="text-xl md:text-2xl font-bold text-center mb-2 text-${scenario.color}-700">${scenario.title}</h2>
+                        <p class="text-center text-gray-600 max-w-3xl mx-auto mb-4">${scenario.description}</p>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr><th>ปี</th><th>เงินต้น<br>ต้นปี</th><th>ดอกเบี้ย<br>ปีนี้</th><th>เงินต้นงวด</th><th>ยอดต้องชำระ</th><th>เบี้ยปรับ<br>ปีนี้</th><th>ชำระจริง</th><th>ตัดเบี้ยปรับ</th><th>ตัดดอกเบี้ย</th><th>ตัดเงินต้น</th><th>เงินต้น<br>ปลายปี</th><th>เงินต้นงวด<br>ค้างสะสม</th></tr>
+                                </thead>
+                                <tbody>
+                                    ${scenario.data.map(row => `
+                                        <tr class="${row.highlight ? `highlight-${scenario.color}` : ''}">
+                                            <td>${row.year}</td>
+                                            <td>${formatCurrency(row.p_start)}</td>
+                                            <td>${formatCurrency(row.interest)}</td>
+                                            <td>${formatCurrency(row.p_due)}</td>
+                                            <td>${formatCurrency(row.total_due)}</td>
+                                            <td>${formatCurrency(row.penalty_accrued)}</td>
+                                            <td class="bg-blue-50 font-bold">${formatCurrency(row.payment)}</td>
+                                            <td class="font-bold text-red-600">${formatCurrency(row.cut_penalty)}</td>
+                                            <td class="font-bold text-orange-600">${formatCurrency(row.cut_interest)}</td>
+                                            <td class="font-bold text-green-600">${formatCurrency(row.cut_principal)}</td>
+                                            <td class="bg-gray-50 font-bold">${row.last_payment ? 'ชำระหมด' : formatCurrency(row.p_end)}</td>
+                                            <td>${formatCurrency(row.p_due_unpaid)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-6 text-center">
+                            <button onclick="downloadInfographic('infographic-old-full', 'กยศ-ตารางแบบเก่า-เต็ม.png')" class="download-btn bg-${scenario.color}-600 text-white font-bold py-2 px-6 rounded-full hover:bg-${scenario.color}-700">ดาวน์โหลดภาพนี้ (PNG)</button>
+                        </div>
+                    </section>`;
+            } else if (scenarioKey === 'interim') {
+                tableHtml = `
+                     <section id="infographic-interim-full" class="bg-white rounded-2xl shadow-lg p-4 md:p-6 mb-8">
+                        <h2 class="text-xl md:text-2xl font-bold text-center mb-2 text-${scenario.color}-700">${scenario.title}</h2>
+                        <p class="text-center text-gray-600 max-w-3xl mx-auto mb-4">${scenario.description}</p>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr><th>ปี</th><th>เงินต้น<br>ต้นปี</th><th>ดอกเบี้ย<br>ปีนี้</th><th>เงินต้นงวด</th><th>ชำระจริง</th><th>ตัดเงินต้น</th><th>เงินต้น<br>ปลายปี</th><th>ดอกเบี้ยสะสม<br>(ยังไม่ชำระ)</th><th>เบี้ยปรับสะสม<br>(ยังไม่ชำระ)</th></tr>
+                                </thead>
+                                <tbody>
+                                    ${scenario.data.map(row => `
+                                        <tr>
+                                            <td>${row.year}</td>
+                                            <td>${formatCurrency(row.p_start)}</td>
+                                            <td>${formatCurrency(row.interest)}</td>
+                                            <td>${formatCurrency(row.p_due)}</td>
+                                            <td class="bg-blue-50 font-bold">${formatCurrency(row.payment)}</td>
+                                            <td class="font-bold text-green-600">${formatCurrency(row.cut_principal)}</td>
+                                            <td class="bg-gray-50 font-bold">${row.last_payment ? 'ชำระหมด' : formatCurrency(row.p_end)}</td>
+                                            <td class="font-bold text-orange-500">${formatCurrency(row.interest_unpaid)}</td>
+                                            <td class="font-bold text-red-500">${formatCurrency(row.penalty_unpaid)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-6 text-center">
+                            <button onclick="downloadInfographic('infographic-interim-full', 'กยศ-ตารางลดแนวดิ่ง-เต็ม.png')" class="download-btn bg-${scenario.color}-500 text-white font-bold py-2 px-6 rounded-full hover:bg-${scenario.color}-600">ดาวน์โหลดภาพนี้ (PNG)</button>
+                        </div>
+                    </section>`;
+            } else { // new law
+                tableHtml = `
+                    <section id="infographic-new-full" class="bg-white rounded-2xl shadow-lg p-4 md:p-6 mb-8">
+                        <h2 class="text-xl md:text-2xl font-bold text-center mb-2 text-${scenario.color}-700">${scenario.title}</h2>
+                        <p class="text-center text-gray-600 max-w-3xl mx-auto mb-4">${scenario.description}</p>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr><th>ปี</th><th>เงินต้น<br>ต้นปี</th><th>ดอกเบี้ย<br>ปีนี้</th><th>เงินต้นงวด</th><th>ยอดต้องชำระ</th><th>ชำระจริง</th><th>ตัดเงินต้นงวด</th><th>ตัดดอกเบี้ย</th><th>ตัดเงินต้นเพิ่ม</th><th>เงินต้น<br>ปลายปี</th></tr>
+                                </thead>
+                                <tbody>
+                                    ${scenario.data.map(row => `
+                                        <tr class="${row.highlight ? `highlight-${scenario.color}` : ''}">
+                                            <td>${row.year}</td>
+                                            <td>${formatCurrency(row.p_start)}</td>
+                                            <td>${formatCurrency(row.interest)}</td>
+                                            <td>${formatCurrency(row.p_due)}</td>
+                                            <td>${formatCurrency(row.total_due)}</td>
+                                            <td class="bg-blue-50 font-bold">${formatCurrency(row.payment)}</td>
+                                            <td class="font-bold text-green-600">${formatCurrency(row.cut_p_due)}</td>
+                                            <td class="font-bold text-orange-600">${formatCurrency(row.cut_interest)}</td>
+                                            <td class="font-bold text-green-600">${formatCurrency(row.cut_p_extra)}</td>
+                                            <td class="bg-gray-50 font-bold">${row.last_payment ? 'ชำระหมด' : formatCurrency(row.p_end)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-6 text-center">
+                            <button onclick="downloadInfographic('infographic-new-full', 'กยศ-ตารางแบบใหม่-เต็ม.png')" class="download-btn bg-${scenario.color}-600 text-white font-bold py-2 px-6 rounded-full hover:bg-${scenario.color}-700">ดาวน์โหลดภาพนี้ (PNG)</button>
+                        </div>
+                    </section>`;
+            }
+            return tableHtml;
+        }
+
+        function generateSocialCard(scenarioKey) {
+            const scenario = scenarios[scenarioKey];
+            const socialData = scenario.data.filter(d => d.year <= 3 || d.last_payment);
+
+            let contentHtml;
+            if (scenarioKey === 'old') {
+                contentHtml = socialData.map(row => `
+                    <div class="mb-4 p-3 rounded-lg ${row.highlight ? `border-2 border-${scenario.color}-400 bg-${scenario.color}-50` : 'bg-gray-50'}">
+                        <p class="font-bold">ปีที่ ${row.year}: ชำระ ${formatCurrency(row.payment)} บาท</p>
+                        <div class="flex justify-around items-center mt-2 text-sm">
+                            <span>➡️ ตัดเบี้ยปรับ: <strong class="text-red-600">${formatCurrency(row.cut_penalty)}</strong></span>
+                            <span>➡️ ตัดดอกเบี้ย: <strong class="text-orange-600">${formatCurrency(row.cut_interest)}</strong></span>
+                            <span>➡️ ตัดเงินต้น: <strong class="text-green-600">${formatCurrency(row.cut_principal)}</strong></span>
+                        </div>
+                        <p class="text-xs text-right mt-1">เงินต้นคงเหลือ: <strong>${row.last_payment ? 'ชำระหมด' : formatCurrency(row.p_end)}</strong></p>
+                    </div>
+                `).join('');
+            } else if (scenarioKey === 'interim') {
+                contentHtml = socialData.map(row => `
+                     <div class="mb-4 p-3 rounded-lg bg-gray-50">
+                        <p class="font-bold">ปีที่ ${row.year}: ชำระ ${formatCurrency(row.payment)} บาท</p>
+                        <div class="flex justify-around items-center mt-2 text-sm">
+                           <span>➡️ ตัดเงินต้น: <strong class="text-green-600">${formatCurrency(row.cut_principal)}</strong></span>
+                           <span class="ml-4">ดอกเบี้ยสะสม (ยังไม่จ่าย): <strong class="text-orange-600">${formatCurrency(row.interest_unpaid)}</strong></span>
+                        </div>
+                        <p class="text-xs text-right mt-1">เงินต้นคงเหลือ: <strong>${row.last_payment ? 'ชำระหมด' : formatCurrency(row.p_end)}</strong></p>
+                    </div>
+                `).join('');
+            } else { // new law
+                contentHtml = socialData.map(row => `
+                    <div class="mb-4 p-3 rounded-lg ${row.highlight ? `border-2 border-${scenario.color}-400 bg-${scenario.color}-50` : 'bg-gray-50'}">
+                        <p class="font-bold">ปีที่ ${row.year}: ชำระ ${formatCurrency(row.payment)} บาท</p>
+                        <div class="flex justify-around items-center mt-2 text-sm">
+                            <span>➡️ ตัดเงินต้นงวด: <strong class="text-green-600">${formatCurrency(row.cut_p_due)}</strong></span>
+                            <span>➡️ ตัดดอกเบี้ย: <strong class="text-orange-600">${formatCurrency(row.cut_interest)}</strong></span>
+                            <span>➡️ ตัดเงินต้นเพิ่ม: <strong class="text-green-600">${formatCurrency(row.cut_p_extra)}</strong></span>
+                        </div>
+                        <p class="text-xs text-right mt-1">เงินต้นคงเหลือ: <strong>${row.last_payment ? 'ชำระหมด' : formatCurrency(row.p_end)}</strong></p>
+                    </div>
+                `).join('');
+            }
+
+            return `
+                <section id="infographic-${scenarioKey}-social" class="social-card border-t-8 border-${scenario.color}-500">
+                    <h3 class="text-xl md:text-2xl font-bold text-center mb-2 text-${scenario.color}-700">${scenario.title}</h3>
+                    <p class="text-center text-gray-600 max-w-3xl mx-auto mb-6">${scenario.description}</p>
+                    ${contentHtml}
+                    <div class="mt-6 text-center">
+                        <button onclick="downloadInfographic('infographic-${scenarioKey}-social', 'กยศ-สรุป-${scenarioKey}.png')" class="download-btn bg-${scenario.color}-600 text-white font-bold py-2 px-6 rounded-full hover:bg-${scenario.color}-700">ดาวน์โหลดภาพนี้ (PNG)</button>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderContent() {
+            const fullView = document.getElementById('view-full');
+            const socialView = document.getElementById('view-social');
+
+            fullView.innerHTML = `
+                ${generateFullTable('old')}
+                ${generateFullTable('interim')}
+                ${generateFullTable('new')}
+            `;
+
+            socialView.innerHTML = `
+                ${generateSocialCard('old')}
+                ${generateSocialCard('interim')}
+                ${generateSocialCard('new')}
+            `;
+        }
+
+        function switchView(view) {
+            const fullView = document.getElementById('view-full');
+            const socialView = document.getElementById('view-social');
+            const tabFull = document.getElementById('tab-full');
+            const tabSocial = document.getElementById('tab-social');
+
+            if (view === 'full') {
+                fullView.classList.remove('hidden');
+                socialView.classList.add('hidden');
+                tabFull.classList.add('active', 'text-blue-600', 'border-blue-600');
+                tabFull.classList.remove('text-gray-500', 'border-transparent');
+                tabSocial.classList.remove('active', 'text-blue-600', 'border-blue-600');
+                tabSocial.classList.add('text-gray-500', 'border-transparent');
+            } else {
+                fullView.classList.add('hidden');
+                socialView.classList.remove('hidden');
+                tabSocial.classList.add('active', 'text-blue-600', 'border-blue-600');
+                tabSocial.classList.remove('text-gray-500', 'border-transparent');
+                tabFull.classList.remove('active', 'text-blue-600', 'border-blue-600');
+                tabFull.classList.add('text-gray-500', 'border-transparent');
+            }
+        }
+
+        function downloadInfographic(elementId, filename) {
+            const element = document.getElementById(elementId);
+            if (!element) {
+                console.error("Element not found:", elementId);
+                return;
+            }
+            
+            html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error('Download failed:', err);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', renderContent);
+    </script>
+</body>
+</html>
