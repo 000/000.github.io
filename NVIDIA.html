@@ -1,0 +1,1854 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>High-Density GPU Server Configurations: 30 GPUs &amp; 1.28TB+ Memory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --text: #334155;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+            --bg-dark: #0f172a;
+        }
+        
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-sans { font-family: 'Inter', sans-serif; }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        }
+        
+        .grid-overlay {
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        
+        .content-mask {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%);
+        }
+        
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg);
+            border-right: 1px solid var(--border);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+        
+        .nav-link {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--text-light);
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 1rem;
+            margin-left: -1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        .nav-section {
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        
+        .nav-subsection {
+            font-size: 0.875rem;
+            margin-left: 1rem;
+        }
+        
+        .citation {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dotted var(--accent);
+        }
+        
+        .citation:hover {
+            border-bottom-style: solid;
+        }
+        
+        .data-table {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            background: var(--bg);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+        
+        .data-table tr:hover {
+            background: rgba(59, 130, 246, 0.02);
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .bento-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+        }
+        
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        @media (max-width: 768px) {
+            .toc-fixed {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .toc-fixed.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-number {
+                font-size: 1.75rem;
+            }
+            
+            .hero-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .hero .font-serif.text-5xl {
+                font-size: 2.25rem;
+                line-height: 2.5rem;
+            }
+            
+            .hero .text-xl {
+                font-size: 1rem;
+            }
+            
+            .hero .content-mask {
+                padding: 1.5rem;
+            }
+            
+            .hero .container.px-8 {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .mermaid-control-btn:not(.reset-zoom) {
+                display: none;
+            }
+            .mermaid-controls {
+                top: auto;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+        }
+        
+        .executive-summary {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid var(--border);
+        }
+        
+        .quote-block {
+            background: linear-gradient(135deg, var(--bg) 0%, rgba(59, 130, 246, 0.05) 100%);
+            border-left: 4px solid var(--accent);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            font-size: 1.125rem;
+            color: var(--text);
+        }
+        
+        /* Mermaid diagram styles */
+        .mermaid-container {
+            display: flex;
+            justify-content: center;
+            min-height: 300px;
+            max-height: 800px;
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mermaid-container .mermaid {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            cursor: grab;
+            transition: transform 0.3s ease;
+            transform-origin: center center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .mermaid-container .mermaid svg {
+            max-width: 100%;
+            height: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .mermaid-container .mermaid:active {
+            cursor: grabbing;
+        }
+        
+        .mermaid-container.zoomed .mermaid {
+            height: 100%;
+            width: 100%;
+            cursor: grab;
+        }
+        
+        .mermaid-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mermaid-control-btn {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #374151;
+            font-size: 14px;
+            min-width: 36px;
+            height: 36px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mermaid-control-btn:hover {
+            background: #f8fafc;
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: translateY(-1px);
+        }
+        
+        .mermaid-control-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Enhanced Mermaid theme customization for better contrast */
+        .mermaid .node rect,
+        .mermaid .node circle,
+        .mermaid .node ellipse,
+        .mermaid .node polygon {
+            fill: #ffffff;
+            stroke: #3b82f6;
+            stroke-width: 2px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+        
+        /* Different node colors with proper contrast */
+        .mermaid .node.node0 rect,
+        .mermaid .node.node0 circle,
+        .mermaid .node.node0 ellipse,
+        .mermaid .node.node0 polygon {
+            fill: #ffffff;
+            stroke: #3b82f6;
+        }
+        
+        .mermaid .node.node1 rect,
+        .mermaid .node.node1 circle,
+        .mermaid .node.node1 ellipse,
+        .mermaid .node.node1 polygon {
+            fill: #dbeafe;
+            stroke: #2563eb;
+        }
+        
+        .mermaid .node.node2 rect,
+        .mermaid .node.node2 circle,
+        .mermaid .node.node2 ellipse,
+        .mermaid .node.node2 polygon {
+            fill: #f3e8ff;
+            stroke: #7c3aed;
+        }
+        
+        .mermaid .node.node3 rect,
+        .mermaid .node.node3 circle,
+        .mermaid .node.node3 ellipse,
+        .mermaid .node.node3 polygon {
+            fill: #dcfdf2;
+            stroke: #059669;
+        }
+        
+        .mermaid .node .label {
+            color: #1e293b;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+            fill: #1e293b;
+        }
+        
+        .mermaid .edgePath .path {
+            stroke: #64748b;
+            stroke-width: 2px;
+            fill: none;
+        }
+        
+        .mermaid .edgeLabel {
+            background-color: #ffffff;
+            color: #374151;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #d1d5db;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mermaid .cluster rect {
+            fill: #f8fafc;
+            stroke: #cbd5e1;
+            stroke-width: 1px;
+            rx: 6;
+        }
+        
+        .mermaid .cluster .label {
+            color: #475569;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+        }
+    </style>
+  </head>
+
+  <body class="bg-gray-50 font-sans text-gray-700">
+    <!-- Table of Contents -->
+    <nav class="toc-fixed">
+      <div class="mb-8">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Contents</h3>
+      </div>
+
+      <div class="nav-section">Overview</div>
+      <a href="#executive-summary" class="nav-link">Executive Summary</a>
+
+      <div class="nav-section">Liqid UltraStack 30</div>
+      <a href="#liqid-overview" class="nav-link">System Overview</a>
+      <a href="#liqid-host" class="nav-link nav-subsection">Host Configuration</a>
+      <a href="#liqid-gpu" class="nav-link nav-subsection">GPU Configuration</a>
+      <a href="#liqid-networking" class="nav-link nav-subsection">Networking</a>
+      <a href="#liqid-power" class="nav-link nav-subsection">Power Requirements</a>
+
+      <div class="nav-section">NVIDIA DGX SuperPOD</div>
+      <a href="#superpod-overview" class="nav-link">Architecture Overview</a>
+      <a href="#superpod-scalability" class="nav-link nav-subsection">Scalability</a>
+      <a href="#superpod-gpu-options" class="nav-link nav-subsection">GPU Options</a>
+      <a href="#superpod-interconnect" class="nav-link nav-subsection">Interconnect</a>
+      <a href="#superpod-software" class="nav-link nav-subsection">Software Stack</a>
+
+      <div class="nav-section">Implementation</div>
+      <a href="#physical-space" class="nav-link">Physical Space</a>
+      <a href="#power-cooling" class="nav-link nav-subsection">Power &amp; Cooling</a>
+      <a href="#interconnect-bandwidth" class="nav-link nav-subsection">Interconnect Bandwidth</a>
+      <a href="#software-orchestration" class="nav-link nav-subsection">Software Stack</a>
+
+      <div class="nav-section">Analysis</div>
+      <a href="#performance-analysis" class="nav-link">Performance Analysis</a>
+      <a href="#cost-analysis" class="nav-link nav-subsection">Cost Considerations</a>
+
+      <div class="nav-section">Conclusion</div>
+      <a href="#recommendations" class="nav-link">Recommendations</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section class="hero-gradient grid-overlay min-h-screen flex items-center relative overflow-hidden">
+        <div class="absolute inset-0 content-mask"></div>
+        <div class="container mx-auto px-8 relative z-10">
+          <div class="max-w-4xl">
+            <h1 class="font-serif text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+              <span class="italic">High-Density</span>
+              <br/>
+              GPU Server Configurations
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
+              Achieving unprecedented scale with 30 GPUs and 1.28TB+ GPU memory using NVIDIA technologies
+            </p>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="hero-stats">
+            <div class="stat-card">
+              <div class="stat-number">30</div>
+              <div class="stat-label">GPUs per Node</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">1.44TB</div>
+              <div class="stat-label">GPU Memory</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">16U</div>
+              <div class="stat-label">Rack Space</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">11.2kW</div>
+              <div class="stat-label">Power Consumption</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Executive Summary -->
+      <section id="executive-summary" class="py-16 px-8">
+        <div class="container mx-auto max-w-4xl">
+          <div class="executive-summary">
+            <h2 class="font-serif text-3xl font-bold text-gray-900 mb-6">Executive Summary</h2>
+            <p class="text-lg leading-relaxed mb-4">
+              This analysis demonstrates that configurations achieving <strong>30 GPUs and at least 1.28TB of GPU memory</strong> are not only feasible but available today using NVIDIA technologies. Two primary approaches emerge as viable solutions:
+            </p>
+
+            <div class="bento-grid mt-8">
+              <div class="bento-card">
+                <h3 class="font-serif text-xl font-bold text-gray-900 mb-3">Liqid UltraStack 30</h3>
+                <p class="text-gray-700 mb-4">A revolutionary high-density solution featuring 30 NVIDIA L40S GPUs with 1.44TB total memory in a 16U form factor.</p>
+                <div class="flex items-center text-blue-600">
+                  <i class="fas fa-check-circle mr-2"></i>
+                  <span class="font-medium">Available Now</span>
+                </div>
+              </div>
+
+              <div class="bento-card">
+                <h3 class="font-serif text-xl font-bold text-gray-900 mb-3">NVIDIA DGX SuperPOD</h3>
+                <p class="text-gray-700 mb-4">A scalable multi-node architecture using DGX H200 systems, offering up to 4.5TB GPU memory with 32 GPUs.</p>
+                <div class="flex items-center text-blue-600">
+                  <i class="fas fa-check-circle mr-2"></i>
+                  <span class="font-medium">Enterprise Ready</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-lg leading-relaxed mt-6">
+              Both solutions address the critical need for massive GPU memory capacity required by modern AI training, large language models, and high-performance computing workloads. The choice between a single high-density node and a multi-node cluster depends on specific performance, scalability, and operational requirements.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Liqid UltraStack 30 Section -->
+      <section id="liqid-overview" class="py-16 px-8 bg-white">
+        <div class="container mx-auto max-w-6xl">
+          <h2 class="font-serif text-4xl font-bold text-gray-900 mb-8">Liqid UltraStack 30 (UX-3038)</h2>
+
+          <div class="highlight-box">
+            <p class="text-lg font-medium">
+              The <strong>Liqid UltraStack 30 (UX-3038)</strong> represents a breakthrough in high-density GPU server design, transforming standard 2U servers into systems capable of accommodating <strong>up to 30 NVIDIA L40S GPUs</strong> within a 16U rackmount form factor.
+            </p>
+          </div>
+
+          <p class="text-lg leading-relaxed mb-6">
+            This innovative approach addresses the critical challenges of traditional server architectures, which are typically limited to 4-8 GPUs per system. The UltraStack 30 leverages Liqid&#39;s composable infrastructure technology to deliver unprecedented GPU density while maintaining operational efficiency.
+            <a href="https://cdi.liqid.com/hubfs/Liqid%20UltraStack_051324.pdf" class="citation" target="_blank">[Liqid UltraStack Datasheet]</a>
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-8 mt-8">
+            <div>
+              <h3 class="font-serif text-2xl font-bold text-gray-900 mb-4">Key Innovations</h3>
+              <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start">
+                  <i class="fas fa-microchip text-blue-600 mr-3 mt-1"></i>
+                  <span>World&#39;s first 30-way NVIDIA L40S system</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-network-wired text-blue-600 mr-3 mt-1"></i>
+                  <span>Liqid Matrix software for dynamic resource configuration</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-server text-blue-600 mr-3 mt-1"></i>
+                  <span>Built on Dell PowerEdge server foundation</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-bolt text-blue-600 mr-3 mt-1"></i>
+                  <span>PCIe Gen 4.0 fabric with RDMA support</span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <img src="https://kimi-web-img.moonshot.cn/img/placeholder-0620/图片13.png" alt="High-density GPU server rack installation in data center" class="rounded-lg shadow-lg w-full h-64 object-cover" size="medium" aspect="wide" style="photo" query="high density GPU server rack" referrerpolicy="no-referrer"/>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Host Server Configuration -->
+      <section id="liqid-host" class="py-16 px-8">
+        <div class="container mx-auto max-w-6xl">
+          <h3 class="font-serif text-3xl font-bold text-gray-900 mb-8">Host Server and CPU Configuration</h3>
+
+          <p class="text-lg leading-relaxed mb-6">
+            The UltraStack 30 leverages robust server platforms from Dell Technologies, offering flexibility with both Intel and AMD processor options. The system integrates host servers, GPU enclosures, and management appliances into a cohesive 16U solution.
+          </p>
+
+          <div class="data-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>Intel Host Server Option (Dell R760)</th>
+                  <th>AMD Host Server Option (Dell R7625)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="font-medium">Server Model</td>
+                  <td>Dell PowerEdge R760</td>
+                  <td>Dell PowerEdge R7625</td>
+                </tr>
+                <tr>
+                  <td class="font-medium">CPU Sockets</td>
+                  <td>Dual Socket</td>
+                  <td>Dual Socket</td>
+                </tr>
+                <tr>
+                  <td class="font-medium">CPU Model</td>
+                  <td>Dual Intel Xeon Gold 6430</td>
+                  <td>Dual AMD EPYC 9354</td>
+                </tr>
+                <tr>
+                  <td class="font-medium">CPU Cores (Total)</td>
+                  <td>64 cores (32 cores per CPU)</td>
+                  <td>64 cores (32 cores per CPU)</td>
+                </tr>
+                <tr>
+                  <td class="font-medium">Host DRAM</td>
+                  <td>1 TB</td>
+                  <td>1 TB</td>
+                </tr>
+                <tr>
+                  <td class="font-medium">Management Appliance</td>
+                  <td>1x Liqid Director (1U)</td>
+                  <td>1x Liqid Director (1U)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="quote-block">
+            &#34;The substantial host memory capacity of 1TB is crucial for buffering data, managing model parameters, and supporting the operating system and application software stacks that drive the GPU-accelerated workloads.&#34;
+          </div>
+        </div>
+      </section>
+
+      <!-- GPU Configuration -->
+      <section id="liqid-gpu" class="py-16 px-8 bg-white">
+        <div class="container mx-auto max-w-6xl">
+          <h3 class="font-serif text-3xl font-bold text-gray-900 mb-8">GPU Configuration and Total Memory</h3>
+
+          <div class="highlight-box">
+            <p class="text-lg font-medium">
+              The UltraStack 30 can house and manage <strong>up to 30 individual NVIDIA L40S GPUs</strong>, each equipped with <strong>48GB of GDDR6 memory</strong>, delivering a total aggregate GPU memory of <strong>1,440 GB (1.44 TB)</strong>.
+            </p>
+          </div>
+
+          <div class="data-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>Specification</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="font-medium">GPU Model</td>
+                  <td>NVIDIA L40S</td>
+                </tr>
+                <tr>
+                  <td class="font-medium">Number of GPUs</td>
+                  <td>Up to 30</td>
+                </tr>
+                <tr>
+                  <td class="font-medium">Memory per GPU</td>
+                  <td>48 GB GDDR6</td>
+                </tr>
+                <tr>
+                  <td class="font-medium">Total GPU Memory (Aggregate)</td>
+                  <td><strong>1,440 GB (1.44 TB)</strong></td>
+                </tr>
+                <tr>
+                  <td class="font-medium">GPU Interface</td>
+                  <td>PCIe Gen 4.0 x16</td>
+                </tr>
+                <tr>
+                  <td class="font-medium">System Form Factor</td>
+                  <td><strong>16U Rackmount</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="text-lg leading-relaxed mt-6">
+            This configuration comfortably exceeds the requirement of at least 1.28 TB of GPU memory with 30 GPUs. The NVIDIA L40S GPUs provide an optimal balance of performance, memory capacity, and density for AI training, inference, and large-scale graphics processing tasks.
+            <a href="https://www.techpowerup.com/gpu-specs/l40s.c4173" class="citation" target="_blank">[NVIDIA L40S Specifications]</a>
+          </p>
+        </div>
+      </section>
+
+      <!-- Networking Infrastructure -->
+      <section id="liqid-networking" class="py-16 px-8">
+        <div class="container mx-auto max-w-6xl">
+          <h3 class="font-serif text-3xl font-bold text-gray-900 mb-8">Networking Infrastructure</h3>
+
+          <p class="text-lg leading-relaxed mb-6">
+            The UltraStack 30 incorporates a comprehensive networking infrastructure designed to support high-speed data transfer and efficient communication, critical for demanding GPU workloads.
+          </p>
+
+          <div class="data-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Networking Component</th>
+                  <th>Quantity &amp; Type</th>
+                  <th>Role and Capabilities</th>
+                  <th>Interface/Protocol Support</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="font-medium">Host NICs (IND)</td>
+                  <td>NVIDIA ConnectX-7</td>
+                  <td>High-speed data transfer, network connectivity for the host server. Capable of 200Gb/s or 400Gb/s per port.</td>
+                  <td>InfiniBand, Ethernet</td>
+                </tr>
+                <tr>
+                  <td class="font-medium">Data Processing Units (DPU)</td>
+                  <td>1x NVIDIA BlueField-3 Dual Port Adapter</td>
+                  <td>Offloads networking, security, and storage tasks from the CPU/GPU. Accelerates data processing and improves isolation.</td>
+                  <td>InfiniBand, Ethernet</td>
+                </tr>
+                <tr>
+                  <td class="font-medium">PCIe Fabric</td>
+                  <td>Liqid Gen 4.0x16 HBA, PCIe Switches</td>
+                  <td>Provides high-bandwidth, low-latency connectivity between all composable elements.</td>
+                  <td>PCIe Gen 4.0</td>
+                </tr>
+                <tr>
+                  <td class="font-medium">Peer-to-Peer Communication</td>
+                  <td>RDMA support via Liqid Matrix</td>
+                  <td>Enables direct data transfer between devices for reduced latency and CPU overhead.</td>
+                  <td>RDMA over Converged Ethernet (RoCE) or InfiniBand</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight-box mt-6">
+            <p class="text-lg">
+              <i class="fas fa-rocket text-blue-600 mr-2"></i>
+              RDMA Peer-to-Peer communication can enable up to a <strong>10x performance improvement</strong> in critical applications by allowing direct data transfer between GPUs and network interfaces.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Power Consumption -->
+      <section id="liqid-power" class="py-16 px-8 bg-white">
+        <div class="container mx-auto max-w-6xl">
+          <h3 class="font-serif text-3xl font-bold text-gray-900 mb-8">Power Consumption</h3>
+
+          <p class="text-lg leading-relaxed mb-6">
+            The UltraStack 30&#39;s high-density configuration requires significant power infrastructure planning. The system has an average power consumption of <strong>11,232 Watts (11.23 kW)</strong>.
+          </p>
+
+          <div class="data-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Liqid UltraStack Model</th>
+                  <th>Number of GPUs (NVIDIA L40S)</th>
+                  <th>Average Power Consumption</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>UltraStack 10 (UX-1010)</td>
+                  <td>10</td>
+                  <td>4,675 Watts</td>
+                </tr>
+                <tr>
+                  <td>UltraStack 20 (UX-2020)</td>
+                  <td>20</td>
+                  <td>8,832 Watts</td>
+                </tr>
+                <tr>
+                  <td>UltraStack 30 (UX-3038)</td>
+                  <td>30</td>
+                  <td><strong>11,232 Watts</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8 mt-8">
+            <div>
+              <h4 class="font-serif text-xl font-bold text-gray-900 mb-4">Power Breakdown</h4>
+              <ul class="space-y-2 text-gray-700">
+                <li><strong>30x NVIDIA L40S GPUs:</strong> ~9,000W (300W TDP each)</li>
+                <li><strong>Host Servers:</strong> Dual CPUs, 1TB RAM</li>
+                <li><strong>Liqid Director:</strong> Management appliance</li>
+                <li><strong>PCIe Switches:</strong> 48-port Gen 4.0 fabric</li>
+                <li><strong>Networking:</strong> ConnectX-7, BlueField-3</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-serif text-xl font-bold text-gray-900 mb-4">Infrastructure Requirements</h4>
+              <ul class="space-y-2 text-gray-700">
+                <li><i class="fas fa-plug text-orange-500 mr-2"></i>High-capacity PDUs and UPS systems</li>
+                <li><i class="fas fa-snowflake text-blue-500 mr-2"></i>Advanced cooling solutions</li>
+                <li><i class="fas fa-bolt text-yellow-500 mr-2"></i>Redundant power feeds</li>
+                <li><i class="fas fa-thermometer-half text-red-500 mr-2"></i>Temperature monitoring</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NVIDIA DGX SuperPOD Section -->
+      <section id="superpod-overview" class="py-16 px-8">
+        <div class="container mx-auto max-w-6xl">
+          <h2 class="font-serif text-4xl font-bold text-gray-900 mb-8">NVIDIA DGX SuperPOD Architecture</h2>
+
+          <div class="highlight-box">
+            <p class="text-lg font-medium">
+              The <strong>NVIDIA DGX SuperPOD</strong> represents a leadership-class AI infrastructure solution, designed to provide scalable and high-performance computing for enterprise AI factories and research institutions.
+            </p>
+          </div>
+
+          <p class="text-lg leading-relaxed mb-6">
+            The architecture is supercharged for the largest and most demanding workloads, including generative AI, natural language processing, and deep learning recommendation models. The <strong>NVIDIA DGX H200 system</strong> forms the foundational building block, featuring 8x NVIDIA H200 GPUs with 1,128GB (1.128TB) of total GPU memory per node.
+            <a href="https://www.nvidia.com/en-us/data-center/dgx-h200/" class="citation" target="_blank">[NVIDIA DGX H200]</a>
+          </p>
+
+          <div class="grid md:grid-cols-3 gap-6 mt-8">
+            <div class="bento-card">
+              <i class="fas fa-layer-group text-blue-600 text-2xl mb-4"></i>
+              <h3 class="font-serif text-xl font-bold text-gray-900 mb-2">Scalable Architecture</h3>
+              <p class="text-gray-700">Start with base configuration and expand as computational needs grow</p>
+            </div>
+            <div class="bento-card">
+              <i class="fas fa-network-wired text-blue-600 text-2xl mb-4"></i>
+              <h3 class="font-serif text-xl font-bold text-gray-900 mb-2">High-Speed Interconnect</h3>
+              <p class="text-gray-700">NVIDIA Quantum InfiniBand for low-latency communication</p>
+            </div>
+            <div class="bento-card">
+              <i class="fas fa-cogs text-blue-600 text-2xl mb-4"></i>
+              <h3 class="font-serif text-xl font-bold text-gray-900 mb-2">Enterprise Ready</h3>
+              <p class="text-gray-700">Comprehensive software stack and management tools</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SuperPOD Scalability -->
+      <section id="superpod-scalability" class="py-16 px-8 bg-white">
+        <div class="container mx-auto max-w-6xl">
+          <h3 class="font-serif text-3xl font-bold text-gray-900 mb-8">Scalability and Base Unit Composition</h3>
+
+          <p class="text-lg leading-relaxed mb-6">
+            The DGX SuperPOD architecture is inherently designed for scalability. To achieve a 30-GPU configuration, a multi-node setup would typically consist of <strong>four DGX H200 nodes</strong> (32 GPUs total), providing approximately <strong>4.5TB of aggregate GPU memory</strong>.
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-8 mt-8">
+            <div>
+              <h4 class="font-serif text-xl font-bold text-gray-900 mb-4">Configuration Options</h4>
+              <div class="space-y-4">
+                <div class="border-l-4 border-blue-500 pl-4">
+                  <h5 class="font-bold text-gray-900">4x DGX H200 Nodes</h5>
+                  <p class="text-gray-700">32 GPUs, ~4.5TB memory</p>
+                </div>
+                <div class="border-l-4 border-green-500 pl-4">
+                  <h5 class="font-bold text-gray-900">4x DGX A100 Nodes (80GB)</h5>
+                  <p class="text-gray-700">32 GPUs, 2.56TB memory</p>
+                </div>
+                <div class="border-l-4 border-purple-500 pl-4">
+                  <h5 class="font-bold text-gray-900">Scalable to 10,000+ GPUs</h5>
+                  <p class="text-gray-700">With Together AI platform integration</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <img src="https://kimi-web-img.moonshot.cn/img/placeholder-0620/图片20.png" alt="Rack-mounted NVIDIA DGX SuperPOD AI supercomputer cluster" class="rounded-lg shadow-lg w-full h-64 object-cover" size="medium" aspect="wide" style="photo" query="NVIDIA DGX SuperPOD rack installation" referrerpolicy="no-referrer"/>
+            </div>
+          </div>
+
+          <div class="quote-block">
+            &#34;The SuperPOD architecture facilitates the integration of these nodes with high-speed interconnects like NVIDIA Quantum InfiniBand, ensuring low-latency communication and high bandwidth across the cluster, which is essential for scaling out training jobs and other distributed AI workloads.&#34;
+          </div>
+        </div>
+      </section>
+
+      <!-- GPU Options -->
+      <section id="superpod-gpu-options" class="py-16 px-8">
+        <div class="container mx-auto max-w-6xl">
+          <h3 class="font-serif text-3xl font-bold text-gray-900 mb-8">GPU Options and Memory Capacity</h3>
+
+          <p class="text-lg leading-relaxed mb-6">
+            The DGX SuperPOD architecture supports various NVIDIA GPU generations, offering flexibility in performance and memory capacity. The choice of GPU directly dictates the total available memory and computational power.
+          </p>
+
+          <div class="data-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>GPU Model</th>
+                  <th>Memory per GPU</th>
+                  <th>GPUs per Node</th>
+                  <th>Memory per Node</th>
+                  <th>30-GPU Configuration</th>
+                  <th>Total Memory (30 GPUs)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="font-medium">NVIDIA H200</td>
+                  <td>~141GB</td>
+                  <td>8</td>
+                  <td>1.128TB</td>
+                  <td>4 nodes (32 GPUs)</td>
+                  <td><strong>~4.5TB</strong></td>
+                </tr>
+                <tr>
+                  <td class="font-medium">NVIDIA A100 80GB</td>
+                  <td>80GB</td>
+                  <td>8</td>
+                  <td>640GB</td>
+                  <td>4 nodes (32 GPUs)</td>
+                  <td><strong>2.56TB</strong></td>
+                </tr>
+                <tr>
+                  <td class="font-medium">NVIDIA A100 40GB</td>
+                  <td>40GB</td>
+                  <td>8</td>
+                  <td>320GB</td>
+                  <td>4 nodes (32 GPUs)</td>
+                  <td><strong>1.28TB</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight-box mt-6">
+            <p class="text-lg">
+              <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+              Even a configuration with two 8-GPU DGX A100 nodes (16 GPUs) would provide exactly 1.28TB of GPU memory, though this doesn&#39;t meet the &#34;30 GPUs&#34; requirement.
+              <a href="https://www.servethehome.com/nvidia-a100-80gb-brings-double-the-memory/" class="citation" target="_blank">[A100 80GB Launch Coverage]</a>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interconnect and Networking -->
+      <section id="superpod-interconnect" class="py-16 px-8 bg-white">
+        <div class="container mx-auto max-w-6xl">
+          <h3 class="font-serif text-3xl font-bold text-gray-900 mb-8">Interconnect and Networking</h3>
+
+          <p class="text-lg leading-relaxed mb-6">
+            High-bandwidth, low-latency communication is paramount for optimal performance in distributed AI training and HPC workloads across multiple nodes.
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <div>
+              <h4 class="font-serif text-xl font-bold text-gray-900 mb-4">Intra-Node Connectivity</h4>
+              <ul class="space-y-3 text-gray-700">
+                <li><strong>NVLink:</strong> 18x connections per GPU, 900GB/s bidirectional bandwidth</li>
+                <li><strong>NVSwitch:</strong> 4x switches, 7.2TB/s aggregate bidirectional bandwidth</li>
+                <li><strong>Performance:</strong> 1.5x more bandwidth than previous generation</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-serif text-xl font-bold text-gray-900 mb-4">Inter-Node Connectivity</h4>
+              <ul class="space-y-3 text-gray-700">
+                <li><strong>ConnectX-7:</strong> 10x 400Gb/s interfaces per node</li>
+                <li><strong>Total Bandwidth:</strong> 1TB/s peak bidirectional</li>
+                <li><strong>InfiniBand:</strong> Quantum-2 or Quantum-X800 options</li>
+                <li><strong>Ethernet:</strong> Spectrum-X platform alternatives</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <h4 class="font-serif text-xl font-bold text-gray-900 mb-4">Network Architecture Topology</h4>
+            <div class="mermaid-container">
+              <div class="mermaid-controls">
+                <button class="mermaid-control-btn zoom-in" title="放大">
+                  <i class="fas fa-search-plus"></i>
+                </button>
+                <button class="mermaid-control-btn zoom-out" title="缩小">
+                  <i class="fas fa-search-minus"></i>
+                </button>
+                <button class="mermaid-control-btn reset-zoom" title="重置">
+                  <i class="fas fa-expand-arrows-alt"></i>
+                </button>
+                <button class="mermaid-control-btn fullscreen" title="全屏查看">
+                  <i class="fas fa-expand"></i>
+                </button>
+              </div>
+              <div class="mermaid" id="network-topology">
+                graph TB
+                A[&#34;DGX Node 1
+                <br/>8x GPUs&#34;] --&gt; E[&#34;InfiniBand
+                <br/>Switch Fabric&#34;]
+                B[&#34;DGX Node 2
+                <br/>8x GPUs&#34;] --&gt; E
+                C[&#34;DGX Node 3
+                <br/>8x GPUs&#34;] --&gt; E
+                D[&#34;DGX Node 4
+                <br/>8x GPUs&#34;] --&gt; E
+                E --&gt; F[&#34;Storage
+                <br/>Network&#34;]
+                E --&gt; G[&#34;Management
+                <br/>Network&#34;]
+
+                subgraph &#34;NVLink Domain&#34;
+                A1[&#34;GPU1&#34;] --&gt; A2[&#34;GPU2&#34;]
+                A2 --&gt; A3[&#34;GPU3&#34;]
+                A3 --&gt; A4[&#34;GPU4&#34;]
+                A4 --&gt; A1
+                end
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p class="text-lg">
+              <i class="fas fa-network-wired text-blue-600 mr-2"></i>
+              <strong>GPUDirect RDMA</strong> enables GPUs in different nodes to directly access each other&#39;s memory, bypassing CPU involvement and reducing latency, which is vital for MPI-based HPC applications and certain AI workloads.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Software Stack -->
+      <section id="superpod-software" class="py-16 px-8">
+        <div class="container mx-auto max-w-6xl">
+          <h3 class="font-serif text-3xl font-bold text-gray-900 mb-8">Software and Management</h3>
+
+          <p class="text-lg leading-relaxed mb-6">
+            Managing a 30-GPU system requires a comprehensive software stack and robust orchestration tools to ensure optimal performance and resource utilization.
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="font-serif text-xl font-bold text-gray-900 mb-4">Core Software Stack</h4>
+              <ul class="space-y-3 text-gray-700">
+                <li><strong>GPU Drivers &amp; CUDA Toolkit:</strong> Foundation for GPU acceleration</li>
+                <li><strong>cuDNN &amp; NCCL:</strong> Deep learning and collective communications</li>
+                <li><strong>AI Frameworks:</strong> TensorFlow, PyTorch, MXNet</li>
+                <li><strong>NGC Catalog:</strong> GPU-optimized containers and models</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-serif text-xl font-bold text-gray-900 mb-4">Orchestration &amp; Management</h4>
+              <ul class="space-y-3 text-gray-700">
+                <li><strong>Workload Managers:</strong> Slurm, Kubernetes with GPU plugins</li>
+                <li><strong>NVIDIA AI Enterprise:</strong> Tested and certified AI tools</li>
+                <li><strong>Monitoring Tools:</strong> GPU utilization, temperature, power</li>
+                <li><strong>Liqid Matrix:</strong> For composable infrastructure management</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="quote-block mt-8">
+            &#34;The complexity of the software stack necessitates careful planning, version management, and ongoing maintenance to keep the system running efficiently and securely. NVIDIA AI Enterprise provides a suite of AI tools and frameworks that are tested, certified, and supported by NVIDIA, designed to streamline the development and deployment of AI applications in enterprise environments.&#34;
+          </div>
+        </div>
+      </section>
+
+      <!-- Implementation Considerations -->
+      <section id="physical-space" class="py-16 px-8 bg-white">
+        <div class="container mx-auto max-w-6xl">
+          <h2 class="font-serif text-4xl font-bold text-gray-900 mb-8">Implementation Considerations</h2>
+
+          <h3 class="font-serif text-3xl font-bold text-gray-900 mb-6">Physical Space and Rack Density</h3>
+
+          <p class="text-lg leading-relaxed mb-6">
+            Physical space and rack density are primary concerns when deploying high-density GPU servers. The Liqid UltraStack 30 consumes 16U of rack space, while a four-node DGX H200 cluster would occupy approximately 24U.
+          </p>
+
+          <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="bento-card text-center">
+              <i class="fas fa-server text-blue-600 text-3xl mb-4"></i>
+              <h4 class="font-serif text-lg font-bold text-gray-900 mb-2">Liqid UltraStack 30</h4>
+              <p class="text-2xl font-bold text-blue-600 mb-1">16U</p>
+              <p class="text-sm text-gray-600">Single system solution</p>
+            </div>
+            <div class="bento-card text-center">
+              <i class="fas fa-layer-group text-green-600 text-3xl mb-4"></i>
+              <h4 class="font-serif text-lg font-bold text-gray-900 mb-2">4x DGX H200</h4>
+              <p class="text-2xl font-bold text-green-600 mb-1">~24U</p>
+              <p class="text-sm text-gray-600">Multi-node cluster</p>
+            </div>
+            <div class="bento-card text-center">
+              <i class="fas fa-weight-hanging text-orange-600 text-3xl mb-4"></i>
+              <h4 class="font-serif text-lg font-bold text-gray-900 mb-2">Weight Considerations</h4>
+              <p class="text-sm text-gray-600">Robust rack infrastructure required</p>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p class="text-lg">
+              <i class="fas fa-industry text-blue-600 mr-2"></i>
+              Dell&#39;s PowerEdge XE9780 and XE9785 servers support up to 192 GPUs with direct-to-chip liquid cooling, while the NVIDIA GB200 NVL72 combines 72 Blackwell GPUs in a single rack, showcasing the pinnacle of current density.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Power and Cooling -->
+      <section id="power-cooling" class="py-16 px-8">
+        <div class="container mx-auto max-w-6xl">
+          <h3 class="font-serif text-3xl font-bold text-gray-900 mb-8">Power and Cooling Requirements</h3>
+
+          <p class="text-lg leading-relaxed mb-6">
+            High-density GPU configurations impose significant power and cooling demands, with systems potentially drawing 10s of kilowatts and requiring advanced cooling solutions.
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <div>
+              <h4 class="font-serif text-xl font-bold text-gray-900 mb-4">Power Requirements</h4>
+              <ul class="space-y-3 text-gray-700">
+                <li><strong>Liqid UltraStack 30:</strong> 11.2 kW average power</li>
+                <li><strong>GPU Power Range:</strong> 300W (L40S) to 700W (H100) per GPU</li>
+                <li><strong>Infrastructure Needs:</strong> High-capacity PDUs, UPS systems</li>
+                <li><strong>Redundancy:</strong> Dual power feeds recommended</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-serif text-xl font-bold text-gray-900 mb-4">Cooling Solutions</h4>
+              <ul class="space-y-3 text-gray-700">
+                <li><strong>Direct-to-Chip Liquid:</strong> Dell XE9780L/XE9785L</li>
+                <li><strong>Rack-Scale Liquid:</strong> NVIDIA GB200 NVL72</li>
+                <li><strong>Immersion Cooling:</strong> Emerging technology option</li>
+                <li><strong>Advanced Air Cooling:</strong> High-flow, targeted solutions</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <h4 class="font-serif text-xl font-bold text-gray-900 mb-4">Power vs. Performance Trade-offs</h4>
+            <div class="mermaid-container">
+              <div class="mermaid-controls">
+                <button class="mermaid-control-btn zoom-in" title="放大">
+                  <i class="fas fa-search-plus"></i>
+                </button>
+                <button class="mermaid-control-btn zoom-out" title="缩小">
+                  <i class="fas fa-search-minus"></i>
+                </button>
+                <button class="mermaid-control-btn reset-zoom" title="重置">
+                  <i class="fas fa-expand-arrows-alt"></i>
+                </button>
+                <button class="mermaid-control-btn fullscreen" title="全屏查看">
+                  <i class="fas fa-expand"></i>
+                </button>
+              </div>
+              <div class="mermaid" id="power-performance">
+                graph LR
+                A[&#34;Low Power
+                <br/>300W/GPU&#34;] --&gt; B[&#34;L40S
+                <br/>48GB&#34;]
+                C[&#34;Medium Power
+                <br/>400W/GPU&#34;] --&gt; D[&#34;A100
+                <br/>80GB&#34;]
+                E[&#34;High Power
+                <br/>700W/GPU&#34;] --&gt; F[&#34;H100/H200
+                <br/>141GB&#34;]
+
+                B --&gt; G[&#34;1.44TB Total
+                <br/>11.2kW System&#34;]
+                D --&gt; H[&#34;2.56TB Total
+                <br/>~16kW System&#34;]
+                F --&gt; I[&#34;4.5TB Total
+                <br/>~28kW System&#34;]
+
+                style A fill:#e1f5fe
+                style C fill:#fff3e0
+                style E fill:#ffebee
+                style B fill:#bbdefb
+                style D fill:#ffe0b2
+                style F fill:#ffcdd2
+                style G fill:#f5f5f5
+                style H fill:#f5f5f5
+                style I fill:#f5f5f5
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interconnect Bandwidth -->
+      <section id="interconnect-bandwidth" class="py-16 px-8 bg-white">
+        <div class="container mx-auto max-w-6xl">
+          <h3 class="font-serif text-3xl font-bold text-gray-900 mb-8">Interconnect Bandwidth and Latency</h3>
+
+          <p class="text-lg leading-relaxed mb-6">
+            Efficient communication between GPUs is essential for distributed training, large-scale inference, and HPC simulations. The choice of interconnect technology directly impacts overall system performance.
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <div>
+              <h4 class="font-serif text-xl font-bold text-gray-900 mb-4">Intra-Node Technologies</h4>
+              <div class="space-y-4">
+                <div class="border border-gray-200 rounded-lg p-4">
+                  <h5 class="font-bold text-gray-900 mb-2">NVLink &amp; NVSwitch</h5>
+                  <p class="text-sm text-gray-700 mb-2">DGX H200: 900GB/s GPU-to-GPU bandwidth</p>
+                  <p class="text-sm text-gray-700">7.2TB/s aggregate bidirectional bandwidth</p>
+                </div>
+                <div class="border border-gray-200 rounded-lg p-4">
+                  <h5 class="font-bold text-gray-900 mb-2">PCIe Gen 4.0</h5>
+                  <p class="text-sm text-gray-700">UltraStack 30: PCIe Gen 4.0 x16 fabric</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-serif text-xl font-bold text-gray-900 mb-4">Inter-Node Technologies</h4>
+              <div class="space-y-4">
+                <div class="border border-gray-200 rounded-lg p-4">
+                  <h5 class="font-bold text-gray-900 mb-2">InfiniBand</h5>
+                  <p class="text-sm text-gray-700 mb-2">Quantum-X800: 800Gb/s</p>
+                  <p class="text-sm text-gray-700">Quantum-2 alternatives</p>
+                </div>
+                <div class="border border-gray-200 rounded-lg p-4">
+                  <h5 class="font-bold text-gray-900 mb-2">Ethernet</h5>
+                  <p class="text-sm text-gray-700 mb-2">Spectrum-X platform</p>
+                  <p class="text-sm text-gray-700">ConnectX-7: 400Gb/s interfaces</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p class="text-lg">
+              <i class="fas fa-tachometer-alt text-blue-600 mr-2"></i>
+              <strong>GPUDirect RDMA</strong> enables GPUs in different nodes to directly access each other&#39;s memory, bypassing CPU involvement and reducing latency, which is vital for MPI-based HPC applications and certain AI workloads.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Software Stack -->
+      <section id="software-orchestration" class="py-16 px-8">
+        <div class="container mx-auto max-w-6xl">
+          <h3 class="font-serif text-3xl font-bold text-gray-900 mb-8">Software Stack and Orchestration</h3>
+
+          <p class="text-lg leading-relaxed mb-6">
+            Managing a 30-GPU system requires a comprehensive software stack including GPU drivers, CUDA toolkit, AI frameworks, and robust orchestration tools for resource management and monitoring.
+          </p>
+
+          <div class="chart-container">
+            <h4 class="font-serif text-xl font-bold text-gray-900 mb-4">Software Stack Architecture</h4>
+            <div class="mermaid-container">
+              <div class="mermaid-controls">
+                <button class="mermaid-control-btn zoom-in" title="放大">
+                  <i class="fas fa-search-plus"></i>
+                </button>
+                <button class="mermaid-control-btn zoom-out" title="缩小">
+                  <i class="fas fa-search-minus"></i>
+                </button>
+                <button class="mermaid-control-btn reset-zoom" title="重置">
+                  <i class="fas fa-expand-arrows-alt"></i>
+                </button>
+                <button class="mermaid-control-btn fullscreen" title="全屏查看">
+                  <i class="fas fa-expand"></i>
+                </button>
+              </div>
+              <div class="mermaid" id="software-stack">
+                graph TD
+                A[&#34;Applications&#34;] --&gt; B[&#34;AI Frameworks
+                <br/>TensorFlow, PyTorch&#34;]
+                B --&gt; C[&#34;GPU Libraries
+                <br/>cuDNN, NCCL&#34;]
+                C --&gt; D[&#34;CUDA Toolkit&#34;]
+                D --&gt; E[&#34;GPU Drivers&#34;]
+
+                F[&#34;Orchestration&#34;] --&gt; G[&#34;Kubernetes + GPU Operator&#34;]
+                F --&gt; H[&#34;Slurm Workload Manager&#34;]
+                G --&gt; I[&#34;Monitoring &amp; Logging&#34;]
+                H --&gt; I
+
+                J[&#34;NGC Catalog&#34;] --&gt; K[&#34;Pre-built Containers&#34;]
+                J --&gt; L[&#34;Pre-trained Models&#34;]
+                J --&gt; M[&#34;Helm Charts&#34;]
+
+                style A fill:#e3f2fd
+                style B fill:#e8f5e8
+                style C fill:#fff3e0
+                style D fill:#f3e5f5
+                style E fill:#fce4ec
+                style F fill:#f1f8e9
+                style G fill:#e0f7fa
+                style H fill:#e0f7fa
+                style I fill:#fafafa
+                style J fill:#fff8e1
+                style K fill:#e8eaf6
+                style L fill:#e8eaf6
+                style M fill:#e8eaf6
+              </div>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="bento-card">
+              <h4 class="font-serif text-lg font-bold text-gray-900 mb-3">Core Stack</h4>
+              <ul class="text-sm text-gray-700 space-y-1">
+                <li>• GPU Drivers</li>
+                <li>• CUDA Toolkit</li>
+                <li>• cuDNN &amp; NCCL</li>
+                <li>• AI Frameworks</li>
+              </ul>
+            </div>
+            <div class="bento-card">
+              <h4 class="font-serif text-lg font-bold text-gray-900 mb-3">Management</h4>
+              <ul class="text-sm text-gray-700 space-y-1">
+                <li>• Kubernetes</li>
+                <li>• Slurm</li>
+                <li>• NVIDIA GPU Operator</li>
+                <li>• Monitoring Tools</li>
+              </ul>
+            </div>
+            <div class="bento-card">
+              <h4 class="font-serif text-lg font-bold text-gray-900 mb-3">Enterprise</h4>
+              <ul class="text-sm text-gray-700 space-y-1">
+                <li>• NVIDIA AI Enterprise</li>
+                <li>• NGC Catalog</li>
+                <li>• Liqid Matrix</li>
+                <li>• Support Services</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Performance Analysis -->
+      <section id="performance-analysis" class="py-16 px-8 bg-white">
+        <div class="container mx-auto max-w-6xl">
+          <h2 class="font-serif text-4xl font-bold text-gray-900 mb-8">Performance Analysis</h2>
+
+          <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <div class="bento-card">
+              <h3 class="font-serif text-xl font-bold text-gray-900 mb-4">Liqid UltraStack 30 Advantages</h3>
+              <ul class="space-y-2 text-gray-700">
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Single system simplicity</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>1.44TB memory in 16U</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Composable infrastructure</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>RDMA P2P communication</li>
+              </ul>
+            </div>
+            <div class="bento-card">
+              <h3 class="font-serif text-xl font-bold text-gray-900 mb-4">DGX SuperPOD Advantages</h3>
+              <ul class="space-y-2 text-gray-700">
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Up to 4.5TB memory</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Proven enterprise architecture</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Superior GPU performance</li>
+                <li><i class="fas fa-check text-green-600 mr-2"></i>Linear scalability</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p class="text-lg">
+              <i class="fas fa-balance-scale text-blue-600 mr-2"></i>
+              The choice between solutions depends on specific workload requirements: <strong>UltraStack 30</strong> for maximum density in a single system, or <strong>DGX SuperPOD</strong> for ultimate performance and scalability.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cost Analysis -->
+      <section id="cost-analysis" class="py-16 px-8">
+        <div class="container mx-auto max-w-6xl">
+          <h3 class="font-serif text-3xl font-bold text-gray-900 mb-8">Cost Considerations</h3>
+
+          <p class="text-lg leading-relaxed mb-6">
+            Total cost of ownership extends beyond hardware acquisition to include power consumption, cooling infrastructure, software licensing, and operational complexity.
+          </p>
+
+          <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="bento-card text-center">
+              <i class="fas fa-dollar-sign text-green-600 text-2xl mb-4"></i>
+              <h4 class="font-serif text-lg font-bold text-gray-900 mb-2">Hardware Acquisition</h4>
+              <p class="text-sm text-gray-700">Initial hardware investment and deployment costs</p>
+            </div>
+            <div class="bento-card text-center">
+              <i class="fas fa-bolt text-orange-600 text-2xl mb-4"></i>
+              <h4 class="font-serif text-lg font-bold text-gray-900 mb-2">Power &amp; Cooling</h4>
+              <p class="text-sm text-gray-700">Ongoing operational expenses for infrastructure</p>
+            </div>
+            <div class="bento-card text-center">
+              <i class="fas fa-cogs text-blue-600 text-2xl mb-4"></i>
+              <h4 class="font-serif text-lg font-bold text-gray-900 mb-2">Software &amp; Support</h4>
+              <p class="text-sm text-gray-700">Licensing, maintenance, and operational overhead</p>
+            </div>
+          </div>
+
+          <div class="quote-block">
+            &#34;Liqid emphasizes energy-efficient design for the UltraStack 30, aiming to deliver top-tier performance while minimizing power consumption and reducing operational costs through operational efficiency.&#34;
+          </div>
+        </div>
+      </section>
+
+      <!-- Recommendations -->
+      <section id="recommendations" class="py-16 px-8 bg-white">
+        <div class="container mx-auto max-w-6xl">
+          <h2 class="font-serif text-4xl font-bold text-gray-900 mb-8">Recommendations</h2>
+
+          <div class="highlight-box mb-8">
+            <p class="text-xl font-medium">
+              Both <strong>Liqid UltraStack 30</strong> and <strong>NVIDIA DGX SuperPOD</strong> architectures successfully meet and exceed the target configuration of 30 GPUs with at least 1.28TB GPU memory.
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <div class="bento-card">
+              <h3 class="font-serif text-xl font-bold text-gray-900 mb-4">Choose Liqid UltraStack 30 When:</h3>
+              <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start">
+                  <i class="fas fa-server text-blue-600 mr-3 mt-1"></i>
+                  <span>Single-system simplicity is preferred</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-compress text-blue-600 mr-3 mt-1"></i>
+                  <span>Rack space optimization is critical</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-puzzle-piece text-blue-600 mr-3 mt-1"></i>
+                  <span>Composable infrastructure benefits are desired</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-clock text-blue-600 mr-3 mt-1"></i>
+                  <span>Faster deployment timeline is needed</span>
+                </li>
+              </ul>
+            </div>
+            <div class="bento-card">
+              <h3 class="font-serif text-xl font-bold text-gray-900 mb-4">Choose DGX SuperPOD When:</h3>
+              <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start">
+                  <i class="fas fa-chart-line text-green-600 mr-3 mt-1"></i>
+                  <span>Maximum performance is required</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-expand text-green-600 mr-3 mt-1"></i>
+                  <span>Future scalability is essential</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-shield-alt text-green-600 mr-3 mt-1"></i>
+                  <span>Enterprise-grade support is needed</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-layer-group text-green-600 mr-3 mt-1"></i>
+                  <span>Proven architecture preferred</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+            <h4 class="font-serif text-lg font-bold text-blue-900 mb-3">Key Success Factors</h4>
+            <div class="grid md:grid-cols-2 gap-4 text-blue-800">
+              <div>
+                <p class="font-medium mb-2">Infrastructure Planning:</p>
+                <ul class="text-sm space-y-1">
+                  <li>• Adequate power provisioning</li>
+                  <li>• Advanced cooling solutions</li>
+                  <li>• Physical space requirements</li>
+                </ul>
+              </div>
+              <div>
+                <p class="font-medium mb-2">Operational Excellence:</p>
+                <ul class="text-sm space-y-1">
+                  <li>• Comprehensive monitoring</li>
+                  <li>• Skilled personnel training</li>
+                  <li>• Software stack management</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <p class="text-lg text-gray-700 leading-relaxed">
+              The feasibility of 30-GPU configurations with 1.28TB+ memory is clearly established with current NVIDIA technologies. The decision between solutions should be based on specific organizational requirements, budget constraints, and long-term strategic objectives.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Mobile TOC Toggle -->
+    <button id="toc-toggle" class="fixed top-4 left-4 z-50 bg-blue-600 text-white p-3 rounded-lg shadow-lg md:hidden">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#ffffff',
+                primaryTextColor: '#1e293b',
+                primaryBorderColor: '#3b82f6',
+                lineColor: '#64748b',
+                secondaryColor: '#f8fafc',
+                tertiaryColor: '#e2e8f0',
+                background: '#ffffff',
+                mainBkg: '#ffffff',
+                secondBkg: '#f8fafc',
+                tertiaryBkg: '#e2e8f0',
+                nodeBorder: '#3b82f6',
+                clusterBkg: '#f8fafc',
+                clusterBorder: '#cbd5e1',
+                defaultLinkColor: '#64748b',
+                titleColor: '#1e293b',
+                edgeLabelBackground: '#ffffff',
+                nodeTextColor: '#1e293b'
+            },
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+        
+        // Initialize Mermaid Controls for zoom and pan
+        function initializeMermaidControls() {
+            const containers = document.querySelectorAll('.mermaid-container');
+
+            containers.forEach(container => {
+            const mermaidElement = container.querySelector('.mermaid');
+            let scale = 1;
+            let isDragging = false;
+            let startX, startY, translateX = 0, translateY = 0;
+
+            // 触摸相关状态
+            let isTouch = false;
+            let touchStartTime = 0;
+            let initialDistance = 0;
+            let initialScale = 1;
+            let isPinching = false;
+
+            // Zoom controls
+            const zoomInBtn = container.querySelector('.zoom-in');
+            const zoomOutBtn = container.querySelector('.zoom-out');
+            const resetBtn = container.querySelector('.reset-zoom');
+            const fullscreenBtn = container.querySelector('.fullscreen');
+
+            function updateTransform() {
+                mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+                if (scale > 1) {
+                container.classList.add('zoomed');
+                } else {
+                container.classList.remove('zoomed');
+                }
+
+                mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+            }
+
+            if (zoomInBtn) {
+                zoomInBtn.addEventListener('click', () => {
+                scale = Math.min(scale * 1.25, 4);
+                updateTransform();
+                });
+            }
+
+            if (zoomOutBtn) {
+                zoomOutBtn.addEventListener('click', () => {
+                scale = Math.max(scale / 1.25, 0.3);
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+                updateTransform();
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+                });
+            }
+
+            if (fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', () => {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
+                }
+                });
+            }
+
+            // Mouse Events
+            mermaidElement.addEventListener('mousedown', (e) => {
+                if (isTouch) return; // 如果是触摸设备，忽略鼠标事件
+
+                isDragging = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+                mermaidElement.style.cursor = 'grabbing';
+                updateTransform();
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging && !isTouch) {
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseleave', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            // 获取两点之间的距离
+            function getTouchDistance(touch1, touch2) {
+                return Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+                );
+            }
+
+            // Touch Events - 触摸事件处理
+            mermaidElement.addEventListener('touchstart', (e) => {
+                isTouch = true;
+                touchStartTime = Date.now();
+
+                if (e.touches.length === 1) {
+                // 单指拖动
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+
+                } else if (e.touches.length === 2) {
+                // 双指缩放
+                isPinching = true;
+                isDragging = false;
+
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialDistance = getTouchDistance(touch1, touch2);
+                initialScale = scale;
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isDragging && !isPinching) {
+                // 单指拖动
+                const touch = e.touches[0];
+                translateX = touch.clientX - startX;
+                translateY = touch.clientY - startY;
+                updateTransform();
+
+                } else if (e.touches.length === 2 && isPinching) {
+                // 双指缩放
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = getTouchDistance(touch1, touch2);
+
+                if (initialDistance > 0) {
+                    const newScale = Math.min(Math.max(
+                    initialScale * (currentDistance / initialDistance),
+                    0.3
+                    ), 4);
+                    scale = newScale;
+                    updateTransform();
+                }
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchend', (e) => {
+                // 重置状态
+                if (e.touches.length === 0) {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                // 延迟重置isTouch，避免鼠标事件立即触发
+                setTimeout(() => {
+                    isTouch = false;
+                }, 100);
+                } else if (e.touches.length === 1 && isPinching) {
+                // 从双指变为单指，切换为拖动模式
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+                }
+
+                updateTransform();
+            });
+
+            mermaidElement.addEventListener('touchcancel', (e) => {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                setTimeout(() => {
+                isTouch = false;
+                }, 100);
+
+                updateTransform();
+            });
+
+            // Enhanced wheel zoom with better center point handling
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+                // Adjust translation to zoom towards center
+                if (newScale !== scale) {
+                const scaleDiff = newScale / scale;
+                translateX = translateX * scaleDiff;
+                translateY = translateY * scaleDiff;
+                scale = newScale;
+
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+
+                updateTransform();
+                }
+            });
+
+            // Initialize display
+            updateTransform();
+            });
+        }
+
+        // Initialize mermaid controls after diagrams are rendered
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(initializeMermaidControls, 1000);
+        });
+        
+        // Mobile TOC Toggle
+        const tocToggle = document.getElementById('toc-toggle');
+        const toc = document.querySelector('.toc-fixed');
+        
+        tocToggle.addEventListener('click', () => {
+            toc.classList.toggle('mobile-open');
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Close mobile TOC
+                    toc.classList.remove('mobile-open');
+                }
+            });
+        });
+        
+        // Active navigation highlighting
+        function updateActiveNav() {
+            const sections = document.querySelectorAll('[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', updateActiveNav);
+        
+        // Close mobile TOC when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!toc.contains(e.target) && !tocToggle.contains(e.target)) {
+                toc.classList.remove('mobile-open');
+            }
+        });
+        
+        // Close mobile TOC when resizing to desktop
+        function handleResize() {
+            if (window.innerWidth >= 769) {
+                toc.classList.remove('mobile-open');
+            }
+        }
+        
+        window.addEventListener('resize', handleResize);
+    </script>
+  
+
+</body></html>
