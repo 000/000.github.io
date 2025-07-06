@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Analysis: Next-Generation HPC & AI Infrastructure</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: The SPA is designed as a narrative-driven dashboard, guiding the user from the high-level problem to specific solutions and considerations. The structure is: 1. Executive Briefing (key takeaways). 2. The Challenge (defining the '30-GPU Node' problem visually). 3. Architectural Pathways (an interactive comparison of the two main solutions, Pre-Integrated vs. Custom). 4. Financial Deep Dive (an interactive cost calculator and TCO visualization). 5. Market Landscape (a dynamic chart to compare competing GPUs). 6. Strategic Outlook (conclusions and risks). This non-linear, thematic structure allows users to explore topics based on interest, making complex data digestible and directly comparable, which is more effective for web-based exploration than a linear report. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Physical vs. Logical Node concept. -> Goal: Compare/Inform -> Viz: Side-by-side HTML/CSS diagram with clear iconography (check/cross). -> Interaction: None, it's a static visual explanation. -> Justification: Instantly clarifies the core technical ambiguity for non-expert users. -> Library: Tailwind CSS.
+        - Report Info: Cost breakdown of GB200 NVL72. -> Goal: Explore/Analyze -> Viz: Bar Chart. -> Interaction: A toggle switch to apply a 30% import duty, which dynamically updates the chart data and total cost display. -> Justification: Makes the financial impact of policy tangible and interactive. -> Library: Chart.js.
+        - Report Info: 5-Year TCO projection. -> Goal: Inform -> Viz: Donut Chart. -> Interaction: Hover tooltips for details on each cost segment. -> Justification: Effectively shows the significant proportion of OPEX relative to CAPEX. -> Library: Chart.js.
+        - Report Info: GPU accelerator specifications table. -> Goal: Compare/Explore -> Viz: Bar Chart. -> Interaction: Dropdown menu allows user to select the comparison metric (Memory, Bandwidth, Power). -> Justification: Allows for dynamic, user-driven comparison of competing products on key metrics. -> Library: Chart.js.
+        - Report Info: Strategic recommendations and risks. -> Goal: Inform -> Viz: Accordion-style collapsible sections. -> Interaction: Click to expand/collapse. -> Justification: Presents dense text in a clean, manageable format, preventing information overload. -> Library: Vanilla JS + Tailwind CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #333333;
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #4DB6AC;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4DB6AC;
+            transition: width 0.3s;
+        }
+        .nav-link.active::after, .nav-link:hover::after {
+            width: 100%;
+        }
+        .stat-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        .tab.active {
+            border-color: #4DB6AC;
+            background-color: #E0F2F1;
+            color: #00796B;
+        }
+        .toggle-bg:after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            background: white;
+            border-radius: 9999px;
+            height: 1.25rem;
+            width: 1.25rem;
+            transition: 0.3s;
+        }
+        input:checked + .toggle-bg:after {
+            transform: translateX(100%);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-gray-800">
+                HPC Analysis
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#briefing" class="nav-link active">Briefing</a>
+                <a href="#challenge" class="nav-link">The Challenge</a>
+                <a href="#architectures" class="nav-link">Architectures</a>
+                <a href="#financials" class="nav-link">Financials</a>
+                <a href="#market" class="nav-link">Market</a>
+                <a href="#strategy" class="nav-link">Strategy</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="briefing" class="py-20 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-4">The Future of AI is Rack-Scale</h1>
+                <p class="text-lg md:text-xl text-gray-600 max-w-4xl mx-auto mb-12">An interactive analysis of the technical feasibility, architectural pathways, and financial realities of procuring next-generation supercomputing infrastructure.</p>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="stat-card p-6">
+                        <h3 class="text-xl font-bold text-teal-600 mb-2">Technically Feasible</h3>
+                        <p class="text-gray-600">The "30 GPUs per Node" requirement is achievable, but only by defining "Node" as a <span class="font-semibold">logical</span>, multi-server cluster, not a single physical box.</p>
+                    </div>
+                    <div class="stat-card p-6">
+                        <h3 class="text-xl font-bold text-teal-600 mb-2">Estimated Cost</h3>
+                        <p class="text-gray-600">A single NVIDIA GB200 NVL72 rack is estimated to cost <span class="font-semibold">~THB 150M to 195M</span> landed in Thailand, depending on import duties.</p>
+                    </div>
+                    <div class="stat-card p-6">
+                        <h3 class="text-xl font-bold text-teal-600 mb-2">Key Architecture</h3>
+                        <p class="text-gray-600">The <span class="font-semibold">NVIDIA GB200 NVL72</span>, with 72 GPUs in a single rack, exemplifies the "rack-as-a-node" paradigm and vastly exceeds the tender specifications.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="challenge" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-gray-800">The "30 GPUs per Node" Challenge</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">The core of the tender specification hinges on a critical distinction. This section clarifies why a literal interpretation is impossible and how a modern HPC perspective makes it feasible.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-white p-8 rounded-lg shadow-lg border-2 border-red-200">
+                        <h3 class="text-2xl font-bold text-red-600 mb-4 flex items-center">
+                            <span class="text-3xl mr-3">&#10060;</span> Physical Node: Impossible
+                        </h3>
+                        <p class="text-gray-700 mb-6">A single physical server chassis cannot house 30 GPUs. Even the most advanced, high-density servers from leading manufacturers max out at 8 or 10 GPUs due to fundamental constraints in physical space, power delivery, and cooling.</p>
+                        <div class="bg-red-50 p-6 rounded-lg text-center">
+                            <p class="text-6xl font-bold text-red-500">8-10</p>
+                            <p class="text-lg font-medium text-red-700">Max GPUs per physical server</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg border-2 border-green-200">
+                        <h3 class="text-2xl font-bold text-green-600 mb-4 flex items-center">
+                            <span class="text-3xl mr-3">&#9989;</span> Logical Node: Feasible
+                        </h3>
+                        <p class="text-gray-700 mb-6">In High-Performance Computing (HPC), a "node" is a logical pool of resources. Multiple physical servers are interconnected with high-speed fabrics to act as a single, powerful computational unit for a specific job.</p>
+                        <div class="bg-green-50 p-6 rounded-lg text-center">
+                             <p class="text-6xl font-bold text-green-500">30+</p>
+                            <p class="text-lg font-medium text-green-700">GPUs in a logical cluster node</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="architectures" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-gray-800">Architectural Pathways</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Once we define "node" logically, two primary architectural pathways emerge. The choice between them is a strategic trade-off between ultimate performance and flexibility.</p>
+                </div>
+                
+                <div>
+                    <div class="flex justify-center border-b mb-8">
+                        <button class="tab active py-4 px-6 block hover:text-teal-500 focus:outline-none text-lg font-medium" data-tab="integrated">Pre-Integrated Rack-Scale</button>
+                        <button class="tab py-4 px-6 block hover:text-teal-500 focus:outline-none text-lg font-medium" data-tab="custom">Custom-Integrated Cluster</button>
+                    </div>
+
+                    <div id="integrated" class="tab-content">
+                        <div class="grid md:grid-cols-2 gap-12 items-center">
+                            <div>
+                                <h3 class="text-3xl font-bold text-gray-800 mb-4">The Rack-as-a-Node Paradigm</h3>
+                                <p class="text-gray-600 mb-6">This approach uses a fully engineered, turnkey solution like the NVIDIA GB200 NVL72. The entire rack is designed, integrated, and sold as a single product, functioning as one massive, coherent accelerator.</p>
+                                <ul class="space-y-4">
+                                    <li class="flex items-start"><span class="text-green-500 font-bold text-xl mr-3">&#10003;</span><div><strong class="text-gray-700">Unmatched Performance:</strong> Tightly integrated components and proprietary interconnects (like NVLink) offer the highest possible bandwidth and lowest latency.</div></li>
+                                    <li class="flex items-start"><span class="text-green-500 font-bold text-xl mr-3">&#10003;</span><div><strong class="text-gray-700">Simplified Deployment:</strong> Arrives as a pre-validated, pre-configured unit, dramatically reducing integration complexity and time-to-solution.</div></li>
+                                    <li class="flex items-start"><span class="text-red-500 font-bold text-xl mr-3">&#10007;</span><div><strong class="text-gray-700">Vendor Lock-In:</strong> Commits the organization to a single vendor's ecosystem for hardware, software, and support.</div></li>
+                                </ul>
+                            </div>
+                            <div class="bg-gray-100 p-8 rounded-lg">
+                                <h4 class="text-xl font-bold text-center mb-4">Example: NVIDIA GB200 NVL72</h4>
+                                <div class="space-y-3 text-lg">
+                                    <div class="flex justify-between"><span>GPUs:</span><span class="font-semibold">72</span></div>
+                                    <div class="flex justify-between"><span>Total Memory:</span><span class="font-semibold">13.5 TB</span></div>
+                                    <div class="flex justify-between"><span>Interconnect:</span><span class="font-semibold">5th Gen NVLink</span></div>
+                                    <div class="flex justify-between"><span>Inter-GPU Bandwidth:</span><span class="font-semibold">1.8 TB/s</span></div>
+                                    <div class="flex justify-between"><span>Power Draw:</span><span class="font-semibold">~120 kW</span></div>
+                                    <div class="flex justify-between"><span>Cooling:</span><span class="font-semibold">Direct Liquid Cooled</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="custom" class="tab-content hidden">
+                         <div class="grid md:grid-cols-2 gap-12 items-center">
+                            <div>
+                                <h3 class="text-3xl font-bold text-gray-800 mb-4">The Disaggregated Cluster-Node</h3>
+                                <p class="text-gray-600 mb-6">This approach constructs a logical node by procuring individual high-density servers and knitting them together with a high-performance, standards-based interconnect fabric like InfiniBand.</p>
+                                <ul class="space-y-4">
+                                    <li class="flex items-start"><span class="text-green-500 font-bold text-xl mr-3">&#10003;</span><div><strong class="text-gray-700">Flexibility & Vendor Diversity:</strong> Allows selection of best-of-breed components for servers, storage, and networking from multiple vendors.</div></li>
+                                    <li class="flex items-start"><span class="text-green-500 font-bold text-xl mr-3">&#10003;</span><div><strong class="text-gray-700">Phased Scaling:</strong> Enables incremental investment and growth, scaling from a few servers to many as needs and budgets allow.</div></li>
+                                    <li class="flex items-start"><span class="text-red-500 font-bold text-xl mr-3">&#10007;</span><div><strong class="text-gray-700">Higher Complexity:</strong> Requires significant in-house or partner expertise for design, integration, validation, and performance tuning.</div></li>
+                                </ul>
+                            </div>
+                            <div class="bg-gray-100 p-8 rounded-lg">
+                                <h4 class="text-xl font-bold text-center mb-4">Example: 4x 8-GPU Servers</h4>
+                                <div class="space-y-3 text-lg">
+                                    <div class="flex justify-between"><span>GPUs:</span><span class="font-semibold">32</span></div>
+                                    <div class="flex justify-between"><span>Total Memory (H200):</span><span class="font-semibold">4.5 TB</span></div>
+                                    <div class="flex justify-between"><span>Interconnect:</span><span class="font-semibold">InfiniBand NDR</span></div>
+                                    <div class="flex justify-between"><span>Inter-GPU Bandwidth:</span><span class="font-semibold">~50 GB/s</span></div>
+                                    <div class="flex justify-between"><span>Power Draw:</span><span class="font-semibold">~40-50 kW</span></div>
+                                    <div class="flex justify-between"><span>Cooling:</span><span class="font-semibold">Liquid or Air</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="py-20">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-gray-800">Financial Deep Dive</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Understanding the total investment requires analyzing both the initial acquisition cost and the significant long-term operational expenses.</p>
+                </div>
+                <div class="grid lg:grid-cols-5 gap-8">
+                    <div class="lg:col-span-3 bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold mb-1">Interactive Cost Breakdown</h3>
+                        <p class="text-gray-600 mb-6">Estimated landed cost for one NVIDIA GB200 NVL72 rack in Thailand.</p>
+                        <div class="flex items-center justify-center mb-6">
+                            <span class="mr-3 text-gray-700">Standard (0% Duty)</span>
+                            <label for="dutyToggle" class="flex items-center cursor-pointer">
+                                <div class="relative">
+                                    <input type="checkbox" id="dutyToggle" class="sr-only">
+                                    <div class="block bg-gray-300 w-12 h-7 rounded-full toggle-bg"></div>
+                                </div>
+                            </label>
+                             <span class="ml-3 font-semibold text-gray-700">Contingency (30% Duty)</span>
+                        </div>
+                        <div class="chart-container" style="height: 350px; max-height: 40vh;">
+                            <canvas id="costChart"></canvas>
+                        </div>
+                        <div class="mt-8 text-center">
+                             <p class="text-lg text-gray-600">Final Estimated Total Price:</p>
+                             <p id="totalCost" class="text-4xl font-bold text-teal-600"></p>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2 bg-white p-8 rounded-lg shadow-lg">
+                         <h3 class="text-2xl font-bold mb-1">5-Year Total Cost of Ownership (TCO)</h3>
+                         <p class="text-gray-600 mb-6">The initial purchase is only part of the story. Operational costs are substantial.</p>
+                         <div class="chart-container" style="height: 350px; max-height: 40vh;">
+                            <canvas id="tcoChart"></canvas>
+                        </div>
+                        <div class="mt-8 text-center">
+                            <p class="text-lg text-gray-600">5-Year TCO is approx.</p>
+                             <p class="text-4xl font-bold text-teal-600">~THB 387M+</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="market" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-gray-800">Accelerator Market Landscape</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Compare the leading data center GPUs from major vendors across key performance metrics. The choice of accelerator is a foundational decision in any HPC design.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <div class="md:flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold mb-4 md:mb-0">GPU Specification Comparison</h3>
+                        <div class="flex items-center">
+                            <label for="metricSelect" class="mr-3 text-gray-700">Compare by:</label>
+                            <select id="metricSelect" class="form-select appearance-none block w-full md:w-auto px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-teal-600 focus:outline-none">
+                                <option value="memory" selected>Memory Capacity (GB)</option>
+                                <option value="bandwidth">Memory Bandwidth (TB/s)</option>
+                                <option value="power">Max Power (Watts)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="gpuCompareChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="strategy" class="py-20">
+             <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-gray-800">Strategic Outlook & Recommendations</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Acquiring this class of infrastructure is a strategic commitment with significant risks and rewards. Success requires a holistic approach beyond the hardware purchase.</p>
+                </div>
+                <div class="max-w-4xl mx-auto space-y-4">
+                    <div class="accordion-item bg-white rounded-lg shadow-md">
+                        <button class="accordion-header w-full flex justify-between items-center text-left p-6">
+                            <span class="text-xl font-semibold text-gray-800">Context: Sovereign AI & Thailand 4.0</span>
+                            <span class="accordion-icon text-2xl font-light text-teal-500 transform transition-transform">+</span>
+                        </button>
+                        <div class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                            <p class="p-6 pt-0 text-gray-600">This infrastructure is a key enabler for **Sovereign AI**, allowing Thailand to build and control its own AI future. It directly supports the **Thailand 4.0** initiative by providing the necessary tools to transition to an innovation-driven economy in fields like generative AI, advanced healthcare, and smart agriculture.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-white rounded-lg shadow-md">
+                        <button class="accordion-header w-full flex justify-between items-center text-left p-6">
+                            <span class="text-xl font-semibold text-gray-800">Risk Analysis: Lock-in, Supply Chain, and Execution</span>
+                            <span class="accordion-icon text-2xl font-light text-teal-500 transform transition-transform">+</span>
+                        </button>
+                        <div class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                            <p class="p-6 pt-0 text-gray-600">Key risks include **vendor lock-in** to proprietary ecosystems like NVIDIA's CUDA, **supply chain delays** for cutting-edge components, and most importantly, **execution risk**. An underutilized system represents a massive waste of capital. A clear program of projects, data, and skilled personnel is essential to realize its value.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-white rounded-lg shadow-md">
+                        <button class="accordion-header w-full flex justify-between items-center text-left p-6">
+                            <span class="text-xl font-semibold text-gray-800">Key Recommendations</span>
+                            <span class="accordion-icon text-2xl font-light text-teal-500 transform transition-transform">+</span>
+                        </button>
+                        <div class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                             <ul class="p-6 pt-0 text-gray-600 space-y-2 list-disc list-inside">
+                                <li><strong>Revise Tender Documents:</strong> Immediately clarify the term "Node" to distinguish between physical and logical units to avoid contractual ambiguity.</li>
+                                <li><strong>Adopt TCO Budgeting:</strong> Financial planning must be based on a 5-year Total Cost of Ownership model, not just the initial purchase price.</li>
+                                <li><strong>Engage Elite Partners:</strong> Work only with partners certified by the manufacturer for rack-scale, liquid-cooled deployments.</li>
+                                <li><strong>Invest in People & Programs:</strong> Concurrently invest in hiring and training a skilled team and developing a clear pipeline of AI projects.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 HPC Interactive Analysis. All data derived from public reports for illustrative purposes.</p>
+        </div>
+    </footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const app = {
+        init() {
+            this.setupEventListeners();
+            this.initCostChart();
+            this.initTcoChart();
+            this.initGpuCompareChart();
+            this.updateActiveNavLink();
+        },
+
+        setupEventListeners() {
+            document.getElementById('dutyToggle').addEventListener('change', (e) => {
+                this.updateCostChart(e.target.checked);
+            });
+
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    const target = tab.getAttribute('data-tab');
+                    tabContents.forEach(content => {
+                        content.id === target ? content.classList.remove('hidden') : content.classList.add('hidden');
+                    });
+                });
+            });
+
+            document.getElementById('metricSelect').addEventListener('change', (e) => {
+                this.updateGpuCompareChart(e.target.value);
+            });
+
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('.accordion-icon');
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        icon.classList.remove('rotate-45');
+                    } else {
+                        document.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
+                        document.querySelectorAll('.accordion-icon').forEach(i => i.classList.remove('rotate-45'));
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        icon.classList.add('rotate-45');
+                    }
+                });
+            });
+            
+            window.addEventListener('scroll', this.updateActiveNavLink);
+        },
+        
+        updateActiveNavLink() {
+            let fromTop = window.scrollY + 150;
+            const navLinks = document.querySelectorAll('.nav-link');
+            let currentSection = null;
+
+            document.querySelectorAll('main section').forEach(section => {
+                if (section.offsetTop <= fromTop && section.offsetTop + section.offsetHeight > fromTop) {
+                    currentSection = section.id;
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        },
+
+        data: {
+            cost: {
+                labels: ['Hardware (CIF)', 'Import Duty', 'VAT', 'SI Margin (40%)'],
+                baseValues: {
+                    hardware: 100024800,
+                    vat_base_rate: 0.07,
+                    si_margin_rate: 0.4,
+                },
+                scenarios: {
+                    duty0: { dutyRate: 0, color: 'rgba(77, 182, 172, 0.7)' },
+                    duty30: { dutyRate: 0.30, color: 'rgba(239, 83, 80, 0.7)' }
+                }
+            },
+            tco: {
+                labels: ['CAPEX (Hardware)', 'Colocation', 'Power & Cooling', 'Software & Support', 'Staffing'],
+                data: [149.8, 144.0, 28.5, 45.0, 20.0],
+                colors: ['#00796B', '#0097A7', '#26A69A', '#4DB6AC', '#80CBC4']
+            },
+            gpu: {
+                labels: ['NVIDIA B200', 'NVIDIA H200', 'AMD MI300X', 'Intel Gaudi 3', 'AMD MI325X'],
+                datasets: {
+                    memory: {
+                        label: 'Memory Capacity (GB)',
+                        data: [192, 141, 192, 128, 256],
+                        color: 'rgba(2,136,209, 0.7)'
+                    },
+                    bandwidth: {
+                        label: 'Memory Bandwidth (TB/s)',
+                        data: [8.0, 4.8, 5.3, 3.7, 6.0],
+                        color: 'rgba(0,121,107, 0.7)'
+                    },
+                    power: {
+                        label: 'Max Power (Watts)',
+                        data: [1200, 1000, 750, 900, 1000],
+                        color: 'rgba(216,27,96, 0.7)'
+                    }
+                }
+            }
+        },
+        
+        charts: {},
+
+        calculateCost(use30PercentDuty) {
+            const { hardware, vat_base_rate, si_margin_rate } = this.data.cost.baseValues;
+            const scenario = use30PercentDuty ? this.data.cost.scenarios.duty30 : this.data.cost.scenarios.duty0;
+
+            const duty = hardware * scenario.dutyRate;
+            const vatBase = hardware + duty;
+            const vat = vatBase * vat_base_rate;
+            const costBeforeSI = hardware + duty + vat;
+            const siMargin = costBeforeSI * si_margin_rate;
+            const total = costBeforeSI + siMargin;
+            
+            return {
+                datasets: [{
+                    label: 'Cost (THB)',
+                    data: [hardware, duty, vat, siMargin],
+                    backgroundColor: [this.data.tco.colors[1],this.data.tco.colors[2],this.data.tco.colors[3],this.data.tco.colors[4]],
+                    borderColor: '#ffffff',
+                    borderWidth: 1
+                }],
+                total: total
+            };
+        },
+
+        initCostChart() {
+            const ctx = document.getElementById('costChart').getContext('2d');
+            const initialData = this.calculateCost(false);
+            
+            this.charts.cost = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: this.data.cost.labels,
+                    datasets: initialData.datasets
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            stacked: true,
+                             ticks: {
+                                callback: function(value) {
+                                    return (value / 1e6) + 'M';
+                                }
+                            }
+                        },
+                        y: { stacked: true }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: false },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: ${new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', notation: 'compact' }).format(context.raw)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            document.getElementById('totalCost').textContent = new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(initialData.total);
+        },
+
+        updateCostChart(use30PercentDuty) {
+            const newData = this.calculateCost(use30PercentDuty);
+            this.charts.cost.data.datasets = newData.datasets;
+            this.charts.cost.update();
+            document.getElementById('totalCost').textContent = new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(newData.total);
+        },
+
+        initTcoChart() {
+            const ctx = document.getElementById('tcoChart').getContext('2d');
+            this.charts.tco = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: this.data.tco.labels,
+                    datasets: [{
+                        label: '5-Year Cost (Million THB)',
+                        data: this.data.tco.data,
+                        backgroundColor: this.data.tco.colors,
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: false
+                        },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    return ` ${context.label}: ${context.raw}M THB`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        },
+        
+        initGpuCompareChart() {
+            const ctx = document.getElementById('gpuCompareChart').getContext('2d');
+            const initialMetric = 'memory';
+            this.charts.gpuCompare = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: this.data.gpu.labels,
+                    datasets: [{
+                        label: this.data.gpu.datasets[initialMetric].label,
+                        data: this.data.gpu.datasets[initialMetric].data,
+                        backgroundColor: this.data.gpu.datasets[initialMetric].color,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        },
+        
+        updateGpuCompareChart(metric) {
+            const chart = this.charts.gpuCompare;
+            const newDataset = this.data.gpu.datasets[metric];
+            chart.data.datasets[0].label = newDataset.label;
+            chart.data.datasets[0].data = newDataset.data;
+            chart.data.datasets[0].backgroundColor = newDataset.color;
+            chart.update();
+        }
+    };
+
+    app.init();
+});
+</script>
+
+</body>
+</html>
