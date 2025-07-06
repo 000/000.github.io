@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เปรียบเทียบการชำระหนี้ กยศ. 3 กรณี</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Kanit', 'Sarabun', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 600;
+        }
+        .header h2 {
+            margin: 10px 0 0 0;
+            font-size: 20px;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+        .info-box {
+            background: #e8f4f8;
+            border: 2px solid #4a90e2;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .info-box h3 {
+            color: #1e3c72;
+            margin: 0 0 10px 0;
+        }
+        .params {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .param-item {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .param-item strong {
+            color: #2a5298;
+            font-size: 18px;
+        }
+        .cases-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .case-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .case-header {
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+        .case-header h3 {
+            margin: 0 0 5px 0;
+            font-size: 22px;
+        }
+        .case-header p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .case-1 .case-header { background: #e74c3c; }
+        .case-2 .case-header { background: #f39c12; }
+        .case-3 .case-header { background: #27ae60; }
+        
+        .payment-flow {
+            padding: 20px;
+            text-align: center;
+        }
+        .flow-order {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .flow-item {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            color: white;
+        }
+        .flow-arrow {
+            font-size: 20px;
+            color: #7f8c8d;
+        }
+        .penalty { background: #e74c3c; }
+        .interest { background: #f39c12; }
+        .principal { background: #27ae60; }
+        
+        .installments {
+            padding: 0 20px 20px;
+        }
+        .installment {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+        }
+        .installment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .installment-number {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .payment-amount {
+            background: #3498db;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+        .allocation {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .allocation-item {
+            text-align: center;
+            padding: 8px;
+            border-radius: 8px;
+            background: white;
+            border: 1px solid #e0e0e0;
+        }
+        .allocation-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 4px;
+        }
+        .allocation-value {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .debt-breakdown {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .debt-breakdown-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .debt-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            font-size: 13px;
+        }
+        .debt-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px;
+            background: white;
+            border-radius: 4px;
+        }
+        .debt-label {
+            color: #6c757d;
+        }
+        .debt-value {
+            font-weight: 600;
+        }
+        .debt-total {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 2px solid #ffeaa7;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 16px;
+            color: #d68910;
+        }
+        .summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .summary h3 {
+            margin: 0 0 20px 0;
+            font-size: 24px;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .summary-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .summary-case {
+            font-size: 16px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        .summary-amount {
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2a5298;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        @media (max-width: 768px) {
+            .cases-container {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .logo {
+                width: 60px;
+                height: 60px;
+                font-size: 14px;
+            }
+            .debt-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">กยศ.</div>
+            <h1>📊 เปรียบเทียบการชำระหนี้ กยศ.</h1>
+            <h2>ก่อนและหลัง พ.ร.บ. กยศ. ปี 2566</h2>
+        </div>
+
+        <div class="info-box">
+            <h3>🎯 ตัวอย่างการคำนวณ</h3>
+            <div class="params">
+                <div class="param-item">
+                    <strong>💰 เงินต้น:</strong> 100,000 บาท
+                </div>
+                <div class="param-item">
+                    <strong>💳 ชำระต่อปี:</strong> 8,000 บาท
+                </div>
+                <div class="param-item">
+                    <strong>📈 ดอกเบี้ย:</strong> 1% ต่อปี
+                </div>
+                <div class="param-item">
+                    <strong>⚠️ เบี้ยปรับ:</strong> 0.5% ต่อปี (ของเงินต้นค้างชำระ)
+                </div>
+                <div class="param-item">
+                    <strong>📅 กำหนดชำระ:</strong> 5 กรกฎาคม ของทุกปี
+                </div>
+                <div class="param-item">
+                    <strong>🗓️ เริ่มชำระ:</strong> 5 ก.ค. 2556 (งวดแรกไม่มีดอกเบี้ย)
+                </div>
+            </div>
+            <p style="margin-top: 15px; padding: 10px; background: #d4edda; border-radius: 8px; font-size: 14px; color: #155724;">
+                💡 <strong>หมายเหตุ:</strong> เมื่อชำระเงินตามลำดับจนครบงวดปัจจุบันแล้ว หากมีเงินเหลือจะนำไปชำระงวดถัดไป และหากชำระงวดถัดไปครบแล้ว เงินที่เหลือจะนำไปลดเงินต้นเท่านั้น
+            </p>
+        </div>
+
+        <div class="cases-container">
+            <!-- กรณีที่ 1 -->
+            <div class="case-card case-1">
+                <div class="case-header">
+                    <h3>❌ ก่อน พ.ร.บ. กยศ. 2566</h3>
+                    <p>(ชำระเบี้ยปรับก่อน)</p>
+                </div>
+                <div class="payment-flow">
+                    <strong>ลำดับการหักชำระ:</strong>
+                    <div class="flow-order">
+                        <span class="flow-item penalty">เบี้ยปรับ</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-item interest">ดอกเบี้ย</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-item principal">เงินต้น</span>
+                    </div>
+                </div>
+                <div class="installments">
+                    <div class="installment">
+                        <div class="installment-header">
+                            <span class="installment-number">งวดที่ 1 (5 ก.ค. 2556)</span>
+                            <span class="payment-amount">ชำระ 8,000 บาท</span>
+                        </div>
+                        <div class="allocation">
+                            <div class="allocation-item">
+                                <div class="allocation-label">เงินต้น</div>
+                                <div class="allocation-value" style="color: #27ae60;">2,500</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">ดอกเบี้ย</div>
+                                <div class="allocation-value" style="color: #f39c12;">0</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">เบี้ยปรับ</div>
+                                <div class="allocation-value" style="color: #e74c3c;">0</div>
+                            </div>
+                        </div>
+                        <div class="debt-breakdown">
+                            <div class="debt-breakdown-title">รายละเอียดหนี้คงเหลือ</div>
+                            <div class="debt-details">
+                                <div class="debt-detail">
+                                    <span class="debt-label">เงินต้นคงเหลือ:</span>
+                                    <span class="debt-value">97,500</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ต้นค้างชำระ:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ดอกเบี้ยค้าง:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">เบี้ยปรับค้าง:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                            </div>
+                            <div class="debt-total">
+                                <span>รวมหนี้คงเหลือ:</span>
+                                <span>97,500 บาท</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="installment">
+                        <div class="installment-header">
+                            <span class="installment-number">งวดที่ 10 (5 ก.ค. 2565)</span>
+                            <span class="payment-amount">ชำระ 8,000 บาท</span>
+                        </div>
+                        <div class="allocation">
+                            <div class="allocation-item">
+                                <div class="allocation-label">เงินต้น</div>
+                                <div class="allocation-value" style="color: #27ae60;">7,370</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">ดอกเบี้ย</div>
+                                <div class="allocation-value" style="color: #f39c12;">630</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">เบี้ยปรับ</div>
+                                <div class="allocation-value" style="color: #e74c3c;">0</div>
+                            </div>
+                        </div>
+                        <div class="debt-breakdown">
+                            <div class="debt-breakdown-title">รายละเอียดหนี้คงเหลือ</div>
+                            <div class="debt-details">
+                                <div class="debt-detail">
+                                    <span class="debt-label">เงินต้นคงเหลือ:</span>
+                                    <span class="debt-value">55,630</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ต้นค้างชำระ:</span>
+                                    <span class="debt-value">630</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ดอกเบี้ยค้าง:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">เบี้ยปรับค้าง:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                            </div>
+                            <div class="debt-total">
+                                <span>รวมหนี้คงเหลือ:</span>
+                                <span>56,260 บาท</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="installment" style="border: 2px solid #e74c3c;">
+                        <div class="installment-header">
+                            <span class="installment-number">งวดที่ 15 (5 ก.ค. 2570)</span>
+                            <span class="payment-amount">ชำระ 8,000 บาท</span>
+                        </div>
+                        <div class="allocation">
+                            <div class="allocation-item">
+                                <div class="allocation-label">เงินต้น</div>
+                                <div class="allocation-value" style="color: #27ae60;">7,683</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">ดอกเบี้ย</div>
+                                <div class="allocation-value" style="color: #f39c12;">255</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">เบี้ยปรับ</div>
+                                <div class="allocation-value" style="color: #e74c3c;">62</div>
+                            </div>
+                        </div>
+                        <div class="debt-breakdown" style="background: #f8d7da; border-color: #f5c6cb;">
+                            <div class="debt-breakdown-title">รายละเอียดหนี้คงเหลือ</div>
+                            <div class="debt-details">
+                                <div class="debt-detail">
+                                    <span class="debt-label">เงินต้นคงเหลือ:</span>
+                                    <span class="debt-value">17,801</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ต้นค้างชำระ:</span>
+                                    <span class="debt-value">17,801</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ดอกเบี้ยค้าง:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">เบี้ยปรับค้าง:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                            </div>
+                            <div class="debt-total" style="color: #e74c3c;">
+                                <span>รวมหนี้คงเหลือ:</span>
+                                <span>35,602 บาท</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- กรณีที่ 2 -->
+            <div class="case-card case-2">
+                <div class="case-header">
+                    <h3>🔄 ช่วงเปลี่ยนผ่าน "ลดแนวดิ่ง"</h3>
+                    <p>(20 มี.ค. 66 - 31 ธ.ค. 67)</p>
+                </div>
+                <div class="payment-flow">
+                    <strong>ลำดับการหักชำระ:</strong>
+                    <div class="flow-order">
+                        <span class="flow-item principal">เงินต้น</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-item interest">ดอกเบี้ย</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-item penalty">เบี้ยปรับ</span>
+                    </div>
+                </div>
+                <div class="installments">
+                    <div class="installment">
+                        <div class="installment-header">
+                            <span class="installment-number">งวดที่ 1 (5 ก.ค. 2556)</span>
+                            <span class="payment-amount">ชำระ 8,000 บาท</span>
+                        </div>
+                        <div class="allocation">
+                            <div class="allocation-item">
+                                <div class="allocation-label">เงินต้น</div>
+                                <div class="allocation-value" style="color: #27ae60;">2,500</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">ดอกเบี้ย</div>
+                                <div class="allocation-value" style="color: #f39c12;">0</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">เบี้ยปรับ</div>
+                                <div class="allocation-value" style="color: #e74c3c;">0</div>
+                            </div>
+                        </div>
+                        <div class="debt-breakdown">
+                            <div class="debt-breakdown-title">รายละเอียดหนี้คงเหลือ</div>
+                            <div class="debt-details">
+                                <div class="debt-detail">
+                                    <span class="debt-label">เงินต้นคงเหลือ:</span>
+                                    <span class="debt-value">97,500</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ต้นค้างชำระ:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ดอกเบี้ยค้าง:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">เบี้ยปรับค้าง:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                            </div>
+                            <div class="debt-total">
+                                <span>รวมหนี้คงเหลือ:</span>
+                                <span>97,500 บาท</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="installment">
+                        <div class="installment-header">
+                            <span class="installment-number">งวดที่ 10 (5 ก.ค. 2565)</span>
+                            <span class="payment-amount">ชำระ 8,000 บาท</span>
+                        </div>
+                        <div class="allocation">
+                            <div class="allocation-item">
+                                <div class="allocation-label">เงินต้น</div>
+                                <div class="allocation-value" style="color: #27ae60;">8,000</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">ดอกเบี้ย</div>
+                                <div class="allocation-value" style="color: #f39c12;">0</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">เบี้ยปรับ</div>
+                                <div class="allocation-value" style="color: #e74c3c;">0</div>
+                            </div>
+                        </div>
+                        <div class="debt-breakdown">
+                            <div class="debt-breakdown-title">รายละเอียดหนี้คงเหลือ</div>
+                            <div class="debt-details">
+                                <div class="debt-detail">
+                                    <span class="debt-label">เงินต้นคงเหลือ:</span>
+                                    <span class="debt-value">55,000</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ต้นค้างชำระ:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ดอกเบี้ยค้าง:</span>
+                                    <span class="debt-value">630</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">เบี้ยปรับค้าง:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                            </div>
+                            <div class="debt-total">
+                                <span>รวมหนี้คงเหลือ:</span>
+                                <span>55,630 บาท</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="installment" style="border: 2px solid #f39c12;">
+                        <div class="installment-header">
+                            <span class="installment-number">งวดที่ 15 (5 ก.ค. 2570)</span>
+                            <span class="payment-amount">ชำระ 8,000 บาท</span>
+                        </div>
+                        <div class="allocation">
+                            <div class="allocation-item">
+                                <div class="allocation-label">เงินต้น</div>
+                                <div class="allocation-value" style="color: #27ae60;">8,000</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">ดอกเบี้ย</div>
+                                <div class="allocation-value" style="color: #f39c12;">0</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">เบี้ยปรับ</div>
+                                <div class="allocation-value" style="color: #e74c3c;">0</div>
+                            </div>
+                        </div>
+                        <div class="debt-breakdown" style="background: #fff3cd; border-color: #ffeaa7;">
+                            <div class="debt-breakdown-title">รายละเอียดหนี้คงเหลือ</div>
+                            <div class="debt-details">
+                                <div class="debt-detail">
+                                    <span class="debt-label">เงินต้นคงเหลือ:</span>
+                                    <span class="debt-value">15,000</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ต้นค้างชำระ:</span>
+                                    <span class="debt-value">15,000</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ดอกเบี้ยค้าง:</span>
+                                    <span class="debt-value">2,580</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">เบี้ยปรับค้าง:</span>
+                                    <span class="debt-value">100</span>
+                                </div>
+                            </div>
+                            <div class="debt-total" style="color: #f39c12;">
+                                <span>รวมหนี้คงเหลือ:</span>
+                                <span>32,680 บาท</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- กรณีที่ 3 -->
+            <div class="case-card case-3">
+                <div class="case-header">
+                    <h3>✅ หลัง พ.ร.บ. กยศ. 2566</h3>
+                    <p>(มีผลบังคับใช้เต็มรูปแบบ)</p>
+                </div>
+                <div class="payment-flow">
+                    <strong>ลำดับการหักชำระ:</strong>
+                    <div class="flow-order">
+                        <span class="flow-item principal">เงินต้น</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-item interest">ดอกเบี้ย</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-item penalty">เบี้ยปรับ</span>
+                    </div>
+                </div>
+                <div class="installments">
+                    <div class="installment">
+                        <div class="installment-header">
+                            <span class="installment-number">งวดที่ 1 (5 ก.ค. 2556)</span>
+                            <span class="payment-amount">ชำระ 8,000 บาท</span>
+                        </div>
+                        <div class="allocation">
+                            <div class="allocation-item">
+                                <div class="allocation-label">เงินต้น</div>
+                                <div class="allocation-value" style="color: #27ae60;">2,500</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">ดอกเบี้ย</div>
+                                <div class="allocation-value" style="color: #f39c12;">0</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">เบี้ยปรับ</div>
+                                <div class="allocation-value" style="color: #e74c3c;">0</div>
+                            </div>
+                        </div>
+                        <div class="debt-breakdown">
+                            <div class="debt-breakdown-title">รายละเอียดหนี้คงเหลือ</div>
+                            <div class="debt-details">
+                                <div class="debt-detail">
+                                    <span class="debt-label">เงินต้นคงเหลือ:</span>
+                                    <span class="debt-value">97,500</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ต้นค้างชำระ:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ดอกเบี้ยค้าง:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">เบี้ยปรับค้าง:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                            </div>
+                            <div class="debt-total">
+                                <span>รวมหนี้คงเหลือ:</span>
+                                <span>97,500 บาท</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="installment">
+                        <div class="installment-header">
+                            <span class="installment-number">งวดที่ 10</span>
+                            <span class="payment-amount">ชำระ 8,000 บาท</span>
+                        </div>
+                        <div class="allocation">
+                            <div class="allocation-item">
+                                <div class="allocation-label">เงินต้น</div>
+                                <div class="allocation-value" style="color: #27ae60;">8,000</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">ดอกเบี้ย</div>
+                                <div class="allocation-value" style="color: #f39c12;">0</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">เบี้ยปรับ</div>
+                                <div class="allocation-value" style="color: #e74c3c;">0</div>
+                            </div>
+                        </div>
+                        <div class="debt-breakdown">
+                            <div class="debt-breakdown-title">รายละเอียดหนี้คงเหลือ</div>
+                            <div class="debt-details">
+                                <div class="debt-detail">
+                                    <span class="debt-label">เงินต้นคงเหลือ:</span>
+                                    <span class="debt-value">55,000</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ต้นค้างชำระ:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ดอกเบี้ยค้าง:</span>
+                                    <span class="debt-value">630</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">เบี้ยปรับค้าง:</span>
+                                    <span class="debt-value">0</span>
+                                </div>
+                            </div>
+                            <div class="debt-total">
+                                <span>รวมหนี้คงเหลือ:</span>
+                                <span>55,630 บาท</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="installment" style="border: 2px solid #27ae60;">
+                        <div class="installment-header">
+                            <span class="installment-number">งวดที่ 15 (5 ก.ค. 2570)</span>
+                            <span class="payment-amount">ชำระ 8,000 บาท</span>
+                        </div>
+                        <div class="allocation">
+                            <div class="allocation-item">
+                                <div class="allocation-label">เงินต้น</div>
+                                <div class="allocation-value" style="color: #27ae60;">8,000</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">ดอกเบี้ย</div>
+                                <div class="allocation-value" style="color: #f39c12;">0</div>
+                            </div>
+                            <div class="allocation-item">
+                                <div class="allocation-label">เบี้ยปรับ</div>
+                                <div class="allocation-value" style="color: #e74c3c;">0</div>
+                            </div>
+                        </div>
+                        <div class="debt-breakdown" style="background: #d4edda; border-color: #c3e6cb;">
+                            <div class="debt-breakdown-title">รายละเอียดหนี้คงเหลือ</div>
+                            <div class="debt-details">
+                                <div class="debt-detail">
+                                    <span class="debt-label">เงินต้นคงเหลือ:</span>
+                                    <span class="debt-value">15,000</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ต้นค้างชำระ:</span>
+                                    <span class="debt-value">15,000</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">ดอกเบี้ยค้าง:</span>
+                                    <span class="debt-value">2,580</span>
+                                </div>
+                                <div class="debt-detail">
+                                    <span class="debt-label">เบี้ยปรับค้าง:</span>
+                                    <span class="debt-value">100</span>
+                                </div>
+                            </div>
+                            <div class="debt-total" style="color: #27ae60;">
+                                <span>รวมหนี้คงเหลือ:</span>
+                                <span>32,680 บาท</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary">
+            <h3>🎉 สรุปผลเปรียบเทียบ ณ งวดที่ 15</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-case">ก่อน พ.ร.บ. 2566</div>
+                    <div class="summary-amount">35,602 บาท</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-case">ช่วงเปลี่ยนผ่าน</div>
+                    <div class="summary-amount">32,680 บาท</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-case">หลัง พ.ร.บ. 2566</div>
+                    <div class="summary-amount">32,680 บาท</div>
+                </div>
+            </div>
+            <p style="margin-top: 20px; font-size: 18px;">
+                💡 พ.ร.บ. กยศ. ใหม่ช่วยให้หนี้ลดลง <strong>2,922 บาท</strong> หรือ <strong>8.2%</strong>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
