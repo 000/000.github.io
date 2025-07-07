@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>การวิเคราะห์สถาปัตยกรรมระบบ AI บนเทคโนโลยี Intel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Parchment (#F8F7F4), Gunmetal Blue (#3D405B), Muted Sage Green (#81B29A), Terracotta (#E07A5F) -->
+    <!-- Application Structure Plan: A tabbed single-page application designed for non-linear exploration. The structure breaks the dense report into thematic sections: 1. Overview (key metrics & proposal), 2. Architecture Comparison (interactive cards for NVIDIA/AMD/Intel), 3. Intel Blueprint (deep-dive into the proposed Gaudi 3 solution), 4. Software (explaining the ecosystem and parallel models), 5. Big Data Workflow (visualizing the Oracle data pipeline), and 6. Cost Analysis (interactive chart and breakdown). This tabbed structure is chosen to prevent overwhelming the user with a long scroll, allowing them to jump directly to the section of interest, which enhances usability and comprehension of the complex technical and financial data. -->
+    <!-- Visualization & Content Choices: Report info is presented interactively. Quantitative data (requirements, cost) -> Goal: Inform/Compare -> Viz: CSS Gauges and a Chart.js Donut Chart for intuitive, at-a-glance understanding. Architecture comparison -> Goal: Compare -> Viz: HTML/CSS interactive cards to contrast philosophies and a bar chart for a single-metric comparison. System and data flow diagrams -> Goal: Organize/Explain -> Viz: Structured HTML/CSS diagrams (flowcharts/blocks) for clarity without SVG/Mermaid. Textual content is broken into digestible paragraphs with clear headings within each tab. Justification: These choices prioritize clarity, engagement, and adherence to the NO SVG/Mermaid constraint by using web-native technologies (HTML, CSS, Canvas) to create all visual elements. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #F4F7F9;
+            color: #334155;
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-button.active {
+            color: #1E40AF;
+            border-bottom-color: #1E40AF;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .gauge-bar {
+            transition: width 1.5s ease-in-out;
+        }
+        .flow-step {
+            display: flex;
+            align-items: center;
+        }
+        .flow-arrow {
+            font-size: 2rem;
+            color: #94A3B8;
+            margin: 0 1rem;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8">
+        
+        <header class="text-center mb-8 md:mb-12">
+            <h1 class="text-3xl md:text-5xl font-bold text-gray-800">การออกแบบและวิเคราะห์สถาปัตยกรรมระบบ AI</h1>
+            <p class="text-lg md:text-xl text-gray-600 mt-2">บนพื้นฐานเทคโนโลยี Intel สำหรับองค์กร</p>
+        </header>
+
+        <div class="bg-white rounded-xl shadow-lg p-2 sticky top-4 z-10 mb-8">
+            <nav class="flex flex-wrap justify-center -mb-px">
+                <button class="tab-button text-sm md:text-base font-semibold text-gray-600 py-3 px-2 md:px-5 active" onclick="showTab('overview')">ภาพรวมและข้อเสนอแนะ</button>
+                <button class="tab-button text-sm md:text-base font-semibold text-gray-600 py-3 px-2 md:px-5" onclick="showTab('comparison')">เปรียบเทียบสถาปัตยกรรม</button>
+                <button class="tab-button text-sm md:text-base font-semibold text-gray-600 py-3 px-2 md:px-5" onclick="showTab('blueprint')">พิมพ์เขียวระบบ Intel</button>
+                <button class="tab-button text-sm md:text-base font-semibold text-gray-600 py-3 px-2 md:px-5" onclick="showTab('software')">ซอฟต์แวร์และการประมวลผล</button>
+                <button class="tab-button text-sm md:text-base font-semibold text-gray-600 py-3 px-2 md:px-5" onclick="showTab('data')">การวิเคราะห์ข้อมูลขนาดใหญ่</button>
+                <button class="tab-button text-sm md:text-base font-semibold text-gray-600 py-3 px-2 md:px-5" onclick="showTab('cost')">การวิเคราะห์ต้นทุน</button>
+            </nav>
+        </div>
+
+        <main>
+            <!-- Tab: Overview & Recommendation -->
+            <div id="tab-overview" class="tab-content fade-in">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 card p-6">
+                        <h2 class="text-2xl font-bold text-blue-900 mb-4">บทสรุปสำหรับผู้บริหาร</h2>
+                        <p class="text-gray-700 leading-relaxed">
+                            รายงานฉบับนี้เสนอแนะให้จัดตั้งคลัสเตอร์ปัญญาประดิษฐ์ (AI) โดยใช้ **Intel Gaudi 3 AI Accelerator จำนวน 32 หน่วย** ซึ่งจัดเรียงในรูปแบบคลัสเตอร์ที่ประกอบด้วยเซิร์ฟเวอร์สมรรถนะสูงจำนวน 4 เครื่อง (แต่ละเครื่องบรรจุ Gaudi 3 จำนวน 8 หน่วย) สถาปัตยกรรมนี้ไม่เพียงแต่ตอบสนองทุกข้อกำหนดของโครงการ แต่ยังสอดคล้องกับวิสัยทัศน์ของ Intel ในการใช้มาตรฐานเปิดและเครือข่าย Ethernet ซึ่งช่วยลดการผูกขาดทางเทคโนโลยีและนำไปสู่ต้นทุนรวมในการเป็นเจ้าของ (TCO) ที่ต่ำกว่าในระยะยาว
+                        </p>
+                        <p class="text-gray-700 leading-relaxed mt-4">
+                            หัวใจของโซลูชันนี้คือการใช้สถาปัตยกรรมแบบขยายขนาด (Scale-Out) โดยเชื่อมต่อเซิร์ฟเวอร์ 4 เครื่องเข้าด้วยกันผ่านเครือข่าย Ethernet ความเร็วสูง (800GbE) เพื่อสร้าง "โหนดเสมือน" ขนาด 32 accelerator แม้แต่ละเซิร์ฟเวอร์จะทำงานเป็นหน่วยอิสระ แต่ระบบนิเวศซอฟต์แวร์อย่าง PyTorch และ oneCCL สามารถทำให้ accelerator ทั้ง 32 หน่วยทำงานร่วมกันได้อย่างมีประสิทธิภาพ
+                        </p>
+                    </div>
+
+                    <div class="card p-6 flex flex-col justify-center">
+                        <h3 class="text-xl font-bold text-blue-900 mb-4 text-center">การตอบสนองต่อข้อกำหนดหลัก</h3>
+                        <div class="space-y-5">
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm font-semibold text-gray-600">จำนวน Accelerator</span>
+                                    <span class="text-sm font-bold text-green-600">32 / 30 หน่วย</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div id="accelerator-gauge" class="bg-blue-600 h-4 rounded-full gauge-bar" style="width: 0%;"></div>
+                                </div>
+                                <p class="text-xs text-right text-gray-500 mt-1">เป้าหมายสำเร็จ (107%)</p>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm font-semibold text-gray-600">หน่วยความจำรวม</span>
+                                    <span class="text-sm font-bold text-green-600">4.1 / 1.28 TB</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div id="memory-gauge" class="bg-teal-500 h-4 rounded-full gauge-bar" style="width: 0%;"></div>
+                                </div>
+                                <p class="text-xs text-right text-gray-500 mt-1">เกินเป้าหมาย (320%)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Architecture Comparison -->
+            <div id="tab-comparison" class="tab-content hidden fade-in">
+                 <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-blue-900">เปรียบเทียบกระบวนทัศน์สถาปัตยกรรม AI ขนาดใหญ่</h2>
+                    <p class="text-gray-600 mt-2">ทำความเข้าใจปรัชญาการออกแบบ, จุดแข็ง, และข้อควรพิจารณาของผู้นำตลาดแต่ละราย</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- NVIDIA Card -->
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">NVIDIA DGX SuperPOD</h3>
+                        <p class="font-semibold text-blue-700 mb-4">ปรัชญา: Monolithic "AI Factory"</p>
+                        <ul class="space-y-3 text-gray-600 text-sm">
+                            <li class="flex items-start"><span class="font-bold text-green-500 mr-2">✔</span><strong>Scale-Up Interconnect:</strong> NVLink & NVSwitch ที่เป็นกรรมสิทธิ์เพื่อประสิทธิภาพสูงสุด</li>
+                            <li class="flex items-start"><span class="font-bold text-green-500 mr-2">✔</span><strong>Memory Model:</strong> Coherent Memory Space ผ่าน NVSwitch ทำให้เขียนโปรแกรมง่าย</li>
+                            <li class="flex items-start"><span class="font-bold text-green-500 mr-2">✔</span><strong>จุดแข็ง:</strong> ประสิทธิภาพสูงสุดและระบบนิเวศซอฟต์แวร์ (CUDA) ที่สมบูรณ์ที่สุด</li>
+                            <li class="flex items-start"><span class="font-bold text-red-500 mr-2">✖</span><strong>ข้อควรพิจารณา:</strong> Vendor Lock-in สูงและมีต้นทุนรวมที่แพงที่สุด</li>
+                        </ul>
+                    </div>
+                    <!-- AMD Card -->
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">AMD Instinct Platform</h3>
+                        <p class="font-semibold text-red-700 mb-4">ปรัชญา: Federated High-Density Nodes</p>
+                        <ul class="space-y-3 text-gray-600 text-sm">
+                             <li class="flex items-start"><span class="font-bold text-green-500 mr-2">✔</span><strong>Scale-Up Interconnect:</strong> Infinity Fabric ที่เป็นกรรมสิทธิ์สำหรับเชื่อมต่อภายในโหนด</li>
+                             <li class="flex items-start"><span class="font-bold text-green-500 mr-2">✔</span><strong>Scale-Out Interconnect:</strong> ใช้เครือข่ายมาตรฐาน (Ethernet/InfiniBand)</li>
+                             <li class="flex items-start"><span class="font-bold text-green-500 mr-2">✔</span><strong>จุดแข็ง:</strong> ความหนาแน่นของหน่วยความจำต่อโหนดสูงและมีความยืดหยุ่นในการขยายระบบ</li>
+                             <li class="flex items-start"><span class="font-bold text-red-500 mr-2">✖</span><strong>ข้อควรพิจารณา:</strong> ประสิทธิภาพระหว่างโหนดขึ้นอยู่กับเครือข่ายภายนอก</li>
+                        </ul>
+                    </div>
+                    <!-- Intel Card -->
+                    <div class="card p-6 border-4 border-blue-600">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Intel Gaudi Platform</h3>
+                        <p class="font-semibold text-blue-800 mb-4">ปรัชญา: Ethernet-Native Open Scale-Out</p>
+                        <ul class="space-y-3 text-gray-600 text-sm">
+                            <li class="flex items-start"><span class="font-bold text-green-500 mr-2">✔</span><strong>Scale-Up Interconnect:</strong> On-chip 200GbE RoCE ใช้มาตรฐาน Ethernet ภายในโหนด</li>
+                            <li class="flex items-start"><span class="font-bold text-green-500 mr-2">✔</span><strong>Scale-Out Interconnect:</strong> ใช้เครือข่าย Ethernet มาตรฐานโดยตรงจาก Accelerator</li>
+                            <li class="flex items-start"><span class="font-bold text-green-500 mr-2">✔</span><strong>จุดแข็ง:</strong> ใช้มาตรฐานเปิด, ยืดหยุ่น, ลด Vendor Lock-in และอาจมีต้นทุนเครือข่ายต่ำกว่า</li>
+                            <li class="flex items-start"><span class="font-bold text-red-500 mr-2">✖</span><strong>ข้อควรพิจารณา:</strong> ประสิทธิภาพขึ้นอยู่กับการบูรณาการเครือข่ายและซอฟต์แวร์</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Intel Blueprint -->
+            <div id="tab-blueprint" class="tab-content hidden fade-in">
+                 <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-blue-900">พิมพ์เขียวสถาปัตยกรรม Intel Gaudi 3</h2>
+                    <p class="text-gray-600 mt-2">โครงสร้างของคลัสเตอร์ 32-Accelerator ที่ประกอบด้วยเซิร์ฟเวอร์สมรรถนะสูง 4 เครื่อง</p>
+                </div>
+                <div class="card p-6 md:p-8">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">แผนภาพสถาปัตยกรรมคลัสเตอร์</h3>
+                    <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                         <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                            <div class="p-4 bg-white rounded-lg shadow">Server 1<br><span class="text-xs text-gray-500">(8x Gaudi 3)</span></div>
+                            <div class="p-4 bg-white rounded-lg shadow">Server 2<br><span class="text-xs text-gray-500">(8x Gaudi 3)</span></div>
+                            <div class="p-4 bg-white rounded-lg shadow">Server 3<br><span class="text-xs text-gray-500">(8x Gaudi 3)</span></div>
+                            <div class="p-4 bg-white rounded-lg shadow">Server 4<br><span class="text-xs text-gray-500">(8x Gaudi 3)</span></div>
+                        </div>
+
+                        <div class="flex justify-center my-4">
+                            <div class="w-1 h-8 bg-gray-300"></div>
+                        </div>
+
+                        <div class="bg-blue-100 text-blue-800 p-6 rounded-lg shadow-inner text-center">
+                            <h4 class="font-bold text-lg">Leaf-Spine Ethernet Fabric (800GbE)</h4>
+                            <p class="text-sm">เชื่อมต่อ Accelerator ทั้ง 32 หน่วยเข้าด้วยกันผ่าน RoCE v2</p>
+                        </div>
+
+                        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="bg-green-50 text-green-800 p-4 rounded-lg text-center">
+                                <h4 class="font-semibold">Storage Fabric (200GbE)</h4>
+                                <p>เชื่อมต่อไปยัง Parallel File System (WEKA/NVMe-oF)</p>
+                            </div>
+                            <div class="bg-yellow-50 text-yellow-800 p-4 rounded-lg text-center">
+                                 <h4 class="font-semibold">Management Fabric (25GbE)</h4>
+                                 <p>สำหรับควบคุมและจัดการระบบ (BMC/iDRAC)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Software & Processing -->
+            <div id="tab-software" class="tab-content hidden fade-in">
+                 <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-blue-900">ระบบนิเวศซอฟต์แวร์และโมเดลการประมวลผล</h2>
+                    <p class="text-gray-600 mt-2">ซอฟต์แวร์คือหัวใจที่ขับเคลื่อนฮาร์ดแวร์ให้ทำงานได้อย่างเต็มศักยภาพ</p>
+                </div>
+                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Intel Gaudi Software Stack</h3>
+                        <p class="text-gray-700 mb-4">Gaudi ใช้ซอฟต์แวร์สแต็กชื่อ **SynapseAI** ซึ่งบูรณาการเข้ากับเฟรมเวิร์กยอดนิยมอย่าง PyTorch และ TensorFlow โดยตรง ช่วยให้นักพัฒนาสามารถย้ายโค้ดมาทำงานบน Gaudi ได้โดยมีการเปลี่ยนแปลงน้อยมาก</p>
+                        <div class="bg-gray-100 p-4 rounded-lg">
+                            <div class="flow-step">
+                                <div class="p-3 bg-blue-200 text-blue-800 rounded-lg font-bold">PyTorch</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="p-3 bg-indigo-200 text-indigo-800 rounded-lg font-bold">SynapseAI</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="p-3 bg-green-200 text-green-800 rounded-lg font-bold">Gaudi HPU</div>
+                            </div>
+                            <p class="text-xs text-center mt-2 text-gray-500">เปลี่ยนแค่ `device="cuda"` เป็น `device="hpu"`</p>
+                        </div>
+                    </div>
+                    <div class="card p-6">
+                         <h3 class="text-xl font-bold text-gray-800 mb-4">กลยุทธ์การประมวลผลแบบขนาน</h3>
+                         <ul class="space-y-4">
+                            <li><strong class="text-blue-800">Data Parallelism:</strong> คัดลอกโมเดลไปยังทุก Accelerator และแบ่งข้อมูลเพื่อประมวลผลพร้อมกัน แล้วรวมผลลัพธ์ผ่าน **AllReduce**</li>
+                            <li><strong class="text-blue-800">Pipeline Parallelism:</strong> แบ่งโมเดลเป็นส่วนๆ ตามลำดับเลเยอร์ เหมาะสำหรับสถาปัตยกรรมแบบ Scale-out อย่าง Gaudi</li>
+                            <li><strong class="text-blue-800">Fully Sharded Data Parallel (FSDP):</strong> เทคนิคขั้นสูงที่แบ่งทั้งโมเดล, Gradients, และ Optimizer เพื่อลดการใช้หน่วยความจำต่อ Accelerator ซึ่งเป็นกลยุทธ์สำคัญสำหรับคลัสเตอร์ Gaudi</li>
+                         </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Big Data Analytics -->
+            <div id="tab-data" class="tab-content hidden fade-in">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-blue-900">แนวทางการวิเคราะห์ข้อมูล Oracle ขนาด 200 TB</h2>
+                    <p class="text-gray-600 mt-2">กระบวนการทำงานแบบ Out-of-Core สำหรับชุดข้อมูลที่ใหญ่กว่าหน่วยความจำ GPU</p>
+                </div>
+                <div class="card p-6 md:p-8">
+                     <div class="relative space-y-4 md:space-y-0">
+                        <!-- Step 1 -->
+                        <div class="flex items-center">
+                            <div class="z-10 flex items-center justify-center w-12 h-12 bg-blue-600 rounded-full text-white font-bold text-lg">1</div>
+                            <div class="ml-4 p-4 bg-white border rounded-lg shadow-sm flex-1">
+                                <h4 class="font-bold">สกัดข้อมูล (Extract)</h4>
+                                <p class="text-sm text-gray-600">ใช้ `DBMS_CLOUD.EXPORT_DATA` ของ Oracle เพื่อส่งออกข้อมูล 200 TB เป็นไฟล์ **Apache Parquet** แบบขนาน</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-6 top-12 bottom-0 w-px bg-gray-300 hidden md:block" style="height: calc(100% - 3rem);"></div>
+                         <!-- Step 2 -->
+                         <div class="flex items-center ml-0 md:ml-16">
+                            <div class="z-10 flex items-center justify-center w-12 h-12 bg-blue-600 rounded-full text-white font-bold text-lg">2</div>
+                            <div class="ml-4 p-4 bg-white border rounded-lg shadow-sm flex-1">
+                                <h4 class="font-bold">จัดเตรียมข้อมูล (Stage)</h4>
+                                <p class="text-sm text-gray-600">จัดเก็บไฟล์ Parquet ทั้งหมดบน **Distributed File System** (เช่น WEKA, Lustre) ที่คลัสเตอร์สามารถเข้าถึงได้</p>
+                            </div>
+                        </div>
+                         <!-- Step 3 -->
+                        <div class="flex items-center ml-0 md:ml-32">
+                            <div class="z-10 flex items-center justify-center w-12 h-12 bg-blue-600 rounded-full text-white font-bold text-lg">3</div>
+                            <div class="ml-4 p-4 bg-white border rounded-lg shadow-sm flex-1">
+                                <h4 class="font-bold">ประมวลผล (Process)</h4>
+                                <p class="text-sm text-gray-600">ใช้ **Apache Spark** หรือ **Dask** เพื่อจัดการการอ่านข้อมูลทีละพาร์ทิชัน (Out-of-Core) และส่งต่อไปยังคลัสเตอร์ **Gaudi 3** เพื่อทำการวิเคราะห์</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Cost Analysis -->
+            <div id="tab-cost" class="tab-content hidden fade-in">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-blue-900">การวิเคราะห์ต้นทุนโครงการ</h2>
+                    <p class="text-gray-600 mt-2">การประเมินราคาเบื้องต้นสำหรับการจัดตั้งคลัสเตอร์ Intel Gaudi 3 ขนาด 32 accelerator</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                    <div class="lg:col-span-2 card p-6 flex items-center justify-center">
+                        <div class="chart-container w-full max-w-sm h-64 md:h-80">
+                            <canvas id="costChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-3 card p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">รายละเอียดการแจกแจงต้นทุน (โดยประมาณ)</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-gray-500">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">รายการ</th>
+                                        <th scope="col" class="px-6 py-3 text-right">จำนวนเงิน (บาท)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-white border-b">
+                                        <td class="px-6 py-4 font-medium text-gray-900">1. ต้นทุนฮาร์ดแวร์ (CIF)</td>
+                                        <td class="px-6 py-4 text-right">40,370,000</td>
+                                    </tr>
+                                    <tr class="bg-gray-50 border-b">
+                                        <td class="px-6 py-4 font-medium text-gray-900">2. ภาษีนำเข้า (30%)</td>
+                                        <td class="px-6 py-4 text-right">12,111,000</td>
+                                    </tr>
+                                     <tr class="bg-white border-b">
+                                        <td class="px-6 py-4 font-medium text-gray-900">3. ค่าบริการและกำไร SI (35%)</td>
+                                        <td class="px-6 py-4 text-right">18,368,350</td>
+                                    </tr>
+                                     <tr class="bg-gray-50 border-b">
+                                        <td class="px-6 py-4 font-medium text-gray-900">4. ภาษีมูลค่าเพิ่ม (VAT 7%)</td>
+                                        <td class="px-6 py-4 text-right">4,959,455</td>
+                                    </tr>
+                                     <tr class="bg-blue-50">
+                                        <td class="px-6 py-4 font-bold text-blue-900 text-base">ราคาประเมินสุดท้ายของโครงการ</td>
+                                        <td class="px-6 py-4 text-right font-bold text-blue-900 text-base">~ 75,800,000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-4">**ข้อจำกัดความรับผิด:** ตัวเลขนี้เป็นการประเมินเบื้องต้นเพื่อการวางแผนงบประมาณเท่านั้น และจำเป็นต้องขอใบเสนอราคาอย่างเป็นทางการจากผู้จัดจำหน่าย</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+<script>
+    const tabs = {
+        overview: document.getElementById('tab-overview'),
+        comparison: document.getElementById('tab-comparison'),
+        blueprint: document.getElementById('tab-blueprint'),
+        software: document.getElementById('tab-software'),
+        data: document.getElementById('tab-data'),
+        cost: document.getElementById('tab-cost'),
+    };
+    const tabButtons = document.querySelectorAll('.tab-button');
+    let costChartInstance = null;
+
+    function showTab(tabName) {
+        Object.values(tabs).forEach(tab => tab.classList.add('hidden'));
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+
+        tabs[tabName].classList.remove('hidden');
+        tabs[tabName].classList.add('fade-in');
+        
+        const activeButton = document.querySelector(`.tab-button[onclick="showTab('${tabName}')"]`);
+        activeButton.classList.add('active');
+
+        if (tabName === 'cost' && !costChartInstance) {
+            createCostChart();
+        }
+    }
+
+    function createCostChart() {
+        const ctx = document.getElementById('costChart').getContext('2d');
+        const costData = {
+            labels: ['ต้นทุนฮาร์ดแวร์', 'ภาษีนำเข้า', 'ค่าบริการ SI', 'VAT'],
+            datasets: [{
+                label: 'Cost Breakdown',
+                data: [40370000, 12111000, 18368350, 4959455],
+                backgroundColor: [
+                    '#3B82F6', // Blue-500
+                    '#10B981', // Emerald-500
+                    '#F59E0B', // Amber-500
+                    '#EF4444'  // Red-500
+                ],
+                borderColor: '#F4F7F9',
+                borderWidth: 3,
+                hoverOffset: 4
+            }]
+        };
+
+        costChartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: costData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                family: "'Sarabun', sans-serif",
+                                size: 12
+                            },
+                            color: '#475569'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 0 }).format(context.parsed);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                cutout: '60%'
+            }
+        });
+    }
+
+    function updateGauges() {
+        const acceleratorGauge = document.getElementById('accelerator-gauge');
+        const memoryGauge = document.getElementById('memory-gauge');
+        
+        // Use a timeout to trigger the animation after the page loads
+        setTimeout(() => {
+            acceleratorGauge.style.width = `${(32/30) * 100}%`;
+            memoryGauge.style.width = `${(4.1/1.28) > 1 ? 100 : (4.1/1.28) * 100}%`;
+        }, 300);
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        showTab('overview');
+        updateGauges();
+    });
+
+</script>
+</body>
+</html>
