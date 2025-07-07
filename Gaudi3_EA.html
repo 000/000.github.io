@@ -1,0 +1,1803 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Intel Gaudi 3: Designing the Next-Generation AI Accelerator System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'serif': ['Playfair Display', 'serif'],
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#1e293b',
+                        'secondary': '#64748b',
+                        'accent': '#3b82f6',
+                        'surface': '#f8fafc',
+                        'muted': '#94a3b8',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            z-index: 50;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+        }
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+        .citation {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+        }
+        .citation:hover {
+            text-decoration: underline;
+        }
+        .toc-link {
+            display: block;
+            padding: 0.5rem 0;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-left: 2px solid transparent;
+            padding-left: 1rem;
+            margin-left: -1rem;
+            transition: all 0.2s;
+        }
+        .toc-link:hover, .toc-link.active {
+            color: #3b82f6;
+            border-left-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+        }
+        .toc-link.sub {
+            font-size: 0.8rem;
+            padding-left: 2rem;
+            margin-left: -1rem;
+        }
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+            margin: 3rem 0;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                overflow-x: hidden;
+            }
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .hero-grid h1 {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            .hero-grid img {
+                max-width: 100%;
+                height: auto;
+            }
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .main-content {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+        }
+    </style>
+  </head>
+
+  <body class="font-sans bg-surface text-primary">
+    <!-- Table of Contents -->
+    <nav class="toc-fixed">
+      <div class="mb-8">
+        <h3 class="font-serif font-semibold text-lg text-primary mb-4">Contents</h3>
+        <div class="space-y-1">
+          <a href="#executive-summary" class="toc-link">Executive Summary</a>
+          <a href="#requirements" class="toc-link">System Requirements</a>
+          <a href="#gaudi-solution" class="toc-link">Gaudi 3 Solution</a>
+          <a href="#node-config" class="toc-link">Node Configuration</a>
+          <a href="#requirements-met" class="toc-link">Requirements Analysis</a>
+          <a href="#cost-analysis" class="toc-link">Cost Analysis</a>
+          <a href="#alternatives" class="toc-link">Alternatives</a>
+          <a href="#recommendations" class="toc-link">Recommendations</a>
+          <a href="#final-architecture" class="toc-link">Final Architecture</a>
+        </div>
+      </div>
+
+      <div class="mt-8 p-4 bg-accent/5 rounded-lg">
+        <h4 class="font-semibold text-sm text-primary mb-2">Key Metrics</h4>
+        <div class="space-y-2 text-xs text-secondary">
+          <div><span class="font-medium">32</span> Accelerators</div>
+          <div><span class="font-medium">4 TB</span> HBM2E Memory</div>
+          <div><span class="font-medium">PCIe Gen 5</span> Connectivity</div>
+          <div><span class="font-medium">$125K</span> per UBB</div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section class="relative bg-gradient-to-br from-primary via-slate-800 to-slate-900 text-white overflow-hidden">
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="relative z-10 px-8 py-16">
+          <div class="max-w-7xl mx-auto">
+            <div class="hero-grid">
+              <div class="space-y-6">
+                <div class="inline-block px-4 py-2 bg-accent/20 rounded-full text-accent font-medium text-sm">
+                  Enterprise AI Architecture
+                </div>
+                <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+                  <span class="italic">Intel Gaudi 3:</span>
+                  <br/>
+                  Designing the Next-Generation AI Accelerator System
+                </h1>
+                <p class="text-base sm:text-xl text-slate-300 leading-relaxed max-w-2xl">
+                  A comprehensive analysis of Intel&#39;s Gaudi 3 architecture for high-density AI workloads,
+                  delivering 4TB of HBM2E memory across 32 accelerators with PCIe Gen 5 connectivity.
+                </p>
+              </div>
+              <div class="relative">
+                <img src="https://kimi-web-img.moonshot.cn/img/placeholder-0620/图片15.png" alt="Intel Gaudi 3 AI accelerator hardware" class="w-full h-96 object-cover rounded-lg shadow-2xl" size="large" aspect="wide" style="photo" query="Intel Gaudi 3 AI accelerator" referrerpolicy="no-referrer"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-lg"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Executive Summary -->
+      <section id="executive-summary" class="px-8 py-16 bg-white">
+        <div class="max-w-4xl mx-auto">
+          <h2 class="font-serif text-3xl font-bold text-primary mb-8">Executive Summary</h2>
+          <div class="prose prose-lg max-w-none">
+            <div class="bg-accent/5 border-l-4 border-accent p-6 rounded-r-lg mb-8">
+              <p class="text-lg font-medium text-primary mb-4">
+                An Intel-based AI accelerator system meeting all specified requirements can be designed using
+                <strong>Intel Gaudi 3 accelerators</strong>. A logical node would comprise four Universal Baseboards (UBBs),
+                each housing eight Gaudi 3 OAM modules (HL-325L), totaling 32 accelerators.
+              </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+              <div class="bg-surface p-6 rounded-lg">
+                <div class="text-2xl font-bold text-accent mb-2">32</div>
+                <div class="text-sm font-medium text-secondary">Accelerators per Node</div>
+                <div class="text-xs text-muted mt-1">Exceeds 30-unit minimum</div>
+              </div>
+              <div class="bg-surface p-6 rounded-lg">
+                <div class="text-2xl font-bold text-accent mb-2">4 TB</div>
+                <div class="text-sm font-medium text-secondary">HBM2E Memory</div>
+                <div class="text-xs text-muted mt-1">3.1x above 1.28TB requirement</div>
+              </div>
+              <div class="bg-surface p-6 rounded-lg">
+                <div class="text-2xl font-bold text-accent mb-2">PCIe Gen 5</div>
+                <div class="text-sm font-medium text-secondary">Host Connectivity</div>
+                <div class="text-xs text-muted mt-1">With RoCE v2 networking</div>
+              </div>
+            </div>
+
+            <p class="text-secondary leading-relaxed">
+              This configuration provides <strong>4 TB of HBM2E memory</strong> and supports <strong>BF16/FP16 precision</strong>
+              with PCIe Gen 5 host connectivity. The Gaudi 3&#39;s integrated <strong>24 × 200 Gbps Ethernet (RoCE v2) NICs</strong>
+              per accelerator will handle inter-accelerator communication. This design significantly exceeds the minimum requirements
+              for accelerator count and memory, while adhering to all technical and vendor constraints.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- System Requirements -->
+      <section id="requirements" class="px-8 py-16">
+        <div class="max-w-4xl mx-auto">
+          <h2 class="font-serif text-3xl font-bold text-primary mb-8">System Requirements Overview</h2>
+
+          <div class="grid md:grid-cols-2 gap-8 mb-12">
+            <div class="space-y-6">
+              <div class="bg-white p-6 rounded-lg shadow-sm border">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-microchip text-accent text-xl mr-3"></i>
+                  <h3 class="font-semibold text-lg">Accelerator Specifications</h3>
+                </div>
+                <ul class="space-y-2 text-secondary">
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-accent text-sm mt-1 mr-2"></i>
+                    Enterprise/datacenter-grade AI accelerators
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-accent text-sm mt-1 mr-2"></i>
+                    Minimum BF16/FP16 precision support
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-accent text-sm mt-1 mr-2"></i>
+                    Comparable to NVIDIA A100 80GB
+                  </li>
+                </ul>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg shadow-sm border">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-memory text-accent text-xl mr-3"></i>
+                  <h3 class="font-semibold text-lg">Memory Requirements</h3>
+                </div>
+                <div class="space-y-3">
+                  <div class="flex justify-between">
+                    <span class="text-secondary">Minimum accelerators:</span>
+                    <span class="font-medium">30 units</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-secondary">Total memory:</span>
+                    <span class="font-medium">≥1.28TB</span>
+                  </div>
+                  <div class="text-sm text-muted">
+                    Essential for large language models and generative AI
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-6">
+              <div class="bg-white p-6 rounded-lg shadow-sm border">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-network-wired text-accent text-xl mr-3"></i>
+                  <h3 class="font-semibold text-lg">Interconnect</h3>
+                </div>
+                <ul class="space-y-2 text-secondary">
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-accent text-sm mt-1 mr-2"></i>
+                    PCIe Gen4/5 for accelerator connectivity
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-times text-red-500 text-sm mt-1 mr-2"></i>
+                    No NVIDIA technologies (NVLink prohibited)
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-accent text-sm mt-1 mr-2"></i>
+                    Verifiable PCIe Gen4/5 support required
+                  </li>
+                </ul>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg shadow-sm border">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-dollar-sign text-accent text-xl mr-3"></i>
+                  <h3 class="font-semibold text-lg">Cost &amp; Cooling</h3>
+                </div>
+                <div class="space-y-3">
+                  <div class="text-secondary">
+                    <strong>Cooling options:</strong> Air, liquid, or hybrid
+                  </div>
+                  <div class="text-secondary">
+                    <strong>Primary goal:</strong> Most economical setup
+                  </div>
+                  <div class="text-sm text-muted">
+                    Total Cost of Ownership (TCO) optimization
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-r-lg">
+            <p class="text-blue-800">
+              <strong>Key Constraint:</strong> The system must use PCIe Gen4/5 for connecting AI accelerators
+              and must be based entirely on Intel technology, excluding any NVIDIA components or proprietary interconnects.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Gaudi 3 Solution -->
+      <section id="gaudi-solution" class="px-8 py-16 bg-surface">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="font-serif text-3xl font-bold text-primary mb-8">Proposed Solution: Intel Gaudi 3 Accelerators</h2>
+
+          <div class="grid lg:grid-cols-3 gap-8 mb-12">
+            <div class="lg:col-span-2 space-y-8">
+              <div class="bg-white p-8 rounded-lg shadow-sm">
+                <h3 class="font-serif text-2xl font-semibold text-primary mb-6">Gaudi 3 Architecture Overview</h3>
+                <p class="text-secondary mb-6 leading-relaxed">
+                  The <strong>Intel Gaudi 3 AI accelerator</strong> is built on a 5nm process technology and represents
+                  a significant leap in performance and features compared to the previous Gaudi 2 generation
+                  <a href="https://www.datacenterdynamics.com/en/news/intel-xeon-6-e-cores-now-available-company-reveals-pricing-for-gaudi-ai-accelerator/" class="citation">[203]</a>.
+                  It is designed to deliver high throughput for both training and inference of large-scale AI models,
+                  including Large Language Models (LLMs).
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 class="font-semibold text-primary mb-3">Key Performance Metrics</h4>
+                    <ul class="space-y-2 text-sm text-secondary">
+                      <li><strong>FP8 Compute:</strong> 1,835 teraflops per accelerator
+                        <a href="https://www.datacenterdynamics.com/en/news/intel-xeon-6-e-cores-now-available-company-reveals-pricing-for-gaudi-ai-accelerator/" class="citation">[203]</a>
+                      </li>
+                      <li><strong>BF16 Support:</strong> 4× more AI compute vs. Gaudi 2
+                        <a href="https://www.datacenterdynamics.com/en/news/intel-xeon-6-e-cores-now-available-company-reveals-pricing-for-gaudi-ai-accelerator/" class="citation">[203]</a>
+                      </li>
+                      <li><strong>HBM2E Memory:</strong> 128GB per card
+                        <a href="https://www.datacenterdynamics.com/en/news/intel-xeon-6-e-cores-now-available-company-reveals-pricing-for-gaudi-ai-accelerator/" class="citation">[203]</a>
+                      </li>
+                      <li><strong>Memory Bandwidth:</strong> 3.7TBps (1.5× Gaudi 2)
+                        <a href="https://www.datacenterdynamics.com/en/news/intel-xeon-6-e-cores-now-available-company-reveals-pricing-for-gaudi-ai-accelerator/" class="citation">[203]</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-primary mb-3">Advanced Features</h4>
+                    <ul class="space-y-2 text-sm text-secondary">
+                      <li><strong>Integrated Networking:</strong> 24 × 200Gbps Ethernet ports
+                        <a href="https://docs.habana.ai/en/latest/Gaudi_Overview/Gaudi_Architecture.html" class="citation">[74]</a>
+                      </li>
+                      <li><strong>Host Interface:</strong> PCIe Gen 5.0 x16
+                        <a href="https://docs.habana.ai/en/latest/Gaudi_Overview/Gaudi_Architecture.html" class="citation">[74]</a>
+                      </li>
+                      <li><strong>RoCE v2 Support:</strong> RDMA over Converged Ethernet</li>
+                      <li><strong>Form Factor:</strong> OAM modules for high density</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white p-8 rounded-lg shadow-sm">
+                <h3 class="font-serif text-2xl font-semibold text-primary mb-6">Technical Specifications</h3>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-sm">
+                    <thead class="bg-surface">
+                      <tr>
+                        <th class="text-left p-4 font-semibold">Feature</th>
+                        <th class="text-left p-4 font-semibold">Specification</th>
+                        <th class="text-left p-4 font-semibold">Reference</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                      <tr>
+                        <td class="p-4 font-medium">Manufacturing Process</td>
+                        <td class="p-4 text-secondary">5nm (TSMC)</td>
+                        <td class="p-4">
+                          <a href="https://www.kontronn.com/hardware/intel-gaudi-3-ai-accelerator/" class="citation">[139]</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-4 font-medium">Compute Engines</td>
+                        <td class="p-4 text-secondary">8 MMEs, 64 TPCs</td>
+                        <td class="p-4">
+                          <a href="https://www.kontronn.com/hardware/intel-gaudi-3-ai-accelerator/" class="citation">[139]</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-4 font-medium">Precision Support</td>
+                        <td class="p-4 text-secondary">BF16, FP16, FP8</td>
+                        <td class="p-4">
+                          <a href="https://docs.habana.ai/en/latest/Gaudi_Overview/Gaudi_Architecture.html" class="citation">[74]</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-4 font-medium">HBM2E Memory</td>
+                        <td class="p-4 text-secondary">128 GB</td>
+                        <td class="p-4">
+                          <a href="https://docs.habana.ai/en/latest/Gaudi_Overview/Gaudi_Architecture.html" class="citation">[74]</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-4 font-medium">HBM Bandwidth</td>
+                        <td class="p-4 text-secondary">3.7 TB/s</td>
+                        <td class="p-4">
+                          <a href="https://docs.habana.ai/en/latest/Gaudi_Overview/Gaudi_Architecture.html" class="citation">[74]</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-4 font-medium">On-Chip SRAM</td>
+                        <td class="p-4 text-secondary">96 MB</td>
+                        <td class="p-4">
+                          <a href="https://www.kontronn.com/hardware/intel-gaudi-3-ai-accelerator/" class="citation">[139]</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-4 font-medium">Integrated Networking</td>
+                        <td class="p-4 text-secondary">24 × 200 Gbps RoCE v2</td>
+                        <td class="p-4">
+                          <a href="https://docs.habana.ai/en/latest/Gaudi_Overview/Gaudi_Architecture.html" class="citation">[74]</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-6">
+              <img src="https://kimi-web-img.moonshot.cn/img/placeholder-0620/图片18.png" alt="Intel Gaudi 3 AI accelerator module" class="w-full h-64 object-cover rounded-lg shadow-sm" size="medium" aspect="wide" style="photo" query="Intel Gaudi 3 accelerator module" referrerpolicy="no-referrer"/>
+
+              <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="font-semibold text-primary mb-4">Market Positioning</h4>
+                <div class="space-y-3 text-sm text-secondary">
+                  <p>
+                    <strong>Competitive Advantage:</strong> Positioned as &#34;the only MLPerf-benchmarked alternative
+                    to Nvidia H100 for training and inference of LLMs&#34;
+                    <a href="https://www.datacenterdynamics.com/en/news/intel-xeon-6-e-cores-now-available-company-reveals-pricing-for-gaudi-ai-accelerator/" class="citation">[203]</a>.
+                  </p>
+                  <p>
+                    <strong>Open Ecosystem:</strong> Leverages standard Ethernet for scale-out networking,
+                    reducing reliance on proprietary interconnects.
+                  </p>
+                </div>
+              </div>
+
+              <div class="bg-accent/10 p-6 rounded-lg">
+                <h4 class="font-semibold text-primary mb-3">Key Benefits</h4>
+                <ul class="space-y-2 text-sm text-secondary">
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-accent text-xs mt-1 mr-2"></i>
+                    Direct BF16/FP16 hardware support
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-accent text-xs mt-1 mr-2"></i>
+                    PCIe Gen 5 compliance
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-accent text-xs mt-1 mr-2"></i>
+                    Integrated high-speed networking
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-accent text-xs mt-1 mr-2"></i>
+                    Cost-effective vs. H100
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Node Configuration -->
+      <section id="node-config" class="px-8 py-16">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="font-serif text-3xl font-bold text-primary mb-8">Node Configuration with Gaudi 3</h2>
+
+          <div class="grid lg:grid-cols-2 gap-12 mb-12">
+            <div class="space-y-8">
+              <div class="bg-white p-8 rounded-lg shadow-sm">
+                <h3 class="font-serif text-xl font-semibold text-primary mb-6">Universal Baseboard (UBB) Architecture</h3>
+                <p class="text-secondary mb-6 leading-relaxed">
+                  The foundational building block is the <strong>Universal Baseboard (UBB)</strong>, which houses
+                  eight Gaudi 3 OAM modules. Intel offers an AI kit including a UBB with eight Gaudi 3 accelerators
+                  priced at <strong>$125,000</strong>
+                  <a href="https://www.datacenterdynamics.com/en/news/intel-xeon-6-e-cores-now-available-company-reveals-pricing-for-gaudi-ai-accelerator/" class="citation">[203]</a>.
+                </p>
+
+                <div class="bg-surface p-6 rounded-lg mb-6">
+                  <h4 class="font-semibold text-primary mb-4">UBB Performance Metrics</h4>
+                  <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <div class="text-2xl font-bold text-accent">14.6</div>
+                      <div class="text-muted">PFLOPS FP8</div>
+                    </div>
+                    <div>
+                      <div class="text-2xl font-bold text-accent">1 TB+</div>
+                      <div class="text-muted">HBM2E Memory</div>
+                    </div>
+                    <div>
+                      <div class="text-2xl font-bold text-accent">29.6</div>
+                      <div class="text-muted">TBps HBM BW</div>
+                    </div>
+                    <div>
+                      <div class="text-2xl font-bold text-accent">8</div>
+                      <div class="text-muted">Gaudi 3 Modules</div>
+                    </div>
+                  </div>
+                </div>
+
+                <p class="text-sm text-secondary">
+                  Each UBB simplifies integration by providing pre-configured assembly of accelerators,
+                  similar to NVIDIA&#39;s HGX platforms but using standard Ethernet for interconnects.
+                </p>
+              </div>
+
+              <div class="bg-white p-8 rounded-lg shadow-sm">
+                <h3 class="font-serif text-xl font-semibold text-primary mb-6">Scaling to 32 Accelerators</h3>
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between p-4 bg-surface rounded">
+                    <span class="text-secondary">UBBs Required:</span>
+                    <span class="font-bold text-accent">4 × UBBs</span>
+                  </div>
+                  <div class="flex items-center justify-between p-4 bg-surface rounded">
+                    <span class="text-secondary">Total Accelerators:</span>
+                    <span class="font-bold text-accent">32 units</span>
+                  </div>
+                  <div class="flex items-center justify-between p-4 bg-surface rounded">
+                    <span class="text-secondary">Total Memory:</span>
+                    <span class="font-bold text-accent">4 TB HBM2E</span>
+                  </div>
+                  <div class="flex items-center justify-between p-4 bg-surface rounded">
+                    <span class="text-secondary">Memory vs. Requirement:</span>
+                    <span class="font-bold text-green-600">+212%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-6">
+              <img src="https://kimi-web-img.moonshot.cn/img/placeholder-0620/图片5.png" alt="Intel Universal Baseboard with multiple Gaudi 3 AI accelerator modules" class="w-full h-64 object-cover rounded-lg shadow-sm" size="medium" aspect="wide" style="photo" query="Intel Universal Baseboard with Gaudi 3 accelerators" referrerpolicy="no-referrer"/>
+
+              <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="font-semibold text-primary mb-4">System Architecture Diagram</h4>
+                <div class="mermaid-container">
+                  <div class="mermaid-controls">
+                    <button class="mermaid-control-btn zoom-in" title="放大">
+                      <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button class="mermaid-control-btn zoom-out" title="缩小">
+                      <i class="fas fa-search-minus"></i>
+                    </button>
+                    <button class="mermaid-control-btn reset-zoom" title="重置">
+                      <i class="fas fa-expand-arrows-alt"></i>
+                    </button>
+                    <button class="mermaid-control-btn fullscreen" title="全屏查看">
+                      <i class="fas fa-expand"></i>
+                    </button>
+                  </div>
+                  <div class="mermaid">
+                    graph TB
+                    subgraph &#34;Logical Node (32 Accelerators)&#34;
+                    subgraph &#34;UBB 1&#34;
+                    A1[&#34;Gaudi 3
+                    <br/>128GB HBM2E&#34;]
+                    A2[&#34;Gaudi 3
+                    <br/>128GB HBM2E&#34;]
+                    A8[&#34;Gaudi 3
+                    <br/>128GB HBM2E&#34;]
+                    end
+                    subgraph &#34;UBB 2&#34;
+                    B1[&#34;Gaudi 3
+                    <br/>128GB HBM2E&#34;]
+                    B2[&#34;Gaudi 3
+                    <br/>128GB HBM2E&#34;]
+                    B8[&#34;Gaudi 3
+                    <br/>128GB HBM2E&#34;]
+                    end
+                    subgraph &#34;UBB 3&#34;
+                    C1[&#34;Gaudi 3
+                    <br/>128GB HBM2E&#34;]
+                    C2[&#34;Gaudi 3
+                    <br/>128GB HBM2E&#34;]
+                    C8[&#34;Gaudi 3
+                    <br/>128GB HBM2E&#34;]
+                    end
+                    subgraph &#34;UBB 4&#34;
+                    D1[&#34;Gaudi 3
+                    <br/>128GB HBM2E&#34;]
+                    D2[&#34;Gaudi 3
+                    <br/>128GB HBM2E&#34;]
+                    D8[&#34;Gaudi 3
+                    <br/>128GB HBM2E&#34;]
+                    end
+                    end
+
+                    subgraph &#34;Host System&#34;
+                    CPU1[&#34;Dual Xeon Scalable
+                    <br/>PCIe Gen5 x16&#34;]
+                    CPU2[&#34;Dual Xeon Scalable
+                    <br/>PCIe Gen5 x16&#34;]
+                    Switch[&#34;800GbE Switch
+                    <br/>RoCE v2&#34;]
+                    end
+
+                    A1 -. &#34;PCIe Gen5&#34; .-&gt; CPU1
+                    B1 -. &#34;PCIe Gen5&#34; .-&gt; CPU2
+                    C1 -. &#34;PCIe Gen5&#34; .-&gt; CPU1
+                    D1 -. &#34;PCIe Gen5&#34; .-&gt; CPU2
+
+                    A1 -. &#34;200Gbps Ethernet&#34; .-&gt; Switch
+                    B1 -. &#34;200Gbps Ethernet&#34; .-&gt; Switch
+                    C1 -. &#34;200Gbps Ethernet&#34; .-&gt; Switch
+                    D1 -. &#34;200Gbps Ethernet&#34; .-&gt; Switch
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="font-semibold text-primary mb-4">Interconnect Topology</h4>
+                <div class="space-y-3 text-sm text-secondary">
+                  <div class="flex items-start">
+                    <i class="fas fa-ethernet text-accent text-sm mt-0.5 mr-2"></i>
+                    <div>
+                      <strong>Intra-UBB:</strong> Direct 200Gbps Ethernet links between 8 OAMs
+                      <a href="https://www.databricks.com/blog/llm-training-and-inference-intel-gaudi2-ai-accelerators" class="citation">[204]</a>
+                    </div>
+                  </div>
+                  <div class="flex items-start">
+                    <i class="fas fa-network-wired text-accent text-sm mt-0.5 mr-2"></i>
+                    <div>
+                      <strong>Inter-UBB:</strong> Scale-out ports via 800GbE switch fabric
+                    </div>
+                  </div>
+                  <div class="flex items-start">
+                    <i class="fas fa-microchip text-accent text-sm mt-0.5 mr-2"></i>
+                    <div>
+                      <strong>Host Connection:</strong> PCIe Gen5 x16 per accelerator
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-8 rounded-lg shadow-sm">
+            <h3 class="font-serif text-xl font-semibold text-primary mb-6">Host System Requirements</h3>
+            <div class="grid md:grid-cols-3 gap-6">
+              <div class="p-6 bg-surface rounded-lg">
+                <h4 class="font-semibold text-primary mb-3">CPU &amp; Chipset</h4>
+                <ul class="space-y-2 text-sm text-secondary">
+                  <li>Dual Intel Xeon Scalable Processors</li>
+                  <li>4th/5th Gen (Sapphire/Emerald Rapids)</li>
+                  <li>Minimum 128 PCIe Gen5 lanes</li>
+                  <li>PCIe switch support if needed</li>
+                </ul>
+              </div>
+              <div class="p-6 bg-surface rounded-lg">
+                <h4 class="font-semibold text-primary mb-3">Memory &amp; Storage</h4>
+                <ul class="space-y-2 text-sm text-secondary">
+                  <li>512GB+ DDR5 system memory</li>
+                  <li>Multiple NVMe SSDs (PCIe Gen4/5)</li>
+                  <li>High-bandwidth storage controller</li>
+                  <li>RAID configuration for reliability</li>
+                </ul>
+              </div>
+              <div class="p-6 bg-surface rounded-lg">
+                <h4 class="font-semibold text-primary mb-3">Power &amp; Cooling</h4>
+                <ul class="space-y-2 text-sm text-secondary">
+                  <li>30kW+ power delivery capacity</li>
+                  <li>3-phase power input required</li>
+                  <li>Direct-to-chip liquid cooling</li>
+                  <li>Advanced thermal monitoring</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Requirements Analysis -->
+      <section id="requirements-met" class="px-8 py-16 bg-surface">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="font-serif text-3xl font-bold text-primary mb-8">Meeting Specific Numerical Requirements</h2>
+
+          <div class="grid lg:grid-cols-2 gap-8 mb-12">
+            <div class="bg-white p-8 rounded-lg shadow-sm">
+              <h3 class="font-serif text-xl font-semibold text-primary mb-6">Accelerator Count Analysis</h3>
+              <div class="space-y-6">
+                <div class="flex justify-between items-center p-4 bg-green-50 rounded-lg">
+                  <div>
+                    <div class="font-semibold text-primary">Achieved Configuration</div>
+                    <div class="text-sm text-secondary">32 accelerators (4 UBBs × 8)</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-2xl font-bold text-green-600">+6.7%</div>
+                    <div class="text-xs text-muted">Above minimum</div>
+                  </div>
+                </div>
+
+                <div class="space-y-3">
+                  <div class="flex justify-between">
+                    <span class="text-secondary">Minimum Required:</span>
+                    <span class="font-medium">30 units</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-secondary">Proposed Solution:</span>
+                    <span class="font-medium">32 units</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-secondary">Excess Capacity:</span>
+                    <span class="font-medium text-green-600">2 units</span>
+                  </div>
+                </div>
+
+                <p class="text-sm text-secondary">
+                  Using four UBBs provides a clean, modular approach that exceeds the minimum requirement
+                  while maintaining system simplicity and serviceability.
+                </p>
+              </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-lg shadow-sm">
+              <h3 class="font-serif text-xl font-semibold text-primary mb-6">Memory Capacity Analysis</h3>
+              <div class="space-y-6">
+                <div class="flex justify-between items-center p-4 bg-green-50 rounded-lg">
+                  <div>
+                    <div class="font-semibold text-primary">Total Memory Achieved</div>
+                    <div class="text-sm text-secondary">4 TB HBM2E (32 × 128GB)</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-2xl font-bold text-green-600">+212%</div>
+                    <div class="text-xs text-muted">Above minimum</div>
+                  </div>
+                </div>
+
+                <div class="space-y-3">
+                  <div class="flex justify-between">
+                    <span class="text-secondary">Minimum Required:</span>
+                    <span class="font-medium">1.28TB</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-secondary">Proposed Solution:</span>
+                    <span class="font-medium">4.00TB</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-secondary">Memory per Accelerator:</span>
+                    <span class="font-medium">128GB</span>
+                  </div>
+                </div>
+
+                <p class="text-sm text-secondary">
+                  The substantial memory headroom enables larger batch sizes, more complex models,
+                  and future scalability for advanced AI workloads.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid lg:grid-cols-2 gap-8 mb-12">
+            <div class="bg-white p-8 rounded-lg shadow-sm">
+              <h3 class="font-serif text-xl font-semibold text-primary mb-6">Precision &amp; Interconnect Compliance</h3>
+              <div class="space-y-4">
+                <div class="p-4 bg-accent/10 rounded-lg">
+                  <div class="flex items-center mb-2">
+                    <i class="fas fa-check-circle text-accent text-lg mr-2"></i>
+                    <span class="font-semibold">BF16/FP16 Support</span>
+                  </div>
+                  <p class="text-sm text-secondary">
+                    Native hardware support with Matrix Multiplication Engines (MMEs) delivering
+                    1,835 TeraFLOPS for BF16 operations
+                    <a href="https://www.datacenterdynamics.com/en/news/intel-xeon-6-e-cores-now-available-company-reveals-pricing-for-gaudi-ai-accelerator/" class="citation">[203]</a>.
+                  </p>
+                </div>
+
+                <div class="p-4 bg-accent/10 rounded-lg">
+                  <div class="flex items-center mb-2">
+                    <i class="fas fa-check-circle text-accent text-lg mr-2"></i>
+                    <span class="font-semibold">PCIe Gen5 Compliance</span>
+                  </div>
+                  <p class="text-sm text-secondary">
+                    Direct hardware support with PCIe Gen5 x16 host interface
+                    <a href="https://docs.habana.ai/en/latest/Gaudi_Overview/Gaudi_Architecture.html" class="citation">[74]</a>,
+                    providing maximum bandwidth for data transfer.
+                  </p>
+                </div>
+
+                <div class="p-4 bg-accent/10 rounded-lg">
+                  <div class="flex items-center mb-2">
+                    <i class="fas fa-check-circle text-accent text-lg mr-2"></i>
+                    <span class="font-semibold">No NVIDIA Technology</span>
+                  </div>
+                  <p class="text-sm text-secondary">
+                    Pure Intel solution using standard Ethernet (RoCE v2) for interconnects,
+                    avoiding proprietary NVIDIA technologies like NVLink.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-lg shadow-sm">
+              <h3 class="font-serif text-xl font-semibold text-primary mb-6">Performance Characteristics</h3>
+              <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="p-4 bg-surface rounded-lg text-center">
+                    <div class="text-2xl font-bold text-accent">58.7</div>
+                    <div class="text-xs text-muted">PFLOPS FP8</div>
+                  </div>
+                  <div class="p-4 bg-surface rounded-lg text-center">
+                    <div class="text-2xl font-bold text-accent">118.4</div>
+                    <div class="text-xs text-muted">TBps HBM BW</div>
+                  </div>
+                </div>
+
+                <div class="space-y-3 text-sm">
+                  <div class="flex justify-between">
+                    <span class="text-secondary">FP8 Compute (Total):</span>
+                    <span class="font-medium">58.7 PFLOPS</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-secondary">BF16 Compute (Total):</span>
+                    <span class="font-medium">58.7 PFLOPS</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-secondary">Memory Bandwidth (Total):</span>
+                    <span class="font-medium">118.4 TB/s</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-secondary">Network Bandwidth (Total):</span>
+                    <span class="font-medium">153.6 Tbps</span>
+                  </div>
+                </div>
+
+                <p class="text-xs text-muted pt-2">
+                  *Based on 32 accelerators × individual specifications
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-green-50 border-l-4 border-green-400 p-8 rounded-r-lg">
+            <h3 class="font-serif text-xl font-semibold text-green-800 mb-4">Compliance Summary</h3>
+            <p class="text-green-700 mb-4">
+              The proposed Intel Gaudi 3-based system <strong>fully complies</strong> with all specified requirements
+              and significantly exceeds the minimum thresholds for accelerator count and memory capacity.
+            </p>
+            <div class="grid md:grid-cols-3 gap-4 text-sm">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-green-600">100%</div>
+                <div class="text-green-700">Requirements Met</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-green-600">312%</div>
+                <div class="text-green-700">Memory vs. Minimum</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-green-600">106.7%</div>
+                <div class="text-green-700">Accelerator Count</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Cost Analysis -->
+      <section id="cost-analysis" class="px-8 py-16">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="font-serif text-3xl font-bold text-primary mb-8">Cost and Performance Considerations</h2>
+
+          <div class="grid lg:grid-cols-3 gap-8 mb-12">
+            <div class="lg:col-span-2 space-y-8">
+              <div class="bg-white p-8 rounded-lg shadow-sm">
+                <h3 class="font-serif text-xl font-semibold text-primary mb-6">Cost Comparison Analysis</h3>
+                <p class="text-secondary mb-6 leading-relaxed">
+                  Intel has strategically priced Gaudi 3 to be competitive against NVIDIA&#39;s H100.
+                  An 8-chip Gaudi 3 accelerator kit (UBB with 8 OAM modules) is priced at <strong>$125,000</strong>
+                  <a href="https://www.amax.com/the-next-step-for-intel-accelerators-a-look-at-intel-gaudi-3/" class="citation">[53]</a>,
+                  translating to approximately <strong>$15,625 per chip</strong>
+                  <a href="https://www.amax.com/the-next-step-for-intel-accelerators-a-look-at-intel-gaudi-3/" class="citation">[53]</a>.
+                </p>
+
+                <div class="overflow-x-auto">
+                  <table class="w-full text-sm">
+                    <thead class="bg-surface">
+                      <tr>
+                        <th class="text-left p-4 font-semibold">Accelerator Model</th>
+                        <th class="text-right p-4 font-semibold">Price per Unit</th>
+                        <th class="text-right p-4 font-semibold">30 Units Total</th>
+                        <th class="text-right p-4 font-semibold">vs. Gaudi 3</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                      <tr class="bg-green-50">
+                        <td class="p-4 font-medium">Intel Gaudi 3</td>
+                        <td class="p-4 text-right">$15,625</td>
+                        <td class="p-4 text-right font-bold text-green-600">$468,750</td>
+                        <td class="p-4 text-right">Baseline</td>
+                      </tr>
+                      <tr>
+                        <td class="p-4 font-medium">NVIDIA H100 80GB</td>
+                        <td class="p-4 text-right">$30,678</td>
+                        <td class="p-4 text-right font-bold text-red-600">$920,340</td>
+                        <td class="p-4 text-right text-red-600">+96%</td>
+                      </tr>
+                      <tr>
+                        <td class="p-4 font-medium">NVIDIA A100 80GB</td>
+                        <td class="p-4 text-right">$10,000-14,000</td>
+                        <td class="p-4 text-right font-bold">$300,000-420,000</td>
+                        <td class="p-4 text-right text-green-600">-36% to -10%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg">
+                  <p class="text-yellow-800 text-sm">
+                    <strong>Note:</strong> While Gaudi 3 offers significant savings vs. H100,
+                    A100 may be cheaper but doesn&#39;t meet the &#34;no NVIDIA technology&#34; requirement.
+                    Actual pricing may vary based on volume and configuration.
+                  </p>
+                </div>
+              </div>
+
+              <div class="bg-white p-8 rounded-lg shadow-sm">
+                <h3 class="font-serif text-xl font-semibold text-primary mb-6">Total Cost of Ownership (TCO)</h3>
+                <div class="space-y-6">
+                  <div>
+                    <h4 class="font-semibold text-primary mb-3">Power Consumption Analysis</h4>
+                    <div class="space-y-3 text-sm">
+                      <div class="flex justify-between">
+                        <span class="text-secondary">Gaudi 3 OAM TDP (air-cooled):</span>
+                        <span class="font-medium">900W</span>
+                      </div>
+                      <div class="flex justify-between">
+                        <span class="text-secondary">32 accelerators power draw:</span>
+                        <span class="font-medium">28.8 kW</span>
+                      </div>
+                      <div class="flex justify-between">
+                        <span class="text-secondary">Host system overhead:</span>
+                        <span class="font-medium">~5 kW</span>
+                      </div>
+                      <div class="flex justify-between border-t pt-2">
+                        <span class="text-secondary font-medium">Total node power:</span>
+                        <span class="font-bold text-accent">~34 kW</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 class="font-semibold text-primary mb-3">Operational Cost Factors</h4>
+                    <ul class="space-y-2 text-sm text-secondary">
+                      <li class="flex items-start">
+                        <i class="fas fa-bolt text-accent text-xs mt-1 mr-2"></i>
+                        <span>Power efficiency claims: 40% better than H100 for certain workloads
+                          <a href="https://www.birow.com/olcsobb-nvidia-h100-alternativa-az-inteltol" class="citation">[134]</a>
+                        </span>
+                      </li>
+                      <li class="flex items-start">
+                        <i class="fas fa-snowflake text-accent text-xs mt-1 mr-2"></i>
+                        <span>Advanced cooling infrastructure required (liquid cooling recommended)</span>
+                      </li>
+                      <li class="flex items-start">
+                        <i class="fas fa-tools text-accent text-xs mt-1 mr-2"></i>
+                        <span>Standard Ethernet networking reduces infrastructure costs vs. InfiniBand</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-6">
+              <img src="https://kimi-web-img.moonshot.cn/img/placeholder-0620/图片19.png" alt="Data center with liquid cooling system" class="w-full h-48 object-cover rounded-lg shadow-sm" size="medium" aspect="wide" style="photo" query="data center liquid cooling infrastructure" referrerpolicy="no-referrer"/>
+
+              <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="font-semibold text-primary mb-4">Market Positioning</h4>
+                <div class="space-y-3 text-sm text-secondary">
+                  <p>
+                    Intel positions Gaudi 3 as a <strong>high-performance, cost-effective alternative</strong>
+                    to NVIDIA&#39;s H100 GPU, particularly for LLM training and inference
+                    <a href="https://cdrdv2-public.intel.com/845118/gaudi-3-ai-accelerator-30-3-30.pdf" class="citation">[354]</a>.
+                  </p>
+                  <p>
+                    <strong>Open ecosystem approach</strong> leveraging standard Ethernet and supporting
+                    popular frameworks like PyTorch provides flexibility and potential cost savings
+                    <a href="https://cdrdv2-public.intel.com/845118/gaudi-3-ai-accelerator-30-3-30.pdf" class="citation">[388]</a>.
+                  </p>
+                </div>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="font-semibold text-primary mb-4">OEM Partnerships</h4>
+                <div class="space-y-2 text-sm text-secondary">
+                  <div class="flex items-center">
+                    <i class="fas fa-server text-accent text-xs mr-2"></i>
+                    <span>Dell PowerEdge XE9680</span>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="fas fa-server text-accent text-xs mr-2"></i>
+                    <span>HPE ProLiant DL systems</span>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="fas fa-server text-accent text-xs mr-2"></i>
+                    <span>Lenovo ThinkSystem</span>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="fas fa-server text-accent text-xs mr-2"></i>
+                    <span>Supermicro SYS-822GA-NGR3
+                      <a href="https://www.supermicro.com/products/brief/Product-Brief-Gaudi3.pdf" class="citation">[222]</a>
+                    </span>
+                  </div>
+                </div>
+                <p class="text-xs text-muted mt-3">
+                  General availability from OEM partners typically Q2-Q3 2024
+                  <a href="https://infohub.delltechnologies.com/en-us/p/introducing-dell-poweredge-xe9680-with-intel-gaudi-3-ai-accelerator/" class="citation">[356]</a>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Alternatives -->
+      <section id="alternatives" class="px-8 py-16 bg-surface">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="font-serif text-3xl font-bold text-primary mb-8">Alternative: Intel Data Center GPU Max Series</h2>
+
+          <div class="grid lg:grid-cols-2 gap-8 mb-12">
+            <div class="bg-white p-8 rounded-lg shadow-sm">
+              <h3 class="font-serif text-xl font-semibold text-primary mb-6">Ponte Vecchio Overview</h3>
+              <p class="text-secondary mb-6 leading-relaxed">
+                The <strong>Intel Data Center GPU Max Series (Ponte Vecchio)</strong> is a general-purpose GPU
+                architecture designed for high-performance computing (HPC) and AI workloads. It features a complex
+                chiplet-based design with various tile types manufactured on different process nodes.
+              </p>
+
+              <div class="space-y-4">
+                <div class="p-4 bg-surface rounded-lg">
+                  <h4 class="font-semibold text-primary mb-2">Key Capabilities</h4>
+                  <ul class="space-y-1 text-sm text-secondary">
+                    <li>• High memory bandwidth (HBM2e)</li>
+                    <li>• Significant FP32/FP64 compute performance</li>
+                    <li>• AI-optimized data types (BF16, FP16)</li>
+                    <li>• Xe Matrix Extensions (XMX)</li>
+                    <li>• Used in Aurora supercomputer</li>
+                  </ul>
+                </div>
+
+                <div class="p-4 bg-surface rounded-lg">
+                  <h4 class="font-semibold text-primary mb-2">Target Workloads</h4>
+                  <ul class="space-y-1 text-sm text-secondary">
+                    <li>• Traditional HPC simulations</li>
+                    <li>• Scientific computing</li>
+                    <li>• General AI workloads</li>
+                    <li>• Mixed HPC/AI applications</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-lg shadow-sm">
+              <h3 class="font-serif text-xl font-semibold text-primary mb-6">Comparison with Gaudi 3</h3>
+
+              <div class="space-y-6">
+                <div>
+                  <h4 class="font-semibold text-primary mb-3">Advantages for This Design</h4>
+                  <div class="space-y-3">
+                    <div class="p-3 bg-green-50 rounded-lg">
+                      <div class="font-medium text-green-800 mb-1">Targeted Optimization</div>
+                      <div class="text-sm text-green-700">
+                        Gaudi 3 specifically architected for deep learning training/inference
+                        <a href="https://cdrdv2-public.intel.com/845118/gaudi-3-ai-accelerator-30-3-30.pdf" class="citation">[406]</a>
+                      </div>
+                    </div>
+
+                    <div class="p-3 bg-green-50 rounded-lg">
+                      <div class="font-medium text-green-800 mb-1">Integrated Networking</div>
+                      <div class="text-sm text-green-700">
+                        24 × 200Gbps Ethernet ports vs. proprietary Xe Link
+                      </div>
+                    </div>
+
+                    <div class="p-3 bg-green-50 rounded-lg">
+                      <div class="font-medium text-green-800 mb-1">Density &amp; Packaging</div>
+                      <div class="text-sm text-green-700">
+                        UBB design facilitates 32 accelerators per node
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-primary mb-3">Cost &amp; Ecosystem</h4>
+                  <div class="space-y-2 text-sm text-secondary">
+                    <div class="flex justify-between">
+                      <span>Gaudi 3 8-chip kit:</span>
+                      <span class="font-bold text-green-600">$125,000</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Ponte Vecchio pricing:</span>
+                      <span class="font-medium">Less clear</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Software ecosystem:</span>
+                      <span class="font-medium">Gaudi more AI-focused</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-blue-50 border-l-4 border-blue-400 p-8 rounded-r-lg">
+            <h3 class="font-serif text-xl font-semibold text-blue-800 mb-4">Recommendation</h3>
+            <p class="text-blue-700 mb-4">
+              <strong>Gaudi 3 appears to be the more suitable and economical choice</strong> for this specific
+              AI-focused design requiring high density of accelerators per node and leveraging standard Ethernet for scalability.
+            </p>
+            <p class="text-blue-700 text-sm">
+              Ponte Vecchio might be more appropriate for mixed HPC/AI workloads or where its specific
+              HPC capabilities are paramount, but Gaudi 3 better meets the stated requirements.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Recommendations -->
+      <section id="recommendations" class="px-8 py-16">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="font-serif text-3xl font-bold text-primary mb-8">Conclusion and Recommendations</h2>
+
+          <div class="grid lg:grid-cols-2 gap-8 mb-12">
+            <div class="space-y-8">
+              <div class="bg-white p-8 rounded-lg shadow-sm">
+                <h3 class="font-serif text-xl font-semibold text-primary mb-6">Feasibility Assessment</h3>
+                <p class="text-secondary mb-6 leading-relaxed">
+                  The proposed system design utilizing <strong>Intel Gaudi 3 accelerators is highly feasible</strong>
+                  and directly addresses all specified numerical and technical requirements. The four-UBB configuration
+                  provides significant performance headroom while maintaining compliance with all constraints.
+                </p>
+
+                <div class="space-y-4">
+                  <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 text-lg mr-3 mt-1"></i>
+                    <div>
+                      <div class="font-semibold text-primary">Technical Compliance</div>
+                      <div class="text-sm text-secondary">All precision, interconnect, and memory requirements met</div>
+                    </div>
+                  </div>
+                  <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 text-lg mr-3 mt-1"></i>
+                    <div>
+                      <div class="font-semibold text-primary">Architecture Simplicity</div>
+                      <div class="text-sm text-secondary">Modular UBB approach simplifies integration and service</div>
+                    </div>
+                  </div>
+                  <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 text-lg mr-3 mt-1"></i>
+                    <div>
+                      <div class="font-semibold text-primary">Market Availability</div>
+                      <div class="text-sm text-secondary">OEM partnerships ensure supply chain reliability</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white p-8 rounded-lg shadow-sm">
+                <h3 class="font-serif text-xl font-semibold text-primary mb-6">Implementation Timeline</h3>
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between p-4 bg-surface rounded">
+                    <div>
+                      <div class="font-semibold text-primary">Phase 1: Planning &amp; Procurement</div>
+                      <div class="text-sm text-secondary">Hardware specification, vendor selection</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-sm font-medium">Months 1-2</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between p-4 bg-surface rounded">
+                    <div>
+                      <div class="font-semibold text-primary">Phase 2: Infrastructure Preparation</div>
+                      <div class="text-sm text-secondary">Power, cooling, network infrastructure</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-sm font-medium">Months 3-4</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between p-4 bg-surface rounded">
+                    <div>
+                      <div class="font-semibold text-primary">Phase 3: System Integration</div>
+                      <div class="text-sm text-secondary">Hardware installation, configuration</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-sm font-medium">Months 5-6</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between p-4 bg-surface rounded">
+                    <div>
+                      <div class="font-semibold text-primary">Phase 4: Deployment &amp; Validation</div>
+                      <div class="text-sm text-secondary">Software setup, performance testing</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-sm font-medium">Months 7-8</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-6">
+              <img src="https://kimi-web-img.moonshot.cn/img/placeholder-0620/图片13.png" alt="Data center server rack with liquid cooling system" class="w-full h-64 object-cover rounded-lg shadow-sm" size="medium" aspect="wide" style="photo" query="data center server rack liquid cooling" referrerpolicy="no-referrer"/>
+
+              <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="font-semibold text-primary mb-4">Critical Success Factors</h4>
+                <div class="space-y-3 text-sm text-secondary">
+                  <div class="flex items-start">
+                    <i class="fas fa-exclamation-triangle text-yellow-500 text-xs mt-1 mr-2"></i>
+                    <span><strong>Power &amp; Cooling:</strong> 34kW+ infrastructure with liquid cooling required</span>
+                  </div>
+                  <div class="flex items-start">
+                    <i class="fas fa-network-wired text-accent text-xs mt-1 mr-2"></i>
+                    <span><strong>Network Topology:</strong> Optimized Ethernet fabric for inter-UBB communication</span>
+                  </div>
+                  <div class="flex items-start">
+                    <i class="fas fa-code text-accent text-xs mt-1 mr-2"></i>
+                    <span><strong>Software Stack:</strong> SynapseAI and framework integration validation</span>
+                  </div>
+                  <div class="flex items-start">
+                    <i class="fas fa-tools text-accent text-xs mt-1 mr-2"></i>
+                    <span><strong>Monitoring:</strong> Advanced thermal and performance monitoring systems</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="font-semibold text-primary mb-4">Risk Mitigation</h4>
+                <div class="space-y-3 text-sm text-secondary">
+                  <div class="p-3 bg-yellow-50 rounded">
+                    <div class="font-medium text-yellow-800 mb-1">Technical Risks</div>
+                    <div class="text-yellow-700">Pilot deployment with single UBB before full-scale implementation</div>
+                  </div>
+                  <div class="p-3 bg-blue-50 rounded">
+                    <div class="font-medium text-blue-800 mb-1">Supply Chain</div>
+                    <div class="text-blue-700">Multiple OEM partnerships provide redundancy</div>
+                  </div>
+                  <div class="p-3 bg-green-50 rounded">
+                    <div class="font-medium text-green-800 mb-1">Cost Control</div>
+                    <div class="text-green-700">Phased investment based on performance validation</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Final Architecture -->
+      <section id="final-architecture" class="px-8 py-16 bg-surface">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="font-serif text-3xl font-bold text-primary mb-8">Final System Architecture Proposal</h2>
+
+          <div class="bg-white p-8 rounded-lg shadow-sm mb-12">
+            <h3 class="font-serif text-2xl font-semibold text-primary mb-6">Architecture Overview</h3>
+            <p class="text-secondary mb-8 leading-relaxed">
+              The final system architecture creates a <strong>logical node with 32 Intel Gaudi 3 HL-325L OAM accelerators</strong>
+              by integrating four Universal Baseboards (UBBs), each housing eight Gaudi 3 OAM modules. This configuration
+              provides substantial computational power and memory for demanding AI workloads while leveraging open,
+              standards-based interconnects.
+            </p>
+
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+              <div>
+                <h4 class="font-semibold text-primary mb-4">Hardware Configuration</h4>
+                <div class="space-y-4">
+                  <div class="p-4 bg-surface rounded-lg">
+                    <div class="font-medium text-primary mb-2">Accelerator Configuration</div>
+                    <ul class="space-y-1 text-sm text-secondary">
+                      <li>• 32 × Intel Gaudi 3 HL-325L OAM modules</li>
+                      <li>• 128 GB HBM2E per accelerator</li>
+                      <li>• 4 TB total accelerator memory per node</li>
+                      <li>• BF16, FP16, FP8 precision support</li>
+                    </ul>
+                  </div>
+
+                  <div class="p-4 bg-surface rounded-lg">
+                    <div class="font-medium text-primary mb-2">Base Unit</div>
+                    <ul class="space-y-1 text-sm text-secondary">
+                      <li>• 4 × Intel HLB-325 Universal Baseboards</li>
+                      <li>• 8 Gaudi 3 OAMs per UBB</li>
+                      <li>• ~14.6 PFLOPS (FP8/BF16) per UBB</li>
+                      <li>• ~1 TB HBM2E per UBB</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 class="font-semibold text-primary mb-4">Interconnect &amp; Infrastructure</h4>
+                <div class="space-y-4">
+                  <div class="p-4 bg-surface rounded-lg">
+                    <div class="font-medium text-primary mb-2">Networking</div>
+                    <ul class="space-y-1 text-sm text-secondary">
+                      <li>• PCIe Gen 5.0 x16 host interface</li>
+                      <li>• 24 × 200Gbps Ethernet (RoCE v2) per accelerator</li>
+                      <li>• 800GbE switch fabric for inter-UBB</li>
+                      <li>• RDMA support for low-latency communication</li>
+                    </ul>
+                  </div>
+
+                  <div class="p-4 bg-surface rounded-lg">
+                    <div class="font-medium text-primary mb-2">Power &amp; Cooling</div>
+                    <ul class="space-y-1 text-sm text-secondary">
+                      <li>• ~34 kW total node power requirement</li>
+                      <li>• Direct-to-chip liquid cooling recommended</li>
+                      <li>• 3-phase power input required</li>
+                      <li>• Advanced thermal monitoring systems</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-accent/10 p-8 rounded-lg">
+              <h4 class="font-semibold text-primary mb-4">Software Stack</h4>
+              <div class="grid md:grid-cols-3 gap-6 text-sm">
+                <div>
+                  <div class="font-medium text-primary mb-2">Core Framework</div>
+                  <ul class="space-y-1 text-secondary">
+                    <li>• Intel SynapseAI</li>
+                    <li>• PyTorch integration</li>
+                    <li>• Deep learning frameworks</li>
+                  </ul>
+                </div>
+                <div>
+                  <div class="font-medium text-primary mb-2">System Management</div>
+                  <ul class="space-y-1 text-secondary">
+                    <li>• Cluster management software</li>
+                    <li>• Workload scheduling</li>
+                    <li>• Performance monitoring</li>
+                  </ul>
+                </div>
+                <div>
+                  <div class="font-medium text-primary mb-2">Development Tools</div>
+                  <ul class="space-y-1 text-secondary">
+                    <li>• Model optimization tools</li>
+                    <li>• Debugging and profiling</li>
+                    <li>• API and SDK support</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid lg:grid-cols-2 gap-8">
+            <div class="bg-white p-8 rounded-lg shadow-sm">
+              <h3 class="font-serif text-xl font-semibold text-primary mb-6">Performance Summary</h3>
+              <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="p-4 bg-surface rounded-lg text-center">
+                    <div class="text-2xl font-bold text-accent">58.7</div>
+                    <div class="text-xs text-muted">Total PFLOPS (FP8)</div>
+                  </div>
+                  <div class="p-4 bg-surface rounded-lg text-center">
+                    <div class="text-2xl font-bold text-accent">4.0</div>
+                    <div class="text-xs text-muted">TB Total Memory</div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="p-4 bg-surface rounded-lg text-center">
+                    <div class="text-2xl font-bold text-accent">118.4</div>
+                    <div class="text-xs text-muted">TB/s Memory BW</div>
+                  </div>
+                  <div class="p-4 bg-surface rounded-lg text-center">
+                    <div class="text-2xl font-bold text-accent">153.6</div>
+                    <div class="text-xs text-muted">Tbps Network BW</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-lg shadow-sm">
+              <h3 class="font-serif text-xl font-semibold text-primary mb-6">Cost Summary</h3>
+              <div class="space-y-4">
+                <div class="flex justify-between items-center p-4 bg-surface rounded-lg">
+                  <div>
+                    <div class="font-semibold text-primary">Accelerator Hardware</div>
+                    <div class="text-sm text-secondary">4 UBBs × $125,000</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-xl font-bold text-accent">$500,000</div>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center p-4 bg-surface rounded-lg">
+                  <div>
+                    <div class="font-semibold text-primary">Host System &amp; Networking</div>
+                    <div class="text-sm text-secondary">Servers, switches, infrastructure</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-xl font-bold">~$200,000</div>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center p-4 bg-surface rounded-lg">
+                  <div>
+                    <div class="font-semibold text-primary">Power &amp; Cooling</div>
+                    <div class="text-sm text-secondary">Infrastructure upgrades</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-xl font-bold">~$150,000</div>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center p-4 bg-accent/10 rounded-lg border-2 border-accent/20">
+                  <div>
+                    <div class="font-semibold text-primary">Total Estimated Cost</div>
+                    <div class="text-sm text-secondary">Capital expenditure</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-2xl font-bold text-accent">~$850,000</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-12 bg-green-50 border-l-4 border-green-400 p-8 rounded-r-lg">
+            <h3 class="font-serif text-xl font-semibold text-green-800 mb-4">Final Recommendation</h3>
+            <p class="text-green-700 mb-4">
+              The proposed Intel Gaudi 3-based system architecture <strong>fully complies with all requirements</strong>
+              while providing significant performance headroom and cost advantages over alternative solutions.
+            </p>
+            <p class="text-green-700 text-sm">
+              This design delivers 312% of the minimum memory requirement and 106.7% of the minimum accelerator count,
+              ensuring ample capacity for current and future AI workloads while maintaining an open, standards-based approach.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="px-8 py-12 bg-primary text-white">
+        <div class="max-w-4xl mx-auto text-center">
+          <h3 class="font-serif text-2xl font-semibold mb-4">Intel Gaudi 3 AI Accelerator System Design</h3>
+          <p class="text-slate-300 mb-6">
+            Comprehensive architecture analysis for high-density AI workloads with 32 accelerators and 4TB HBM2E memory
+          </p>
+          <div class="text-sm text-slate-400">
+            <p>Document prepared for enterprise AI infrastructure planning</p>
+            <p class="mt-2">All specifications and pricing based on publicly available information as of 2024</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#3b82f6',
+                primaryTextColor: '#1e293b',
+                primaryBorderColor: '#e2e8f0',
+                lineColor: '#64748b',
+                secondaryColor: '#f8fafc',
+                tertiaryColor: '#e2e8f0',
+                background: '#ffffff',
+                mainBkg: '#ffffff',
+                secondaryBkg: '#f8fafc',
+                tertiaryBkg: '#e2e8f0',
+                // Improve contrast for different node types
+                cScale0: '#3b82f6',
+                cScale1: '#10b981', 
+                cScale2: '#f59e0b',
+                cScale3: '#ef4444',
+                cScale4: '#8b5cf6',
+                cScale5: '#06b6d4',
+                // Text colors with better contrast
+                c0: '#ffffff',
+                c1: '#ffffff', 
+                c2: '#1e293b',
+                c3: '#ffffff',
+                c4: '#ffffff',
+                c5: '#ffffff'
+            },
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20
+            }
+        });
+
+        // Initialize Mermaid Controls for zoom and pan
+        function initializeMermaidControls() {
+            const containers = document.querySelectorAll('.mermaid-container');
+
+            containers.forEach(container => {
+            const mermaidElement = container.querySelector('.mermaid');
+            let scale = 1;
+            let isDragging = false;
+            let startX, startY, translateX = 0, translateY = 0;
+
+            // 触摸相关状态
+            let isTouch = false;
+            let touchStartTime = 0;
+            let initialDistance = 0;
+            let initialScale = 1;
+            let isPinching = false;
+
+            // Zoom controls
+            const zoomInBtn = container.querySelector('.zoom-in');
+            const zoomOutBtn = container.querySelector('.zoom-out');
+            const resetBtn = container.querySelector('.reset-zoom');
+            const fullscreenBtn = container.querySelector('.fullscreen');
+
+            function updateTransform() {
+                mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+                if (scale > 1) {
+                container.classList.add('zoomed');
+                } else {
+                container.classList.remove('zoomed');
+                }
+
+                mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+            }
+
+            if (zoomInBtn) {
+                zoomInBtn.addEventListener('click', () => {
+                scale = Math.min(scale * 1.25, 4);
+                updateTransform();
+                });
+            }
+
+            if (zoomOutBtn) {
+                zoomOutBtn.addEventListener('click', () => {
+                scale = Math.max(scale / 1.25, 0.3);
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+                updateTransform();
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+                });
+            }
+
+            if (fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', () => {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
+                }
+                });
+            }
+
+            // Mouse Events
+            mermaidElement.addEventListener('mousedown', (e) => {
+                if (isTouch) return; // 如果是触摸设备，忽略鼠标事件
+
+                isDragging = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+                mermaidElement.style.cursor = 'grabbing';
+                updateTransform();
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging && !isTouch) {
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseleave', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            // 获取两点之间的距离
+            function getTouchDistance(touch1, touch2) {
+                return Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+                );
+            }
+
+            // Touch Events - 触摸事件处理
+            mermaidElement.addEventListener('touchstart', (e) => {
+                isTouch = true;
+                touchStartTime = Date.now();
+
+                if (e.touches.length === 1) {
+                // 单指拖动
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+
+                } else if (e.touches.length === 2) {
+                // 双指缩放
+                isPinching = true;
+                isDragging = false;
+
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialDistance = getTouchDistance(touch1, touch2);
+                initialScale = scale;
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isDragging && !isPinching) {
+                // 单指拖动
+                const touch = e.touches[0];
+                translateX = touch.clientX - startX;
+                translateY = touch.clientY - startY;
+                updateTransform();
+
+                } else if (e.touches.length === 2 && isPinching) {
+                // 双指缩放
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = getTouchDistance(touch1, touch2);
+
+                if (initialDistance > 0) {
+                    const newScale = Math.min(Math.max(
+                    initialScale * (currentDistance / initialDistance),
+                    0.3
+                    ), 4);
+                    scale = newScale;
+                    updateTransform();
+                }
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchend', (e) => {
+                // 重置状态
+                if (e.touches.length === 0) {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                // 延迟重置isTouch，避免鼠标事件立即触发
+                setTimeout(() => {
+                    isTouch = false;
+                }, 100);
+                } else if (e.touches.length === 1 && isPinching) {
+                // 从双指变为单指，切换为拖动模式
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+                }
+
+                updateTransform();
+            });
+
+            mermaidElement.addEventListener('touchcancel', (e) => {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                setTimeout(() => {
+                isTouch = false;
+                }, 100);
+
+                updateTransform();
+            });
+
+            // Enhanced wheel zoom with better center point handling
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+                // Adjust translation to zoom towards center
+                if (newScale !== scale) {
+                const scaleDiff = newScale / scale;
+                translateX = translateX * scaleDiff;
+                translateY = translateY * scaleDiff;
+                scale = newScale;
+
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+
+                updateTransform();
+                }
+            });
+
+            // Initialize display
+            updateTransform();
+            });
+        }
+
+        // Smooth scrolling for TOC links
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    const offsetTop = targetElement.offsetTop - 20;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+                
+                // Update active state
+                document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Update active TOC link on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.pageYOffset >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            document.querySelectorAll('.toc-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Initialize mermaid controls after page loads
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                initializeMermaidControls();
+            }, 1500); // Wait for mermaid to render
+        });
+    </script>
+  
+
+</body></html>
