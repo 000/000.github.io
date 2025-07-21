@@ -1,0 +1,797 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Selenium OCR Solutions for Thai DMS: Comprehensive Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <style>
+        :root {
+            --primary: #0f766e;
+            --secondary: #f0fdfa;
+            --accent: #14b8a6;
+            --neutral: #1e293b;
+            --base: #ffffff;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--base);
+            overflow-x: hidden;
+        }
+        
+        .serif {
+            font-family: 'Crimson Text', serif;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .bg-gradient-overlay {
+            background: linear-gradient(135deg, rgba(15, 118, 110, 0.1), rgba(20, 184, 166, 0.05));
+        }
+        
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid #e2e8f0;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .main-content {
+            margin-left: 300px;
+            max-width: 900px;
+            padding: 0 2rem;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .hero-section {
+            height: 80vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .vanta-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .citation-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dotted var(--primary);
+        }
+        
+        .citation-link:hover {
+            border-bottom: 1px solid var(--primary);
+        }
+        
+        .toc-link {
+            display: block;
+            padding: 0.5rem 0;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            border-left: 2px solid transparent;
+            padding-left: 1rem;
+        }
+        
+        .toc-link:hover,
+        .toc-link.active {
+            color: var(--primary);
+            border-left-color: var(--primary);
+            background: rgba(15, 118, 110, 0.05);
+            margin-left: -1.5rem;
+            padding-left: 2.5rem;
+        }
+        
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+            margin: 4rem 0;
+        }
+        
+        .highlight-box {
+            background: var(--secondary);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .quote-block {
+            font-style: italic;
+            font-size: 1.125rem;
+            color: var(--neutral);
+            border-left: 4px solid var(--accent);
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+        
+        @media (max-width: 1024px) {
+            .toc-fixed {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                width: 280px;
+            }
+            .toc-fixed.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 0 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section {
+                height: auto;
+            }
+            .hero-content {
+                padding: 1.5rem;
+            }
+            .hero-content .grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-content h1 {
+                font-size: 2rem;
+                line-height: 1.2;
+            }
+            .main-content {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+  </head>
+
+  <body class="bg-gray-50">
+    <!-- Fixed Table of Contents -->
+    <nav class="toc-fixed" id="tableOfContents">
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Table of Contents</h3>
+        <a href="#overview" class="toc-link">Overview of Requirements</a>
+        <a href="#byteScout" class="toc-link">ByteScout Cloud OCR API</a>
+        <a href="#alternatives" class="toc-link">Alternative Solutions</a>
+        <a href="#integration" class="toc-link">Integration Strategy</a>
+        <a href="#other-approaches" class="toc-link">Other OCR Approaches</a>
+        <a href="#intranet-vue" class="toc-link">Intranet &amp; Vue.js Specifics</a>
+        <a href="#conclusion" class="toc-link">Conclusion</a>
+      </div>
+    </nav>
+
+    <!-- Mobile TOC Toggle -->
+    <button id="tocToggle" class="fixed top-4 left-4 z-50 lg:hidden bg-white p-3 rounded-full shadow-lg">
+      <i class="fas fa-bars text-gray-600"></i>
+    </button>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section class="hero-section mb-16">
+        <div class="vanta-bg" id="vanta-bg"></div>
+        <div class="hero-content">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+            <div class="lg:col-span-2">
+              <h1 class="text-4xl lg:text-5xl font-bold text-gradient serif mb-6 leading-tight">
+                <em>Super Premium Selenium OCR Solutions</em> for Thai Debt Management Systems
+              </h1>
+              <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+                A comprehensive analysis of commercial-grade Optical Character Recognition solutions
+                for automating Thai financial data extraction from intranet-based Vue.js applications.
+              </p>
+            </div>
+            <div class="lg:col-span-1">
+              <div class="bg-white rounded-2xl p-6 border border-gray-200">
+                <h3 class="font-semibold text-gray-900 mb-4">Key Findings</h3>
+                <ul class="space-y-3 text-sm text-gray-600">
+                  <li class="flex items-center"><i class="fas fa-check text-teal-600 mr-2"></i>ByteScout Cloud OCR API leads with Thai support</li>
+                  <li class="flex items-center"><i class="fas fa-check text-teal-600 mr-2"></i>Both cloud and on-premise deployment options</li>
+                  <li class="flex items-center"><i class="fas fa-check text-teal-600 mr-2"></i>Budget-friendly under $1,000/month</li>
+                  <li class="flex items-center"><i class="fas fa-check text-teal-600 mr-2"></i>Seamless Python integration</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Overview Section -->
+      <section id="overview" class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 serif mb-8">Overview of Requirements</h2>
+
+        <div class="prose prose-lg max-w-none">
+          <p class="text-gray-700 leading-relaxed mb-6">
+            The primary objective is to identify robust, &#34;super premium&#34; solutions that leverage Selenium for the automated detection and extraction of specific Thai financial data points, namely <strong>&#34;ยอดหนี้ตั้งต้น&#34; (Outstanding Debt Principal)</strong> and <strong>&#34;วันครบกำหนดชำระหนี้&#34; (Debt Due Date)</strong>, from an intranet-based Debt Management System (DMS).
+          </p>
+
+          <div class="highlight-box">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3">Technical Environment</h3>
+            <ul class="text-gray-700 space-y-2">
+              <li><strong>Frontend Framework:</strong> Vue.js</li>
+              <li><strong>Browser:</strong> Google Chrome</li>
+              <li><strong>Network:</strong> Intranet-only application</li>
+              <li><strong>Language:</strong> Entirely Thai interface</li>
+              <li><strong>Budget:</strong> &lt; USD $1,000 per month</li>
+            </ul>
+          </div>
+
+          <h3 class="text-2xl font-semibold text-gray-900 serif mt-8 mb-4">Core Objective</h3>
+          <p class="text-gray-700 leading-relaxed mb-6">
+            The central aim is to automate the extraction of precise financial information displayed within the proprietary DMS. The automation must reliably locate these Thai-language values across different screens, ensuring data integrity and consistency for downstream processing or validation.
+          </p>
+
+          <div class="quote-block">
+            &#34;The successful detection of these values will significantly enhance operational efficiency by reducing manual data entry and minimizing the risk of human error in financial record-keeping.&#34;
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- ByteScout Section -->
+      <section id="byteScout" class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 serif mb-8">Leading Commercial OCR API: ByteScout Cloud OCR</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div>
+            <img src="https://kimi-web-img.moonshot.cn/img/placeholder-0620/%E5%9B%BE%E7%89%8718.png" alt="ByteScout OCR API interface showing Thai text recognition" class="w-full rounded-lg shadow-lg" size="medium" aspect="wide" style="photo" query="ByteScout OCR API interface" referrerpolicy="no-referrer" data-modified="1" data-score="10000.00"/>
+          </div>
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">Why ByteScout Stands Out</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+              <a href="https://ocr.space/ocrapi" class="citation-link">ByteScout Cloud OCR API</a>, previously known as OCR.space, emerges as the most suitable commercial solution for integrating OCR capabilities into Selenium-based test automation frameworks, particularly for Thai text extraction.
+            </p>
+            <ul class="space-y-2 text-gray-700">
+              <li class="flex items-start"><i class="fas fa-check-circle text-teal-600 mr-2 mt-1"></i>Explicit Thai language support</li>
+              <li class="flex items-start"><i class="fas fa-check-circle text-teal-600 mr-2 mt-1"></i>Cloud and on-premise deployment options</li>
+              <li class="flex items-start"><i class="fas fa-check-circle text-teal-600 mr-2 mt-1"></i>Python integration examples provided</li>
+              <li class="flex items-start"><i class="fas fa-check-circle text-teal-600 mr-2 mt-1"></i>Budget-friendly pricing tiers</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Thai Language Support</h3>
+          <p class="text-gray-700 mb-4">
+            <a href="https://ocr.space/ocrapi" class="citation-link">ByteScout Cloud OCR API explicitly lists Thai (`tha`) as a supported OCR language</a>.
+            For optimal results with Thai text, <a href="https://ocr.space/thai" class="citation-link">OCR Engine 2 is recommended</a>.
+          </p>
+          <div class="bg-white p-4 rounded-lg border">
+            <code class="text-sm text-gray-800">
+                        language=tha&amp;OCREngine=2
+                    </code>
+          </div>
+        </div>
+
+        <h3 class="text-2xl font-semibold text-gray-900 serif mt-8 mb-4">Pricing and Deployment Options</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-50">
+                <th class="py-3 px-4 font-semibold text-gray-900 border-b">Plan</th>
+                <th class="py-3 px-4 font-semibold text-gray-900 border-b">Price/Month</th>
+                <th class="py-3 px-4 font-semibold text-gray-900 border-b">Requests</th>
+                <th class="py-3 px-4 font-semibold text-gray-900 border-b">Key Features</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="hover:bg-gray-50">
+                <td class="py-3 px-4 border-b">Free</td>
+                <td class="py-3 px-4 border-b">$0</td>
+                <td class="py-3 px-4 border-b">25,000</td>
+                <td class="py-3 px-4 border-b">Basic testing, watermarked PDFs</td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="py-3 px-4 border-b">PRO</td>
+                <td class="py-3 px-4 border-b">$30</td>
+                <td class="py-3 px-4 border-b">300,000</td>
+                <td class="py-3 px-4 border-b">Dedicated servers, 100% uptime</td>
+              </tr>
+              <tr class="hover:bg-gray-50 bg-teal-50">
+                <td class="py-3 px-4 border-b font-semibold">PRO PDF (Recommended)</td>
+                <td class="py-3 px-4 border-b font-semibold">$60</td>
+                <td class="py-3 px-4 border-b">300,000</td>
+                <td class="py-3 px-4 border-b">Large files, watermark-free, fastest processing</td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="py-3 px-4 border-b">Enterprise</td>
+                <td class="py-3 px-4 border-b">$999+</td>
+                <td class="py-3 px-4 border-b">Custom</td>
+                <td class="py-3 px-4 border-b">On-premise option, custom servers</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Alternative Solutions -->
+      <section id="alternatives" class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 serif mb-8">Alternative Commercial Solutions</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div class="bg-white p-6 rounded-lg shadow-lg border">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">
+              <i class="fas fa-robot text-blue-600 mr-2"></i>Tricentis Testim
+            </h3>
+            <p class="text-gray-700 mb-4">
+              <a href="https://documentation.tricentis.com/tosca/1600/en/content/tbox/optical_intelligence_generic.htm" class="citation-link">AI-powered OCR with Vision AI feature</a>, reducing text recognition time to 40ms.
+            </p>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="text-gray-600">Pricing:</span>
+                <span class="text-red-600 font-semibold">~$2,500/month</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Budget Fit:</span>
+                <span class="text-red-600">❌ Exceeds limit</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Intranet Friendly:</span>
+                <span class="text-gray-600">Cloud-based SaaS</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-lg border">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">
+              <i class="fas fa-cog text-orange-600 mr-2"></i>SmartBear TestComplete
+            </h3>
+            <p class="text-gray-700 mb-4">
+              <a href="https://support.smartbear.com/testcomplete/docs/testing-with/object-identification/ocr/index.html" class="citation-link">Built-in OCR leveraging Google Vision API</a> with comprehensive testing capabilities.
+            </p>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="text-gray-600">OCR Mechanism:</span>
+                <span class="text-gray-800">Google Vision API</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Internet Required:</span>
+                <span class="text-orange-600">⚠️ External dependency</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Platform:</span>
+                <span class="text-gray-600">Windows IDE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Comparison Summary</h3>
+          <p class="text-gray-700">
+            While alternatives like Tricentis Testim and SmartBear TestComplete offer advanced features,
+            ByteScout provides a more direct and cost-effective OCR API solution specifically tailored for
+            Thai language requirements within the budget constraints.
+          </p>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Integration Strategy -->
+      <section id="integration" class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 serif mb-8">Integration Strategy</h2>
+
+        <div class="bg-white p-8 rounded-lg shadow-lg border mb-8">
+          <h3 class="text-xl font-semibold text-gray-900 mb-6">Workflow Overview</h3>
+          <div class="space-y-6">
+            <div class="flex items-start">
+              <div class="bg-teal-100 text-teal-800 rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-4 mt-1">1</div>
+              <div>
+                <h4 class="font-semibold text-gray-900">Selenium Web Interaction</h4>
+                <p class="text-gray-700 text-sm">Navigate DMS, handle Vue.js dynamics, locate target elements</p>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <div class="bg-teal-100 text-teal-800 rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-4 mt-1">2</div>
+              <div>
+                <h4 class="font-semibold text-gray-900">Screenshot Capture</h4>
+                <p class="text-gray-700 text-sm">Capture specific elements or regions containing Thai text</p>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <div class="bg-teal-100 text-teal-800 rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-4 mt-1">3</div>
+              <div>
+                <h4 class="font-semibold text-gray-900">Image Preprocessing</h4>
+                <p class="text-gray-700 text-sm">Optional enhancement using Pillow or OpenCV</p>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <div class="bg-teal-100 text-teal-800 rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-4 mt-1">4</div>
+              <div>
+                <h4 class="font-semibold text-gray-900">OCR API Request</h4>
+                <p class="text-gray-700 text-sm">
+                  <a href="https://forum.ui.vision/t/ocrspace-python-example-code-problem/13360" class="citation-link">Send to ByteScout API with language=tha parameter</a>
+                </p>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <div class="bg-teal-100 text-teal-800 rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-4 mt-1">5</div>
+              <div>
+                <h4 class="font-semibold text-gray-900">Response Processing</h4>
+                <p class="text-gray-700 text-sm">Extract and validate Thai financial values from JSON response</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Sample Python Integration Code</h3>
+          <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto"><code>from selenium import webdriver
+import requests
+import json
+from PIL import Image
+import io
+
+# 1. Selenium setup and navigation
+driver = webdriver.Chrome()
+driver.get(&#34;https://intranet-dms.example.com&#34;)
+# Handle Vue.js dynamics and locate elements
+
+# 2. Capture screenshot
+element = driver.find_element(By.XPATH, &#34;//div[contains(@class, &#39;debt-info&#39;)]&#34;)
+screenshot = element.screenshot_as_png
+
+# 3. Optional preprocessing
+image = Image.open(io.BytesIO(screenshot))
+image = image.convert(&#39;L&#39;)  # Convert to grayscale
+
+# 4. Send to ByteScout OCR API
+url = &#34;https://api.ocr.space/parse/image&#34;
+payload = {
+    &#39;apikey&#39;: &#39;YOUR_API_KEY&#39;,
+    &#39;language&#39;: &#39;tha&#39;,
+    &#39;OCREngine&#39;: &#39;2&#39;,
+    &#39;file&#39;: (&#39;screenshot.png&#39;, screenshot)
+}
+response = requests.post(url, files=payload)
+result = json.loads(response.text)
+
+# 5. Extract Thai financial values
+if result[&#39;IsErroredOnProcessing&#39;] == False:
+    extracted_text = result[&#39;ParsedResults&#39;][0][&#39;ParsedText&#39;]
+    # Process text to find &#34;ยอดหนี้ตั้งต้น&#34; and &#34;วันครบกำหนดชำระหนี้&#34;</code>
+                    </pre>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Other Approaches -->
+      <section id="other-approaches" class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 serif mb-8">Other OCR Approaches Evaluated</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div class="bg-white p-6 rounded-lg shadow-lg border">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3">
+              <i class="fas fa-code-branch text-purple-600 mr-2"></i>Open-Source Libraries
+            </h3>
+            <ul class="text-sm text-gray-700 space-y-2 mb-4">
+              <li>• <a href="https://meu-solutions.com/selenium-webdriver-for-automation-testing-using-ocr-technology-with-simple-captcha/" class="citation-link">Tesseract OCR with pytesseract</a>
+              </li>
+              <li>• EasyOCR (PyTorch-based)</li>
+              <li>• dddocr for specialized tasks</li>
+            </ul>
+            <div class="text-xs text-gray-600">
+              <strong>Pros:</strong> Cost-effective, flexible
+              <br/>
+              <strong>Cons:</strong> Setup complexity, accuracy variability
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-lg border">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3">
+              <i class="fas fa-cloud text-blue-600 mr-2"></i>Cloud OCR Services
+            </h3>
+            <ul class="text-sm text-gray-700 space-y-2 mb-4">
+              <li>• Google Cloud Vision</li>
+              <li>• Amazon Textract</li>
+              <li>• Azure Cognitive Services</li>
+            </ul>
+            <div class="text-xs text-gray-600">
+              <strong>Pros:</strong> High accuracy, advanced features
+              <br/>
+              <strong>Cons:</strong> Cost escalation, network dependencies
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-lg border">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3">
+              <i class="fas fa-globe-asia text-green-600 mr-2"></i>Specialized Thai OCR
+            </h3>
+            <ul class="text-sm text-gray-700 space-y-2 mb-4">
+              <li>• <a href="https://www.chula.ac.th/en/highlight/78428/" class="citation-link">ReadMe (Chulalongkorn University)</a>
+              </li>
+              <li>• <a href="https://www.ztrus.com/th/about-us/" class="citation-link">ZTRUS Thai OCR</a>
+              </li>
+              <li>• Local expertise providers</li>
+            </ul>
+            <div class="text-xs text-gray-600">
+              <strong>Pros:</strong> Superior Thai handling
+              <br/>
+              <strong>Cons:</strong> Limited enterprise features
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Intranet and Vue.js -->
+      <section id="intranet-vue" class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 serif mb-8">Intranet &amp; Vue.js Specific Considerations</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div class="bg-white p-6 rounded-lg shadow-lg border">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">
+              <i class="fas fa-network-wired text-red-600 mr-2"></i>Intranet Challenges
+            </h3>
+            <p class="text-gray-700 mb-4">
+              The intranet-only nature of the DMS presents challenges for cloud-based OCR solutions.
+              <a href="https://ocr.space/blog/ocr.space-local/" class="citation-link">ByteScout&#39;s on-premise option</a>
+              addresses these concerns effectively.
+            </p>
+            <ul class="text-sm text-gray-700 space-y-2">
+              <li class="flex items-start">
+                <i class="fas fa-exclamation-triangle text-yellow-500 mr-2 mt-1"></i>
+                Data egress security concerns
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-shield-alt text-green-500 mr-2 mt-1"></i>
+                On-premise deployment available
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-lock text-blue-500 mr-2 mt-1"></i>
+                Sensitive financial data protection
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-lg border">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">
+              <i class="fab fa-vuejs text-green-600 mr-2"></i>Vue.js Dynamics
+            </h3>
+            <p class="text-gray-700 mb-4">
+              <a href="https://worktile.com/kb/p/3633136" class="citation-link">Vue.js applications require robust waiting strategies</a>
+              for reliable Selenium automation.
+            </p>
+            <ul class="text-sm text-gray-700 space-y-2">
+              <li class="flex items-start">
+                <i class="fas fa-clock text-purple-500 mr-2 mt-1"></i>
+                Explicit waits over implicit waits
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-search text-orange-500 mr-2 mt-1"></i>
+                Vue-specific attribute selectors
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-sync text-blue-500 mr-2 mt-1"></i>
+                Dynamic content synchronization
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-box mt-8">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Recommended Approach</h3>
+          <p class="text-gray-700">
+            For Vue.js applications, implement explicit waits using WebDriverWait with ExpectedConditions,
+            and leverage Vue-specific attributes like v-model or v-bind in element locators for more robust
+            and maintainable test scripts.
+          </p>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Conclusion -->
+      <section id="conclusion" class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 serif mb-8">Conclusion and Recommendation</h2>
+
+        <div class="bg-gradient-to-r from-teal-50 to-blue-50 p-8 rounded-2xl border border-teal-200">
+          <h3 class="text-2xl font-semibold text-gray-900 mb-6">ByteScout Cloud OCR API: The Optimal Choice</h3>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+            <div>
+              <h4 class="font-semibold text-gray-900 mb-3">Key Advantages</h4>
+              <ul class="space-y-2 text-gray-700">
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
+                  Explicit Thai language support with OCR Engine 2
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
+                  Flexible deployment: cloud and on-premise options
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
+                  Cost-effective pricing within budget constraints
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
+                  Seamless Python integration with comprehensive documentation
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 mb-3">Implementation Readiness</h4>
+              <ul class="space-y-2 text-gray-700">
+                <li class="flex items-start">
+                  <i class="fas fa-cog text-blue-600 mr-2 mt-1"></i>
+                  Proven Selenium integration patterns
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-shield-alt text-blue-600 mr-2 mt-1"></i>
+                  Intranet-compatible deployment options
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-code text-blue-600 mr-2 mt-1"></i>
+                  Python code examples available
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-chart-line text-blue-600 mr-2 mt-1"></i>
+                  Scalable from free tier to enterprise
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="quote-block">
+            &#34;For your Selenium-based Thai OCR needs in an intranet DMS, ByteScout Cloud OCR API (formerly OCR.space) is a leading commercial option. It supports Thai, offers both cloud and on-premise deployment, fits within your budget, and can be integrated with Selenium using Python.&#34;
+          </div>
+
+          <div class="bg-white p-6 rounded-lg mt-6">
+            <h4 class="font-semibold text-gray-900 mb-3">Next Steps</h4>
+            <ol class="list-decimal list-inside space-y-2 text-gray-700">
+              <li>Start with the free tier to validate Thai OCR accuracy</li>
+              <li>Implement basic Selenium integration for screenshot capture</li>
+              <li>Scale to PRO PDF plan ($60/month) for production use</li>
+              <li>Consider on-premise deployment for enhanced security</li>
+              <li>Monitor accuracy and fine-tune image preprocessing as needed</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="border-t border-gray-200 pt-8 pb-16">
+        <div class="text-center text-gray-600">
+          <p class="mb-4">This analysis is based on comprehensive research of available commercial OCR solutions for Selenium-based automation in Thai language environments.</p>
+          <p class="text-sm">All external links and citations are provided for verification and further research.</p>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+        // Initialize Vanta.js background
+        VANTA.WAVES({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x0f766e,
+            shininess: 30.00,
+            waveHeight: 15.00,
+            waveSpeed: 0.75,
+            zoom: 0.65
+        });
+
+        // Table of Contents functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocLinks = document.querySelectorAll('.toc-link');
+            const sections = document.querySelectorAll('section[id]');
+            
+            // Smooth scrolling for TOC links
+            tocLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Active section highlighting
+            function updateActiveSection() {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (window.pageYOffset >= sectionTop - 200) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateActiveSection);
+            updateActiveSection();
+        });
+
+        // Mobile TOC toggle (if needed)
+        function toggleTOC() {
+            const toc = document.getElementById('tableOfContents');
+            toc.classList.toggle('open');
+        }
+
+        // Close TOC when clicking outside
+        document.addEventListener('click', function(e) {
+            const toc = document.getElementById('tableOfContents');
+            const toggleBtn = document.getElementById('tocToggle');
+            
+            if (!toc.contains(e.target) && !toggleBtn.contains(e.target)) {
+                toc.classList.remove('open');
+            }
+        });
+
+        // Handle window resize to reset TOC state on large screens
+        window.addEventListener('resize', function() {
+            const toc = document.getElementById('tableOfContents');
+            if (window.innerWidth >= 1024) {
+                toc.classList.remove('open');
+            }
+        });
+        
+        // Initialize TOC toggle button
+        document.getElementById('tocToggle').addEventListener('click', toggleTOC);
+    </script>
+  
+
+</body></html>
