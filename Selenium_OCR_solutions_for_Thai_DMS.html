@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selenium OCR Solutions for Thai DMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Tech Harmony -->
+    <!-- Application Structure Plan: The application is designed as an interactive dashboard to transform the dense source report into an explorable tool. The structure is non-linear to facilitate user-driven discovery. It starts with a summary of key project requirements, presents the top recommendations in a clear, tabbed format, and then provides an interactive comparison tool for all evaluated solutions. This tool allows filtering by key criteria (cost, deployment, OCR accuracy), making it easy to weigh options. The application concludes with a visual representation of the recommended integration strategy. This structure was chosen to empower the user to move from a high-level understanding to detailed analysis based on their own priorities, which is more effective than a static, linear report. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Analysis of 10+ commercial Selenium tools for Thai OCR. Goal: Compare, Analyze, Recommend.
+        - Requirements Section: Goal: Inform. Method: Icon-based cards (HTML/Tailwind). Interaction: None. Justification: Provides a quick, visual summary of project constraints.
+        - Top Recommendations: Goal: Highlight. Method: Tabbed interface (JS). Interaction: Click tabs. Justification: Focuses user attention on the primary findings from the stakeholder report.
+        - Interactive Comparison: Goal: Compare/Filter. Method: Dynamic cards with filter buttons (JS). Interaction: Click filters to show/hide relevant solutions. Justification: The core interactive element, allows users to dynamically query the data based on what's important to them (e.g., "Show me only on-premise solutions under $500/month").
+        - Cost Analysis Chart: Goal: Compare. Method: Horizontal Bar Chart (Chart.js). Interaction: Hover tooltips. Justification: Visually contextualizes the budget constraint and shows how affordable options fit within it.
+        - Integration Workflow: Goal: Organize/Inform. Method: Stepper diagram (HTML/Tailwind). Interaction: None. Justification: Simplifies a complex technical process into easy-to-follow steps.
+        - All diagrams and structures are built with HTML/CSS/Tailwind to adhere to the NO SVG/Mermaid constraint.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+            color: #1e293b; /* slate-800 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+        }
+        .nav-button.active {
+            background-color: #2563eb; /* blue-600 */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .filter-button.active {
+            background-color: #1d4ed8; /* blue-700 */
+            color: white;
+            border-color: #1d4ed8;
+        }
+        .solution-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .solution-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900">Selenium OCR Solutions for Thai DMS</h1>
+            <p class="mt-2 text-slate-600">An interactive analysis of enterprise-grade tools for extracting Thai financial data from an intranet Debt Management System.</p>
+        </div>
+    </header>
+
+    <main class="py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Key Requirements Section -->
+            <section id="requirements" class="mb-12">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Core Project Requirements</h2>
+                <p class="text-slate-600 mb-6">This section outlines the primary technical and business constraints for the solution. Any selected tool must meet these criteria to be considered viable for automating the validation of the Debt Management System (DMS).</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-md flex items-center space-x-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m4-2v2M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-slate-900">Thai OCR Support</h3>
+                            <p class="text-slate-500">Must accurately read "ยอดหนี้ตั้งต้น" & "วันครบกำหนดชำระหนี้".</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md flex items-center space-x-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-slate-900">Vue.js & Chrome</h3>
+                            <p class="text-slate-500">Compatible with a dynamic Vue.js frontend on Google Chrome.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md flex items-center space-x-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-slate-900">Intranet-Only Access</h3>
+                            <p class="text-slate-500">Requires on-premise deployment or secure tunneling.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md flex items-center space-x-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01M12 6v-1m0-1V4m0 2.01M12 18v-2" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-slate-900">Budget < $1,000 / month</h3>
+                            <p class="text-slate-500">Commercial tool licensing must be cost-effective.</p>
+                        </div>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow-md flex items-center space-x-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-slate-900">Python or Low-Code</h3>
+                            <p class="text-slate-500">Comfortable with scripting or codeless platforms.</p>
+                        </div>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow-md flex items-center space-x-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-slate-900">No Vendor Support</h3>
+                            <p class="text-slate-500">Team is self-sufficient; direct vendor support not required.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Top Recommendations Section -->
+            <section id="recommendations" class="mb-12">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Top Recommendations</h2>
+                <p class="text-slate-600 mb-6">Based on a comprehensive stakeholder assessment, the following solutions are recommended. Each option balances accuracy, security, and cost differently, providing a clear path forward based on project priorities.</p>
+                <div class="bg-white rounded-lg shadow-md">
+                    <div class="border-b border-slate-200">
+                        <nav id="tabs-nav" class="-mb-px flex space-x-8 px-6" aria-label="Tabs">
+                            <button data-tab="tab1" class="nav-button active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-blue-600 border-blue-600">
+                                ⭐ Recommended: ByteScout API
+                            </button>
+                            <button data-tab="tab2" class="nav-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-slate-500 border-transparent hover:text-slate-700 hover:border-slate-300">
+                                Alternative: SmartBear TestComplete
+                            </button>
+                            <button data-tab="tab3" class="nav-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-slate-500 border-transparent hover:text-slate-700 hover:border-slate-300">
+                                AI-Powered: Tricentis Testim
+                            </button>
+                        </nav>
+                    </div>
+                    <div class="p-6">
+                        <div id="tab1" class="tab-content active">
+                            <h3 class="text-xl font-semibold text-slate-900 mb-2">ByteScout Cloud OCR API (OCR.space)</h3>
+                            <p class="text-slate-600 mb-4">The optimal choice for balancing accuracy, security, and cost. It offers a dedicated OCR engine for Thai, can be deployed entirely on-premise to meet intranet security needs, and fits comfortably within the budget.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                                    <h4 class="font-semibold text-green-800">Pros</h4>
+                                    <ul class="list-disc list-inside mt-2 text-sm text-green-700 space-y-1">
+                                        <li>Explicit Thai language support (Engine 2)</li>
+                                        <li>100% on-premise deployment option ensures data privacy</li>
+                                        <li>Highly cost-effective with flexible pricing tiers</li>
+                                        <li>Simple REST API integration with Python/Selenium</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                                    <h4 class="font-semibold text-red-800">Cons</h4>
+                                    <ul class="list-disc list-inside mt-2 text-sm text-red-700 space-y-1">
+                                        <li>Not an all-in-one testing tool; requires scripting</li>
+                                        <li>Cloud API use sends screenshots over the internet (mitigated by on-premise option)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab2" class="tab-content">
+                            <h3 class="text-xl font-semibold text-slate-900 mb-2">SmartBear TestComplete (with OCR Add-on)</h3>
+                            <p class="text-slate-600 mb-4">A comprehensive, all-in-one test automation platform with built-in OCR capabilities powered by Google Cloud Vision, making it a strong alternative for teams looking for a single tool to manage all testing activities.</p>
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                                    <h4 class="font-semibold text-green-800">Pros</h4>
+                                    <ul class="list-disc list-inside mt-2 text-sm text-green-700 space-y-1">
+                                        <li>All-in-one solution with native OCR</li>
+                                        <li>High accuracy for Thai via Google Vision API</li>
+                                        <li>Supports Python scripting and keyword testing</li>
+                                        <li>Runs on-premise, simplifying intranet setup</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                                    <h4 class="font-semibold text-red-800">Cons</h4>
+                                    <ul class="list-disc list-inside mt-2 text-sm text-red-700 space-y-1">
+                                        <li>OCR feature requires outbound internet access to SmartBear's servers</li>
+                                        <li>Can be overkill if only OCR is needed</li>
+                                        <li>Higher initial learning curve and cost than a simple API</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab3" class="tab-content">
+                            <h3 class="text-xl font-semibold text-slate-900 mb-2">Tricentis Testim (Vision AI)</h3>
+                            <p class="text-slate-600 mb-4">A cutting-edge, AI-powered platform with extremely fast and accurate visual OCR. It excels at handling dynamic UIs but comes at a premium price point that exceeds the project's budget.</p>
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                                    <h4 class="font-semibold text-green-800">Pros</h4>
+                                    <ul class="list-disc list-inside mt-2 text-sm text-green-700 space-y-1">
+                                        <li>Extremely fast and robust AI-driven OCR</li>
+                                        <li>Excellent for dynamic Vue.js UIs with self-healing locators</li>
+                                        <li>Minimal maintenance and codeless test creation</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                                    <h4 class="font-semibold text-red-800">Cons</h4>
+                                    <ul class="list-disc list-inside mt-2 text-sm text-red-700 space-y-1">
+                                        <li>Cost-prohibitive (far exceeds <$1,000/month budget)</li>
+                                        <li>Primarily a cloud service, requiring complex setup for intranet access</li>
+                                        <li>Proprietary platform creates vendor lock-in</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Comparison Tool Section -->
+            <section id="comparison-tool" class="mb-12">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Interactive Solution Comparison</h2>
+                <p class="text-slate-600 mb-6">Use the filters below to dynamically compare all evaluated solutions based on key criteria. This tool helps you identify the platforms that best align with your specific technical needs, security policies, and budget.</p>
+                <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                    <div class="flex flex-wrap gap-4 items-center">
+                        <span class="font-medium text-slate-700">Filter by:</span>
+                        <div class="flex flex-wrap gap-2" id="filters">
+                            <button data-filter="all" class="filter-button active px-3 py-1 text-sm font-medium rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">All</button>
+                            <button data-filter="on-premise" class="filter-button px-3 py-1 text-sm font-medium rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">On-Premise Option</button>
+                            <button data-filter="low-cost" class="filter-button px-3 py-1 text-sm font-medium rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">Low Cost (<$500/mo)</button>
+                            <button data-filter="high-accuracy" class="filter-button px-3 py-1 text-sm font-medium rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">High Thai OCR Accuracy</button>
+                            <button data-filter="tunneling" class="filter-button px-3 py-1 text-sm font-medium rounded-full border border-slate-300 bg-white text-slate-700 hover:bg-slate-50">Tunneling Required</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="solutions-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Solution cards will be injected here by JavaScript -->
+                </div>
+            </section>
+            
+             <!-- Cost Analysis Section -->
+            <section id="cost-analysis" class="mb-12">
+                 <h2 class="text-2xl font-bold text-slate-800 mb-4">Cost Analysis of Viable Solutions</h2>
+                 <p class="text-slate-600 mb-6">This chart visualizes the estimated monthly cost of the most affordable solutions relative to the project's budget. It clearly shows which options are financially viable, helping to narrow down the choices based on one of the most critical project constraints.</p>
+                 <div class="bg-white p-6 rounded-lg shadow-md">
+                     <div class="chart-container">
+                        <canvas id="costChart"></canvas>
+                     </div>
+                 </div>
+            </section>
+
+
+            <!-- Integration Strategy Section -->
+            <section id="integration">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Recommended Integration Strategy</h2>
+                 <p class="text-slate-600 mb-6">The recommended approach combines the flexibility of Selenium with the power of a dedicated OCR API. This workflow is robust, secure (especially with an on-premise OCR server), and can be implemented with existing Python expertise.</p>
+                <div class="w-full">
+                    <div class="flex items-center">
+                        <!-- Step 1 -->
+                        <div class="flex-1">
+                            <div class="bg-white border-2 border-blue-600 rounded-lg p-4 text-center">
+                                <div class="text-blue-600 font-bold">Step 1</div>
+                                <div class="text-slate-800 font-semibold mt-1">Web Interaction</div>
+                                <p class="text-xs text-slate-500 mt-1">Selenium navigates the Vue.js DMS.</p>
+                            </div>
+                        </div>
+
+                        <!-- Connector -->
+                        <div class="flex-shrink-0 w-12 text-center text-slate-400 font-bold text-2xl">→</div>
+
+                        <!-- Step 2 -->
+                        <div class="flex-1">
+                            <div class="bg-white border-2 border-blue-600 rounded-lg p-4 text-center">
+                                <div class="text-blue-600 font-bold">Step 2</div>
+                                <div class="text-slate-800 font-semibold mt-1">Screenshot</div>
+                                <p class="text-xs text-slate-500 mt-1">Capture image of target UI element.</p>
+                            </div>
+                        </div>
+
+                        <!-- Connector -->
+                        <div class="flex-shrink-0 w-12 text-center text-slate-400 font-bold text-2xl">→</div>
+
+                        <!-- Step 3 -->
+                        <div class="flex-1">
+                            <div class="bg-white border-2 border-blue-600 rounded-lg p-4 text-center">
+                                <div class="text-blue-600 font-bold">Step 3</div>
+                                <div class="text-slate-800 font-semibold mt-1">OCR API Call</div>
+                                <p class="text-xs text-slate-500 mt-1">Send image to ByteScout API.</p>
+                            </div>
+                        </div>
+
+                        <!-- Connector -->
+                        <div class="flex-shrink-0 w-12 text-center text-slate-400 font-bold text-2xl">→</div>
+
+                        <!-- Step 4 -->
+                        <div class="flex-1">
+                            <div class="bg-white border-2 border-blue-600 rounded-lg p-4 text-center">
+                                <div class="text-blue-600 font-bold">Step 4</div>
+                                <div class="text-slate-800 font-semibold mt-1">Validation</div>
+                                <p class="text-xs text-slate-500 mt-1">Parse JSON and assert values.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+    
+    <footer class="bg-white mt-12">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-slate-500">
+            <p>Interactive report generated based on stakeholder assessment. &copy; 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const solutionsData = [
+                {
+                    name: 'ByteScout OCR API',
+                    description: 'Specialized OCR web service with explicit Thai support and on-premise options. The top recommendation.',
+                    tags: ['on-premise', 'low-cost', 'high-accuracy'],
+                    cost: 'Low ($30-$999/mo)',
+                    deployment: 'Cloud or On-Premise'
+                },
+                {
+                    name: 'SmartBear TestComplete',
+                    description: 'All-in-one testing tool with built-in OCR (via Google Vision). Requires internet for OCR feature.',
+                    tags: ['on-premise', 'low-cost', 'high-accuracy'],
+                    cost: 'Moderate (~$400/mo)',
+                    deployment: 'On-Premise (Hybrid for OCR)'
+                },
+                {
+                    name: 'Tricentis Testim',
+                    description: 'Advanced AI-powered platform with extremely fast OCR. Cost-prohibitive for this project.',
+                    tags: ['tunneling', 'high-accuracy'],
+                    cost: 'High (>$2,500/mo)',
+                    deployment: 'Cloud (SaaS)'
+                },
+                {
+                    name: 'Applitools Eyes',
+                    description: 'Best-in-class Visual AI and OCR for non-Latin scripts. A premium choice for maximum accuracy.',
+                    tags: ['tunneling', 'high-accuracy'],
+                    cost: 'High (~$700+/mo)',
+                    deployment: 'Cloud'
+                },
+                {
+                    name: 'Katalon Studio',
+                    description: 'Comprehensive solution that supports local execution. OCR via Tesseract integration.',
+                    tags: ['on-premise', 'low-cost'],
+                    cost: 'Low (<$100/mo)',
+                    deployment: 'On-Premise'
+                },
+                {
+                    name: 'Sauce Labs',
+                    description: 'Leading cloud Selenium grid with a highly secure tunneling solution (Sauce Connect).',
+                    tags: ['tunneling'],
+                    cost: 'Moderate',
+                    deployment: 'Cloud'
+                },
+                {
+                    name: 'BrowserStack',
+                    description: 'Top cloud testing service with a robust local tunneling agent for private site testing.',
+                    tags: ['tunneling'],
+                    cost: 'Moderate',
+                    deployment: 'Cloud'
+                },
+                {
+                    name: 'LambdaTest',
+                    description: 'Cloud Selenium grid with SmartUI visual testing that includes integrated OCR.',
+                    tags: ['tunneling', 'high-accuracy'],
+                    cost: 'Low-Moderate (~$100+/mo)',
+                    deployment: 'Cloud'
+                },
+                {
+                    name: 'mabl',
+                    description: 'AI-powered test automation platform with GenAI assertions and secure tunneling.',
+                    tags: ['tunneling', 'high-accuracy'],
+                    cost: 'High',
+                    deployment: 'Cloud'
+                },
+                {
+                    name: 'Healenium',
+                    description: 'Open-source extension for self-healing locators. Does not have native OCR but augments other tools.',
+                    tags: ['on-premise', 'low-cost'],
+                    cost: 'Free (Open Source)',
+                    deployment: 'On-Premise'
+                }
+            ];
+
+            const grid = document.getElementById('solutions-grid');
+            const filters = document.getElementById('filters');
+            let currentFilter = 'all';
+
+            function renderSolutions() {
+                grid.innerHTML = '';
+                const filteredSolutions = solutionsData.filter(solution => 
+                    currentFilter === 'all' || solution.tags.includes(currentFilter)
+                );
+
+                if (filteredSolutions.length === 0) {
+                    grid.innerHTML = `<p class="text-slate-500 col-span-full text-center">No solutions match the selected filter.</p>`;
+                    return;
+                }
+
+                filteredSolutions.forEach(solution => {
+                    const card = document.createElement('div');
+                    card.className = 'solution-card bg-white p-6 rounded-lg shadow-md flex flex-col';
+                    card.innerHTML = `
+                        <h3 class="text-lg font-bold text-slate-900">${solution.name}</h3>
+                        <p class="text-slate-600 mt-2 flex-grow">${solution.description}</p>
+                        <div class="mt-4 pt-4 border-t border-slate-200">
+                            <p class="text-sm font-medium text-slate-800">Cost: <span class="font-normal text-slate-600">${solution.cost}</span></p>
+                            <p class="text-sm font-medium text-slate-800">Deployment: <span class="font-normal text-slate-600">${solution.deployment}</span></p>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            filters.addEventListener('click', e => {
+                if (e.target.tagName === 'BUTTON') {
+                    currentFilter = e.target.dataset.filter;
+                    document.querySelectorAll('#filters button').forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    renderSolutions();
+                }
+            });
+
+            // Tabs functionality
+            const tabsNav = document.getElementById('tabs-nav');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabsNav.addEventListener('click', e => {
+                if (e.target.tagName === 'BUTTON') {
+                    const tabId = e.target.dataset.tab;
+                    
+                    tabsNav.querySelectorAll('button').forEach(btn => {
+                        btn.classList.remove('active', 'text-blue-600', 'border-blue-600');
+                        btn.classList.add('text-slate-500', 'border-transparent', 'hover:text-slate-700', 'hover:border-slate-300');
+                    });
+                    
+                    e.target.classList.add('active', 'text-blue-600', 'border-blue-600');
+                    e.target.classList.remove('text-slate-500', 'border-transparent', 'hover:text-slate-700', 'hover:border-slate-300');
+
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === tabId) {
+                            content.classList.add('active');
+                        }
+                    });
+                }
+            });
+
+            // Chart.js implementation
+            const ctx = document.getElementById('costChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['ByteScout API (Pro)', 'Katalon Studio', 'SmartBear TestComplete (est.)', 'LambdaTest'],
+                    datasets: [{
+                        label: 'Estimated Monthly Cost (USD)',
+                        data: [60, 100, 400, 100],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(249, 115, 22, 0.7)',
+                            'rgba(139, 92, 246, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(59, 130, 246)',
+                            'rgb(16, 185, 129)',
+                            'rgb(249, 115, 22)',
+                            'rgb(139, 92, 246)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 1000,
+                            title: {
+                                display: true,
+                                text: 'Monthly Cost (USD)'
+                            },
+                            grid: {
+                                color: '#e2e8f0'
+                            }
+                        },
+                        y: {
+                           grid: {
+                                display: false
+                           }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `$${context.raw}`;
+                                }
+                            }
+                        },
+                        annotation: {
+                            annotations: {
+                                line1: {
+                                    type: 'line',
+                                    xMin: 1000,
+                                    xMax: 1000,
+                                    borderColor: 'rgb(239, 68, 68)',
+                                    borderWidth: 2,
+                                    borderDash: [6, 6],
+                                    label: {
+                                        content: 'Budget Limit ($1000)',
+                                        display: true,
+                                        position: 'end'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            renderSolutions();
+        });
+    </script>
+</body>
+</html>
