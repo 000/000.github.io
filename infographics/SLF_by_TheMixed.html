@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>แผนการเปลี่ยนผ่านสู่ดิจิทัล กยศ. พ.ศ. 2566-2570</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        :root {
+            --tiffany-blue: #0ABAB5;
+            --peach-fuzz: #FFBE98;
+            --mocha-mousse: #A47B67;
+            --ultimate-grey: #97999B;
+            --viva-magenta: #BE3455;
+            --white: #FFFFFF;
+            --light-bg: #F5F5F5;
+            --dark-text: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: var(--white);
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, var(--tiffany-blue) 0%, #08A8A3 100%);
+            color: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(10, 186, 181, 0.3);
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .subtitle {
+            font-size: 24px;
+            font-weight: 400;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .executive-summary {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px auto 0;
+            max-width: 900px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-item h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Timeline Section */
+        .timeline-section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--tiffany-blue);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        #timeline-container {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        /* KPI Section */
+        .kpi-section {
+            background: var(--light-bg);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .kpi-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid var(--viva-magenta);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .kpi-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--viva-magenta);
+            margin: 15px 0;
+        }
+
+        .kpi-label {
+            font-size: 18px;
+            color: var(--dark-text);
+        }
+
+        .kpi-change {
+            font-size: 16px;
+            color: var(--ultimate-grey);
+            margin-top: 10px;
+        }
+
+        /* EA Layers Section */
+        .ea-section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .ea-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .ea-box {
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            color: var(--white);
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ea-box:hover {
+            transform: scale(1.05);
+        }
+
+        .ea-box h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .ea-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .ea-box li {
+            padding: 8px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .ea-core { background: var(--tiffany-blue); }
+        .ea-security { background: var(--ultimate-grey); }
+        .ea-integration { background: var(--mocha-mousse); }
+
+        /* Dashboard Mockups */
+        .dashboard-section {
+            background: var(--light-bg);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+        }
+
+        .dashboard-mockup {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-mockup h3 {
+            font-size: 24px;
+            color: var(--mocha-mousse);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Legend */
+        .legend {
+            background: var(--light-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 32px; }
+            .header .subtitle { font-size: 18px; }
+            .summary-grid { grid-template-columns: 1fr; gap: 20px; }
+            .kpi-grid { grid-template-columns: 1fr; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .ea-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* Timeline specific styles */
+        .timeline-svg {
+            min-width: 1200px;
+        }
+
+        .initiative-box {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .initiative-box:hover {
+            filter: brightness(1.1);
+            transform: scale(1.02);
+        }
+
+        /* Chart styles */
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: var(--white);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header fade-in">
+            <h1>แผนการเปลี่ยนผ่านสู่ดิจิทัล กยศ.</h1>
+            <p class="subtitle">พ.ศ. 2566 - 2570: เสริมพลังอนาคตด้วยข้อมูลเชิงลึกและความเข้าอันดี</p>
+            
+            <div class="executive-summary">
+                <h3 style="font-size: 24px; margin-bottom: 20px;">เป้าหมายการเปลี่ยนผ่านสู่ดิจิทัล</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <h3>ผู้กู้ยืม</h3>
+                        <p>ประสบการณ์ดิจิทัลที่ราบรื่น</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3>สถาบันการศึกษา</h3>
+                        <p>ความร่วมมือที่มีประสิทธิภาพ</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3>พนักงาน</h3>
+                        <p>เครื่องมือทันสมัยเพิ่มผลิตภาพ</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Timeline Section -->
+        <section class="timeline-section fade-in">
+            <h2 class="section-title">Customer Journey Digital Transformation Timeline</h2>
+            <div id="timeline-container"></div>
+            
+            <div class="legend">
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--peach-fuzz);"></div>
+                        <span>สมัครกู้ยืมและยืนยันตัวตน</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--tiffany-blue);"></div>
+                        <span>การสื่อสารและสนับสนุนลูกค้า</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--mocha-mousse);"></div>
+                        <span>ข้อมูลและการวิเคราะห์</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--viva-magenta);"></div>
+                        <span>การบริหารหนี้ด้วย AI</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--ultimate-grey);"></div>
+                        <span>ระบบพื้นฐาน/สถาปัตยกรรมองค์กร (EA)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- KPI Section -->
+        <section class="kpi-section fade-in">
+            <h2 class="section-title">ตัวชี้วัดสำคัญ พ.ศ. 2566-2570</h2>
+            
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">อัตราการชำระคืน</div>
+                    <div class="kpi-value">80% → 92%</div>
+                    <div class="kpi-change">เพิ่มขึ้น 12% ใน 5 ปี</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">คะแนนความพึงพอใจ</div>
+                    <div class="kpi-value">65% → 90%</div>
+                    <div class="kpi-change">เพิ่มขึ้น 25% ใน 5 ปี</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">ต้นทุนต่อสินเชื่อ</div>
+                    <div class="kpi-value">-30%</div>
+                    <div class="kpi-change">ลดลงจากการทำงานอัตโนมัติ</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">กระบวนการอัตโนมัติ</div>
+                    <div class="kpi-value">10% → 75%</div>
+                    <div class="kpi-change">เพิ่มประสิทธิภาพการทำงาน</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">อัตราการใช้ช่องทางดิจิทัล</div>
+                    <div class="kpi-value">40% → 95%</div>
+                    <div class="kpi-change">ผู้ใช้หันมาใช้บริการออนไลน์</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">ระยะเวลาอนุมัติเงินกู้</div>
+                    <div class="kpi-value">30 วัน → 7 วัน</div>
+                    <div class="kpi-change">เร็วขึ้น 76%</div>
+                </div>
+            </div>
+
+            <div id="kpi-chart" class="chart-container"></div>
+        </section>
+
+        <!-- Dashboard Mockups -->
+        <section class="dashboard-section fade-in">
+            <h2 class="section-title">Executive Dashboard Mockups</h2>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-mockup">
+                    <h3>ศูนย์บัญชาการผู้บริหาร กยศ.</h3>
+                    <div id="executive-dashboard" style="height: 400px;"></div>
+                </div>
+                
+                <div class="dashboard-mockup">
+                    <h3>ระบบอัจฉริยะวิเคราะห์การเก็บหนี้</h3>
+                    <div id="ai-dashboard" style="height: 400px;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EA Layers -->
+        <section class="ea-section fade-in">
+            <h2 class="section-title">สถาปัตยกรรมองค์กร (Enterprise Architecture)</h2>
+            
+            <div class="ea-grid">
+                <div class="ea-box ea-core">
+                    <h3>Core Business</h3>
+                    <ul>
+                        <li>ระบบ e-Service กลาง</li>
+                        <li>ระบบ BI Self-Service</li>
+                        <li>ระบบบูรณาการข้อมูล</li>
+                    </ul>
+                </div>
+                
+                <div class="ea-box ea-security">
+                    <h3>Security</h3>
+                    <ul>
+                        <li>Security Infrastructure</li>
+                        <li>ระบบ e-KYC</li>
+                        <li>API Security Gateway</li>
+                    </ul>
+                </div>
+                
+                <div class="ea-box ea-integration">
+                    <h3>External Integration</h3>
+                    <ul>
+                        <li>ระบบ API Gateway</li>
+                        <li>LINE Integration</li>
+                        <li>Government Agency Connectors</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // Timeline Data
+        const timelineData = {
+            years: ["ปีที่ 1 (2566)", "ปีที่ 2 (2567)", "ปีที่ 3 (2568)", "ปีที่ 4 (2569)", "ปีที่ 5 (2570)"],
+            categories: [
+                {id: "apply", name: "สมัครกู้ยืมและยืนยันตัวตน", color: "#FFBE98"},
+                {id: "comm", name: "การสื่อสารและสนับสนุนลูกค้า", color: "#0ABAB5"},
+                {id: "data", name: "ข้อมูลและการวิเคราะห์", color: "#A47B67"},
+                {id: "ai", name: "การบริหารหนี้ด้วย AI", color: "#BE3455"},
+                {id: "ea", name: "สถาปัตยกรรมองค์กร (EA)", color: "#97999B"}
+            ],
+            initiatives: [
+                {name: "ระบบ e-Service กลาง", category: "apply", startYear: 0, endYear: 0, kpi: "ลดเวลาการเข้าถึงบริการ 50%"},
+                {name: "ระบบ e-KYC", category: "apply", startYear: 1, endYear: 1, kpi: "ลดเวลาการยืนยันตัวตนเหลือ 1 ชั่วโมง"},
+                {name: "ระบบ AI Chatbot", category: "comm", startYear: 1, endYear: 1, kpi: "ตอบคำถามอัตโนมัติ 60%"},
+                {name: "ระบบแจ้งเตือน LINE", category: "comm", startYear: 2, endYear: 2, kpi: "ลดการผิดนัดชำระครั้งแรก 15%"},
+                {name: "ระบบ BI Self-Service", category: "data", startYear: 2, endYear: 2, kpi: "Real-time Executive Dashboards"},
+                {name: "AI แบ่งกลุ่มลูกหนี้", category: "ai", startYear: 3, endYear: 3, kpi: "เพิ่มอัตราการเก็บหนี้ 10-15%"},
+                {name: "Personalization ผ่าน AI", category: "ai", startYear: 3, endYear: 4, kpi: "แผนชำระหนี้เฉพาะบุคคล"},
+                {name: "ระบบธุรกิจแกนหลัก", category: "ea", startYear: 0, endYear: 3, kpi: "ปรับปรุงระบบหลัก"},
+                {name: "โครงสร้างพื้นฐานดิจิทัล", category: "ea", startYear: 0, endYear: 4, kpi: "Cloud & Infrastructure"},
+                {name: "ความปลอดภัยทางไซเบอร์", category: "ea", startYear: 0, endYear: 4, kpi: "Zero Trust Security"},
+                {name: "ระบบ API Gateway", category: "ea", startYear: 1, endYear: 2, kpi: "Integration Platform"}
+            ]
+        };
+
+        // Create Timeline
+        function createTimeline() {
+            const margin = {top: 60, right: 50, bottom: 60, left: 250};
+            const width = 1200 - margin.left - margin.right;
+            const height = 600 - margin.top - margin.bottom;
+
+            const svg = d3.select("#timeline-container")
+                .append("svg")
+                .attr("class", "timeline-svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Scales
+            const xScale = d3.scaleBand()
+                .domain(d3.range(timelineData.years.length))
+                .range([0, width])
+                .padding(0.1);
+
+            const yScale = d3.scaleBand()
+                .domain(timelineData.categories.map(d => d.id))
+                .range([0, height])
+                .padding(0.3);
+
+            // Grid lines
+            svg.selectAll(".grid-line")
+                .data(timelineData.years)
+                .enter()
+                .append("line")
+                .attr("class", "grid-line")
+                .attr("x1", (d, i) => xScale(i))
+                .attr("x2", (d, i) => xScale(i))
+                .attr("y1", 0)
+                .attr("y2", height)
+                .style("stroke", "#e0e0e0")
+                .style("stroke-dasharray", "3,3");
+
+            // Year labels
+            svg.selectAll(".year-label")
+                .data(timelineData.years)
+                .enter()
+                .append("text")
+                .attr("class", "year-label")
+                .attr("x", (d, i) => xScale(i) + xScale.bandwidth() / 2)
+                .attr("y", -20)
+                .attr("text-anchor", "middle")
+                .style("font-size", "16px")
+                .style("font-weight", "600")
+                .text(d => d);
+
+            // Category labels
+            svg.selectAll(".category-label")
+                .data(timelineData.categories)
+                .enter()
+                .append("text")
+                .attr("class", "category-label")
+                .attr("x", -10)
+                .attr("y", d => yScale(d.id) + yScale.bandwidth() / 2)
+                .attr("text-anchor", "end")
+                .attr("dominant-baseline", "middle")
+                .style("font-size", "14px")
+                .style("font-weight", "600")
+                .text(d => d.name);
+
+            // Initiative boxes
+            const initiatives = svg.selectAll(".initiative")
+                .data(timelineData.initiatives)
+                .enter()
+                .append("g")
+                .attr("class", "initiative");
+
+            initiatives.append("rect")
+                .attr("class", "initiative-box")
+                .attr("x", d => xScale(d.startYear))
+                .attr("y", d => yScale(d.category))
+                .attr("width", d => (d.endYear - d.startYear + 1) * xScale.bandwidth() - 10)
+                .attr("height", yScale.bandwidth())
+                .attr("rx", 8)
+                .attr("fill", d => timelineData.categories.find(c => c.id === d.category).color)
+                .style("opacity", 0.9)
+                .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.2))")
+                .on("mouseover", function(event, d) {
+                    const tooltip = document.getElementById("tooltip");
+                    tooltip.innerHTML = `<strong>${d.name}</strong><br/>KPI: ${d.kpi}`;
+                    tooltip.style.opacity = 1;
+                    tooltip.style.left = (event.pageX + 10) + "px";
+                    tooltip.style.top = (event.pageY - 28) + "px";
+                })
+                .on("mouseout", function() {
+                    document.getElementById("tooltip").style.opacity = 0;
+                });
+
+            initiatives.append("text")
+                .attr("x", d => xScale(d.startYear) + ((d.endYear - d.startYear + 1) * xScale.bandwidth() - 10) / 2)
+                .attr("y", d => yScale(d.category) + yScale.bandwidth() / 2)
+                .attr("text-anchor", "middle")
+                .attr("dominant-baseline", "middle")
+                .style("fill", "white")
+                .style("font-size", "12px")
+                .style("font-weight", "500")
+                .style("pointer-events", "none")
+                .text(d => d.name);
+        }
+
+        // Create KPI Chart
+        function createKPIChart() {
+            const margin = {top: 40, right: 80, bottom: 60, left: 80};
+            const width = document.getElementById("kpi-chart").offsetWidth - margin.left - margin.right;
+            const height = 400 - margin.top - margin.bottom;
+
+            const svg = d3.select("#kpi-chart")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const years = [2566, 2567, 2568, 2569, 2570];
+            const collectionRate = [80, 82, 85, 88, 92];
+            const satisfactionRate = [65, 72, 80, 85, 90];
+
+            const xScale = d3.scaleLinear()
+                .domain([2566, 2570])
+                .range([0, width]);
+
+            const yScale = d3.scaleLinear()
+                .domain([0, 100])
+                .range([height, 0]);
+
+            // X axis
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(xScale).tickFormat(d => d));
+
+            // Y axis
+            svg.append("g")
+                .call(d3.axisLeft(yScale).tickFormat(d => d + "%"));
+
+            // Collection rate line
+            const collectionLine = d3.line()
+                .x((d, i) => xScale(years[i]))
+                .y(d => yScale(d))
+                .curve(d3.curveMonotoneX);
+
+            svg.append("path")
+                .datum(collectionRate)
+                .attr("fill", "none")
+                .attr("stroke", "#BE3455")
+                .attr("stroke-width", 3)
+                .attr("d", collectionLine);
+
+            // Satisfaction rate line
+            const satisfactionLine = d3.line()
+                .x((d, i) => xScale(years[i]))
+                .y(d => yScale(d))
+                .curve(d3.curveMonotoneX);
+
+            svg.append("path")
+                .datum(satisfactionRate)
+                .attr("fill", "none")
+                .attr("stroke", "#0ABAB5")
+                .attr("stroke-width", 3)
+                .attr("d", satisfactionLine);
+
+            // Data points
+            years.forEach((year, i) => {
+                svg.append("circle")
+                    .attr("cx", xScale(year))
+                    .attr("cy", yScale(collectionRate[i]))
+                    .attr("r", 5)
+                    .attr("fill", "#BE3455");
+
+                svg.append("circle")
+                    .attr("cx", xScale(year))
+                    .attr("cy", yScale(satisfactionRate[i]))
+                    .attr("r", 5)
+                    .attr("fill", "#0ABAB5");
+            });
+
+            // Labels
+            svg.append("text")
+                .attr("x", xScale(2570) + 10)
+                .attr("y", yScale(92))
+                .style("font-size", "14px")
+                .style("fill", "#BE3455")
+                .text("92% อัตราการชำระคืน");
+
+            svg.append("text")
+                .attr("x", xScale(2570) + 10)
+                .attr("y", yScale(90))
+                .style("font-size", "14px")
+                .style("fill", "#0ABAB5")
+                .text("90% คะแนนความพึงพอใจ");
+
+            // Title
+            svg.append("text")
+                .attr("x", width / 2)
+                .attr("y", -20)
+                .attr("text-anchor", "middle")
+                .style("font-size", "18px")
+                .style("font-weight", "600")
+                .text("แนวโน้มตัวชี้วัดหลัก");
+        }
+
+        // Create Executive Dashboard
+        function createExecutiveDashboard() {
+            const container = d3.select("#executive-dashboard");
+            const width = container.node().getBoundingClientRect().width;
+            const height = 400;
+
+            const svg = container.append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            // Background
+            svg.append("rect")
+                .attr("width", width)
+                .attr("height", height)
+                .attr("fill", "#f8f9fa");
+
+            // KPI Gauges
+            const gaugeData = [
+                {label: "อัตราการเก็บหนี้", value: 92, x: width * 0.25, y: 150},
+                {label: "ความพึงพอใจ", value: 90, x: width * 0.75, y: 150}
+            ];
+
+            gaugeData.forEach(d => {
+                const g = svg.append("g")
+                    .attr("transform", `translate(${d.x},${d.y})`);
+
+                // Background arc
+                const bgArc = d3.arc()
+                    .innerRadius(60)
+                    .outerRadius(80)
+                    .startAngle(-Math.PI / 2)
+                    .endAngle(Math.PI / 2);
+
+                g.append("path")
+                    .attr("d", bgArc)
+                    .attr("fill", "#e0e0e0");
+
+                // Value arc
+                const valueArc = d3.arc()
+                    .innerRadius(60)
+                    .outerRadius(80)
+                    .startAngle(-Math.PI / 2)
+                    .endAngle(-Math.PI / 2 + (Math.PI * d.value / 100));
+
+                g.append("path")
+                    .attr("d", valueArc)
+                    .attr("fill", d.label === "อัตราการเก็บหนี้" ? "#BE3455" : "#0ABAB5");
+
+                // Value text
+                g.append("text")
+                    .attr("text-anchor", "middle")
+                    .attr("dy", "0.35em")
+                    .style("font-size", "24px")
+                    .style("font-weight", "700")
+                    .text(d.value + "%");
+
+                // Label
+                g.append("text")
+                    .attr("y", 100)
+                    .attr("text-anchor", "middle")
+                    .style("font-size", "16px")
+                    .text(d.label);
+            });
+
+            // Regional map placeholder
+            const mapG = svg.append("g")
+                .attr("transform", `translate(${width/2 - 100}, 250)`);
+
+            mapG.append("rect")
+                .attr("width", 200)
+                .attr("height", 120)
+                .attr("fill", "#e0e0e0")
+                .attr("rx", 10);
+
+            mapG.append("text")
+                .attr("x", 100)
+                .attr("y", 60)
+                .attr("text-anchor", "middle")
+                .style("font-size", "14px")
+                .text("แผนที่ภูมิภาค");
+        }
+
+        // Create AI Dashboard
+        function createAIDashboard() {
+            const container = d3.select("#ai-dashboard");
+            const width = container.node().getBoundingClientRect().width;
+            const height = 400;
+
+            const svg = container.append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            // Debtor segmentation data
+            const segmentData = [
+                {name: "กลุ่มเปราะบาง", value: 35, color: "#0ABAB5"},
+                {name: "กลุ่มมีศักยภาพ", value: 40, color: "#A47B67"},
+                {name: "กลุ่มจงใจ", value: 15, color: "#BE3455"},
+                {name: "กลุ่มผิดนัดใหม่", value: 10, color: "#FFBE98"}
+            ];
+
+            const pie = d3.pie()
+                .value(d => d.value)
+                .sort(null);
+
+            const arc = d3.arc()
+                .innerRadius(0)
+                .outerRadius(120);
+
+            const g = svg.append("g")
+                .attr("transform", `translate(${width/2}, ${height/2})`);
+
+            const arcs = g.selectAll(".arc")
+                .data(pie(segmentData))
+                .enter()
+                .append("g")
+                .attr("class", "arc");
+
+            arcs.append("path")
+                .attr("d", arc)
+                .attr("fill", d => d.data.color)
+                .style("stroke", "white")
+                .style("stroke-width", 2);
+
+            // Labels
+            arcs.append("text")
+                .attr("transform", d => `translate(${arc.centroid(d)})`)
+                .attr("text-anchor", "middle")
+                .style("font-size", "14px")
+                .style("font-weight", "600")
+                .style("fill", "white")
+                .text(d => d.data.value + "%");
+
+            // Legend
+            const legend = svg.append("g")
+                .attr("transform", `translate(20, 20)`);
+
+            segmentData.forEach((d, i) => {
+                const legendRow = legend.append("g")
+                    .attr("transform", `translate(0, ${i * 25})`);
+
+                legendRow.append("rect")
+                    .attr("width", 20)
+                    .attr("height", 20)
+                    .attr("fill", d.color)
+                    .attr("rx", 4);
+
+                legendRow.append("text")
+                    .attr("x", 30)
+                    .attr("y", 15)
+                    .style("font-size", "14px")
+                    .text(d.name + " (" + d.value + "%)");
+            });
+        }
+
+        // Initialize all visualizations
+        document.addEventListener("DOMContentLoaded", function() {
+            createTimeline();
+            createKPIChart();
+            createExecutiveDashboard();
+            createAIDashboard();
+
+            // Add fade-in animation to elements
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll(".fade-in").forEach(el => {
+                observer.observe(el);
+            });
+        });
+
+        // Window resize handler
+        window.addEventListener("resize", function() {
+            // Redraw charts on resize
+            d3.select("#kpi-chart").select("svg").remove();
+            d3.select("#executive-dashboard").select("svg").remove();
+            d3.select("#ai-dashboard").select("svg").remove();
+            
+            createKPIChart();
+            createExecutiveDashboard();
+            createAIDashboard();
+        });
+    </script>
+</body>
+</html>
