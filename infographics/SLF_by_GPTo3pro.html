@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>แผน Digital Transformation กยศ. พ.ศ. 2566–2570</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body{
+      margin:0;
+      font-family: 'Sarabun', sans-serif;
+      background:#fff;
+      color:#222;
+    }
+    h1{
+      text-align:center;
+      font-size:2.2rem;
+      margin:40px 0 20px;
+      color:#0ABAB5; /* Tiffany Blue for title */
+      font-weight:700;
+    }
+    .sectionTitle{
+      margin:40px auto 10px;
+      font-size:1.5rem;
+      font-weight:600;
+      max-width:1000px;
+      padding-left:20px;
+    }
+    .timelineContainer, .kpiContainer{
+      max-width:1000px;
+      margin:0 auto 60px;
+      padding:0 20px;
+    }
+    .legend{
+      max-width:1000px;
+      margin:0 auto 40px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px 24px;
+      justify-content:center;
+      font-size:14px;
+    }
+    .legendItem{
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .legendColor{
+      width:15px;
+      height:15px;
+      border-radius:2px;
+    }
+    svg text{
+      font-family:'Sarabun', sans-serif;
+      font-size:12px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>แผน Digital Transformation กยศ.<br>พ.ศ. 2566–2570</h1>
+
+<!-- Timeline -->
+<div class="sectionTitle">แผนระยะเวลา 5 ปี (Customer Journey)</div>
+<div class="timelineContainer" id="timeline"></div>
+
+<!-- Legend -->
+<div class="legend">
+  <div class="legendItem"><span class="legendColor" style="background:#FFBE98"></span>สมัครกู้ยืมและยืนยันตัวตน</div>
+  <div class="legendItem"><span class="legendColor" style="background:#0ABAB5"></span>การสื่อสารและสนับสนุนลูกค้า</div>
+  <div class="legendItem"><span class="legendColor" style="background:#A47B67"></span>ข้อมูลและการวิเคราะห์</div>
+  <div class="legendItem"><span class="legendColor" style="background:#BE3455"></span>การบริหารหนี้ด้วย AI</div>
+  <div class="legendItem"><span class="legendColor" style="background:#97999B"></span>ระบบพื้นฐาน/สถาปัตยกรรมองค์กร (EA)</div>
+</div>
+
+<!-- KPI Chart -->
+<div class="sectionTitle">ตัวชี้วัดสำคัญ พ.ศ. 2566–2570</div>
+<div class="kpiContainer" id="kpiChart"></div>
+
+<script>
+/* === Timeline Data === */
+const years = [2566,2567,2568,2569,2570];
+const categories = [
+  {id:'apply', label:'สมัครกู้ยืมและยืนยันตัวตน', color:'#FFBE98', y:0},
+  {id:'comm',  label:'การสื่อสารและสนับสนุนลูกค้า', color:'#0ABAB5', y:1},
+  {id:'data',  label:'ข้อมูลและการวิเคราะห์', color:'#A47B67', y:2},
+  {id:'ai',    label:'การบริหารหนี้ด้วย AI', color:'#BE3455', y:3},
+  {id:'ea',    label:'สถาปัตยกรรมองค์กร (EA)', color:'#97999B', y:4}
+];
+
+const initiatives = [
+  {cat:'apply', name:'ระบบ e-Service กลาง', start:2566, end:2566},
+  {cat:'apply', name:'ระบบ e-KYC', start:2567, end:2567},
+  {cat:'comm',  name:'ระบบ AI Chatbot', start:2567, end:2567},
+  {cat:'comm',  name:'ระบบแจ้งเตือนผ่าน LINE', start:2568, end:2568},
+  {cat:'data',  name:'ระบบ BI Self-Service', start:2568, end:2568},
+  {cat:'ai',    name:'ระบบ AI แบ่งกลุ่มลูกหนี้', start:2569, end:2569},
+  {cat:'ai',    name:'บริการ Personalization ผ่าน AI', start:2569, end:2570},
+  {cat:'ea',    name:'ระบบธุรกิจแกนหลัก', start:2566, end:2569},
+  {cat:'ea',    name:'โครงสร้อมพื้นฐานดิจิทัล', start:2566, end:2570},
+  {cat:'ea',    name:'ความปลอดภัยทางไซเบอร์', start:2566, end:2570},
+  {cat:'ea',    name:'ระบบ API Gateway', start:2567, end:2568}
+];
+
+/* === Render Timeline === */
+const margin = {top:40, right:20, bottom:20, left:220};
+const svgW = 1000, svgH = 300;
+const width = svgW - margin.left - margin.right;
+const height = svgH - margin.top - margin.bottom;
+
+const svg = d3.select("#timeline")
+  .append("svg")
+  .attr("viewBox", `0 0 ${svgW} ${svgH}`)
+  .attr("preserveAspectRatio","xMidYMin meet")
+  .style("width","100%").style("height","auto");
+
+const x = d3.scaleBand()
+  .domain(years)
+  .range([0,width])
+  .paddingInner(0.2);
+
+const y = d3.scaleBand()
+  .domain(categories.map(d=>d.id))
+  .range([0,height])
+  .padding(0.4);
+
+const g = svg.append("g")
+  .attr("transform",`translate(${margin.left},${margin.top})`);
+
+/* year header */
+g.append("g")
+  .selectAll("text")
+  .data(years)
+  .enter()
+  .append("text")
+  .attr("x", d=>x(d)+x.bandwidth()/2)
+  .attr("y",-15)
+  .attr("text-anchor","middle")
+  .style("font-weight","600")
+  .text((d,i)=>`ปีที่ ${i+1} (${d})`);
+
+/* category labels */
+categories.forEach(cat=>{
+  g.append("text")
+   .attr("x",-10)
+   .attr("y",y(cat.id)+y.bandwidth()/2)
+   .attr("text-anchor","end")
+   .attr("dominant-baseline","middle")
+   .style("font-weight","600")
+   .text(cat.label);
+});
+
+/* vertical grid */
+g.selectAll("line.v")
+  .data(years)
+  .enter()
+  .append("line")
+  .attr("x1",d=>x(d))
+  .attr("x2",d=>x(d))
+  .attr("y1",0)
+  .attr("y2",height)
+  .attr("stroke","#97999B")
+  .attr("stroke-opacity",0.3);
+
+/* draw bars */
+initiatives.forEach(d=>{
+  const cat = categories.find(c=>c.id===d.cat);
+  const start = x(d.start);
+  const end = x(d.end)+x.bandwidth();
+  const barY = y(cat.id);
+  g.append("rect")
+   .attr("x",start)
+   .attr("y",barY)
+   .attr("width",end-start)
+   .attr("height",y.bandwidth())
+   .attr("fill",cat.color)
+   .attr("rx",4);
+
+  g.append("text")
+   .attr("x",(start+end)/2)
+   .attr("y",barY+y.bandwidth()/2)
+   .attr("text-anchor","middle")
+   .attr("dominant-baseline","middle")
+   .style("font-size","11px")
+   .style("fill", d3.lab(cat.color).l>60?"#000":"#fff")
+   .text(d.name);
+});
+
+/* === KPI Chart === */
+const kpiW = 1000, kpiH = 300;
+const kpiMargin = {top:20, right:40, bottom:40, left:50};
+const kpiWidth = kpiW - kpiMargin.left - kpiMargin.right;
+const kpiHeight = kpiH - kpiMargin.top - kpiMargin.bottom;
+
+const kpiSvg = d3.select("#kpiChart")
+  .append("svg")
+  .attr("viewBox",`0 0 ${kpiW} ${kpiH}`)
+  .attr("preserveAspectRatio","xMidYMin meet")
+  .style("width","100%").style("height","auto");
+
+const kpiG = kpiSvg.append("g")
+  .attr("transform",`translate(${kpiMargin.left},${kpiMargin.top})`);
+
+const xK = d3.scaleBand()
+  .domain(years)
+  .range([0,kpiWidth])
+  .padding(0.1);
+const yK = d3.scaleLinear()
+  .domain([0,100])
+  .range([kpiHeight,0]);
+
+kpiG.append("g")
+  .attr("transform",`translate(0,${kpiHeight})`)
+  .call(d3.axisBottom(xK));
+
+kpiG.append("g")
+  .call(d3.axisLeft(yK).tickFormat(d=>d+"%"));
+
+const collection = [80,82,85,88,92];
+const satisfaction = [65,72,80,85,90];
+
+const lineCol = d3.line()
+  .x((d,i)=>xK(years[i])+xK.bandwidth()/2)
+  .y(d=>yK(d));
+
+const lineSat = d3.line()
+  .x((d,i)=>xK(years[i])+xK.bandwidth()/2)
+  .y(d=>yK(d));
+
+kpiG.append("path")
+  .datum(collection)
+  .attr("fill","none")
+  .attr("stroke","#BE3455")
+  .attr("stroke-width",3)
+  .attr("d",lineCol);
+
+kpiG.append("path")
+  .datum(satisfaction)
+  .attr("fill","none")
+  .attr("stroke","#0ABAB5")
+  .attr("stroke-width",3)
+  .attr("d",lineSat);
+
+/* points */
+years.forEach((yr,i)=>{
+  kpiG.append("circle")
+    .attr("cx",xK(yr)+xK.bandwidth()/2)
+    .attr("cy",yK(collection[i]))
+    .attr("r",4)
+    .attr("fill","#BE3455");
+  kpiG.append("circle")
+    .attr("cx",xK(yr)+xK.bandwidth()/2)
+    .attr("cy",yK(satisfaction[i]))
+    .attr("r",4)
+    .attr("fill","#0ABAB5");
+});
+
+/* labels */
+kpiG.append("text")
+  .attr("x",xK(2570)+xK.bandwidth()/2+5)
+  .attr("y",yK(92))
+  .style("font-size","12px")
+  .style("fill","#BE3455")
+  .text("92% อัตราการชำระคืน");
+
+kpiG.append("text")
+  .attr("x",xK(2570)+xK.bandwidth()/2+5)
+  .attr("y",yK(90))
+  .style("font-size","12px")
+  .style("fill","#0ABAB5")
+  .text("90% คะแนนความพึงพอใจ");
+</script>
+
+</body>
+</html>
