@@ -4,390 +4,495 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>แผนที่การเปลี่ยนแปลงสู่ดิจิทัล กยศ. พ.ศ. 2566-2570</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --tiffany-blue: #0ABAB5;
-            --peach-fuzz: #FFDAB9;
-            --mocha-mousse: #A57C65;
-            --viva-magenta: #BB2649;
-            --ultimate-grey: #949494;
-            --bg-color: #f0f4f8;
-            --text-color: #333;
-            --header-color: #ffffff;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
+        
         body {
             font-family: 'Noto Sans Thai', sans-serif;
-            margin: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow-x: hidden;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            color: #333;
+            line-height: 1.6;
         }
-
-       .container {
-            max-width: 1200px;
+        
+        .container {
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
-
-        header {
+        
+        .header {
             text-align: center;
-            padding: 20px 0;
-            background: linear-gradient(135deg, #078282, #0ABAB5);
-            color: var(--header-color);
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #0ABAB5 0%, #08a8a3 100%);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(10, 186, 181, 0.3);
+            margin-bottom: 50px;
         }
-
-        header h1 {
+        
+        .header h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            margin: 0;
-            color: var(--header-color);
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
-
-        main {
-            padding-top: 20px;
+        
+        .roadmap-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            min-height: 1200px;
         }
-
-        #roadmap-container {
+        
+        .roadmap-title {
+            font-size: 1.8rem;
+            color: #0ABAB5;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        #roadmap-chart {
             width: 100%;
-            overflow-x: auto;
+            height: 900px;
         }
         
-       .gantt-chart-svg {
-            font-family: 'Noto Sans Thai', sans-serif;
-        }
-
-       .axis-x text,.axis-y text {
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-       .year-label {
-            font-size: 18px;
-            font-weight: 700;
-            fill: #555;
-        }
-
-       .journey-label {
-            font-size: 16px;
-            font-weight: 700;
-            fill: #111;
+        .ea-layers {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
         }
         
-       .journey-icon {
-            font-size: 24px;
-        }
-
-       .task-bar {
-            stroke-width: 1;
-            stroke: rgba(0,0,0,0.2);
-            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.15));
-        }
-
-       .task-label {
-            fill: white;
-            font-size: 13px;
-            font-weight: 500;
-            text-anchor: middle;
-            pointer-events: none;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-        }
-        
-       .kpi-text {
-            font-size: 12px;
-            fill: #444;
-        }
-        
-       .kpi-title {
-            font-weight: 700;
-            font-size: 13px;
-        }
-
-       .section-title {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #333;
-            margin-top: 40px;
-            margin-bottom: 20px;
-            border-bottom: 3px solid var(--tiffany-blue);
-            display: inline-block;
-            padding-bottom: 5px;
-        }
-        
-       .section-container {
+        .ea-title {
+            font-size: 1.8rem;
+            color: #0ABAB5;
+            margin-bottom: 30px;
             text-align: center;
         }
-
-       .ea-layers-grid,.legend-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
+        
+        .ea-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
-
-       .ea-box,.legend-item {
-            padding: 15px 25px;
-            border-radius: 8px;
+        
+        .ea-box {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
             font-weight: 500;
             color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
         }
         
-       .legend-item {
+        .ea-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .ea-core { background: #949494; }
+        .ea-security { background: #BB2649; }
+        .ea-integration { background: #A57C65; }
+        .ea-data { background: #FFDAB9; color: #333; }
+        .ea-ai { background: #0ABAB5; }
+        
+        .legend {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .legend-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .legend-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            color: var(--text-color);
-            background-color: #fff;
         }
         
-       .legend-color-box {
-            width: 20px;
+        .legend-color {
+            width: 30px;
             height: 20px;
-            border-radius: 4px;
+            border-radius: 5px;
         }
-
+        
+        .kpi-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        
+        .kpi-title {
+            font-size: 1.8rem;
+            color: #0ABAB5;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .kpi-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .kpi-card:hover {
+            border-color: #0ABAB5;
+            transform: translateY(-5px);
+        }
+        
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0ABAB5;
+            margin-bottom: 10px;
+        }
+        
+        .kpi-label {
+            font-size: 1rem;
+            color: #666;
+        }
+        
         @media (max-width: 768px) {
-            header h1 {
+            .header h1 {
                 font-size: 1.8rem;
             }
-           .section-title {
-                font-size: 1.5rem;
+            
+            .roadmap-container {
+                padding: 20px;
+            }
+            
+            #roadmap-chart {
+                height: 600px;
             }
         }
-
     </style>
 </head>
 <body>
-
-    <header>
-        <h1>แผนที่การเปลี่ยนแปลงสู่ดิจิทัล กยศ. พ.ศ. 2566-2570 (ค.ศ. 2023-2027)</h1>
-    </header>
-
     <div class="container">
-        <main>
-            <div id="roadmap-container">
-                <svg id="gantt-chart" class="gantt-chart-svg"></svg>
-            </div>
-
-            <div class="section-container">
-                <h2 class="section-title">ชั้นสถาปัตยกรรมองค์กร (EA Layers)</h2>
-            </div>
-            <div class="ea-layers-grid">
-                <div class="ea-box" style="background-color: var(--ultimate-grey);">Core Business</div>
-                <div class="ea-box" style="background-color: var(--tiffany-blue);">External Integration</div>
-                <div class="ea-box" style="background-color: var(--viva-magenta);">Security</div>
-                <div class="ea-box" style="background-color: var(--mocha-mousse);">Infrastructure</div>
-            </div>
-
-            <div class="section-container">
-                <h2 class="section-title">คำอธิบายสัญลักษณ์</h2>
-            </div>
-            <div class="legend-grid">
-                <div class="legend-item">
-                    <div class="legend-color-box" style="background-color: var(--peach-fuzz);"></div>
-                    <span>Customer Engagement</span>
+        <div class="header">
+            <h1>แผนที่การเปลี่ยนแปลงสู่ดิจิทัล กยศ. พ.ศ. 2566-2570 (ค.ศ. 2023-2027)</h1>
+        </div>
+        
+        <div class="roadmap-container">
+            <h2 class="roadmap-title">เส้นทางการใช้งานของลูกค้าและระบบดิจิทัล</h2>
+            <div id="roadmap-chart"></div>
+        </div>
+        
+        <div class="kpi-section">
+            <h2 class="kpi-title">ตัวชี้วัดความสำเร็จหลัก</h2>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-value">+50%</div>
+                    <div class="kpi-label">คำขอใช้บริการออนไลน์</div>
                 </div>
-                <div class="legend-item">
-                    <div class="legend-color-box" style="background-color: var(--mocha-mousse);"></div>
-                    <span>Data Analytics</span>
+                <div class="kpi-card">
+                    <div class="kpi-value">+25%</div>
+                    <div class="kpi-label">ความพึงพอใจของลูกค้า (CSAT)</div>
                 </div>
-                <div class="legend-item">
-                    <div class="legend-color-box" style="background-color: var(--viva-magenta);"></div>
-                    <span>AI Integration</span>
+                <div class="kpi-card">
+                    <div class="kpi-value">-30%</div>
+                    <div class="kpi-label">ต้นทุนการดำเนินงาน</div>
                 </div>
-                <div class="legend-item">
-                    <div class="legend-color-box" style="background-color: var(--tiffany-blue);"></div>
-                    <span>Future-Ready Ecosystem</span>
+                <div class="kpi-card">
+                    <div class="kpi-value">+10%</div>
+                    <div class="kpi-label">อัตราการชำระคืนเงินกู้</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">60%</div>
+                    <div class="kpi-label">การตอบคำถามผ่าน AI Chatbot</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">80%</div>
+                    <div class="kpi-label">การใช้งานระบบ Self-Service</div>
                 </div>
             </div>
-        </main>
+        </div>
+        
+        <div class="ea-layers">
+            <h2 class="ea-title">ชั้น EA (Enterprise Architecture)</h2>
+            <div class="ea-grid">
+                <div class="ea-box ea-core">Core Business</div>
+                <div class="ea-box ea-security">Security</div>
+                <div class="ea-box ea-integration">External Integration</div>
+                <div class="ea-box ea-data">Data Analytics</div>
+                <div class="ea-box ea-ai">AI Integration</div>
+            </div>
+            
+            <div class="legend">
+                <h3 class="legend-title">คำอธิบายสี</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #949494;"></div>
+                        <span>Core Business - ระบบธุรกิจหลัก</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #BB2649;"></div>
+                        <span>Security - ความปลอดภัย</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #A57C65;"></div>
+                        <span>External Integration - การเชื่อมต่อภายนอก</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #FFDAB9;"></div>
+                        <span>Data Analytics - การวิเคราะห์ข้อมูล</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #0ABAB5;"></div>
+                        <span>AI Integration - การผสานระบบ AI</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
+    
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
-        const data = {
-            tasks:,
-            journeys: [
-                { name: "ค้นหาข้อมูล", icon: "🔍" },
-                { name: "ลงทะเบียน/สมัคร", icon: "📝" },
-                { name: "จัดการ", icon: "⚙️" },
-                { name: "สื่อสาร/แจ้งเตือน", icon: "💬" },
-                { name: "รายงาน/วิเคราะห์", icon: "📊" },
-            ],
-            years: [1, 2, 3, 4, 5],
-            kpis: },
-                { year: 2, title: "เป้าหมายปี 2567:", items: ["• Chatbot ตอบคำถามอัตโนมัติ 60%", "• ลดภาระ Call Center 25%"] },
-                { year: 3, title: "เป้าหมายปี 2568:", items: },
-                { year: 4, title: "เป้าหมายปี 2569:", items: },
-                { year: 5, title: "เป้าหมายปี 2570:", items: },
-            ]
-        };
-
-        const drawChart = () => {
-            const container = d3.select("#roadmap-container");
-            const width = container.node().getBoundingClientRect().width;
-            const height = 800;
-            const margin = { top: 60, right: 20, bottom: 40, left: 180 };
-
-            d3.select("#gantt-chart").selectAll("*").remove();
-
-            const svg = d3.select("#gantt-chart")
-               .attr("width", width)
-               .attr("height", height);
-
-            const xScale = d3.scaleBand()
-               .domain(data.years)
-               .range([margin.left, width - margin.right])
-               .padding(0.2);
-
-            const yScale = d3.scaleBand()
-               .domain(data.journeys.map(j => j.name))
-               .range([margin.top, height - margin.bottom])
-               .padding(0.3);
-
-            // X-Axis (Years)
-            svg.append("g")
-               .attr("class", "axis-x")
-               .attr("transform", `translate(0, ${margin.top - 10})`)
-               .call(d3.axisTop(xScale).tickFormat(d => `ปี ${d} (${2565 + d})`).tickSize(0))
-               .select(".domain").remove();
-
-            // Y-Axis (Journeys)
-            const yAxis = svg.append("g")
-               .attr("class", "axis-y")
-               .attr("transform", `translate(${margin.left}, 0)`)
-               .call(d3.axisLeft(yScale).tickSize(0))
-               .select(".domain").remove();
+        // Set up dimensions and margins
+        const margin = {top: 60, right: 150, bottom: 100, left: 250};
+        const width = document.getElementById('roadmap-chart').offsetWidth - margin.left - margin.right;
+        const height = 800 - margin.top - margin.bottom;
+        
+        // Create SVG
+        const svg = d3.select("#roadmap-chart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+        
+        // Define years
+        const years = ["ปี 1 (2566)", "ปี 2 (2567)", "ปี 3 (2568)", "ปี 4 (2569)", "ปี 5 (2570)"];
+        
+        // Define customer journey steps
+        const journeySteps = [
+            {id: "search", label: "ค้นหาข้อมูล", icon: "Q"},
+            {id: "register", label: "ลงทะเบียน/สมัคร", icon: "📝"},
+            {id: "manage", label: "จัดการ", icon: "⚙️"},
+            {id: "communicate", label: "สื่อสาร/แจ้งเตือน", icon: "💬"},
+            {id: "report", label: "รายงาน/วิเคราะห์", icon: "📊"}
+        ];
+        
+        // Define subsystems with their timeline
+        const subsystems = [
+            {name: "s:UU e-Service กลาง", startYear: 0, endYear: 4, journey: "register", color: "#87CEEB"},
+            {name: "s:UU AI Chatbot", startYear: 1, endYear: 4, journey: "communicate", color: "#9370DB"},
+            {name: "s:UU แจ้งเตือนผ่าน LINE", startYear: 1, endYear: 4, journey: "communicate", color: "#9370DB"},
+            {name: "s:UU eKYC", startYear: 2, endYear: 4, journey: "register", color: "#DC143C"},
+            {name: "s:UU API Gateway", startYear: 2, endYear: 4, journey: "manage", color: "#DC143C"},
+            {name: "บริการ Personalization ผ่าน AI", startYear: 3, endYear: 4, journey: "search", color: "#FF8C00"},
+            {name: "s:UU LINE API", startYear: 3, endYear: 4, journey: "communicate", color: "#FF8C00"},
+            {name: "s:UU BI Self-Service", startYear: 4, endYear: 4, journey: "report", color: "#FFD700"}
+        ];
+        
+        // Create scales
+        const xScale = d3.scaleBand()
+            .domain(years)
+            .range([0, width])
+            .padding(0.1);
+        
+        const yScale = d3.scaleBand()
+            .domain(journeySteps.map(d => d.id))
+            .range([0, height])
+            .padding(0.2);
+        
+        // Add grid lines
+        svg.append("g")
+            .attr("class", "grid")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(xScale)
+                .tickSize(-height)
+                .tickFormat("")
+            )
+            .style("stroke-dasharray", "3,3")
+            .style("opacity", 0.3);
+        
+        // Add X axis
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(xScale))
+            .style("font-size", "14px")
+            .style("font-weight", "500");
+        
+        // Add Y axis with icons
+        const yAxis = svg.append("g")
+            .call(d3.axisLeft(yScale).tickFormat(""));
+        
+        // Add journey labels with icons
+        journeySteps.forEach(step => {
+            const yPos = yScale(step.id) + yScale.bandwidth() / 2;
             
-            yAxis.selectAll("text").remove();
+            // Add icon
+            svg.append("text")
+                .attr("x", -40)
+                .attr("y", yPos)
+                .attr("text-anchor", "middle")
+                .attr("dominant-baseline", "middle")
+                .style("font-size", "20px")
+                .text(step.icon);
             
-            svg.selectAll(".journey-group")
-               .data(data.journeys)
-               .enter()
-               .append("g")
-               .attr("transform", d => `translate(${margin.left - 20}, ${yScale(d.name) + yScale.bandwidth() / 2})`)
-               .append("text")
-               .attr("text-anchor", "end")
-               .html(d => `<tspan class="journey-label">${d.name}</tspan> <tspan class="journey-icon">${d.icon}</tspan>`);
-
-
-            // Grid lines
-            svg.append("g")
-               .attr("class", "grid")
-               .selectAll("line")
-               .data(data.years)
-               .enter().append("line")
-               .attr("x1", d => xScale(d) + xScale.bandwidth() / 2)
-               .attr("x2", d => xScale(d) + xScale.bandwidth() / 2)
-               .attr("y1", margin.top)
-               .attr("y2", height - margin.bottom)
-               .attr("stroke", "#e0e0e0")
-               .attr("stroke-dasharray", "4");
-
-            // Task bars
-            const bars = svg.append("g")
-               .selectAll("g")
-               .data(data.tasks)
-               .enter()
-               .append("g");
-
-            bars.append("rect")
-               .attr("class", "task-bar")
-               .attr("x", d => xScale(d.startYear))
-               .attr("y", d => yScale(d.journey) + yScale.bandwidth() * 0.2)
-               .attr("width", d => (xScale(d.endYear) - xScale(d.startYear)) + xScale.bandwidth())
-               .attr("height", yScale.bandwidth() * 0.6)
-               .attr("rx", 8)
-               .attr("ry", 8)
-               .style("fill", d => d.color);
-
-            bars.append("text")
-               .attr("class", "task-label")
-               .attr("x", d => xScale(d.startYear) + ((xScale(d.endYear) - xScale(d.startYear)) + xScale.bandwidth()) / 2)
-               .attr("y", d => yScale(d.journey) + yScale.bandwidth() / 2)
-               .attr("dy", "0.35em")
-               .text(d => d.name);
-                
-            // KPIs
-            const kpiGroups = svg.append("g")
-               .selectAll("g")
-               .data(data.kpis)
-               .enter()
-               .append("g")
-               .attr("transform", d => `translate(${xScale(d.year) + 10}, ${height - margin.bottom + 20})`);
-
-            kpiGroups.each(function(d) {
-                const group = d3.select(this);
-                group.append("text")
-                   .attr("class", "kpi-title")
-                   .text(d.title);
-                d.items.forEach((item, i) => {
-                    group.append("text")
-                       .attr("class", "kpi-text")
-                       .attr("y", (i + 1) * 18)
-                       .text(item);
-                });
-            });
+            // Add label
+            svg.append("text")
+                .attr("x", -60)
+                .attr("y", yPos)
+                .attr("text-anchor", "end")
+                .attr("dominant-baseline", "middle")
+                .style("font-size", "14px")
+                .style("font-weight", "500")
+                .text(step.label);
+        });
+        
+        // Add subsystem boxes
+        const subsystemGroups = svg.selectAll(".subsystem")
+            .data(subsystems)
+            .enter()
+            .append("g")
+            .attr("class", "subsystem");
+        
+        // Add rectangles for subsystems
+        subsystemGroups.append("rect")
+            .attr("x", d => xScale(years[d.startYear]))
+            .attr("y", d => yScale(d.journey))
+            .attr("width", d => (d.endYear - d.startYear + 1) * xScale.bandwidth() - 10)
+            .attr("height", yScale.bandwidth())
+            .attr("rx", 8)
+            .attr("ry", 8)
+            .style("fill", d => d.color)
+            .style("opacity", 0.8)
+            .style("filter", "drop-shadow(0 3px 5px rgba(0,0,0,0.2))");
+        
+        // Add text labels for subsystems
+        subsystemGroups.append("text")
+            .attr("x", d => xScale(years[d.startYear]) + ((d.endYear - d.startYear + 1) * xScale.bandwidth() - 10) / 2)
+            .attr("y", d => yScale(d.journey) + yScale.bandwidth() / 2)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "middle")
+            .style("fill", "white")
+            .style("font-size", "12px")
+            .style("font-weight", "500")
+            .text(d => d.name);
+        
+        // Add progress arrows
+        const arrowData = [
+            {from: 0, to: 1, y: "search"},
+            {from: 1, to: 2, y: "register"},
+            {from: 2, to: 3, y: "manage"},
+            {from: 3, to: 4, y: "communicate"}
+        ];
+        
+        svg.selectAll(".arrow")
+            .data(arrowData)
+            .enter()
+            .append("path")
+            .attr("class", "arrow")
+            .attr("d", d => {
+                const x1 = xScale(years[d.from]) + xScale.bandwidth() - 5;
+                const x2 = xScale(years[d.to]) + 5;
+                const y = yScale(d.y) + yScale.bandwidth() / 2;
+                return `M ${x1} ${y} L ${x2} ${y} L ${x2 - 10} ${y - 5} M ${x2} ${y} L ${x2 - 10} ${y + 5}`;
+            })
+            .style("stroke", "#0ABAB5")
+            .style("stroke-width", 2)
+            .style("fill", "none")
+            .style("opacity", 0.6);
+        
+        // Add KPI indicators
+        const kpiData = [
+            {year: 0, text: "50% บริการออนไลน์"},
+            {year: 1, text: "60% Chatbot"},
+            {year: 2, text: "70% eKYC"},
+            {year: 3, text: "80% Personalization"},
+            {year: 4, text: "90% Self-Service"}
+        ];
+        
+        svg.selectAll(".kpi")
+            .data(kpiData)
+            .enter()
+            .append("text")
+            .attr("x", d => xScale(years[d.year]) + xScale.bandwidth() / 2)
+            .attr("y", -20)
+            .attr("text-anchor", "middle")
+            .style("font-size", "12px")
+            .style("fill", "#666")
+            .style("font-weight", "500")
+            .text(d => d.text);
+        
+        // Add title
+        svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", -40)
+            .attr("text-anchor", "middle")
+            .style("font-size", "18px")
+            .style("font-weight", "700")
+            .style("fill", "#0ABAB5")
+            .text("เส้นทางการใช้งานของลูกค้า (Customer Journey)");
+        
+        // Add mini dashboard visualizations
+        const dashboardData = [
+            {year: 2, value: 70, label: "Digital Adoption"},
+            {year: 3, value: 85, label: "AI Usage"},
+            {year: 4, value: 95, label: "Automation"}
+        ];
+        
+        const miniCharts = svg.selectAll(".mini-chart")
+            .data(dashboardData)
+            .enter()
+            .append("g")
+            .attr("class", "mini-chart")
+            .attr("transform", d => `translate(${xScale(years[d.year]) + xScale.bandwidth() / 2 - 30}, ${height + 50})`);
+        
+        // Add mini pie charts
+        const pie = d3.pie().value(d => d);
+        const arc = d3.arc().innerRadius(0).outerRadius(20);
+        
+        miniCharts.each(function(d) {
+            const pieData = pie([d.value, 100 - d.value]);
+            const g = d3.select(this);
             
-            // Mock Dashboard
-            const mockDashboardX = xScale(5) + 15;
-            const mockDashboardY = yScale("รายงาน/วิเคราะห์") - 100;
-            const dbGroup = svg.append("g")
-               .attr("transform", `translate(${mockDashboardX}, ${mockDashboardY})`);
-
-            dbGroup.append("rect")
-               .attr("width", xScale.bandwidth() - 30)
-               .attr("height", 120)
-               .attr("rx", 10)
-               .attr("fill", "#fff")
-               .attr("stroke", "#ccc")
-               .style("filter", "drop-shadow(0px 3px 5px rgba(0,0,0,0.1))");
+            g.selectAll(".arc")
+                .data(pieData)
+                .enter()
+                .append("path")
+                .attr("d", arc)
+                .style("fill", (d, i) => i === 0 ? "#0ABAB5" : "#e0e0e0");
             
-            dbGroup.append("text").text("Executive Dashboard").attr("x", 10).attr("y", 20).style("font-size", "12px").style("font-weight", "bold");
-            
-            // Mock pie chart
-            const pieData = ;
-            const pie = d3.pie();
-            const arc = d3.arc().innerRadius(0).outerRadius(20);
-            const pieColors = ["var(--tiffany-blue)", "var(--peach-fuzz)", "var(--viva-magenta)"];
-            
-            dbGroup.append("g")
-               .attr("transform", "translate(40, 65)")
-               .selectAll("path")
-               .data(pie(pieData))
-               .enter()
-               .append("path")
-               .attr("d", arc)
-               .attr("fill", (d, i) => pieColors[i]);
-
-            // Mock bar chart
-            const barData = [5, 6, 3, 7];
-            dbGroup.append("g")
-               .attr("transform", `translate(${xScale.bandwidth() / 2 - 10}, 45)`)
-               .selectAll("rect")
-               .data(barData)
-               .enter()
-               .append("rect")
-               .attr("x", (d, i) => i * 12)
-               .attr("y", d => 50 - d * 3)
-               .attr("width", 10)
-               .attr("height", d => d * 3)
-               .attr("fill", "var(--mocha-mousse)");
-        };
-
-        drawChart();
-        window.addEventListener('resize', drawChart);
-
+            g.append("text")
+                .attr("y", 35)
+                .attr("text-anchor", "middle")
+                .style("font-size", "10px")
+                .text(d.label);
+        });
     </script>
 </body>
 </html>
