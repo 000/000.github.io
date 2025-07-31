@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="แผนการเปลี่ยนผ่านสู่ดิจิทัลของกองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.) พ.ศ. 2566-2570">
+    <meta name="author" content="กองทุนเงินให้กู้ยืมเพื่อการศึกษา">
+    <meta property="og:title" content="กยศ. Digital Transformation Roadmap 2566-2570">
+    <meta property="og:description" content="แผนการเปลี่ยนผ่านสู่ดิจิทัลเพื่อยกระดับการให้บริการและเพิ่มประสิทธิภาพการทำงาน">
+    <title>กยศ. Digital Transformation Roadmap 2566-2570</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- D3.js for advanced visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        /* CSS Custom Properties for Theme */
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #3b82f6;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #cbd5e1;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            overflow-x: hidden;
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Section */
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            font-weight: 300;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Vision Section */
+        .vision-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .vision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .vision-card {
+            padding: 1.5rem;
+            background: var(--bg-primary);
+            border-radius: 0.75rem;
+            border: 2px solid var(--border-color);
+            transition: var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vision-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--secondary-color);
+        }
+
+        .vision-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Timeline Section */
+        .timeline-section {
+            margin: 3rem 0;
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            overflow-x: auto;
+        }
+
+        .timeline-container {
+            min-width: 1200px;
+            position: relative;
+        }
+
+        .timeline-header {
+            display: grid;
+            grid-template-columns: 200px repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .year-label {
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+
+        .journey-row {
+            display: grid;
+            grid-template-columns: 200px repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+
+        .journey-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border-radius: 0.5rem;
+        }
+
+        .journey-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .initiative-box {
+            padding: 1rem;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition-base);
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .initiative-box:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+            z-index: 10;
+        }
+
+        .initiative-box.platform {
+            background: var(--primary-color);
+        }
+
+        .initiative-box.analytics {
+            background: var(--success-color);
+        }
+
+        .initiative-box.integration {
+            background: var(--secondary-color);
+        }
+
+        .initiative-box.span-2 {
+            grid-column: span 2;
+        }
+
+        .initiative-box.span-3 {
+            grid-column: span 3;
+        }
+
+        .initiative-box.span-4 {
+            grid-column: span 4;
+        }
+
+        .initiative-box.span-5 {
+            grid-column: span 5;
+        }
+
+        /* KPI Dashboard Preview */
+        .dashboard-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .kpi-card {
+            padding: 1.5rem;
+            background: var(--bg-primary);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+            transition: var(--transition-base);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0.5rem 0;
+        }
+
+        .kpi-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .kpi-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.85rem;
+            color: var(--success-color);
+            margin-top: 0.5rem;
+        }
+
+        /* EA Architecture Layers */
+        .ea-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .ea-layers {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .ea-layer {
+            padding: 2rem 1rem;
+            text-align: center;
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: 600;
+            transition: var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ea-layer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .ea-layer:hover::before {
+            transform: translateY(0);
+        }
+
+        .ea-layer.business {
+            background: var(--primary-color);
+        }
+
+        .ea-layer.security {
+            background: #dc2626;
+        }
+
+        .ea-layer.integration {
+            background: var(--secondary-color);
+        }
+
+        .ea-layer.infrastructure {
+            background: #6b7280;
+        }
+
+        /* ROI Section */
+        .roi-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .roi-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .roi-metric {
+            text-align: center;
+        }
+
+        .roi-metric-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--success-color);
+            line-height: 1;
+        }
+
+        .roi-metric-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* Section Headers */
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h2::before {
+            content: '';
+            width: 4px;
+            height: 2rem;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .timeline-container {
+                min-width: 800px;
+            }
+
+            .vision-grid,
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ea-layers {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .container {
+                max-width: 100%;
+                padding: 0;
+            }
+
+            header {
+                background: none;
+                color: black;
+                border: 2px solid black;
+            }
+
+            .vision-card,
+            .kpi-card,
+            .timeline-section,
+            .dashboard-section,
+            .ea-section,
+            .roi-section {
+                box-shadow: none;
+                border: 1px solid black;
+                page-break-inside: avoid;
+            }
+
+            .initiative-box {
+                box-shadow: none;
+                border: 1px solid black;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Intersection Observer Animation */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin-top: 2rem;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+
+        /* Progress Indicators */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success-color);
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        /* Icon Styles */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            fill: currentColor;
+        }
+
+        /* Budget Indicator */
+        .budget-indicator {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-badge.pending {
+            background: var(--accent-color);
+        }
+
+        .status-badge.planning {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="loading" role="banner" aria-label="หัวข้อหลัก">
+            <h1>แผนการเปลี่ยนผ่านสู่ดิจิทัลของ กยศ.</h1>
+            <p class="subtitle">Digital Transformation Roadmap พ.ศ. 2566 - 2570</p>
+        </header>
+
+        <!-- Vision Section -->
+        <section class="vision-section animate-on-scroll" aria-label="วิสัยทัศน์และเป้าหมาย">
+            <h2>วิสัยทัศน์การเปลี่ยนผ่านสู่ดิจิทัล</h2>
+            <div class="vision-grid">
+                <div class="vision-card">
+                    <div class="vision-icon" aria-hidden="true">👥</div>
+                    <h3>Customer Centricity</h3>
+                    <p>ยกระดับประสบการณ์ผู้ใช้บริการด้วยระบบดิจิทัลที่ทันสมัย เข้าถึงง่าย และตอบโจทย์ทุกความต้องการ</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%" data-target="85"></div>
+                    </div>
+                </div>
+                <div class="vision-card">
+                    <div class="vision-icon" aria-hidden="true">💪</div>
+                    <h3>Empowering Workforce</h3>
+                    <p>เสริมสร้างศักยภาพบุคลากรด้วยเครื่องมือดิจิทัลและระบบ Self-Service BI เพื่อการตัดสินใจที่รวดเร็ว</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%" data-target="90"></div>
+                    </div>
+                </div>
+                <div class="vision-card">
+                    <div class="vision-icon" aria-hidden="true">📊</div>
+                    <h3>Data-Driven Decision</h3>
+                    <p>ใช้ข้อมูลและ Analytics ขับเคลื่อนการตัดสินใจ พร้อม Real-time Dashboard สำหรับผู้บริหาร</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%" data-target="95"></div>
+                    </div>
+                </div>
+                <div class="vision-card">
+                    <div class="vision-icon" aria-hidden="true">🤖</div>
+                    <h3>AI & Automation</h3>
+                    <p>นำ AI มาช่วยในการวิเคราะห์พฤติกรรมการชำระหนี้และเพิ่มประสิทธิภาพการติดตามหนี้</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%" data-target="75"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Section -->
+        <section class="timeline-section animate-on-scroll" aria-label="แผนการดำเนินงาน">
+            <h2>Customer Journey & Digital Initiatives Timeline</h2>
+            <div class="timeline-container">
+                <div class="timeline-header">
+                    <div>Customer Journey</div>
+                    <div class="year-label">2566</div>
+                    <div class="year-label">2567</div>
+                    <div class="year-label">2568</div>
+                    <div class="year-label">2569</div>
+                    <div class="year-label">2570</div>
+                </div>
+
+                <!-- ค้นหาข้อมูล/บริการ -->
+                <div class="journey-row">
+                    <div class="journey-label">
+                        <div class="journey-icon" aria-hidden="true">🔍</div>
+                        <span>ค้นหาข้อมูล/บริการ</span>
+                    </div>
+                    <div class="initiative-box platform span-5">
+                        <span>Platform Rental (60 เดือน)</span>
+                        <div class="budget-indicator">งบประมาณหลัก</div>
+                    </div>
+                </div>
+
+                <!-- ลงทะเบียน/ยื่นคำขอ -->
+                <div class="journey-row">
+                    <div class="journey-label">
+                        <div class="journey-icon" aria-hidden="true">📝</div>
+                        <span>ลงทะเบียน/ยื่นคำขอ</span>
+                    </div>
+                    <div></div>
+                    <div class="initiative-box integration span-2">
+                        <span>Central e-Service Portal</span>
+                        <div class="status-badge">เริ่มใช้งาน</div>
+                    </div>
+                    <div class="initiative-box analytics">
+                        <span>AI-Powered Application</span>
+                    </div>
+                    <div class="initiative-box integration">
+                        <span>Enhanced Portal v2</span>
+                    </div>
+                </div>
+
+                <!-- รับบริการ -->
+                <div class="journey-row">
+                    <div class="journey-label">
+                        <div class="journey-icon" aria-hidden="true">⚙️</div>
+                        <span>รับบริการ</span>
+                    </div>
+                    <div class="initiative-box analytics">
+                        <span>Self-Service BI</span>
+                    </div>
+                    <div class="initiative-box analytics span-2">
+                        <span>Real-time Dashboard System</span>
+                        <div class="status-badge">สำหรับผู้บริหาร</div>
+                    </div>
+                    <div class="initiative-box platform span-2">
+                        <span>Personalized User Experience</span>
+                    </div>
+                </div>
+
+                <!-- ติดต่อสอบถาม -->
+                <div class="journey-row">
+                    <div class="journey-label">
+                        <div class="journey-icon" aria-hidden="true">💬</div>
+                        <span>ติดต่อสอบถาม/ตอบกลับ</span>
+                    </div>
+                    <div></div>
+                    <div class="initiative-box integration">
+                        <span>AI Chatbot v1</span>
+                    </div>
+                    <div class="initiative-box integration span-2">
+                        <span>LINE API Integration</span>
+                        <div class="status-badge">ช่องทางใหม่</div>
+                    </div>
+                    <div class="initiative-box analytics">
+                        <span>Omnichannel Support</span>
+                    </div>
+                </div>
+
+                <!-- ให้ข้อเสนอแนะ -->
+                <div class="journey-row">
+                    <div class="journey-label">
+                        <div class="journey-icon" aria-hidden="true">💡</div>
+                        <span>ให้ข้อเสนอแนะ</span>
+                    </div>
+                    <div class="initiative-box platform">
+                        <span>Feedback System</span>
+                    </div>
+                    <div></div>
+                    <div class="initiative-box analytics span-3">
+                        <span>Advanced Analytics & Sentiment Analysis</span>
+                        <div class="status-badge pending">AI-Driven Insights</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- KPI Dashboard Preview -->
+        <section class="dashboard-section animate-on-scroll" aria-label="ตัวชี้วัดความสำเร็จ">
+            <h2>Real-time Performance Dashboard (ตัวอย่าง)</h2>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">จำนวนผู้ใช้งานระบบดิจิทัล</div>
+                    <div class="kpi-value">1.2M</div>
+                    <div class="kpi-trend">
+                        <span>↑ 35%</span>
+                        <span>จากปีที่แล้ว</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">ระยะเวลาการอนุมัติเฉลี่ย</div>
+                    <div class="kpi-value">3 วัน</div>
+                    <div class="kpi-trend">
+                        <span>↓ 60%</span>
+                        <span>ลดลงจาก 7.5 วัน</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">อัตราการชำระหนี้ตรงเวลา</div>
+                    <div class="kpi-value">78%</div>
+                    <div class="kpi-trend">
+                        <span>↑ 12%</span>
+                        <span>หลังใช้ AI Analytics</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">ความพึงพอใจผู้ใช้บริการ</div>
+                    <div class="kpi-value">4.5/5</div>
+                    <div class="kpi-trend">
+                        <span>↑ 0.8</span>
+                        <span>จากระบบเดิม</span>
+                    </div>
+                </div>
+            </div>
+            <div id="trend-chart" class="chart-container"></div>
+        </section>
+
+        <!-- EA Architecture -->
+        <section class="ea-section animate-on-scroll" aria-label="สถาปัตยกรรมองค์กร">
+            <h2>Enterprise Architecture Layers</h2>
+            <div class="ea-layers">
+                <div class="ea-layer business">
+                    <h3>Core Business</h3>
+                    <p>ระบบหลักการให้กู้ยืม</p>
+                    <p>และติดตามหนี้</p>
+                </div>
+                <div class="ea-layer security">
+                    <h3>Security</h3>
+                    <p>Zero Trust Architecture</p>
+                    <p>& Data Protection</p>
+                </div>
+                <div class="ea-layer integration">
+                    <h3>External Integration</h3>
+                    <p>API Gateway</p>
+                    <p>& Partner Systems</p>
+                </div>
+                <div class="ea-layer infrastructure">
+                    <h3>Infrastructure</h3>
+                    <p>Cloud-Native Platform</p>
+                    <p>& DevSecOps</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROI Section -->
+        <section class="roi-section animate-on-scroll" aria-label="ผลตอบแทนการลงทุน">
+            <h2>Expected Return on Investment (ROI)</h2>
+            <div class="roi-metrics">
+                <div class="roi-metric">
+                    <div class="roi-metric-value">250%</div>
+                    <div class="roi-metric-label">ROI ใน 5 ปี</div>
+                </div>
+                <div class="roi-metric">
+                    <div class="roi-metric-value">40%</div>
+                    <div class="roi-metric-label">ลดต้นทุนการดำเนินงาน</div>
+                </div>
+                <div class="roi-metric">
+                    <div class="roi-metric-value">3x</div>
+                    <div class="roi-metric-label">เพิ่มประสิทธิภาพการทำงาน</div>
+                </div>
+                <div class="roi-metric">
+                    <div class="roi-metric-value">60%</div>
+                    <div class="roi-metric-label">ลดระยะเวลาการให้บริการ</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Animate progress bars
+                    const progressBars = entry.target.querySelectorAll('.progress-fill');
+                    progressBars.forEach(bar => {
+                        const target = bar.getAttribute('data-target');
+                        setTimeout(() => {
+                            bar.style.width = target + '%';
+                        }, 200);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Tooltip functionality
+        const tooltip = document.getElementById('tooltip');
+        const initiativeBoxes = document.querySelectorAll('.initiative-box');
+
+        initiativeBoxes.forEach(box => {
+            box.addEventListener('mouseenter', (e) => {
+                const rect = e.target.getBoundingClientRect();
+                tooltip.textContent = 'คลิกเพื่อดูรายละเอียดเพิ่มเติม';
+                tooltip.style.left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2 + 'px';
+                tooltip.style.top = rect.top - tooltip.offsetHeight - 10 + 'px';
+                tooltip.classList.add('show');
+            });
+
+            box.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('show');
+            });
+        });
+
+        // D3.js Chart for Trend Visualization
+        function createTrendChart() {
+            const container = d3.select('#trend-chart');
+            const width = container.node().getBoundingClientRect().width;
+            const height = 300;
+            const margin = { top: 20, right: 30, bottom: 40, left: 60 };
+
+            const svg = container.append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            const data = [
+                { year: '2566', users: 300000, satisfaction: 3.7 },
+                { year: '2567', users: 500000, satisfaction: 4.0 },
+                { year: '2568', users: 800000, satisfaction: 4.2 },
+                { year: '2569', users: 1000000, satisfaction: 4.4 },
+                { year: '2570', users: 1200000, satisfaction: 4.5 }
+            ];
+
+            const xScale = d3.scaleBand()
+                .domain(data.map(d => d.year))
+                .range([margin.left, width - margin.right])
+                .padding(0.1);
+
+            const yScale = d3.scaleLinear()
+                .domain([0, d3.max(data, d => d.users)])
+                .range([height - margin.bottom, margin.top]);
+
+            const yScale2 = d3.scaleLinear()
+                .domain([0, 5])
+                .range([height - margin.bottom, margin.top]);
+
+            // Bars
+            svg.selectAll('.bar')
+                .data(data)
+                .enter().append('rect')
+                .attr('class', 'bar')
+                .attr('x', d => xScale(d.year))
+                .attr('y', height - margin.bottom)
+                .attr('width', xScale.bandwidth())
+                .attr('height', 0)
+                .attr('fill', '#3b82f6')
+                .transition()
+                .duration(1000)
+                .delay((d, i) => i * 100)
+                .attr('y', d => yScale(d.users))
+                .attr('height', d => height - margin.bottom - yScale(d.users));
+
+            // Line
+            const line = d3.line()
+                .x(d => xScale(d.year) + xScale.bandwidth() / 2)
+                .y(d => yScale2(d.satisfaction))
+                .curve(d3.curveMonotoneX);
+
+            svg.append('path')
+                .datum(data)
+                .attr('fill', 'none')
+                .attr('stroke', '#f59e0b')
+                .attr('stroke-width', 3)
+                .attr('d', line)
+                .attr('stroke-dasharray', function() { return this.getTotalLength(); })
+                .attr('stroke-dashoffset', function() { return this.getTotalLength(); })
+                .transition()
+                .duration(2000)
+                .attr('stroke-dashoffset', 0);
+
+            // Axes
+            svg.append('g')
+                .attr('transform', `translate(0,${height - margin.bottom})`)
+                .call(d3.axisBottom(xScale));
+
+            svg.append('g')
+                .attr('transform', `translate(${margin.left},0)`)
+                .call(d3.axisLeft(yScale).tickFormat(d => d / 1000000 + 'M'));
+
+            svg.append('g')
+                .attr('transform', `translate(${width - margin.right},0)`)
+                .call(d3.axisRight(yScale2));
+
+            // Labels
+            svg.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', 0)
+                .attr('x', 0 - (height / 2))
+                .attr('dy', '1em')
+                .style('text-anchor', 'middle')
+                .style('font-size', '12px')
+                .text('จำนวนผู้ใช้งาน');
+
+            svg.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', width - 10)
+                .attr('x', 0 - (height / 2))
+                .attr('dy', '1em')
+                .style('text-anchor', 'middle')
+                .style('font-size', '12px')
+                .text('ความพึงพอใจ (5 คะแนน)');
+        }
+
+        // Initialize chart when visible
+        const chartObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    createTrendChart();
+                    chartObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const chartContainer = document.getElementById('trend-chart');
+        if (chartContainer) {
+            chartObserver.observe(chartContainer);
+        }
+
+        // Smooth scroll for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Print optimization
+        window.addEventListener('beforeprint', () => {
+            document.body.classList.add('printing');
+        });
+
+        window.addEventListener('afterprint', () => {
+            document.body.classList.remove('printing');
+        });
+
+        // Performance optimization - lazy load images if any
+        if ('loading' in HTMLImageElement.prototype) {
+            const images = document.querySelectorAll('img[loading="lazy"]');
+            images.forEach(img => {
+                img.src = img.dataset.src;
+            });
+        }
+
+        // Accessibility - Focus management
+        const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        const modal = document.querySelector('#modal');
+        const firstFocusableElement = modal?.querySelectorAll(focusableElements)[0];
+        const focusableContent = modal?.querySelectorAll(focusableElements);
+        const lastFocusableElement = focusableContent?.[focusableContent.length - 1];
+
+        // Add keyboard navigation support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab' && modal?.classList.contains('open')) {
+                if (e.shiftKey) {
+                    if (document.activeElement === firstFocusableElement) {
+                        lastFocusableElement?.focus();
+                        e.preventDefault();
+                    }
+                } else {
+                    if (document.activeElement === lastFocusableElement) {
+                        firstFocusableElement?.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+            
+            // Animate header
+            setTimeout(() => {
+                document.querySelector('header').style.animation = 'none';
+            }, 600);
+        });
+
+        // Service Worker for offline support (optional)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {
+                console.log('Service Worker registration failed');
+            });
+        }
+    </script>
+</body>
+</html>
