@@ -1,0 +1,136 @@
+<html lang="th"> <head> <meta charset="UTF-8"> <title>แผนการเปลี่ยนผ่านสู่ดิจิทัล กยศ. พ.ศ. 2566–2570</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <meta name="description" content="อินโฟกราฟิกโรดแมประยะ 5 ปี (พ.ศ. 2566–2570) ของกองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.) เน้น Customer-Centric, Data-Driven, AI-Ready"> <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet"> <script src="https://d3js.org/d3.v7.min.js"></script> <style> :root { /* Required palette */ --tiffany: #0ABAB5; /* Tiffany Blue */ --peach: #FFBE98; /* Pantone 2024 Peach Fuzz */ --mocha: #A47B67; /* Pantone 2025 Mocha Mousse (approx.) */ --magenta: #BE3455; /* Pantone 2023 Viva Magenta */ --gray: #97999B; /* Pantone 2021 Ultimate Gray */ --bg: #FFFFFF; --bg-soft: #FAFAFA; --text: #1F2937; --muted: #6B7280; }
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Sarabun', system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+  line-height: 1.55;
+}
+
+header {
+  padding: 36px 16px 24px;
+  text-align: center;
+  border-bottom: 1px solid #ECECEC;
+  background: linear-gradient(180deg, rgba(10,186,181,0.08), rgba(10,186,181,0));
+}
+header h1 {
+  margin: 0 0 8px;
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--tiffany);
+}
+header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 56px;
+}
+
+.section {
+  margin: 28px 0 36px;
+  padding: 20px;
+  border: 1px solid #EEE;
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.section h2 {
+  margin: 0 0 16px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--tiffany);
+  text-align: center;
+}
+
+.subnote {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: -6px;
+  margin-bottom: 6px;
+}
+
+/* Timeline and KPI SVG wrappers */
+.svgWrap {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  background: var(--bg);
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  justify-content: center;
+  padding: 10px 12px;
+  background: var(--bg-soft);
+  border: 1px solid #EEE;
+  border-radius: 10px;
+  margin-top: 16px;
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text);
+  white-space: nowrap;
+}
+.swatch {
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+  display: inline-block;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Helper notes */
+.footnote {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  header h1 { font-size: 28px; }
+  .section h2 { font-size: 20px; }
+}
+</style> </head> <body> <header role="banner" aria-label="ส่วนหัวเรื่อง"> <h1>แผนการเปลี่ยนผ่านสู่ดิจิทัล กยศ. พ.ศ. 2566–2570</h1> <p>Customer-Centric • Data-Driven • AI-Ready</p> </header> <main class="container"> <!-- Timeline Roadmap --> <section class="section" aria-label="ไทม์ไลน์โรดแมป"> <h2>ไทม์ไลน์โรดแมป (Customer Journeys x ปี)</h2> <div class="subnote">แกน X: ปีที่ 1–5 (2566–2570), แกน Y: หมวดงานสำคัญ และสถาปัตยกรรมองค์กร (EA) ด้านล่าง</div> <div class="svgWrap"> <svg id="timeline" role="img" aria-label="แผนงานดิจิทัลในช่วงปี 2566–2570"></svg> </div>
+
+  <!-- Legend -->
+  <div class="legend" aria-label="คำอธิบายสี">
+    <div class="legend-item"><span class="swatch" style="background:#FFBE98"></span>สมัครกู้ยืมและยืนยันตัวตน</div>
+    <div class="legend-item"><span class="swatch" style="background:#0ABAB5"></span>การสื่อสารและสนับสนุนลูกค้า</div>
+    <div class="legend-item"><span class="swatch" style="background:#A47B67"></span>ข้อมูลและการวิเคราะห์</div>
+    <div class="legend-item"><span class="swatch" style="background:#BE3455"></span>การบริหารหนี้ด้วย AI</div>
+    <div class="legend-item"><span class="swatch" style="background:#97999B"></span>สถาปัตยกรรมองค์กร (EA)</div>
+  </div>
+  <div class="footnote">เส้นแบ่งแนวตั้งช่วยบอกขอบเขตปี • ป้ายบนแท่งคือชื่อโครงการ (ภาษาไทย)</div>
+</section>
+
+<!-- KPI Lines -->
+<section class="section" aria-label="ตัวชี้วัดสำคัญ">
+  <h2>ตัวชี้วัดสำคัญ พ.ศ. 2566–2570</h2>
+  <div class="svgWrap">
+    <svg id="kpiChart" role="img" aria-label="แนวโน้ม KPI: อัตราการชำระคืน และ ความพึงพอใจผู้กู้"></svg>
+  </div>
+  <div class="footnote">ใช้สเกล 0–100% ร่วมกัน • ปลายเส้นแสดงค่าและชื่อ KPI</div>
+</section>
+</main> <script> // Timeline data and rendering (function() { const years = [2566, 2567, 2568, 2569, 2570]; // Categories mapping to required Thai labels const categories = [ { id: 'apply', label: 'สมัครกู้ยืมและยืนยันตัวตน', color: '#FFBE98' }, // Peach { id: 'comm', label: 'การสื่อสารและสนับสนุนลูกค้า', color: '#0ABAB5' }, // Tiffany { id: 'data', label: 'ข้อมูลและการวิเคราะห์', color: '#A47B67' }, // Mocha { id: 'ai', label: 'การบริหารหนี้ด้วย AI', color: '#BE3455' }, // Magenta // EA as a separate section { id: 'ea', label: 'สถาปัตยกรรมองค์กร (ระบบพื้นฐาน)', color: '#97999B' } // Ultimate Gray ]; // Specific initiatives and span, per requirements const bars = [ // สมัครกู้ยืมและยืนยันตัวตน { cat:'apply', name:'ระบบ e-Service กลาง', start:2566, end:2566 }, { cat:'apply', name:'ระบบ e-KYC', start:2567, end:2567 }, // การสื่อสารและสนับสนุนลูกค้า { cat:'comm', name:'ระบบ AI Chatbot', start:2567, end:2567 }, { cat:'comm', name:'ระบบแจ้งเตือนผ่าน LINE', start:2568, end:2568 }, // ข้อมูลและการวิเคราะห์ { cat:'data', name:'ระบบ BI Self-Service', start:2568, end:2568 }, // การบริหารหนี้ด้วย AI { cat:'ai', name:'ระบบ AI แบ่งกลุ่มลูกหนี้', start:2569, end:2569 }, { cat:'ai', name:'บริการ Personalization ผ่าน AI', start:2569, end:2570 }, // extends into 2570 // EA initiatives { cat:'ea', name:'ระบบธุรกิจแกนหลัก', start:2566, end:2569 }, { cat:'ea', name:'โครงสร้างพื้นฐานดิจิทัล', start:2566, end:2570 }, { cat:'ea', name:'ความปลอดภัยทางไซเบอร์', start:2566, end:2570 }, { cat:'ea', name:'ระบบ API Gateway', start:2567, end:2568 } ]; // SVG layout const svg = d3.select('#timeline'); const margin = { top: 70, right: 80, bottom: 40, left: 220 }; const width = 1100; const rowH = 70; const height = margin.top + margin.bottom + rowH * categories.length; svg.attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height}`) .attr('preserveAspectRatio','xMidYMin meet'); const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`); // X scale as band per year for equal spacing const x = d3.scaleBand().domain(years).range([0, width]).paddingInner(0.2); // Y scale per category const y = d3.scaleBand().domain(categories.map(c => c.id)).range([0, rowH * categories.length]).padding(0.35); // Year headers at top g.selectAll('.yearLabel') .data(years) .enter() .append('text') .attr('class','yearLabel') .attr('x', d => x(d) + x.bandwidth()/2) .attr('y', -30) .attr('text-anchor','middle') .style('font-weight',600) .style('font-size','16px') .text((d,i)=>`ปีที่ ${i+1} (${d})`); // Vertical grid lines at year boundaries g.selectAll('.yearGrid') .data(years) .enter() .append('line') .attr('x1', d => x(d)) .attr('x2', d => x(d)) .attr('y1', 0) .attr('y2', rowH * categories.length) .attr('stroke', '#97999B') .attr('stroke-opacity', 0.35); // Category labels g.selectAll('.catLabel') .data(categories) .enter() .append('text') .attr('x', -16) .attr('y', d => y(d.id) + y.bandwidth()/2) .attr('text-anchor','end') .attr('dominant-baseline','middle') .style('font-weight',700) .style('font-size','14px') .text(d => d.label); // Horizontal separator before EA section for clarity const eaIndex = categories.findIndex(c => c.id === 'ea'); if (eaIndex > 0) { g.append('line') .attr('x1', -margin.left + 20) .attr('x2', width) .attr('y1', y(categories[eaIndex].id) - (rowH * 0.25)) .attr('y2', y(categories[eaIndex].id) - (rowH * 0.25)) .attr('stroke', '#E5E7EB') .attr('stroke-width', 1.2); } // Draw bars bars.forEach(d => { const cat = categories.find(c => c.id === d.cat); if (!cat) return; const xStart = x(d.start); const xEnd = x(d.end) + x.bandwidth(); const bw = Math.max(8, xEnd - xStart); const by = y(cat.id); // Bar rect g.append('rect') .attr('x', xStart) .attr('y', by) .attr('width', bw) .attr('height', y.bandwidth()) .attr('rx', 6) .attr('fill', cat.color); // Label inside bar const labelColor = (cat.id === 'ai' || cat.id === 'data') ? '#FFFFFF' : '#111111'; g.append('text') .attr('x', xStart + bw/2) .attr('y', by + y.bandwidth()/2) .attr('text-anchor','middle') .attr('dominant-baseline','middle') .style('font-size','12px') .style('font-weight',600) .style('fill', labelColor) .text(d.name); }); // Title at top of the timeline graphic svg.append('text') .attr('x', (width + margin.left + margin.right)/2) .attr('y', 26) .attr('text-anchor','middle') .style('font-size','18px') .style('font-weight','700') .style('fill', '#0ABAB5') .text('ไทม์ไลน์แผนดิจิทัล พ.ศ. 2566–2570'); })(); // KPI dual-line chart (function() { const svg = d3.select('#kpiChart'); const margin = { top: 40, right: 140, bottom: 48, left: 56 }; const width = 1100; const height = 320; svg.attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`) .attr('preserveAspectRatio','xMidYMin meet'); const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`); const years = [2566,2567,2568,2569,2570]; // Data series const series = [ { name: 'อัตราการชำระคืน', color: '#BE3455', values: [80,82,85,88,92] }, { name: 'คะแนนความพึงพอใจผู้กู้', color: '#0ABAB5', values: [65,72,80,85,90] } ]; const x = d3.scaleBand().domain(years).range([0, width]).padding(0.2); const y = d3.scaleLinear().domain([0,100]).range([height, 0]); // Axes g.append('g') .attr('transform', `translate(0,${height})`) .call(d3.axisBottom(x).tickFormat(d => d)); g.append('g') .call(d3.axisLeft(y).tickFormat(d => d + '%')); // Lines const line = d3.line() .x((d,i) => x(years[i]) + x.bandwidth()/2) .y(d => y(d)) .curve(d3.curveMonotoneX); series.forEach(s => { g.append('path') .datum(s.values) .attr('fill','none') .attr('stroke', s.color) .attr('stroke-width', 3) .attr('d', line); // Points s.values.forEach((v,i) => { g.append('circle') .attr('cx', x(years[i]) + x.bandwidth()/2) .attr('cy', y(v)) .attr('r', 4) .attr('fill', s.color); }); // End labels at 2570 const lastIdx = s.values.length - 1; g.append('text') .attr('x', x(2570) + x.bandwidth()/2 + 8) .attr('y', y(s.values[lastIdx]) + (s.name.includes('ชำระคืน') ? -6 : 14)) .style('font-size', '12px') .style('fill', s.color) .style('font-weight', 600) .text(`${s.values[lastIdx]}% ${s.name}`); }); // Chart title svg.append('text') .attr('x', (width + margin.left + margin.right)/2) .attr('y', 24) .attr('text-anchor','middle') .style('font-size','18px') .style('font-weight','700') .style('fill', '#0ABAB5') .text('ตัวชี้วัดสำคัญ พ.ศ. 2566–2570'); // Mini legend const legend = svg.append('g').attr('transform', `translate(${width + margin.left + 20}, ${margin.top})`); series.forEach((s, i) => { const row = legend.append('g').attr('transform', `translate(0, ${i*24})`); row.append('rect').attr('width', 14).attr('height', 14).attr('fill', s.color).attr('rx', 2); row.append('text').attr('x', 20).attr('y', 11).style('font-size','12px').text(s.name); }); })(); </script> <!-- References to development best practices used --> <div style="max-width:1200px;margin:0 auto 40px;padding:0 16px;"> <div class="footnote"> แนวทางการเขียนกราฟด้วย D3 อ้างอิงแนวปฏิบัติการใช้สเกล/แกน/เส้นจากชุมชนผู้พัฒนา เช่นการใช้ d3.scale, d3.axis และ d3.line เพื่อความคมชัดและอ่านง่าย อ้างอิง: <a href="https://medium.com/react-courses/drawing-basic-charts-with-react-typescript-d3-part-i-line-area-and-bar-charts-cd159c62e18c" target="_blank" rel="noopener">medium.com</a>, <a href="https://blog.avenuecode.com/creating-a-data-visualization-from-scratch-using-d3.js?hs_amp=true" target="_blank" rel="noopener">blog.avenuecode.com</a>, <a href="https://how.dev/answers/how-to-create-a-line-chart-using-d3" target="_blank" rel="noopener">how.dev</a>, <a href="https://sharkcoder.com/data-visualization/d3-line-chart" target="_blank" rel="noopener">sharkcoder.com</a>. </div> </div> </body> </html>
