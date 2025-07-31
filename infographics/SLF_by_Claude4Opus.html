@@ -2,510 +2,639 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แผนการเปลี่ยนผ่านสู่ดิจิทัล กยศ. 2566-2570</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>แผนการเปลี่ยนผ่านสู่ดิจิทัล กยศ. พ.ศ. 2566 - 2570</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
-        /* 1. Base styles and variables */
         :root {
-            --tiffany-blue: #0ABAB5;
-            --peach-fuzz: #FFBE98;
-            --mocha-mousse: #A47764;
-            --ultimate-grey: #949494;
-            --viva-magenta: #BB2649;
-            --bg-white: #FFFFFF;
-            --bg-grey: #F5F5F5;
-            --text-dark: #333333;
-            --text-light: #FFFFFF;
-            --font-family: 'Sarabun', sans-serif;
+            --tiffany: #0ABAB5;
+            --peach: #FFBE98;
+            --mocha: #A47764;
+            --grey: #949494;
+            --magenta: #BB2649;
+            --bg: #FFFFFF;
+            --light-bg: #F5F5F5;
         }
 
-        html {
-            scroll-behavior: smooth;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: var(--font-family);
-            background-color: var(--bg-white);
-            color: var(--text-dark);
-            margin: 0;
+            font-family: 'Sarabun', sans-serif;
+            background: var(--bg);
+            color: #222;
+            line-height: 1.6;
+            overflow-x: auto;
             min-width: 1200px;
         }
 
-        /* 2. Typography */
-        h1 { font-size: 48px; font-weight: 700; color: var(--tiffany-blue); margin: 0; }
-        h2 { font-size: 32px; font-weight: 600; color: var(--text-dark); margin-bottom: 20px; }
-        h3 { font-size: 20px; font-weight: 600; }
-       .subtitle { font-size: 22px; font-weight: 500; color: #555; margin-top: 10px; }
-       .kpi-metric { font-size: 24px; font-weight: 700; }
-
-        /* 3. Layout grid */
-       .container {
-            max-width: 1920px;
-            margin: 0 auto;
-            padding: 0 40px;
-        }
-
-       .main-layout {
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 40px;
-            align-items: start;
-        }
-
-       .content-area {
-            grid-column: 1 / 2;
-        }
-
-       .kpi-sidebar {
-            grid-column: 2 / 3;
-            position: sticky;
-            top: 20px;
-            height: calc(100vh - 40px);
-            overflow-y: auto;
-            padding-right: 15px;
-        }
-        
-        /* Custom scrollbar for sidebar */
-       .kpi-sidebar::-webkit-scrollbar { width: 8px; }
-       .kpi-sidebar::-webkit-scrollbar-track { background: #f1f1f1; }
-       .kpi-sidebar::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
-       .kpi-sidebar::-webkit-scrollbar-thumb:hover { background: #aaa; }
-
-
-        section {
-            padding: 40px 0;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-        
-        section.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* 4. Header & Components */
-       .header-section {
+        .header {
+            background: linear-gradient(135deg, var(--tiffany), #0AA99F);
+            color: white;
+            padding: 60px 40px;
             text-align: center;
-            padding: 40px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
-       .summary-box {
-            background-color: var(--bg-grey);
-            border-left: 5px solid var(--tiffany-blue);
-            padding: 20px 30px;
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 24px;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 30px;
             margin: 30px auto 0;
-            max-width: 900px;
-            text-align: left;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
         }
 
-        /* 5. Timeline components */
-        #timeline-svg {
-            width: 100%;
-            height: 800px;
+        .summary-box h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            text-align: center;
         }
-       .year-bg { opacity: 0.5; }
-       .journey-lane-label { font-size: 18px; font-weight: 600; fill: #444; }
-       .initiative-box { transition: all 0.3s ease; cursor: pointer; }
-       .initiative-box:hover { transform: scale(1.02); filter: brightness(1.1); }
-       .initiative-title { font-size: 18px; font-weight: 600; fill: var(--text-light); }
-       .initiative-metric { font-size: 14px; font-weight: 500; fill: var(--text-light); opacity: 0.9; }
-       .initiative-icon { font-size: 24px; }
 
-        /* 6. EA Layers */
-       .ea-layers-section { background-color: var(--bg-grey); padding: 40px; border-radius: 16px; }
-       .ea-grid { display: flex; justify-content: space-around; gap: 20px; }
-       .ea-group { flex: 1; text-align: center; }
-       .ea-group h3 { padding-bottom: 10px; border-bottom: 3px solid; }
-       .ea-item { background-color: var(--bg-white); padding: 10px 15px; border-radius: 8px; margin-top: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            text-align: center;
+        }
 
-        /* 7. KPI Dashboard */
-       .kpi-card {
-            background-color: var(--bg-grey);
+        .summary-item {
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        .timeline-section {
+            padding: 60px 40px;
+            background: var(--light-bg);
+        }
+
+        .timeline-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .timeline-title {
+            font-size: 32px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--tiffany);
+        }
+
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: 250px repeat(5, 1fr);
+            gap: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .timeline-header {
+            display: contents;
+            font-weight: 600;
+        }
+
+        .timeline-header > div {
+            background: var(--tiffany);
+            color: white;
             padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 20px;
+            text-align: center;
+            font-size: 20px;
         }
-       .kpi-card h3 { margin-top: 0; }
-       .kpi-chart-container { width: 100%; height: 180px; margin-top: 15px; }
-       .kpi-value-wrapper { display: flex; justify-content: center; align-items: center; gap: 10px; }
 
-        /* 8. Mock Dashboards */
-       .mock-dashboards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-       .dashboard-card { background-color: var(--bg-grey); padding: 25px; border-radius: 16px; }
-       .dashboard-card h3 { margin-top: 0; }
-       .dashboard-mockup-svg { border: 1px solid #ddd; border-radius: 8px; background-color: var(--bg-white); }
+        .journey-stage {
+            background: var(--light-bg);
+            padding: 20px;
+            font-weight: 600;
+            font-size: 16px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+        }
 
-        /* 9. Print Styles */
+        .year-column {
+            background: linear-gradient(to bottom, rgba(10,186,181,0.1), rgba(255,190,152,0.1));
+            min-height: 120px;
+            position: relative;
+            border-right: 1px solid #ddd;
+        }
+
+        .initiative-box {
+            position: absolute;
+            left: 5px;
+            right: 5px;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 14px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .initiative-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .ea-section {
+            background: white;
+            padding: 60px 40px;
+        }
+
+        .ea-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .ea-title {
+            font-size: 32px;
+            font-weight: 600;
+            text-align: center;
+            color: var(--grey);
+            margin-bottom: 40px;
+        }
+
+        .ea-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .ea-card {
+            background: linear-gradient(135deg, var(--light-bg), white);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .ea-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--tiffany);
+        }
+
+        .ea-items {
+            list-style: none;
+        }
+
+        .ea-items li {
+            padding: 8px 0;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .kpi-section {
+            background: var(--light-bg);
+            padding: 60px 40px;
+        }
+
+        .kpi-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .kpi-title {
+            font-size: 32px;
+            font-weight: 600;
+            text-align: center;
+            color: var(--magenta);
+            margin-bottom: 40px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .kpi-card h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--tiffany);
+        }
+
+        .dashboard-preview {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-preview h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--tiffany);
+            text-align: center;
+        }
+
+        .dashboard-mockup {
+            width: 100%;
+            height: 400px;
+            background: var(--light-bg);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .legend {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Print styles */
         @media print {
-            body { min-width: unset; }
-           .kpi-sidebar,.header-section.subtitle,.summary-box { display: none; }
-           .main-layout { display: block; }
-            section { padding: 20px 0; opacity: 1; transform: none; }
-            h1 { font-size: 28px; }
-            h2 { font-size: 22px; }
+            .legend { display: none; }
+            body { min-width: auto; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header class="header-section">
-            <h1>แผนการเปลี่ยนผ่านสู่ดิจิทัล กยศ.</h1>
-            <p class="subtitle">พ.ศ. 2566 - 2570: เสริมพลังอนาคตด้วยข้อมูลเชิงลึกและความเข้าใจอันดี</p>
-            <div class="summary-box">
-                <h3>เป้าหมายการเปลี่ยนผ่านสู่ดิจิทัล (Key Transformation Goals)</h3>
-                <p>ปรับเปลี่ยน กยศ. สู่องค์กรที่ขับเคลื่อนด้วยข้อมูลอย่างเต็มรูปแบบ โดยมุ่งเน้นการสร้างประสบการณ์ที่เป็นเลิศสำหรับผู้มีส่วนได้ส่วนเสีย เพิ่มประสิทธิภาพการดำเนินงาน และสร้างความยั่งยืนทางการเงินผ่านเทคโนโลยีดิจิทัลและนวัตกรรม</p>
+    <!-- Header Section -->
+    <header class="header">
+        <h1>แผนการเปลี่ยนผ่านสู่ดิจิทัล กยศ.</h1>
+        <p class="subtitle">พ.ศ. 2566 - 2570: เสริมพลังอนาคตด้วยข้อมูลเชิงลึกและความเข้าอันดี</p>
+        
+        <div class="summary-box">
+            <h3>เป้าหมายการเปลี่ยนผ่านสู่ดิจิทัล</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <strong>ผู้กู้ยืม</strong><br>
+                    ประสบการณ์ดิจิทัลที่ราบรื่น
+                </div>
+                <div class="summary-item">
+                    <strong>พนักงาน</strong><br>
+                    การดำเนินงานที่มีประสิทธิภาพ
+                </div>
+                <div class="summary-item">
+                    <strong>องค์กร</strong><br>
+                    ผลลัพธ์ที่ยั่งยืน
+                </div>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <div class="main-layout">
-            <main class="content-area">
-                <section id="timeline-section">
-                    <h2>เส้นทางการเปลี่ยนผ่านสู่ดิจิทัล (Digital Transformation Journey)</h2>
-                    <svg id="timeline-svg"></svg>
-                </section>
-
-                <section id="ea-section" class="ea-layers-section">
-                    <h2>ชั้นสถาปัตยกรรมองค์กร (Enterprise Architecture Layers)</h2>
-                    <div class="ea-grid">
-                        <div class="ea-group">
-                            <h3 style="border-color: var(--tiffany-blue);">Core Business</h3>
-                            <div class="ea-item">ระบบ e-Service กลาง</div>
-                            <div class="ea-item">ระบบ BI Self-Service</div>
-                            <div class="ea-item">ระบบบูรณาการข้อมูล</div>
-                        </div>
-                        <div class="ea-group">
-                            <h3 style="border-color: var(--ultimate-grey);">Security</h3>
-                            <div class="ea-item">Security Infrastructure</div>
-                            <div class="ea-item">ระบบ e-KYC</div>
-                            <div class="ea-item">API Security Gateway</div>
-                        </div>
-                        <div class="ea-group">
-                            <h3 style="border-color: #7BAFB2;">External Integration</h3>
-                            <div class="ea-item">ระบบ API Gateway</div>
-                            <div class="ea-item">LINE Integration</div>
-                            <div class="ea-item">Government Agency Connectors</div>
-                        </div>
-                    </div>
-                </section>
+    <!-- Timeline Section -->
+    <section class="timeline-section">
+        <div class="timeline-container">
+            <h2 class="timeline-title">แผนระยะเวลา 5 ปี: Customer Journey Operations</h2>
+            
+            <div class="timeline-grid">
+                <div class="timeline-header">
+                    <div></div>
+                    <div>ปี 2566<br>Foundation</div>
+                    <div>ปี 2567<br>Integration</div>
+                    <div>ปี 2568<br>Enhancement</div>
+                    <div>ปี 2569<br>AI/ML</div>
+                    <div>ปี 2570<br>Ecosystem</div>
+                </div>
                 
-                <section id="mock-dashboard-section">
-                    <h2>ภาพตัวอย่าง Dashboard สำหรับผู้บริหาร (Executive Dashboard Mockups)</h2>
-                    <div class="mock-dashboards-grid">
-                        <div class="dashboard-card">
-                            <h3>ศูนย์บัญชาการผู้บริหาร กยศ.</h3>
-                            <svg id="mock-dashboard-1" class="dashboard-mockup-svg" width="100%" height="300"></svg>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>ระบบอัจฉริยะวิเคราะห์การเก็บหนี้</h3>
-                            <svg id="mock-dashboard-2" class="dashboard-mockup-svg" width="100%" height="300"></svg>
-                        </div>
-                    </div>
-                </section>
-
-            </main>
-
-            <aside class="kpi-sidebar">
-                <h2>ตัวชี้วัดความสำเร็จ (Program KPIs)</h2>
-                
-                <div class="kpi-card">
-                    <h3>ประสิทธิภาพการดำเนินงาน</h3>
-                    <p>ต้นทุนต่อสินเชื่อ (เป้าหมาย -30%)</p>
-                    <div id="kpi-cost" class="kpi-chart-container"></div>
-                    <p>กระบวนการอัตโนมัติ</p>
-                    <div id="kpi-automation" class="kpi-chart-container"></div>
-                </div>
-
-                <div class="kpi-card">
-                    <h3>การมีส่วนร่วมของผู้มีส่วนได้ส่วนเสีย</h3>
-                    <p>ความพึงพอใจผู้กู้ (CSAT)</p>
-                    <div id="kpi-csat" class="kpi-chart-container"></div>
-                    <p>อัตราการใช้ช่องทางดิจิทัล</p>
-                    <div id="kpi-digital-adoption" class="kpi-chart-container"></div>
-                </div>
-
-                <div class="kpi-card">
-                    <h3>ความสำเร็จตามภารกิจหลัก</h3>
-                    <p>อัตราการเก็บหนี้รวม (เป้าหมาย +10-15%)</p>
-                    <div id="kpi-collection-rate" class="kpi-chart-container"></div>
-                    <p>ระยะเวลาอนุมัติเงินกู้</p>
-                    <div class="kpi-value-wrapper">
-                        <span class="kpi-metric">30 วัน</span>
-                        <span style="font-size: 24px; color: var(--viva-magenta);">→</span>
-                        <span class="kpi-metric" style="color: var(--tiffany-blue);">7 วัน</span>
+                <!-- Journey Stages -->
+                <div class="journey-stage">ค้นหาข้อมูล/บริการ</div>
+                <div class="year-column">
+                    <div class="initiative-box" style="top: 10px; height: 100px; background: var(--peach);">
+                        <strong>ระบบ e-Service กลาง</strong><br>
+                        <small>ลดเวลา 50%</small>
                     </div>
                 </div>
-            </aside>
+                <div class="year-column"></div>
+                <div class="year-column">
+                    <div class="initiative-box" style="top: 10px; height: 80px; background: var(--peach);">
+                        <strong>AI Chatbot</strong><br>
+                        <small>ตอบคำถาม 60%</small>
+                    </div>
+                </div>
+                <div class="year-column"></div>
+                <div class="year-column">
+                    <div class="initiative-box" style="top: 10px; height: 100px; background: linear-gradient(45deg, var(--peach), var(--mocha));">
+                        <strong>ระบบนิเวศดิจิทัล</strong><br>
+                        <small>อัตโนมัติ 75%</small>
+                    </div>
+                </div>
+
+                <div class="journey-stage">ลงทะเบียน/ยื่นคำขอ</div>
+                <div class="year-column">
+                    <div class="initiative-box" style="top: 10px; height: 100px; background: var(--mocha);">
+                        <strong>ระบบ e-KYC</strong><br>
+                        <small>ยืนยันตัวตน 1 ชม.</small>
+                    </div>
+                </div>
+                <div class="year-column"></div>
+                <div class="year-column"></div>
+                <div class="year-column"></div>
+                <div class="year-column"></div>
+
+                <div class="journey-stage">รับบริการ</div>
+                <div class="year-column"></div>
+                <div class="year-column">
+                    <div class="initiative-box" style="top: 10px; height: 80px; background: var(--peach);">
+                        <strong>AI Chatbot</strong><br>
+                        <small>บริการ 24/7</small>
+                    </div>
+                </div>
+                <div class="year-column">
+                    <div class="initiative-box" style="top: 10px; height: 120px; background: var(--mocha);">
+                        <strong>AI จำแนกลูกหนี้</strong><br>
+                        <small>เพิ่มการเก็บ 10-15%</small>
+                    </div>
+                </div>
+                <div class="year-column">
+                    <div class="initiative-box" style="top: 10px; height: 100px; background: var(--mocha);">
+                        <strong>Personalization AI</strong><br>
+                        <small>แผนเฉพาะบุคคล</small>
+                    </div>
+                </div>
+
+                <div class="journey-stage">ติดตาม/แจ้งเตือน</div>
+                <div class="year-column"></div>
+                <div class="year-column"></div>
+                <div class="year-column">
+                    <div class="initiative-box" style="top: 10px; height: 80px; background: var(--peach);">
+                        <strong>LINE/API</strong><br>
+                        <small>ลดผิดนัด 15%</small>
+                    </div>
+                </div>
+                <div class="year-column"></div>
+                <div class="year-column"></div>
+
+                <div class="journey-stage">ให้ข้อเสนอแนะ</div>
+                <div class="year-column"></div>
+                <div class="year-column"></div>
+                <div class="year-column">
+                    <div class="initiative-box" style="top: 10px; height: 80px; background: var(--mocha);">
+                        <strong>BI Self-Service</strong><br>
+                        <small>Real-time Dashboard</small>
+                    </div>
+                </div>
+                <div class="year-column"></div>
+                <div class="year-column"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EA Layers Section -->
+    <section class="ea-section">
+        <div class="ea-container">
+            <h2 class="ea-title">Enterprise Architecture Layers</h2>
+            <div class="ea-grid">
+                <div class="ea-card">
+                    <h3>Core Business Systems</h3>
+                    <ul class="ea-items">
+                        <li>ระบบ e-Service กลาง</li>
+                        <li>ระบบ BI Self-Service</li>
+                        <li>ระบบบูรณาการข้อมูล</li>
+                    </ul>
+                </div>
+                <div class="ea-card">
+                    <h3>Security Infrastructure</h3>
+                    <ul class="ea-items">
+                        <li>ระบบ e-KYC</li>
+                        <li>Security Infrastructure</li>
+                        <li>API Security Gateway</li>
+                    </ul>
+                </div>
+                <div class="ea-card">
+                    <h3>External Integration</h3>
+                    <ul class="ea-items">
+                        <li>ระบบ API Gateway</li>
+                        <li>LINE Integration</li>
+                        <li>Government Connectors</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KPI Dashboard Section -->
+    <section class="kpi-section">
+        <div class="kpi-container">
+            <h2 class="kpi-title">Key Performance Indicators Dashboard</h2>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <h3>ศูนย์บัญชาการผู้บริหาร กยศ.</h3>
+                    <div class="dashboard-mockup" id="executive-dashboard"></div>
+                </div>
+                <div class="kpi-card">
+                    <h3>ระบบอัจฉริยะวิเคราะห์การเก็บหนี้</h3>
+                    <div class="dashboard-mockup" id="ai-analytics-dashboard"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Legend -->
+    <div class="legend">
+        <h4 style="margin-bottom: 15px; font-size: 16px;">คำอธิบายสี</h4>
+        <div class="legend-item">
+            <div class="legend-color" style="background: var(--tiffany)"></div>
+            <span>Core Systems</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: var(--peach)"></div>
+            <span>Customer Journey</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: var(--mocha)"></div>
+            <span>Data & Analytics</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: var(--grey)"></div>
+            <span>Infrastructure</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: var(--magenta)"></div>
+            <span>KPIs & Results</span>
         </div>
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // --- DATA SETUP ---
-        const timelineData = {
-            journeys: ["ค้นหาข้อมูล/บริการ", "ลงทะเบียน/ยื่นคำขอ", "รับบริการ", "ติดตาม/แจ้งเตือน", "ให้ข้อเสนอแนะ"],
-            years: ,
-            yearColors:,
-            initiatives:
+        // D3.js Visualizations
+        const width = 400, height = 300, margin = 40;
+
+        // Executive Dashboard
+        const execSvg = d3.select("#executive-dashboard")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // KPI Gauges
+        const gaugeData = [
+            {name: "อัตราการเก็บหนี้", value: 92, target: 95, color: "#BB2649"},
+            {name: "ความพึงพอใจ", value: 90, target: 95, color: "#0ABAB5"}
+        ];
+
+        gaugeData.forEach((d, i) => {
+            const g = execSvg.append("g")
+                .attr("transform", `translate(${100 + i*200}, ${height/2})`);
+
+            const arc = d3.arc()
+                .innerRadius(60)
+                .outerRadius(80)
+                .startAngle(-Math.PI/2)
+                .endAngle(Math.PI/2);
+
+            g.append("path")
+                .attr("d", arc)
+                .attr("fill", "#f0f0f0");
+
+            const progressArc = d3.arc()
+                .innerRadius(60)
+                .outerRadius(80)
+                .startAngle(-Math.PI/2)
+                .endAngle(-Math.PI/2 + Math.PI * (d.value/100));
+
+            g.append("path")
+                .attr("d", progressArc)
+                .attr("fill", d.color);
+
+            g.append("text")
+                .attr("text-anchor", "middle")
+                .attr("dy", "0.35em")
+                .style("font-size", "20px")
+                .style("font-weight", "bold")
+                .text(`${d.value}%`);
+
+            g.append("text")
+                .attr("text-anchor", "middle")
+                .attr("y", 100)
+                .style("font-size", "14px")
+                .text(d.name);
+        });
+
+        // AI Analytics Dashboard
+        const aiSvg = d3.select("#ai-analytics-dashboard")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Treemap for debtor segmentation
+        const treemapData = [
+            {name: "กลุ่มเปราะบาง", value: 35, color: "#0ABAB5"},
+            {name: "กลุ่มมีศักยภาพ", value: 40, color: "#A47764"},
+            {name: "กลุ่มจงใจ", value: 15, color: "#BB2649"},
+            {name: "กลุ่มผิดนัดใหม่", value: 10, color: "#FFBE98"}
+        ];
+
+        const pie = d3.pie()
+            .value(d => d.value);
+
+        const arc = d3.arc()
+            .innerRadius(0)
+            .outerRadius(100);
+
+        const pieG = aiSvg.append("g")
+            .attr("transform", `translate(${width/2}, ${height/2})`);
+
+        pieG.selectAll("path")
+            .data(pie(treemapData))
+            .enter()
+            .append("path")
+            .attr("d", arc)
+            .attr("fill", d => d.data.color)
+            .attr("stroke", "white")
+            .attr("stroke-width", 2);
+
+        // Labels
+        pieG.selectAll("text")
+            .data(pie(treemapData))
+            .enter()
+            .append("text")
+            .attr("transform", d => `translate(${arc.centroid(d)})`)
+            .attr("text-anchor", "middle")
+            .style("font-size", "12px")
+            .style("font-weight", "bold")
+            .style("fill", "white")
+            .text(d => `${d.data.name}\n${d.data.value}%`);
+
+        // Smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
         };
 
-        // --- TIMELINE VISUALIZATION ---
-        function drawTimeline() {
-            const svg = d3.select("#timeline-svg");
-            const width = parseInt(svg.style("width"));
-            const height = parseInt(svg.style("height"));
-            const margin = { top: 50, right: 20, bottom: 20, left: 200 };
-
-            const xScale = d3.scaleBand()
-               .domain(timelineData.years)
-               .range([margin.left, width - margin.right])
-               .padding(0.1);
-
-            const yScale = d3.scaleBand()
-               .domain(timelineData.journeys)
-               .range([margin.top, height - margin.bottom])
-               .padding(0.2);
-
-            // Year backgrounds
-            svg.append("g").selectAll("rect")
-               .data(timelineData.years).enter()
-               .append("rect")
-               .attr("class", "year-bg")
-               .attr("x", d => xScale(d))
-               .attr("y", margin.top)
-               .attr("width", xScale.bandwidth())
-               .attr("height", height - margin.top - margin.bottom)
-               .attr("fill", (d, i) => timelineData.yearColors[i]);
-
-            // Year labels
-            svg.append("g").selectAll("text")
-               .data(timelineData.years).enter()
-               .append("text")
-               .attr("x", d => xScale(d) + xScale.bandwidth() / 2)
-               .attr("y", margin.top - 15)
-               .attr("text-anchor", "middle")
-               .style("font-size", "28px")
-               .style("font-weight", "500")
-               .text(d => `พ.ศ. ${d}`);
-
-            // Journey labels (swim lanes)
-            svg.append("g").selectAll("text")
-               .data(timelineData.journeys).enter()
-               .append("text")
-               .attr("class", "journey-lane-label")
-               .attr("x", margin.left - 15)
-               .attr("y", d => yScale(d) + yScale.bandwidth() / 2)
-               .attr("text-anchor", "end")
-               .attr("dominant-baseline", "middle")
-               .text(d => d);
-
-            // Initiative boxes
-            timelineData.initiatives.forEach(d => {
-                const g = svg.append("g").attr("class", "initiative-box");
-                
-                let yPos, boxHeight;
-                if (d.journey === "all") {
-                    yPos = margin.top + 5;
-                    boxHeight = height - margin.top - margin.bottom - 10;
-                } else {
-                    yPos = yScale(d.journey);
-                    boxHeight = yScale.bandwidth();
-                }
-                
-                const xPos = xScale(d.start);
-                const boxWidth = (xScale(d.end) - xScale(d.start)) + xScale.bandwidth();
-
-                g.append("rect")
-                   .attr("x", xPos)
-                   .attr("y", yPos)
-                   .attr("width", boxWidth)
-                   .attr("height", boxHeight)
-                   .attr("rx", 15)
-                   .attr("fill", d.color)
-                   .attr("fill-opacity", 0.8);
-
-                const textGroup = g.append("g")
-                   .attr("transform", `translate(${xPos + boxWidth / 2}, ${yPos + boxHeight / 2})`);
-
-                textGroup.append("text")
-                   .attr("class", "initiative-icon")
-                   .attr("y", -15)
-                   .attr("text-anchor", "middle")
-                   .text(d.icon);
-                
-                textGroup.append("text")
-                   .attr("class", "initiative-title")
-                   .attr("y", 10)
-                   .attr("text-anchor", "middle")
-                   .text(d.name);
-
-                textGroup.append("text")
-                   .attr("class", "initiative-metric")
-                   .attr("y", 35)
-                   .attr("text-anchor", "middle")
-                   .text(d.metric);
-            });
-        }
-
-        // --- KPI CHARTS ---
-        function createGauge(selector, value, max, label, unit) {
-            const svg = d3.select(selector).append("svg").attr("viewBox", "0 0 200 120");
-            const arc = d3.arc().innerRadius(40).outerRadius(55).startAngle(-Math.PI / 2).endAngle(Math.PI / 2);
-            
-            svg.append("path").attr("d", arc).attr("transform", "translate(100, 100)").attr("fill", "#E0E0E0");
-            
-            const valueArc = d3.arc().innerRadius(40).outerRadius(55).startAngle(-Math.PI / 2)
-               .endAngle(-Math.PI / 2 + (Math.PI * (value / max)));
-            
-            svg.append("path").attr("d", valueArc).attr("transform", "translate(100, 100)").attr("fill", "var(--viva-magenta)");
-            
-            svg.append("text").attr("x", 100).attr("y", 95).attr("text-anchor", "middle")
-               .attr("class", "kpi-metric").text(`${value}${unit}`);
-        }
-
-        function createCircularProgress(selector, value, targetValue, label) {
-            const svg = d3.select(selector).append("svg").attr("viewBox", "0 0 120 120");
-            const radius = 50;
-            const arc = d3.arc().innerRadius(radius - 10).outerRadius(radius).startAngle(0);
-
-            svg.append("path").attr("d", arc({endAngle: 2 * Math.PI})).attr("transform", "translate(60,60)").attr("fill", "#E0E0E0");
-            
-            const foreground = svg.append("path").attr("transform", "translate(60,60)").attr("fill", "var(--tiffany-blue)");
-            
-            foreground.transition().duration(1500)
-               .attrTween("d", () => {
-                    const interpolate = d3.interpolate(0, (value / targetValue) * 2 * Math.PI);
-                    return t => arc({endAngle: interpolate(t)});
-                });
-
-            svg.append("text").attr("x", 60).attr("y", 65).attr("text-anchor", "middle")
-               .attr("class", "kpi-metric").text(`${value > 0? '+' : ''}${value}%`);
-        }
-        
-        function createBarChart(selector, start, end) {
-            const data = [{label: '2566', value: start}, {label: '2570', value: end}];
-            const svg = d3.select(selector).append("svg").attr("viewBox", "0 0 150 120");
-            const xScale = d3.scaleBand().domain(data.map(d=>d.label)).range().padding(0.4);
-            const yScale = d3.scaleLinear().domain().range();
-
-            svg.selectAll("rect").data(data).enter().append("rect")
-               .attr("x", d => xScale(d.label))
-               .attr("y", d => yScale(d.value))
-               .attr("width", xScale.bandwidth())
-               .attr("height", d => 100 - yScale(d.value))
-               .attr("fill", (d,i) => i === 0? "var(--ultimate-grey)" : "var(--tiffany-blue)");
-
-            svg.selectAll("text").data(data).enter().append("text")
-               .attr("x", d => xScale(d.label) + xScale.bandwidth()/2)
-               .attr("y", d => yScale(d.value) - 5)
-               .attr("text-anchor", "middle")
-               .style("font-size", "14px")
-               .text(d => `${d.value}%`);
-        }
-
-        function createLineChart(selector, start, end) {
-            const data = [{year: 2566, value: start}, {year: 2570, value: end}];
-            const svg = d3.select(selector).append("svg").attr("viewBox", "0 0 150 120");
-            const xScale = d3.scaleLinear().domain().range();
-            const yScale = d3.scaleLinear().domain().range();
-            const line = d3.line().x(d=>xScale(d.year)).y(d=>yScale(d.value));
-
-            svg.append("path").datum(data).attr("fill", "none").attr("stroke", "var(--viva-magenta)").attr("stroke-width", 3).attr("d", line);
-            svg.selectAll("circle").data(data).enter().append("circle").attr("cx", d=>xScale(d.year)).attr("cy", d=>yScale(d.value)).attr("r", 5).attr("fill", "var(--viva-magenta)");
-        }
-
-        function createDonutChart(selector, start, end) {
-            const data =;
-            const svg = d3.select(selector).append("svg").attr("viewBox", "0 0 120 120");
-            const pie = d3.pie().value(d=>d.value).sort(null);
-            const arc = d3.arc().innerRadius(35).outerRadius(50);
-
-            svg.selectAll("path").data(pie(data)).enter().append("path")
-               .attr("d", arc)
-               .attr("fill", (d,i) => i === 0? "var(--tiffany-blue)" : "#E0E0E0")
-               .attr("transform", "translate(60,60)");
-
-            svg.append("text").attr("x", 60).attr("y", 65).attr("text-anchor", "middle")
-               .attr("class", "kpi-metric").text(`${end}%`);
-        }
-
-        // --- MOCK DASHBOARDS ---
-        function drawMockDashboard1() {
-            const svg = d3.select("#mock-dashboard-1");
-            //... complex drawing logic for a miniature dashboard...
-            svg.append("text").attr("x", 20).attr("y", 30).text("ภาพรวมผลการดำเนินงาน").style("font-size", "18px").style("font-weight", "600");
-            // Mock KPI Dials
-            svg.append("circle").attr("cx", 80).attr("cy", 80).attr("r", 30).attr("fill", "var(--tiffany-blue)").attr("opacity", 0.2);
-            svg.append("text").attr("x", 80).attr("y", 85).text("85%").attr("text-anchor", "middle").style("font-weight", "bold");
-            svg.append("text").attr("x", 80).attr("y", 125).text("เก็บหนี้").attr("text-anchor", "middle");
-
-            svg.append("circle").attr("cx", 200).attr("cy", 80).attr("r", 30).attr("fill", "var(--peach-fuzz)").attr("opacity", 0.3);
-            svg.append("text").attr("x", 200).attr("y", 85).text("92%").attr("text-anchor", "middle").style("font-weight", "bold");
-            svg.append("text").attr("x", 200).attr("y", 125).text("CSAT").attr("text-anchor", "middle");
-
-            // Mock Map
-            svg.append("rect").attr("x", 300).attr("y", 50).attr("width", 200).attr("height", 150).attr("fill", "#E0F2F1").attr("rx", 10);
-            svg.append("text").attr("x", 400).attr("y", 130).text("Heat Map").attr("text-anchor", "middle").attr("fill", "#777");
-        }
-
-        function drawMockDashboard2() {
-            const svg = d3.select("#mock-dashboard-2");
-            const data = {
-                name: "root",
-                children:
-            };
-            const treemap = d3.treemap().size().padding(4);
-            const root = d3.hierarchy(data).sum(d => d.value);
-            treemap(root);
-
-            const nodes = svg.selectAll("g").data(root.leaves()).enter().append("g")
-               .attr("transform", d => `translate(${d.x0 + 20}, ${d.y0 + 50})`);
-
-            nodes.append("rect")
-               .attr("width", d => d.x1 - d.x0)
-               .attr("height", d => d.y1 - d.y0)
-               .attr("fill", d => d.data.color)
-               .attr("rx", 5);
-
-            nodes.append("text")
-               .attr("x", d => (d.x1 - d.x0) / 2)
-               .attr("y", d => (d.y1 - d.y0) / 2)
-               .attr("text-anchor", "middle")
-               .attr("dominant-baseline", "middle")
-               .style("font-size", "14px")
-               .style("font-weight", "600")
-               .text(d => d.data.name);
-        }
-
-        // --- SCROLL ANIMATIONS ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    if(entry.target.id === 'kpi-cost') {
-                        createCircularProgress('#kpi-cost', -30, 100);
-                        createBarChart('#kpi-automation', 10, 75);
-                        createLineChart('#kpi-csat', 65, 90);
-                        createDonutChart('#kpi-digital-adoption', 40, 95);
-                        createGauge('#kpi-collection-rate', 12, 15, 'เก็บหนี้', '%');
-                        observer.unobserve(entry.target); // Animate only once
-                    }
+                    entry.target.classList.add('fade-in');
                 }
             });
+        }, observerOptions);
+
+        document.querySelectorAll('.timeline-grid, .ea-card, .kpi-card').forEach(el => {
+            observer.observe(el);
         });
-        
-        document.querySelectorAll('section,.kpi-card').forEach(el => observer.observe(el));
-        observer.observe(document.getElementById('kpi-cost'));
-
-
-        // --- INITIAL DRAW ---
-        drawTimeline();
-        drawMockDashboard1();
-        drawMockDashboard2();
-    });
     </script>
 </body>
 </html>
