@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กยศ. Digital Transformation Infographic (2566-2570)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #0A2463;
+            color: #FFFFFF;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            max-height: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flowchart-box {
+            border: 2px solid #3E92CC;
+            background-color: #0A2463;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .flowchart-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #F4E285;
+        }
+        .kpi-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-2">พลิกโฉมอนาคต กยศ.</h1>
+            <p class="text-xl md:text-2xl text-[#3E92CC]">เส้นทางการเปลี่ยนผ่านสู่ดิจิทัล 2566-2570</p>
+            <p class="text-lg text-gray-300 mt-4 max-w-4xl mx-auto">ตอบสนองข้อคิดเห็นคณะกรรมการฯ โดยปรับเปลี่ยนแผนจากการนำเสนอโครงการเชิงเทคนิค สู่การเล่าเรื่องเชิงกลยุทธ์ที่มุ่งเน้นผลลัพธ์ที่จับต้องได้ ทั้งในด้านการยกระดับประสบการณ์ผู้มีส่วนได้ส่วนเสีย การใช้ข้อมูลขับเคลื่อนองค์กร และการเพิ่มประสิทธิภาพการดำเนินงาน</p>
+        </header>
+
+        <main>
+            <section id="timeline" class="mb-16">
+                <h2 class="text-3xl font-bold text-center mb-8 text-[#3E92CC]">The 5-Year Journey: จากรากฐานสู่การเติบโต</h2>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+                    
+                    <div class="year-column p-4 rounded-lg kpi-card">
+                        <h3 class="text-2xl font-bold text-center mb-4 text-[#F4E285]">2566: วางรากฐาน</h3>
+                        <div class="space-y-4">
+                            <div class="p-3 bg-[#3E92CC] rounded-lg shadow-lg"><strong>👥 ยกระดับประสบการณ์:</strong> เปิดตัวระบบ e-Service กลาง สร้างช่องทางบริการเดียวสำหรับทุกคน</div>
+                            <div class="p-3 bg-[#D8315B] rounded-lg shadow-lg"><strong>� ขับเคลื่อนด้วยข้อมูล:</strong> เริ่มรวบรวมข้อมูลพฤติกรรมผู้ใช้เพื่อการวิเคราะห์ในอนาคต</div>
+                            <div class="p-3 bg-gray-500 rounded-lg shadow-lg"><strong>🏛️ สร้างความมั่นคง:</strong> ปรับปรุงโครงสร้างพื้นฐาน (Infrastructure) ให้ทันสมัย</div>
+                        </div>
+                    </div>
+
+                    <div class="year-column p-4 rounded-lg kpi-card">
+                        <h3 class="text-2xl font-bold text-center mb-4 text-[#F4E285]">2567: เร่งเครื่อง</h3>
+                        <div class="space-y-4">
+                            <div class="p-3 bg-[#3E92CC] rounded-lg shadow-lg"><strong>👥 ยกระดับประสบการณ์:</strong> นำร่อง AI Chatbot และ e-KYC ลดขั้นตอน ลดระยะเวลารอคอย</div>
+                             <div class="p-3 bg-gray-500 rounded-lg shadow-lg"><strong>🏛️ สร้างความมั่นคง:</strong> เสริมความปลอดภัยทางไซเบอร์ (Cybersecurity)</div>
+                        </div>
+                    </div>
+
+                    <div class="year-column p-4 rounded-lg kpi-card">
+                        <h3 class="text-2xl font-bold text-center mb-4 text-[#F4E285]">2568: สื่อสารเชิงรุก</h3>
+                        <div class="space-y-4">
+                            <div class="p-3 bg-[#3E92CC] rounded-lg shadow-lg"><strong>👥 ยกระดับประสบการณ์:</strong> แจ้งเตือนผ่าน LINE/API เข้าถึงผู้กู้โดยตรงและทันท่วงที</div>
+                            <div class="p-3 bg-[#D8315B] rounded-lg shadow-lg"><strong>💡 ขับเคลื่อนด้วยข้อมูล:</strong> เปิดตัว BI Self-Service Dashboard สำหรับผู้บริหารระดับฝ่าย</div>
+                        </div>
+                    </div>
+
+                    <div class="year-column p-4 rounded-lg kpi-card">
+                        <h3 class="text-2xl font-bold text-center mb-4 text-[#F4E285]">2569: ก้าวสู่ปัญญาประดิษฐ์</h3>
+                        <div class="space-y-4">
+                            <div class="p-3 bg-[#3E92CC] rounded-lg shadow-lg"><strong>👥 ยกระดับประสบการณ์:</strong> เสนอแผนชำระหนี้ส่วนบุคคล (Personalization) ด้วย AI</div>
+                            <div class="p-3 bg-[#D8315B] rounded-lg shadow-lg"><strong>💡 ขับเคลื่อนด้วยข้อมูล:</strong> ใช้ AI แบ่งกลุ่มลูกหนี้ เพิ่มประสิทธิภาพการติดตามหนี้</div>
+                        </div>
+                    </div>
+                    
+                    <div class="year-column p-4 rounded-lg kpi-card">
+                        <h3 class="text-2xl font-bold text-center mb-4 text-[#F4E285]">2570: ระบบนิเวศอัจฉริยะ</h3>
+                        <div class="space-y-4">
+                            <div class="p-3 bg-[#3E92CC] rounded-lg shadow-lg"><strong>👥 ยกระดับประสบการณ์:</strong> ระบบเชื่อมต่อสมบูรณ์แบบ มอบประสบการณ์ไร้รอยต่อ</div>
+                            <div class="p-3 bg-[#D8315B] rounded-lg shadow-lg"><strong>💡 ขับเคลื่อนด้วยข้อมูล:</strong> Dashboard สำหรับคณะกรรมการฯ รายงานผล real-time</div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+            
+            <section id="outcomes" class="mb-16">
+                <h2 class="text-3xl font-bold text-center mb-8 text-[#3E92CC]">The Strategic Outcomes: ผลลัพธ์ที่วัดผลได้</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    
+                    <div class="p-6 rounded-lg kpi-card">
+                        <h3 class="text-2xl font-bold mb-4 text-center">เป้าหมายตัวชี้วัดหลัก (KPIs)</h3>
+                        <p class="text-center text-gray-300 mb-4">คาดการณ์ผลกระทบเชิงบวกจากการลงทุนด้านดิจิทัลตลอดระยะเวลา 5 ปี</p>
+                        <div class="chart-container max-w-xl">
+                            <canvas id="kpiTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-lg kpi-card">
+                        <h3 class="text-2xl font-bold mb-4 text-center">สัดส่วนงบประมาณตาม 3 เสาหลักเชิงกลยุทธ์</h3>
+                        <p class="text-center text-gray-300 mb-4">ปรับการนำเสนอแผนงบประมาณให้สอดคล้องกับคุณค่าที่จะส่งมอบ</p>
+                        <div class="chart-container max-w-md">
+                            <canvas id="budgetDonutChart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="dataviz" class="mb-16">
+                <h2 class="text-3xl font-bold text-center mb-8 text-[#3E92CC]">Data Visualization & AI: ตอบโจทย์สำคัญของคณะกรรมการฯ</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="p-6 rounded-lg kpi-card">
+                        <h3 class="text-2xl font-bold mb-4">AI-Powered Debtor Segmentation</h3>
+                        <p class="text-gray-300 mb-4">ใช้ AI แยกแยะกลุ่มลูกหนี้เพื่อกำหนดกลยุทธ์ติดตามที่เหมาะสมและเป็นธรรม ตอบโจทย์ "คนลำบาก" และ "คนนิสัยไม่ดี"</p>
+                        <div class="space-y-4">
+                            <div class="flowchart-box">ข้อมูลลูกหนี้ทั้งหมด</div>
+                            <div class="flowchart-arrow">▼</div>
+                            <div class="flowchart-box text-[#F4E285]"><strong>AI Model</strong><br>(วิเคราะห์ประวัติการชำระ, ข้อมูลภายนอก, พฤติกรรม)</div>
+                            <div class="flowchart-arrow">▼</div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="flowchart-box"><strong>กลุ่มเปราะบาง</strong><br>(ขาดสภาพคล่องชั่วคราว)<br>-> เสนอแผนปรับโครงสร้างหนี้</div>
+                                <div class="flowchart-box"><strong>กลุ่มมีศักยภาพ</strong><br>(มีกำลังแต่ผิดนัด)<br>-> แจ้งเตือนอัตโนมัติ</div>
+                                <div class="flowchart-box"><strong>กลุ่มจงใจไม่จ่าย</strong><br>(มีกำลังแต่เพิกเฉย)<br>-> ดำเนินการตามกฎหมาย</div>
+                                <div class="flowchart-box"><strong>กลุ่มปกติ</strong><br>(ชำระตรงเวลา)<br>-> ส่งเสริมความรู้ทางการเงิน</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 rounded-lg kpi-card">
+                        <h3 class="text-2xl font-bold mb-4">Executive Dashboard Mockup</h3>
+                        <p class="text-gray-300 mb-4">ภาพตัวอย่าง Dashboard สำหรับผู้บริหารและคณะกรรมการฯ เพื่อการตัดสินใจที่รวดเร็วและแม่นยำ</p>
+                        <div class="bg-[#0A2463] p-4 rounded-lg border-2 border-[#3E92CC]">
+                            <h4 class="text-lg font-bold">กยศ. Command Center</h4>
+                            <div class="grid grid-cols-2 gap-4 mt-4">
+                                <div class="bg-gray-700/50 p-3 rounded">
+                                    <p class="text-sm text-gray-400">อัตราการชำระหนี้รวม</p>
+                                    <p class="text-2xl font-bold text-[#3E92CC]">85.4%</p>
+                                </div>
+                                <div class="bg-gray-700/50 p-3 rounded">
+                                    <p class="text-sm text-gray-400">ความพึงพอใจผู้กู้ (CSAT)</p>
+                                    <p class="text-2xl font-bold text-[#3E92CC]">92%</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 bg-gray-700/50 p-3 rounded">
+                                <p class="text-sm text-gray-400 mb-2">ประสิทธิภาพการดำเนินงาน (รายไตรมาส)</p>
+                                <div class="h-32 w-full bg-gray-800 rounded flex items-center justify-center text-gray-500">
+                                    [Canvas for Line Chart]
+                                </div>
+                            </div>
+                             <div class="mt-4 bg-gray-700/50 p-3 rounded">
+                                <p class="text-sm text-gray-400 mb-2">สัดส่วนลูกหนี้ตามกลุ่ม AI</p>
+                                <div class="h-32 w-full bg-gray-800 rounded flex items-center justify-center text-gray-500">
+                                    [Canvas for Donut Chart]
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const wrapLabel = (str, maxWidth) => {
+                if (str.length <= maxWidth) {
+                    return str;
+                }
+                const words = str.split(' ');
+                let lines = [];
+                let currentLine = '';
+                for (const word of words) {
+                    if ((currentLine + word).length > maxWidth) {
+                        lines.push(currentLine.trim());
+                        currentLine = '';
+                    }
+                    currentLine += word + ' ';
+                }
+                lines.push(currentLine.trim());
+                return lines;
+            };
+            
+            const commonTooltipConfig = {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join(' ');
+                                } else {
+                                  return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            const kpiTrendCtx = document.getElementById('kpiTrendChart').getContext('2d');
+            new Chart(kpiTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['2566', '2567', '2568', '2569', '2570'],
+                    datasets: [{
+                        label: 'อัตราการชำระหนี้ (%)',
+                        data: [78, 80, 82, 85, 88],
+                        borderColor: '#3E92CC',
+                        backgroundColor: 'rgba(62, 146, 204, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'ความพึงพอใจผู้ใช้ (CSAT %)',
+                        data: [65, 75, 80, 88, 92],
+                        borderColor: '#D8315B',
+                        backgroundColor: 'rgba(216, 49, 91, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'ประสิทธิภาพการดำเนินงาน (%)',
+                        data: [50, 60, 75, 85, 95],
+                        borderColor: '#F4E285',
+                        backgroundColor: 'rgba(244, 226, 133, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: { color: '#FFFFFF' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)'}
+                        },
+                        x: {
+                            ticks: { color: '#FFFFFF' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)'}
+                        }
+                    },
+                    plugins: {
+                        ...commonTooltipConfig.plugins,
+                        legend: {
+                            labels: {
+                                color: '#FFFFFF'
+                            }
+                        }
+                    }
+                }
+            });
+
+            const budgetDonutCtx = document.getElementById('budgetDonutChart').getContext('2d');
+            new Chart(budgetDonutCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [
+                        wrapLabel('Pillar 1: The Stakeholder Journey', 16),
+                        wrapLabel('Pillar 2: Data-Driven Intelligence', 16),
+                        wrapLabel('Pillar 3: Foundational Excellence', 16)
+                    ],
+                    datasets: [{
+                        label: 'สัดส่วนงบประมาณ',
+                        data: [45, 35, 20],
+                        backgroundColor: [
+                            '#3E92CC',
+                            '#D8315B',
+                            '#F4E285'
+                        ],
+                        borderColor: '#0A2463',
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    ...commonTooltipConfig,
+                    plugins: {
+                       ...commonTooltipConfig.plugins,
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#FFFFFF',
+                                font: {
+                                    size: 12
+                                },
+                                boxWidth: 20,
+                                padding: 20,
+                                 generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    if (data.labels.length && data.datasets.length) {
+                                        return data.labels.map(function(label, i) {
+                                            const meta = chart.getDatasetMeta(0);
+                                            const style = meta.controller.getStyle(i);
+                                            const labelText = Array.isArray(label) ? label.join(' ') : label;
+                                            return {
+                                                text: `${labelText}: ${data.datasets[0].data[i]}%`,
+                                                fillStyle: style.backgroundColor,
+                                                strokeStyle: style.borderColor,
+                                                lineWidth: style.borderWidth,
+                                                hidden: isNaN(data.datasets[0].data[i]) || meta.data[i].hidden,
+                                                index: i
+                                            };
+                                        });
+                                    }
+                                    return [];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+�
