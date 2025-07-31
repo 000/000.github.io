@@ -3,391 +3,509 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แผนที่การเปลี่ยนแปลงสู่ดิจิทัล กยศ. พ.ศ. 2566-2570</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <title>แผนการเปลี่ยนผ่านสู่ดิจิทัล กยศ. 2566-2570</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
+        /* 1. Base styles and variables */
         :root {
             --tiffany-blue: #0ABAB5;
-            --peach-fuzz: #FFDAB9;
-            --mocha-mousse: #A57C65;
-            --viva-magenta: #BB2649;
+            --peach-fuzz: #FFBE98;
+            --mocha-mousse: #A47764;
             --ultimate-grey: #949494;
-            --bg-color: #f0f4f8;
-            --text-color: #333;
-            --header-color: #ffffff;
+            --viva-magenta: #BB2649;
+            --bg-white: #FFFFFF;
+            --bg-grey: #F5F5F5;
+            --text-dark: #333333;
+            --text-light: #FFFFFF;
+            --font-family: 'Sarabun', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            font-family: 'Noto Sans Thai', sans-serif;
+            font-family: var(--font-family);
+            background-color: var(--bg-white);
+            color: var(--text-dark);
             margin: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow-x: hidden;
+            min-width: 1200px;
         }
 
+        /* 2. Typography */
+        h1 { font-size: 48px; font-weight: 700; color: var(--tiffany-blue); margin: 0; }
+        h2 { font-size: 32px; font-weight: 600; color: var(--text-dark); margin-bottom: 20px; }
+        h3 { font-size: 20px; font-weight: 600; }
+       .subtitle { font-size: 22px; font-weight: 500; color: #555; margin-top: 10px; }
+       .kpi-metric { font-size: 24px; font-weight: 700; }
+
+        /* 3. Layout grid */
        .container {
-            max-width: 1200px;
+            max-width: 1920px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 40px;
         }
 
-        header {
+       .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 40px;
+            align-items: start;
+        }
+
+       .content-area {
+            grid-column: 1 / 2;
+        }
+
+       .kpi-sidebar {
+            grid-column: 2 / 3;
+            position: sticky;
+            top: 20px;
+            height: calc(100vh - 40px);
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+        
+        /* Custom scrollbar for sidebar */
+       .kpi-sidebar::-webkit-scrollbar { width: 8px; }
+       .kpi-sidebar::-webkit-scrollbar-track { background: #f1f1f1; }
+       .kpi-sidebar::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+       .kpi-sidebar::-webkit-scrollbar-thumb:hover { background: #aaa; }
+
+
+        section {
+            padding: 40px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 4. Header & Components */
+       .header-section {
             text-align: center;
-            padding: 20px 0;
-            background: linear-gradient(135deg, #078282, #0ABAB5);
-            color: var(--header-color);
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 40px 0;
+        }
+       .summary-box {
+            background-color: var(--bg-grey);
+            border-left: 5px solid var(--tiffany-blue);
+            padding: 20px 30px;
+            margin: 30px auto 0;
+            max-width: 900px;
+            text-align: left;
         }
 
-        header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 0;
-            color: var(--header-color);
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-        }
-
-        main {
-            padding-top: 20px;
-        }
-
-        #roadmap-container {
+        /* 5. Timeline components */
+        #timeline-svg {
             width: 100%;
-            overflow-x: auto;
+            height: 800px;
         }
-        
-       .gantt-chart-svg {
-            font-family: 'Noto Sans Thai', sans-serif;
-        }
+       .year-bg { opacity: 0.5; }
+       .journey-lane-label { font-size: 18px; font-weight: 600; fill: #444; }
+       .initiative-box { transition: all 0.3s ease; cursor: pointer; }
+       .initiative-box:hover { transform: scale(1.02); filter: brightness(1.1); }
+       .initiative-title { font-size: 18px; font-weight: 600; fill: var(--text-light); }
+       .initiative-metric { font-size: 14px; font-weight: 500; fill: var(--text-light); opacity: 0.9; }
+       .initiative-icon { font-size: 24px; }
 
-       .axis-x text,.axis-y text {
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-       .year-label {
-            font-size: 18px;
-            font-weight: 700;
-            fill: #555;
-        }
+        /* 6. EA Layers */
+       .ea-layers-section { background-color: var(--bg-grey); padding: 40px; border-radius: 16px; }
+       .ea-grid { display: flex; justify-content: space-around; gap: 20px; }
+       .ea-group { flex: 1; text-align: center; }
+       .ea-group h3 { padding-bottom: 10px; border-bottom: 3px solid; }
+       .ea-item { background-color: var(--bg-white); padding: 10px 15px; border-radius: 8px; margin-top: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
-       .journey-label {
-            font-size: 16px;
-            font-weight: 700;
-            fill: #111;
-        }
-        
-       .journey-icon {
-            font-size: 24px;
-        }
-
-       .task-bar {
-            stroke-width: 1;
-            stroke: rgba(0,0,0,0.2);
-            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.15));
-        }
-
-       .task-label {
-            fill: white;
-            font-size: 13px;
-            font-weight: 500;
-            text-anchor: middle;
-            pointer-events: none;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-        }
-        
-       .kpi-text {
-            font-size: 12px;
-            fill: #444;
-        }
-        
-       .kpi-title {
-            font-weight: 700;
-            font-size: 13px;
-        }
-
-       .section-title {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #333;
-            margin-top: 40px;
+        /* 7. KPI Dashboard */
+       .kpi-card {
+            background-color: var(--bg-grey);
+            padding: 20px;
+            border-radius: 16px;
             margin-bottom: 20px;
-            border-bottom: 3px solid var(--tiffany-blue);
-            display: inline-block;
-            padding-bottom: 5px;
         }
-        
-       .section-container {
-            text-align: center;
-        }
+       .kpi-card h3 { margin-top: 0; }
+       .kpi-chart-container { width: 100%; height: 180px; margin-top: 15px; }
+       .kpi-value-wrapper { display: flex; justify-content: center; align-items: center; gap: 10px; }
 
-       .ea-layers-grid,.legend-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
+        /* 8. Mock Dashboards */
+       .mock-dashboards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+       .dashboard-card { background-color: var(--bg-grey); padding: 25px; border-radius: 16px; }
+       .dashboard-card h3 { margin-top: 0; }
+       .dashboard-mockup-svg { border: 1px solid #ddd; border-radius: 8px; background-color: var(--bg-white); }
 
-       .ea-box,.legend-item {
-            padding: 15px 25px;
-            border-radius: 8px;
-            font-weight: 500;
-            color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            text-align: center;
+        /* 9. Print Styles */
+        @media print {
+            body { min-width: unset; }
+           .kpi-sidebar,.header-section.subtitle,.summary-box { display: none; }
+           .main-layout { display: block; }
+            section { padding: 20px 0; opacity: 1; transform: none; }
+            h1 { font-size: 28px; }
+            h2 { font-size: 22px; }
         }
-        
-       .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-color);
-            background-color: #fff;
-        }
-        
-       .legend-color-box {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-        }
-
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.8rem;
-            }
-           .section-title {
-                font-size: 1.5rem;
-            }
-        }
-
     </style>
 </head>
 <body>
-
-    <header>
-        <h1>แผนที่การเปลี่ยนแปลงสู่ดิจิทัล กยศ. พ.ศ. 2566-2570 (ค.ศ. 2023-2027)</h1>
-    </header>
-
     <div class="container">
-        <main>
-            <div id="roadmap-container">
-                <svg id="gantt-chart" class="gantt-chart-svg"></svg>
+        <header class="header-section">
+            <h1>แผนการเปลี่ยนผ่านสู่ดิจิทัล กยศ.</h1>
+            <p class="subtitle">พ.ศ. 2566 - 2570: เสริมพลังอนาคตด้วยข้อมูลเชิงลึกและความเข้าใจอันดี</p>
+            <div class="summary-box">
+                <h3>เป้าหมายการเปลี่ยนผ่านสู่ดิจิทัล (Key Transformation Goals)</h3>
+                <p>ปรับเปลี่ยน กยศ. สู่องค์กรที่ขับเคลื่อนด้วยข้อมูลอย่างเต็มรูปแบบ โดยมุ่งเน้นการสร้างประสบการณ์ที่เป็นเลิศสำหรับผู้มีส่วนได้ส่วนเสีย เพิ่มประสิทธิภาพการดำเนินงาน และสร้างความยั่งยืนทางการเงินผ่านเทคโนโลยีดิจิทัลและนวัตกรรม</p>
             </div>
+        </header>
 
-            <div class="section-container">
-                <h2 class="section-title">ชั้นสถาปัตยกรรมองค์กร (EA Layers)</h2>
-            </div>
-            <div class="ea-layers-grid">
-                <div class="ea-box" style="background-color: var(--ultimate-grey);">Core Business</div>
-                <div class="ea-box" style="background-color: var(--tiffany-blue);">External Integration</div>
-                <div class="ea-box" style="background-color: var(--viva-magenta);">Security</div>
-                <div class="ea-box" style="background-color: var(--mocha-mousse);">Infrastructure</div>
-            </div>
+        <div class="main-layout">
+            <main class="content-area">
+                <section id="timeline-section">
+                    <h2>เส้นทางการเปลี่ยนผ่านสู่ดิจิทัล (Digital Transformation Journey)</h2>
+                    <svg id="timeline-svg"></svg>
+                </section>
 
-            <div class="section-container">
-                <h2 class="section-title">คำอธิบายสัญลักษณ์</h2>
-            </div>
-            <div class="legend-grid">
-                <div class="legend-item">
-                    <div class="legend-color-box" style="background-color: var(--peach-fuzz);"></div>
-                    <span>Customer Engagement</span>
+                <section id="ea-section" class="ea-layers-section">
+                    <h2>ชั้นสถาปัตยกรรมองค์กร (Enterprise Architecture Layers)</h2>
+                    <div class="ea-grid">
+                        <div class="ea-group">
+                            <h3 style="border-color: var(--tiffany-blue);">Core Business</h3>
+                            <div class="ea-item">ระบบ e-Service กลาง</div>
+                            <div class="ea-item">ระบบ BI Self-Service</div>
+                            <div class="ea-item">ระบบบูรณาการข้อมูล</div>
+                        </div>
+                        <div class="ea-group">
+                            <h3 style="border-color: var(--ultimate-grey);">Security</h3>
+                            <div class="ea-item">Security Infrastructure</div>
+                            <div class="ea-item">ระบบ e-KYC</div>
+                            <div class="ea-item">API Security Gateway</div>
+                        </div>
+                        <div class="ea-group">
+                            <h3 style="border-color: #7BAFB2;">External Integration</h3>
+                            <div class="ea-item">ระบบ API Gateway</div>
+                            <div class="ea-item">LINE Integration</div>
+                            <div class="ea-item">Government Agency Connectors</div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="mock-dashboard-section">
+                    <h2>ภาพตัวอย่าง Dashboard สำหรับผู้บริหาร (Executive Dashboard Mockups)</h2>
+                    <div class="mock-dashboards-grid">
+                        <div class="dashboard-card">
+                            <h3>ศูนย์บัญชาการผู้บริหาร กยศ.</h3>
+                            <svg id="mock-dashboard-1" class="dashboard-mockup-svg" width="100%" height="300"></svg>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>ระบบอัจฉริยะวิเคราะห์การเก็บหนี้</h3>
+                            <svg id="mock-dashboard-2" class="dashboard-mockup-svg" width="100%" height="300"></svg>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+
+            <aside class="kpi-sidebar">
+                <h2>ตัวชี้วัดความสำเร็จ (Program KPIs)</h2>
+                
+                <div class="kpi-card">
+                    <h3>ประสิทธิภาพการดำเนินงาน</h3>
+                    <p>ต้นทุนต่อสินเชื่อ (เป้าหมาย -30%)</p>
+                    <div id="kpi-cost" class="kpi-chart-container"></div>
+                    <p>กระบวนการอัตโนมัติ</p>
+                    <div id="kpi-automation" class="kpi-chart-container"></div>
                 </div>
-                <div class="legend-item">
-                    <div class="legend-color-box" style="background-color: var(--mocha-mousse);"></div>
-                    <span>Data Analytics</span>
+
+                <div class="kpi-card">
+                    <h3>การมีส่วนร่วมของผู้มีส่วนได้ส่วนเสีย</h3>
+                    <p>ความพึงพอใจผู้กู้ (CSAT)</p>
+                    <div id="kpi-csat" class="kpi-chart-container"></div>
+                    <p>อัตราการใช้ช่องทางดิจิทัล</p>
+                    <div id="kpi-digital-adoption" class="kpi-chart-container"></div>
                 </div>
-                <div class="legend-item">
-                    <div class="legend-color-box" style="background-color: var(--viva-magenta);"></div>
-                    <span>AI Integration</span>
+
+                <div class="kpi-card">
+                    <h3>ความสำเร็จตามภารกิจหลัก</h3>
+                    <p>อัตราการเก็บหนี้รวม (เป้าหมาย +10-15%)</p>
+                    <div id="kpi-collection-rate" class="kpi-chart-container"></div>
+                    <p>ระยะเวลาอนุมัติเงินกู้</p>
+                    <div class="kpi-value-wrapper">
+                        <span class="kpi-metric">30 วัน</span>
+                        <span style="font-size: 24px; color: var(--viva-magenta);">→</span>
+                        <span class="kpi-metric" style="color: var(--tiffany-blue);">7 วัน</span>
+                    </div>
                 </div>
-                <div class="legend-item">
-                    <div class="legend-color-box" style="background-color: var(--tiffany-blue);"></div>
-                    <span>Future-Ready Ecosystem</span>
-                </div>
-            </div>
-        </main>
+            </aside>
+        </div>
     </div>
 
     <script>
-        const data = {
-            tasks:,
-            journeys: [
-                { name: "ค้นหาข้อมูล", icon: "🔍" },
-                { name: "ลงทะเบียน/สมัคร", icon: "📝" },
-                { name: "จัดการ", icon: "⚙️" },
-                { name: "สื่อสาร/แจ้งเตือน", icon: "💬" },
-                { name: "รายงาน/วิเคราะห์", icon: "📊" },
-            ],
-            years: [1, 2, 3, 4, 5],
-            kpis: },
-                { year: 2, title: "เป้าหมายปี 2567:", items: ["• Chatbot ตอบคำถามอัตโนมัติ 60%", "• ลดภาระ Call Center 25%"] },
-                { year: 3, title: "เป้าหมายปี 2568:", items: },
-                { year: 4, title: "เป้าหมายปี 2569:", items: },
-                { year: 5, title: "เป้าหมายปี 2570:", items: },
-            ]
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- DATA SETUP ---
+        const timelineData = {
+            journeys: ["ค้นหาข้อมูล/บริการ", "ลงทะเบียน/ยื่นคำขอ", "รับบริการ", "ติดตาม/แจ้งเตือน", "ให้ข้อเสนอแนะ"],
+            years: ,
+            yearColors:,
+            initiatives:
         };
 
-        const drawChart = () => {
-            const container = d3.select("#roadmap-container");
-            const width = container.node().getBoundingClientRect().width;
-            const height = 800;
-            const margin = { top: 60, right: 20, bottom: 40, left: 180 };
-
-            d3.select("#gantt-chart").selectAll("*").remove();
-
-            const svg = d3.select("#gantt-chart")
-               .attr("width", width)
-               .attr("height", height);
+        // --- TIMELINE VISUALIZATION ---
+        function drawTimeline() {
+            const svg = d3.select("#timeline-svg");
+            const width = parseInt(svg.style("width"));
+            const height = parseInt(svg.style("height"));
+            const margin = { top: 50, right: 20, bottom: 20, left: 200 };
 
             const xScale = d3.scaleBand()
-               .domain(data.years)
+               .domain(timelineData.years)
                .range([margin.left, width - margin.right])
-               .padding(0.2);
+               .padding(0.1);
 
             const yScale = d3.scaleBand()
-               .domain(data.journeys.map(j => j.name))
+               .domain(timelineData.journeys)
                .range([margin.top, height - margin.bottom])
-               .padding(0.3);
+               .padding(0.2);
 
-            // X-Axis (Years)
-            svg.append("g")
-               .attr("class", "axis-x")
-               .attr("transform", `translate(0, ${margin.top - 10})`)
-               .call(d3.axisTop(xScale).tickFormat(d => `ปี ${d} (${2565 + d})`).tickSize(0))
-               .select(".domain").remove();
-
-            // Y-Axis (Journeys)
-            const yAxis = svg.append("g")
-               .attr("class", "axis-y")
-               .attr("transform", `translate(${margin.left}, 0)`)
-               .call(d3.axisLeft(yScale).tickSize(0))
-               .select(".domain").remove();
-            
-            yAxis.selectAll("text").remove();
-            
-            svg.selectAll(".journey-group")
-               .data(data.journeys)
-               .enter()
-               .append("g")
-               .attr("transform", d => `translate(${margin.left - 20}, ${yScale(d.name) + yScale.bandwidth() / 2})`)
-               .append("text")
-               .attr("text-anchor", "end")
-               .html(d => `<tspan class="journey-label">${d.name}</tspan> <tspan class="journey-icon">${d.icon}</tspan>`);
-
-
-            // Grid lines
-            svg.append("g")
-               .attr("class", "grid")
-               .selectAll("line")
-               .data(data.years)
-               .enter().append("line")
-               .attr("x1", d => xScale(d) + xScale.bandwidth() / 2)
-               .attr("x2", d => xScale(d) + xScale.bandwidth() / 2)
-               .attr("y1", margin.top)
-               .attr("y2", height - margin.bottom)
-               .attr("stroke", "#e0e0e0")
-               .attr("stroke-dasharray", "4");
-
-            // Task bars
-            const bars = svg.append("g")
-               .selectAll("g")
-               .data(data.tasks)
-               .enter()
-               .append("g");
-
-            bars.append("rect")
-               .attr("class", "task-bar")
-               .attr("x", d => xScale(d.startYear))
-               .attr("y", d => yScale(d.journey) + yScale.bandwidth() * 0.2)
-               .attr("width", d => (xScale(d.endYear) - xScale(d.startYear)) + xScale.bandwidth())
-               .attr("height", yScale.bandwidth() * 0.6)
-               .attr("rx", 8)
-               .attr("ry", 8)
-               .style("fill", d => d.color);
-
-            bars.append("text")
-               .attr("class", "task-label")
-               .attr("x", d => xScale(d.startYear) + ((xScale(d.endYear) - xScale(d.startYear)) + xScale.bandwidth()) / 2)
-               .attr("y", d => yScale(d.journey) + yScale.bandwidth() / 2)
-               .attr("dy", "0.35em")
-               .text(d => d.name);
-                
-            // KPIs
-            const kpiGroups = svg.append("g")
-               .selectAll("g")
-               .data(data.kpis)
-               .enter()
-               .append("g")
-               .attr("transform", d => `translate(${xScale(d.year) + 10}, ${height - margin.bottom + 20})`);
-
-            kpiGroups.each(function(d) {
-                const group = d3.select(this);
-                group.append("text")
-                   .attr("class", "kpi-title")
-                   .text(d.title);
-                d.items.forEach((item, i) => {
-                    group.append("text")
-                       .attr("class", "kpi-text")
-                       .attr("y", (i + 1) * 18)
-                       .text(item);
-                });
-            });
-            
-            // Mock Dashboard
-            const mockDashboardX = xScale(5) + 15;
-            const mockDashboardY = yScale("รายงาน/วิเคราะห์") - 100;
-            const dbGroup = svg.append("g")
-               .attr("transform", `translate(${mockDashboardX}, ${mockDashboardY})`);
-
-            dbGroup.append("rect")
-               .attr("width", xScale.bandwidth() - 30)
-               .attr("height", 120)
-               .attr("rx", 10)
-               .attr("fill", "#fff")
-               .attr("stroke", "#ccc")
-               .style("filter", "drop-shadow(0px 3px 5px rgba(0,0,0,0.1))");
-            
-            dbGroup.append("text").text("Executive Dashboard").attr("x", 10).attr("y", 20).style("font-size", "12px").style("font-weight", "bold");
-            
-            // Mock pie chart
-            const pieData = ;
-            const pie = d3.pie();
-            const arc = d3.arc().innerRadius(0).outerRadius(20);
-            const pieColors = ["var(--tiffany-blue)", "var(--peach-fuzz)", "var(--viva-magenta)"];
-            
-            dbGroup.append("g")
-               .attr("transform", "translate(40, 65)")
-               .selectAll("path")
-               .data(pie(pieData))
-               .enter()
-               .append("path")
-               .attr("d", arc)
-               .attr("fill", (d, i) => pieColors[i]);
-
-            // Mock bar chart
-            const barData = [5, 6, 3, 7];
-            dbGroup.append("g")
-               .attr("transform", `translate(${xScale.bandwidth() / 2 - 10}, 45)`)
-               .selectAll("rect")
-               .data(barData)
-               .enter()
+            // Year backgrounds
+            svg.append("g").selectAll("rect")
+               .data(timelineData.years).enter()
                .append("rect")
-               .attr("x", (d, i) => i * 12)
-               .attr("y", d => 50 - d * 3)
-               .attr("width", 10)
-               .attr("height", d => d * 3)
-               .attr("fill", "var(--mocha-mousse)");
-        };
+               .attr("class", "year-bg")
+               .attr("x", d => xScale(d))
+               .attr("y", margin.top)
+               .attr("width", xScale.bandwidth())
+               .attr("height", height - margin.top - margin.bottom)
+               .attr("fill", (d, i) => timelineData.yearColors[i]);
 
-        drawChart();
-        window.addEventListener('resize', drawChart);
+            // Year labels
+            svg.append("g").selectAll("text")
+               .data(timelineData.years).enter()
+               .append("text")
+               .attr("x", d => xScale(d) + xScale.bandwidth() / 2)
+               .attr("y", margin.top - 15)
+               .attr("text-anchor", "middle")
+               .style("font-size", "28px")
+               .style("font-weight", "500")
+               .text(d => `พ.ศ. ${d}`);
 
+            // Journey labels (swim lanes)
+            svg.append("g").selectAll("text")
+               .data(timelineData.journeys).enter()
+               .append("text")
+               .attr("class", "journey-lane-label")
+               .attr("x", margin.left - 15)
+               .attr("y", d => yScale(d) + yScale.bandwidth() / 2)
+               .attr("text-anchor", "end")
+               .attr("dominant-baseline", "middle")
+               .text(d => d);
+
+            // Initiative boxes
+            timelineData.initiatives.forEach(d => {
+                const g = svg.append("g").attr("class", "initiative-box");
+                
+                let yPos, boxHeight;
+                if (d.journey === "all") {
+                    yPos = margin.top + 5;
+                    boxHeight = height - margin.top - margin.bottom - 10;
+                } else {
+                    yPos = yScale(d.journey);
+                    boxHeight = yScale.bandwidth();
+                }
+                
+                const xPos = xScale(d.start);
+                const boxWidth = (xScale(d.end) - xScale(d.start)) + xScale.bandwidth();
+
+                g.append("rect")
+                   .attr("x", xPos)
+                   .attr("y", yPos)
+                   .attr("width", boxWidth)
+                   .attr("height", boxHeight)
+                   .attr("rx", 15)
+                   .attr("fill", d.color)
+                   .attr("fill-opacity", 0.8);
+
+                const textGroup = g.append("g")
+                   .attr("transform", `translate(${xPos + boxWidth / 2}, ${yPos + boxHeight / 2})`);
+
+                textGroup.append("text")
+                   .attr("class", "initiative-icon")
+                   .attr("y", -15)
+                   .attr("text-anchor", "middle")
+                   .text(d.icon);
+                
+                textGroup.append("text")
+                   .attr("class", "initiative-title")
+                   .attr("y", 10)
+                   .attr("text-anchor", "middle")
+                   .text(d.name);
+
+                textGroup.append("text")
+                   .attr("class", "initiative-metric")
+                   .attr("y", 35)
+                   .attr("text-anchor", "middle")
+                   .text(d.metric);
+            });
+        }
+
+        // --- KPI CHARTS ---
+        function createGauge(selector, value, max, label, unit) {
+            const svg = d3.select(selector).append("svg").attr("viewBox", "0 0 200 120");
+            const arc = d3.arc().innerRadius(40).outerRadius(55).startAngle(-Math.PI / 2).endAngle(Math.PI / 2);
+            
+            svg.append("path").attr("d", arc).attr("transform", "translate(100, 100)").attr("fill", "#E0E0E0");
+            
+            const valueArc = d3.arc().innerRadius(40).outerRadius(55).startAngle(-Math.PI / 2)
+               .endAngle(-Math.PI / 2 + (Math.PI * (value / max)));
+            
+            svg.append("path").attr("d", valueArc).attr("transform", "translate(100, 100)").attr("fill", "var(--viva-magenta)");
+            
+            svg.append("text").attr("x", 100).attr("y", 95).attr("text-anchor", "middle")
+               .attr("class", "kpi-metric").text(`${value}${unit}`);
+        }
+
+        function createCircularProgress(selector, value, targetValue, label) {
+            const svg = d3.select(selector).append("svg").attr("viewBox", "0 0 120 120");
+            const radius = 50;
+            const arc = d3.arc().innerRadius(radius - 10).outerRadius(radius).startAngle(0);
+
+            svg.append("path").attr("d", arc({endAngle: 2 * Math.PI})).attr("transform", "translate(60,60)").attr("fill", "#E0E0E0");
+            
+            const foreground = svg.append("path").attr("transform", "translate(60,60)").attr("fill", "var(--tiffany-blue)");
+            
+            foreground.transition().duration(1500)
+               .attrTween("d", () => {
+                    const interpolate = d3.interpolate(0, (value / targetValue) * 2 * Math.PI);
+                    return t => arc({endAngle: interpolate(t)});
+                });
+
+            svg.append("text").attr("x", 60).attr("y", 65).attr("text-anchor", "middle")
+               .attr("class", "kpi-metric").text(`${value > 0? '+' : ''}${value}%`);
+        }
+        
+        function createBarChart(selector, start, end) {
+            const data = [{label: '2566', value: start}, {label: '2570', value: end}];
+            const svg = d3.select(selector).append("svg").attr("viewBox", "0 0 150 120");
+            const xScale = d3.scaleBand().domain(data.map(d=>d.label)).range().padding(0.4);
+            const yScale = d3.scaleLinear().domain().range();
+
+            svg.selectAll("rect").data(data).enter().append("rect")
+               .attr("x", d => xScale(d.label))
+               .attr("y", d => yScale(d.value))
+               .attr("width", xScale.bandwidth())
+               .attr("height", d => 100 - yScale(d.value))
+               .attr("fill", (d,i) => i === 0? "var(--ultimate-grey)" : "var(--tiffany-blue)");
+
+            svg.selectAll("text").data(data).enter().append("text")
+               .attr("x", d => xScale(d.label) + xScale.bandwidth()/2)
+               .attr("y", d => yScale(d.value) - 5)
+               .attr("text-anchor", "middle")
+               .style("font-size", "14px")
+               .text(d => `${d.value}%`);
+        }
+
+        function createLineChart(selector, start, end) {
+            const data = [{year: 2566, value: start}, {year: 2570, value: end}];
+            const svg = d3.select(selector).append("svg").attr("viewBox", "0 0 150 120");
+            const xScale = d3.scaleLinear().domain().range();
+            const yScale = d3.scaleLinear().domain().range();
+            const line = d3.line().x(d=>xScale(d.year)).y(d=>yScale(d.value));
+
+            svg.append("path").datum(data).attr("fill", "none").attr("stroke", "var(--viva-magenta)").attr("stroke-width", 3).attr("d", line);
+            svg.selectAll("circle").data(data).enter().append("circle").attr("cx", d=>xScale(d.year)).attr("cy", d=>yScale(d.value)).attr("r", 5).attr("fill", "var(--viva-magenta)");
+        }
+
+        function createDonutChart(selector, start, end) {
+            const data =;
+            const svg = d3.select(selector).append("svg").attr("viewBox", "0 0 120 120");
+            const pie = d3.pie().value(d=>d.value).sort(null);
+            const arc = d3.arc().innerRadius(35).outerRadius(50);
+
+            svg.selectAll("path").data(pie(data)).enter().append("path")
+               .attr("d", arc)
+               .attr("fill", (d,i) => i === 0? "var(--tiffany-blue)" : "#E0E0E0")
+               .attr("transform", "translate(60,60)");
+
+            svg.append("text").attr("x", 60).attr("y", 65).attr("text-anchor", "middle")
+               .attr("class", "kpi-metric").text(`${end}%`);
+        }
+
+        // --- MOCK DASHBOARDS ---
+        function drawMockDashboard1() {
+            const svg = d3.select("#mock-dashboard-1");
+            //... complex drawing logic for a miniature dashboard...
+            svg.append("text").attr("x", 20).attr("y", 30).text("ภาพรวมผลการดำเนินงาน").style("font-size", "18px").style("font-weight", "600");
+            // Mock KPI Dials
+            svg.append("circle").attr("cx", 80).attr("cy", 80).attr("r", 30).attr("fill", "var(--tiffany-blue)").attr("opacity", 0.2);
+            svg.append("text").attr("x", 80).attr("y", 85).text("85%").attr("text-anchor", "middle").style("font-weight", "bold");
+            svg.append("text").attr("x", 80).attr("y", 125).text("เก็บหนี้").attr("text-anchor", "middle");
+
+            svg.append("circle").attr("cx", 200).attr("cy", 80).attr("r", 30).attr("fill", "var(--peach-fuzz)").attr("opacity", 0.3);
+            svg.append("text").attr("x", 200).attr("y", 85).text("92%").attr("text-anchor", "middle").style("font-weight", "bold");
+            svg.append("text").attr("x", 200).attr("y", 125).text("CSAT").attr("text-anchor", "middle");
+
+            // Mock Map
+            svg.append("rect").attr("x", 300).attr("y", 50).attr("width", 200).attr("height", 150).attr("fill", "#E0F2F1").attr("rx", 10);
+            svg.append("text").attr("x", 400).attr("y", 130).text("Heat Map").attr("text-anchor", "middle").attr("fill", "#777");
+        }
+
+        function drawMockDashboard2() {
+            const svg = d3.select("#mock-dashboard-2");
+            const data = {
+                name: "root",
+                children:
+            };
+            const treemap = d3.treemap().size().padding(4);
+            const root = d3.hierarchy(data).sum(d => d.value);
+            treemap(root);
+
+            const nodes = svg.selectAll("g").data(root.leaves()).enter().append("g")
+               .attr("transform", d => `translate(${d.x0 + 20}, ${d.y0 + 50})`);
+
+            nodes.append("rect")
+               .attr("width", d => d.x1 - d.x0)
+               .attr("height", d => d.y1 - d.y0)
+               .attr("fill", d => d.data.color)
+               .attr("rx", 5);
+
+            nodes.append("text")
+               .attr("x", d => (d.x1 - d.x0) / 2)
+               .attr("y", d => (d.y1 - d.y0) / 2)
+               .attr("text-anchor", "middle")
+               .attr("dominant-baseline", "middle")
+               .style("font-size", "14px")
+               .style("font-weight", "600")
+               .text(d => d.data.name);
+        }
+
+        // --- SCROLL ANIMATIONS ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    if(entry.target.id === 'kpi-cost') {
+                        createCircularProgress('#kpi-cost', -30, 100);
+                        createBarChart('#kpi-automation', 10, 75);
+                        createLineChart('#kpi-csat', 65, 90);
+                        createDonutChart('#kpi-digital-adoption', 40, 95);
+                        createGauge('#kpi-collection-rate', 12, 15, 'เก็บหนี้', '%');
+                        observer.unobserve(entry.target); // Animate only once
+                    }
+                }
+            });
+        });
+        
+        document.querySelectorAll('section,.kpi-card').forEach(el => observer.observe(el));
+        observer.observe(document.getElementById('kpi-cost'));
+
+
+        // --- INITIAL DRAW ---
+        drawTimeline();
+        drawMockDashboard1();
+        drawMockDashboard2();
+    });
     </script>
 </body>
 </html>
