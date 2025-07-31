@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนการเปลี่ยนผ่านสู่ดิจิทัล กยศ. 2566-2570</title>
+    <style>
+        /* CSS Variables for Color Palette */
+        :root {
+            --tiffany-blue: #0ABAB5;
+            --peach-fuzz: #FFBE98;
+            --mocha-mousse: #A47764;
+            --ultimate-grey: #939597;
+            --viva-magenta: #BB2649;
+            --white: #FFFFFF;
+            --dark-grey: #333333;
+            --light-grey: #F5F5F5;
+        }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--dark-grey);
+            background-color: var(--light-grey);
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--tiffany-blue) 0%, var(--mocha-mousse) 100%);
+            color: var(--white);
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-style: italic;
+            opacity: 0.95;
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Section Styles */
+        section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--tiffany-blue);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Roadmap Visualization Container */
+        #roadmap-visualization {
+            min-height: 600px;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        #roadmap-svg {
+            width: 100%;
+            min-width: 1200px;
+            height: 600px;
+        }
+
+        /* KPI Dashboard Styles */
+        #kpi-dashboard {
+            background: linear-gradient(to bottom, var(--white), #fafafa);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .kpi-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--viva-magenta);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .kpi-title {
+            font-size: 1.1rem;
+            color: var(--dark-grey);
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--viva-magenta);
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-change {
+            font-size: 0.9rem;
+            color: var(--ultimate-grey);
+        }
+
+        /* Enterprise Architecture Layers */
+        .ea-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .ea-layer {
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .ea-layer:hover {
+            transform: scale(1.05);
+        }
+
+        .ea-layer h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .ea-layer ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .ea-layer li {
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            background: rgba(255,255,255,0.9);
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .business-layer {
+            background-color: var(--tiffany-blue);
+        }
+
+        .data-layer {
+            background-color: var(--mocha-mousse);
+        }
+
+        .application-layer {
+            background-color: var(--peach-fuzz);
+        }
+
+        .technology-layer {
+            background-color: var(--ultimate-grey);
+        }
+
+        /* Tooltip Styles */
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 12px;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.9);
+            color: var(--white);
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1440px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 2rem 1rem;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            main {
+                padding: 1rem;
+            }
+            
+            section {
+                padding: 1.5rem;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .ea-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+            
+            section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>แผนการเปลี่ยนผ่านสู่ดิจิทัล กยศ. 2566-2570</h1>
+        <p class="subtitle">Empowering Futures Through Intelligence and Empathy</p>
+    </header>
+    
+    <main>
+        <section id="roadmap-visualization" aria-label="Digital Transformation Roadmap Timeline">
+            <h2 class="section-title">แผนงานการพัฒนาระบบดิจิทัล</h2>
+            <svg id="roadmap-svg" role="img" aria-label="Gantt chart showing digital initiatives timeline"></svg>
+            <div class="tooltip" role="tooltip"></div>
+        </section>
+        
+        <section id="kpi-dashboard" aria-label="Key Performance Indicators">
+            <h2 class="section-title">ตัวชี้วัดความสำเร็จหลัก (KPIs)</h2>
+            <div class="kpi-grid">
+                <div class="kpi-card" tabindex="0">
+                    <h3 class="kpi-title">อัตราการเก็บหนี้</h3>
+                    <div class="kpi-value">65% → 80%</div>
+                    <div class="kpi-change">เพิ่มขึ้น 15% ภายใน 5 ปี</div>
+                </div>
+                <div class="kpi-card" tabindex="0">
+                    <h3 class="kpi-title">ความพึงพอใจผู้ใช้</h3>
+                    <div class="kpi-value">65% → 90%</div>
+                    <div class="kpi-change">เพิ่มขึ้น 25% ภายใน 5 ปี</div>
+                </div>
+                <div class="kpi-card" tabindex="0">
+                    <h3 class="kpi-title">ต้นทุนต่อรายการ</h3>
+                    <div class="kpi-value">ลดลง 30%</div>
+                    <div class="kpi-change">จากการทำงานอัตโนมัติ</div>
+                </div>
+                <div class="kpi-card" tabindex="0">
+                    <h3 class="kpi-title">ระยะเวลาอนุมัติ</h3>
+                    <div class="kpi-value">30 วัน → 7 วัน</div>
+                    <div class="kpi-change">เร็วขึ้น 76%</div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="ea-layers" aria-label="Enterprise Architecture Layers">
+            <h2 class="section-title">สถาปัตยกรรมองค์กร</h2>
+            <div class="ea-container">
+                <div class="ea-layer business-layer" tabindex="0">
+                    <h3>Business Layer</h3>
+                    <ul>
+                        <li>กระบวนการทางธุรกิจ</li>
+                        <li>นโยบายและกฎระเบียบ</li>
+                    </ul>
+                </div>
+                <div class="ea-layer data-layer" tabindex="0">
+                    <h3>Data Layer</h3>
+                    <ul>
+                        <li>Data Lake</li>
+                        <li>Analytics Platform</li>
+                        <li>AI/ML Models</li>
+                    </ul>
+                </div>
+                <div class="ea-layer application-layer" tabindex="0">
+                    <h3>Application Layer</h3>
+                    <ul>
+                        <li>Core Banking System</li>
+                        <li>CRM Platform</li>
+                        <li>Mobile Applications</li>
+                    </ul>
+                </div>
+                <div class="ea-layer technology-layer" tabindex="0">
+                    <h3>Technology Layer</h3>
+                    <ul>
+                        <li>Cloud Infrastructure</li>
+                        <li>Security Framework</li>
+                        <li>API Gateway</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        // D3.js Implementation for Gantt Chart
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configuration
+            const margin = {top: 60, right: 120, bottom: 60, left: 250};
+            const svgElement = document.getElementById('roadmap-svg');
+            const width = svgElement.clientWidth - margin.left - margin.right;
+            const height = svgElement.clientHeight - margin.top - margin.bottom;
+            
+            // Customer Journey Stages
+            const yCategories = [
+                "การสมัครและอนุมัติสินเชื่อ",
+                "การเบิกจ่ายเงินกู้",
+                "การติดตามและแจ้งเตือน",
+                "การชำระคืนเงินกู้",
+                "การติดตามหนี้",
+                "การรายงานและวิเคราะห์"
+            ];
+            
+            // Digital Initiatives Data
+            const initiatives = [
+                {
+                    name: "ระบบ e-Service กลาง",
+                    start: new Date(2023, 0, 1),
+                    end: new Date(2024, 11, 31),
+                    category: "การสมัครและอนุมัติสินเชื่อ",
+                    color: "var(--peach-fuzz)",
+                    kpi: "ลดเวลาการให้บริการ 20%"
+                },
+                {
+                    name: "ระบบ AI Chatbot",
+                    start: new Date(2024, 0, 1),
+                    end: new Date(2027, 11, 31),
+                    category: "การติดตามและแจ้งเตือน",
+                    color: "var(--peach-fuzz)",
+                    kpi: "ตอบคำถามอัตโนมัติ 60%"
+                },
+                {
+                    name: "ระบบ e-KYC",
+                    start: new Date(2024, 0, 1),
+                    end: new Date(2025, 11, 31),
+                    category: "การสมัครและอนุมัติสินเชื่อ",
+                    color: "var(--tiffany-blue)",
+                    kpi: "ลดเวลาตรวจสอบเหลือ 1 ชั่วโมง"
+                },
+                {
+                    name: "ระบบแจ้งเตือนผ่าน LINE/API",
+                    start: new Date(2025, 0, 1),
+                    end: new Date(2027, 11, 31),
+                    category: "การติดตามและแจ้งเตือน",
+                    color: "var(--peach-fuzz)",
+                    kpi: "ลดการผิดนัดชำระ 15%"
+                },
+                {
+                    name: "ระบบ BI Self-Service",
+                    start: new Date(2025, 0, 1),
+                    end: new Date(2027, 11, 31),
+                    category: "การรายงานและวิเคราะห์",
+                    color: "var(--mocha-mousse)",
+                    kpi: "Real-time Dashboard"
+                },
+                {
+                    name: "AI-Powered Debtor Segmentation",
+                    start: new Date(2026, 0, 1),
+                    end: new Date(2027, 11, 31),
+                    category: "การติดตามหนี้",
+                    color: "var(--mocha-mousse)",
+                    kpi: "เพิ่มอัตราการเก็บหนี้ 10%"
+                },
+                {
+                    name: "บริการ Personalization ผ่าน AI",
+                    start: new Date(2026, 0, 1),
+                    end: new Date(2027, 11, 31),
+                    category: "การชำระคืนเงินกู้",
+                    color: "var(--peach-fuzz)",
+                    kpi: "เพิ่มความพึงพอใจ 25%"
+                }
+            ];
+            
+            // Create SVG
+            const svg = d3.select("#roadmap-svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom);
+            
+            const g = svg.append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+            
+            // Create scales
+            const xScale = d3.scaleTime()
+                .domain([new Date(2023, 0, 1), new Date(2027, 11, 31)])
+                .range([0, width]);
+            
+            const yScale = d3.scaleBand()
+                .domain(yCategories)
+                .range([0, height])
+                .padding(0.2);
+            
+            // Add grid lines
+            const xGrid = d3.axisBottom(xScale)
+                .tickSize(height)
+                .tickFormat("")
+                .ticks(5);
+            
+            g.append("g")
+                .attr("class", "grid")
+                .attr("opacity", 0.1)
+                .call(xGrid);
+            
+            // Add X axis
+            const xAxis = d3.axisBottom(xScale)
+                .tickFormat(d => {
+                    const year = d.getFullYear();
+                    return `ปี ${year + 543}`;
+                })
+                .ticks(5);
+            
+            g.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(xAxis)
+                .append("text")
+                .attr("x", width / 2)
+                .attr("y", 40)
+                .attr("fill", "black")
+                .style("text-anchor", "middle")
+                .text("ระยะเวลา");
+            
+            // Add Y axis
+            const yAxis = d3.axisLeft(yScale);
+            
+            g.append("g")
+                .call(yAxis)
+                .selectAll("text")
+                .style("font-size", "14px");
+            
+            // Create tooltip
+            const tooltip = d3.select(".tooltip");
+            
+            // Add initiative boxes
+            const boxes = g.selectAll(".initiative")
+                .data(initiatives)
+                .enter().append("g")
+                .attr("class", "initiative");
+            
+            boxes.append("rect")
+                .attr("x", d => xScale(d.start))
+                .attr("y", d => yScale(d.category))
+                .attr("width", d => xScale(d.end) - xScale(d.start))
+                .attr("height", yScale.bandwidth())
+                .attr("fill", d => d.color)
+                .attr("rx", 8)
+                .attr("ry", 8)
+                .style("cursor", "pointer")
+                .style("filter", "drop-shadow(2px 2px 4px rgba(0,0,0,0.2))")
+                .on("mouseover", function(event, d) {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .style("filter", "drop-shadow(4px 4px 8px rgba(0,0,0,0.3))");
+                    
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    
+                    tooltip.html(`<strong>${d.name}</strong><br/>KPI: ${d.kpi}`)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function(d) {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .style("filter", "drop-shadow(2px 2px 4px rgba(0,0,0,0.2))");
+                    
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
+            
+            // Add text labels
+            boxes.append("text")
+                .attr("x", d => xScale(d.start) + (xScale(d.end) - xScale(d.start)) / 2)
+                .attr("y", d => yScale(d.category) + yScale.bandwidth() / 2)
+                .attr("dy", ".35em")
+                .attr("text-anchor", "middle")
+                .style("fill", "white")
+                .style("font-size", "12px")
+                .style("font-weight", "600")
+                .style("pointer-events", "none")
+                .text(d => d.name)
+                .each(function(d) {
+                    const self = d3.select(this);
+                    const textLength = self.node().getComputedTextLength();
+                    const boxWidth = xScale(d.end) - xScale(d.start);
+                    if (textLength > boxWidth - 10) {
+                        const words = d.name.split(' ');
+                        self.text('');
+                        
+                        let tspan = self.append('tspan')
+                            .attr('x', xScale(d.start) + boxWidth / 2)
+                            .attr('dy', '-0.3em');
+                        
+                        let line = [];
+                        let lineNumber = 0;
+                        
+                        words.forEach((word, i) => {
+                            line.push(word);
+                            tspan.text(line.join(' '));
+                            if (tspan.node().getComputedTextLength() > boxWidth - 10) {
+                                line.pop();
+                                tspan.text(line.join(' '));
+                                line = [word];
+                                tspan = self.append('tspan')
+                                    .attr('x', xScale(d.start) + boxWidth / 2)
+                                    .attr('dy', '1.2em')
+                                    .text(word);
+                            }
+                        });
+                    }
+                });
+            
+            // Add connecting lines for dependencies
+            const connections = [
+                {from: "ระบบ e-Service กลาง", to: "ระบบ e-KYC"},
+                {from: "ระบบ e-KYC", to: "ระบบ BI Self-Service"},
+                {from: "ระบบ BI Self-Service", to: "AI-Powered Debtor Segmentation"}
+            ];
+            
+            // Add legend
+            const legendData = [
+                {label: "Stakeholder-Centricity", color: "var(--peach-fuzz)"},
+                {label: "Trust & Foundation", color: "var(--tiffany-blue)"},
+                {label: "Data & Intelligence", color: "var(--mocha-mousse)"}
+            ];
+            
+            const legend = svg.append("g")
+                .attr("transform", `translate(${width + margin.left + 20}, ${margin.top})`);
+            
+            legendData.forEach((item, i) => {
+                const legendRow = legend.append("g")
+                    .attr("transform", `translate(0, ${i * 25})`);
+                
+                legendRow.append("rect")
+                    .attr("width", 20)
+                    .attr("height", 20)
+                    .attr("fill", item.color)
+                    .attr("rx", 4);
+                
+                legendRow.append("text")
+                    .attr("x", 25)
+                    .attr("y", 15)
+                    .style("font-size", "12px")
+                    .text(item.label);
+            });
+            
+            // Add title
+            svg.append("text")
+                .attr("x", (width + margin.left + margin.right) / 2)
+                .attr("y", 30)
+                .attr("text-anchor", "middle")
+                .style("font-size", "18px")
+                .style("font-weight", "bold")
+                .text("Customer Journey Digital Transformation Timeline");
+            
+            // Responsive handling
+            function handleResize() {
+                const newWidth = svgElement.clientWidth - margin.left - margin.right;
+                if (newWidth !== width) {
+                    location.reload(); // Simple reload for demo purposes
+                }
+            }
+            
+            window.addEventListener('resize', handleResize);
+            
+            // Accessibility enhancements
+            svg.attr("role", "img")
+                .attr("aria-label", "Digital transformation roadmap showing initiatives across customer journey stages from 2566 to 2570");
+            
+            // Add keyboard navigation
+            boxes.attr("tabindex", "0")
+                .on("focus", function(event, d) {
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    
+                    const rect = this.getBoundingClientRect();
+                    tooltip.html(`<strong>${d.name}</strong><br/>KPI: ${d.kpi}`)
+                        .style("left", (rect.left + rect.width / 2) + "px")
+                        .style("top", (rect.top - 28) + "px");
+                })
+                .on("blur", function() {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
+        });
+        
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Performance monitoring
+        if ('performance' in window) {
+            window.addEventListener('load', () => {
+                const perfData = window.performance.timing;
+                const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+                console.log(`Page load time: ${pageLoadTime}ms`);
+            });
+        }
+    </script>
+</body>
+</html>
