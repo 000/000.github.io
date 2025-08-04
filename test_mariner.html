@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Comparison (August 2025)</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        caption {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .good { color: green; }
+        .neutral { color: orange; }
+        .weak { color: red; }
+        .note { font-style: italic; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+    <h1>Large Language Model Comparison (as of August 2025)</h1>
+
+    <table>
+        <caption>Model Feature Comparison</caption>
+        <thead>
+            <tr>
+                <th>Feature</th>
+                <th>Grok 4 Heavy</th>
+                <th>Claude 4 Opus</th>
+                <th>OpenAI o3-pro</th>
+                <th>Kimi K2</th>
+                <th>Deepseek R2</th>
+                <th>Gemini 2.5 Pro</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Overall Strength</strong></td>
+                <td>Top-tier reasoning & math, autonomous. <span class="note">Heavy mode is costly.</span></td>
+                <td>Leading complex reasoning & code quality.</td>
+                <td>Highly reliable, strong all-rounder.</td>
+                <td>Open-weight, large scale (MoE). <span class="note">Newer, less benchmarked vs top tier here.</span></td>
+                <td>Highly cost-effective, competitive performance.</td>
+                <td>Fast, excellent price/performance, multimodal leader.</td>
+            </tr>
+            <tr>
+                <td><strong>Reasoning & Planning</strong></td>
+                <td class="good">Excellent</td>
+                <td class="good">Excellent (Leading)</td>
+                <td class="good">Excellent</td>
+                <td class="neutral">Good/Competitive</td>
+                <td class="neutral">Good/Competitive</td>
+                <td class="neutral">Good (Fast, but can be less deep)</td>
+            </tr>
+            <tr>
+                <td><strong>Coding</strong></td>
+                <td class="good">Very Good (Benchmarks, Algorithmic)</td>
+                <td class="good">Excellent (Quality, Taste, SWE-bench leader)</td>
+                <td class="good">Very Good (Reasoning, Utility)</td>
+                <td class="neutral">Competitive</td>
+                <td class="neutral">Competitive</td>
+                <td class="neutral">Good (Not consistently top-tier)</td>
+            </tr>
+            <tr>
+                <td><strong>Context Handling</strong></td>
+                <td>256k tokens, good recall</td>
+                <td>200k tokens, excellent recall</td>
+                <td>Good context handling (specific size varies)</td>
+                <td>Large (1T parameters, effective context size varies)</td>
+                <td>Good</td>
+                <td>1M tokens (Leading)</td>
+            </tr>
+            <tr>
+                <td><strong>Tool Use</strong></td>
+                <td class="good">Excellent (Autonomous)</td>
+                <td class="neutral">Good (Conservative but predictable)</td>
+                <td class="neutral">Good (Needs setup)</td>
+                <td class="neutral">Capable</td>
+                <td class="neutral">Capable</td>
+                <td class="neutral">Good (Needs guidance)</td>
+            </tr>
+            <tr>
+                <td><strong>Multimodality</strong></td>
+                <td class="neutral">Good image processing</td>
+                <td class="neutral">Strong image understanding</td>
+                <td class="neutral">Solid multimodal</td>
+                <td class="neutral">Limited/Developing</td>
+                <td class="neutral">Limited</td>
+                <td class="good">Excellent (Video, Audio, Image - Leading)</td>
+            </tr>
+            <tr>
+                <td><strong>Cost</strong></td>
+                <td>Premium (Heavy mode very high)</td>
+                <td>Premium</td>
+                <td>Premium (Pro tier)</td>
+                <td class="good">Very Low / Open-weight</td>
+                <td class="good">Very Low / Free tier</td>
+                <td class="good">Competitive / Good Value</td>
+            </tr>
+            <tr>
+                <td><strong>Key Differentiator</strong></td>
+                <td>Elite reasoning/math, autonomy</td>
+                <td>Nuanced understanding, code finesse</td>
+                <td>Reliability, all-around strength</td>
+                <td>Open-weight, scale</td>
+                <td>Cost-effectiveness</td>
+                <td>Multimodal mastery, context length</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p><strong>Note:</strong> This comparison is based on information available around August 2025. The AI landscape evolves rapidly, so details may change. "o3-pro" refers to OpenAI's higher-tier offering. Kimi K2 and Deepseek R2 are presented as strong open-weight/low-cost alternatives.</p>
+
+</body>
+</html>
