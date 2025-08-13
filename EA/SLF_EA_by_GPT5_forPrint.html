@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>กยศ. — TOGAF EA (Print‑ready, High Contrast)</title>
+
+<!-- ฟอนต์: ใช้ Sarabun/TH Sarabun New หากมีในเครื่อง; มี fallback มาตรฐาน -->
+<style>
+  :root{
+    /* Core text & neutrals (high contrast for print) */
+    --ink:#000000;
+    --muted:#333333;
+    --paper:#ffffff;
+    --line:#111111;       /* ใช้เส้นเข้มบาง ๆ เพื่อเห็นชัดแม้พิมพ์ขาว‑ดำ */
+
+    /* TOGAF/ArchiMate‑like palette (high‑contrast, print‑friendly) */
+    --tgf-business:#ffb300;    /* Amber/Business */
+    --tgf-data:#007f7f;        /* Teal/Data */
+    --tgf-application:#0d6efd; /* Blue/Application */
+    --tgf-technology:#2e7d32;  /* Green/Technology */
+    --tgf-security:#6f42c1;    /* Purple/Security & Governance */
+
+    /* Accent helpers (monochrome‑safe) */
+    --ok:#0b6e0b;     /* success text */
+    --warn:#8a6a00;   /* warning text */
+    --err:#7a001e;    /* error text */
+  }
+
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Sarabun","TH Sarabun New",Tahoma,Arial,sans-serif;
+    line-height:1.45; font-size:11.5pt;
+  }
+
+  /* Page & print setup */
+  @page { size: A4; margin: 14mm 14mm 16mm 14mm; }
+  .container{max-width:940px;margin:0 auto;padding:0}
+  .header{margin-bottom:8mm}
+  h1,h2,h3,h4{margin:0 0 4mm 0; line-height:1.25}
+  h1{font-size:20pt}
+  h2{font-size:16pt; border-bottom:1px solid var(--line); padding-bottom:2mm}
+  h3{font-size:13pt}
+  h4{font-size:11.5pt; color:var(--muted)}
+
+  .legend{display:flex;flex-wrap:wrap;gap:6mm;margin:4mm 0 2mm 0}
+  .legend .item{display:flex;align-items:center;gap:3.5mm;font-size:10.5pt}
+  .legend .swatch{width:12px;height:12px;border-radius:2px;border:1px solid var(--line)}
+
+  /* Cards/blocks: ใช้แถบสีซ้ายแทนพื้นหลังเพื่อพิมพ์สวย */
+  .block{
+    border:1px solid var(--line);
+    border-left:6px solid var(--line);
+    padding:4mm 5mm; margin:4mm 0;
+    break-inside: avoid; page-break-inside: avoid;
+    background:var(--paper);
+  }
+  .b-business{border-left-color:var(--tgf-business)}
+  .b-data{border-left-color:var(--tgf-data)}
+  .b-app{border-left-color:var(--tgf-application)}
+  .b-tech{border-left-color:var(--tgf-technology)}
+  .b-sec{border-left-color:var(--tgf-security)}
+
+  .meta{display:flex;gap:3mm;flex-wrap:wrap;margin-top:1.5mm}
+  .chip{
+    border:1px solid var(--line); padding:1.5mm 3mm; border-radius:3mm; font-size:10pt;
+    break-inside: avoid; page-break-inside: avoid;
+  }
+
+  /* Lists & metrics */
+  ul{margin:0;padding-left:5mm}
+  li{margin:1.2mm 0}
+  .kpi{display:flex;gap:3mm;flex-wrap:wrap;margin:2mm 0 0 0}
+  .kpi .n{font-weight:700}
+
+  /* Tables (repeat header on each printed page) */
+  table{width:100%; border-collapse:collapse; font-size:10.5pt; margin:2.5mm 0}
+  th,td{border:1px solid var(--line); padding:2.5mm; vertical-align:top}
+  thead{display:table-header-group}
+  tfoot{display:table-footer-group}
+  th{background:#f2f2f2}
+
+  /* Two column grid that collapses well on print */
+  .cols-2{display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+  .cols-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4mm}
+  @media print {
+    .cols-3{grid-template-columns:1fr 1fr} /* ลดเหลือ 2 คอลัมน์เวลาแคบ */
+  }
+
+  /* Section separator for print rhythm */
+  .sep{height:2mm}
+
+  /* Sub‑titles colored bullets */
+  .tagline{margin:2mm 0 0 0; color:var(--muted); font-size:10.5pt}
+  .note{font-size:10pt; color:var(--muted)}
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <h1>สถาปัตยกรรมองค์กร (TOGAF‑Based EA) — กยศ.</h1>
+      <div class="tagline">
+        มุ่งสู่ <strong>Customer‑Centric Digital Organization</strong> ด้วยสี่โดเมนหลัก (Business, Data, Application, Technology)
+        และชั้น <strong>Security &amp; Governance</strong> ที่ครอบคลุมทุกชั้น
+      </div>
+
+      <!-- Legend: TOGAF/ArchiMate‑like colors -->
+      <div class="legend">
+        <div class="item"><span class="swatch" style="background:var(--tgf-business)"></span>Business</div>
+        <div class="item"><span class="swatch" style="background:var(--tgf-data)"></span>Data</div>
+        <div class="item"><span class="swatch" style="background:var(--tgf-application)"></span>Application</div>
+        <div class="item"><span class="swatch" style="background:var(--tgf-technology)"></span>Technology</div>
+        <div class="item"><span class="swatch" style="background:var(--tgf-security)"></span>Security &amp; Governance</div>
+      </div>
+
+      <div class="meta">
+        <span class="chip">Self‑Service ≥ 90% ธุรกรรม</span>
+        <span class="chip">อนุมัติ 14 → 7 วัน</span>
+        <span class="chip">เบิกจ่าย ≤ 3 วันทำการ</span>
+        <span class="chip">ISO/IEC 27001:2022 + Zero Trust</span>
+        <span class="chip">ข้อมูลผู้กู้ ~ 7.15 ล้านบัญชี</span>
+      </div>
+    </div>
+
+    <!-- EA Stack Overview -->
+    <h2>ภาพรวมสถาปัตยกรรม (TOGAF EA Stack)</h2>
+    <div class="block b-sec">
+      <h3>Security &amp; Governance (ครอบคลุมทุกชั้น)</h3>
+      <ul>
+        <li><strong>Zero Trust (ZTNA)</strong> — “Never Trust, Always Verify”, ป้องกัน Lateral Movement</li>
+        <li><strong>ISO/IEC 27001:2022</strong> — ISMS ครบ 4 มิติ (องค์กร/บุคลากร/กายภาพ/เทคโนโลยี)</li>
+        <li><strong>SOC/SIEM + AI</strong> — ลด False Positive ~70%, Automated Playbook ~30 วินาที</li>
+        <li><strong>PDPA (GPPC)</strong>, <strong>Audit Trail</strong> (Immutable, เก็บ 3 ปี), <strong>RBAC/ABAC + PAM</strong></li>
+      </ul>
+    </div>
+
+    <div class="block b-business">
+      <h3>Business Architecture</h3>
+      <ul>
+        <li><strong>Customer Journey (End‑to‑End):</strong> ยื่นกู้ → อนุมัติ → เบิกจ่าย → ชำระหนี้ → ติดตามหนี้/คดี</li>
+        <li><strong>Stakeholder Engagement:</strong> ผู้กู้ยืม, สถานศึกษา (4,000+), สำนักงานทนายความ (200+), หน่วยงานเชื่อมโยง (50+)</li>
+        <li><strong>ผลลัพธ์:</strong> เวลาบริการสั้นลง, ประสบการณ์ดิจิทัลดีขึ้น, รายงาน/แดชบอร์ดเพื่อการตัดสินใจ</li>
+      </ul>
+    </div>
+
+    <div class="block b-data">
+      <h3>Data Architecture</h3>
+      <ul>
+        <li><strong>Big Data (Petabyte‑scale):</strong> Object Storage (S3‑compatible, Erasure Coding, Lifecycle→Cold), Distributed FS (HDFS, 50+ nodes, HA, Spark/MapReduce)</li>
+        <li><strong>PII Protection (PDPA):</strong> Dynamic/Static Data Masking (FPE/Tokenization/AES‑256), Discovery &amp; Catalog, Sensitivity 4 ระดับ</li>
+        <li><strong>Data Exchange &amp; API Standards:</strong> OpenAPI 3.0, OAuth2+JWT, TH e‑GIF XML/JSON/CSV, TLS1.3, SFTP/FTPS, Kafka Streaming</li>
+      </ul>
+    </div>
+
+    <div class="block b-app">
+      <h3>Application Architecture</h3>
+      <ul>
+        <li><strong>DSL (Digital Student Loan):</strong> ครอบคลุมสมัคร‑อนุมัติ‑เบิกจ่าย‑ชำระ‑ปรับโครงสร้างหนี้ (ตาม พ.ร.บ. ฉบับที่ 2), รองรับ 7.15M บัญชี ~50k คำขอ/วัน</li>
+        <li><strong>CRM &amp; Contact Center:</strong> Omni‑channel, SLA Ticketing, Cloud IVR/Skill Routing, Speech Analytics</li>
+        <li><strong>Analytics:</strong> Power BI/Tableau (Near Real‑time ~15 นาที), Advanced ML (Credit/Default/Churn/Collection Optimization)</li>
+        <li><strong>Supporting:</strong> Chatbot (NLP TH, 24/7, Accuracy ~92%), SMS Gateway (500k/วัน), DMS (50M+ ฉบับ, OCR/AI Classify)</li>
+      </ul>
+    </div>
+
+    <div class="block b-tech">
+      <h3>Technology Architecture</h3>
+      <ul>
+        <li><strong>Infrastructure:</strong> HCI (ลดความซับซ้อน ~60%, Snapshot/4ชม.), Oracle 19c EE (RAC/HA, Data Guard/DR), DC Network 100Gbps (SDN/VXLAN)</li>
+        <li><strong>Cloud Services:</strong> LMS (10k concurrent, 50TB + CDN), Backup 3‑2‑1 (Daily 02:00, PITR 30 วัน, Archive 7 ปี)</li>
+        <li><strong>DR Site:</strong> ปทุมธานี, Active‑Passive, Sync Replication, RTO 4 ชม., RPO 15 นาที (ทดสอบรายไตรมาส)</li>
+        <li><strong>End‑User Computing:</strong> เช่า Desktop 444 + Notebook 60, Windows 11/M365/AV, On‑site 4ชม., ลด OPEX บำรุงรักษา ~35%</li>
+      </ul>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- Business Journey (พิมพ์แนวตั้ง) -->
+    <h2>Customer Journey แบบ End‑to‑End (แนวตั้งเพื่อการพิมพ์)</h2>
+    <div class="cols-2">
+      <div class="block b-business">
+        <h3>1) ยื่นกู้ (Application)</h3>
+        <ul>
+          <li>DOPA Digital ID, e‑Studentloan Portal/Mobile</li>
+          <li>AI Assistant + OCR + Rule Engine ตรวจคุณสมบัติทันที</li>
+          <li>Save Draft, Progress Bar, นัดหมายออนไลน์</li>
+        </ul>
+        <div class="kpi"><span class="n">ระยะเวลาเป้าหมาย:</span> ≈ 15 นาที</div>
+      </div>
+
+      <div class="block b-business">
+        <h3>2) อนุมัติ (Approval)</h3>
+        <ul>
+          <li>Workflow อัตโนมัติ + AI Scoring</li>
+          <li>ยืนยันเอกสารผ่าน API กับ 5 หน่วยงานภาครัฐแบบ Real‑time</li>
+          <li>e‑Meeting + Digital Signature, แจ้งผล SMS/Email/Push</li>
+        </ul>
+        <div class="kpi"><span class="n">ระยะเวลาเป้าหมาย:</span> 14 → 7 วัน</div>
+      </div>
+
+      <div class="block b-business">
+        <h3>3) เบิกจ่าย (Disbursement)</h3>
+        <ul>
+          <li>PromptPay/บัญชีธนาคาร, แบ่งงวดตามภาคเรียน</li>
+          <li>Check‑in กับสถานศึกษาก่อนโอน, e‑Receipt, Refund อัตโนมัติ</li>
+          <li>Smart Contract เงื่อนไขการจ่าย, Payment Tracking</li>
+        </ul>
+        <div class="kpi"><span class="n">ระยะเวลาเป้าหมาย:</span> ≤ 3 วันทำการ</div>
+      </div>
+
+      <div class="block b-business">
+        <h3>4) ชำระหนี้ (Repayment)</h3>
+        <ul>
+          <li>10+ ช่องทาง (Mobile/ATM/QR/Direct Debit/Credit/ฯลฯ)</li>
+          <li>คำนวณดอกเบี้ยรายวัน, Flexible Payment, Auto‑reminder 7/3/1 วัน</li>
+          <li>Installment Calculator, เอกสารลดหย่อนภาษี</li>
+        </ul>
+      </div>
+
+      <div class="block b-business">
+        <h3>5) ติดตามหนี้ &amp; คดี (Collection &amp; Legal)</h3>
+        <ul>
+          <li>Collection Scoring 5 ระดับ + Predictive Analytics (คาดการณ์ 30 วัน)</li>
+          <li>Omni‑channel (SMS/Call/Email/LINE) + Chatbot เจรจาเบื้องต้น</li>
+          <li>Field Routing, Legal Portal/Court Integration, ปรับโครงสร้างหนี้ออนไลน์</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- Mapping tables -->
+    <h2>Mapping ตามแนวทาง TOGAF (Catalogs/Matrices) และตัวชี้วัด</h2>
+
+    <div class="block b-app">
+      <h3>Business Capability ↔ Application/Analytics Mapping</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Business Capability</th>
+            <th>สนับสนุนโดยระบบ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Application (ยื่นกู้)</td>
+            <td>DSL, DMS(OCR), Rule Engine, AI Assistant, e‑Signature</td>
+          </tr>
+          <tr>
+            <td>Approval (อนุมัติ)</td>
+            <td>DSL Workflow, API Verification (5 หน่วยงาน), e‑Meeting</td>
+          </tr>
+          <tr>
+            <td>Disbursement (เบิกจ่าย)</td>
+            <td>DSL Payment, PromptPay/Bank, Smart Contract, Payment Tracking</td>
+          </tr>
+          <tr>
+            <td>Repayment (ชำระหนี้)</td>
+            <td>DSL Billing, 10+ ช่องทาง, Calculator, Reminder/SMS, Portal/Mobile</td>
+          </tr>
+          <tr>
+            <td>Collection &amp; Legal</td>
+            <td>Analytics (Prediction/Scoring), CRM/Contact Center, Legal Portal, Field Collection</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cols-3">
+      <div class="block b-sec">
+        <h3>KPI: Security</h3>
+        <ul>
+          <li>MTTD/MTTR ลดลง รายไตรมาส</li>
+          <li>เหตุการณ์ High/Critical ลดลงต่อเนื่อง</li>
+          <li>เหตุเข้าถึง PII โดยมิชอบ = 0</li>
+        </ul>
+      </div>
+      <div class="block b-business">
+        <h3>KPI: Engagement/Service</h3>
+        <ul>
+          <li>อัตราใช้ Portal/Mobile/Chatbot เพิ่มขึ้น</li>
+          <li>SLA เวลาบริการเฉลี่ยลดลง</li>
+          <li>CSAT/NPS ดีขึ้น</li>
+        </ul>
+      </div>
+      <div class="block b-tech">
+        <h3>KPI: Operations</h3>
+        <ul>
+          <li>Availability ระบบหลัก ≥ 99.9%</li>
+          <li>เวลารอบงาน (ยื่นกู้/ปรับโครงสร้าง/ติดตามหนี้) สั้นลง</li>
+          <li>ต้นทุนต่อธุรกรรมลดลง</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- Roadmap (2566–2570) -->
+    <h2>Roadmap สังเคราะห์ 2566–2570</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ปี</th>
+          <th>สาระสำคัญ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2566</td>
+          <td>วาง ISMS, เริ่ม Data Engineering, พัฒนา DSL เบื้องต้น</td>
+        </tr>
+        <tr>
+          <td>2567</td>
+          <td>ขยาย Portal/Mobile, เปิด Dashboard ชุดแรก, ตั้ง API Gateway</td>
+        </tr>
+        <tr>
+          <td>2568</td>
+          <td>BI ครอบคลุม 50+ Dashboard, Chatbot 24/7, DR Drill สม่ำเสมอ</td>
+        </tr>
+        <tr>
+          <td>2569</td>
+          <td>Zero Trust + SOC/SIEM (AI), Data Masking, ขยาย DSL (ชำระ/ปรับโครงสร้างหนี้), บริหารงบตามแผนที่ปรับปรุง</td>
+        </tr>
+        <tr>
+          <td>2570</td>
+          <td>Optimize Analytics ด้าน Collection/Legal, Board‑level KPI &amp; Governance Dashboards</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="note">
+      เนื้อหา/ตัวเลขสำคัญ (เช่น งบ/กิจกรรม, ISO 27001:2022, Zero Trust, DSL, Data Masking, SOC/SIEM, LMS, DR‑Site ฯลฯ)
+      อ้างอิงและสังเคราะห์จาก “ระเบียบวาระที่ 3.1” ทั้งฉบับที่ท่านแนบ.  [oai_citation:1‡วาระ3.1ขออนุมัติแผนปฏิบัติการดิจิทัลกองทุ.docx](file-service://file-Pw5wngvJo41ERrFhnAsaM5)
+    </p>
+
+  </div>
+</body>
+</html>
