@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>กยศ. Enterprise Architecture (TOGAF Framework) - Digital Transformation Roadmap</title>
+  
+  <!-- Icons & Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #0b5ed7;
+      --primary-dark: #0a4db4;
+      --secondary: #1793ff;
+      --accent: #28a745;
+      --warning: #ffc107;
+      --danger: #dc3545;
+      --info: #17a2b8;
+      --dark: #222;
+      --light: #f8f9fa;
+      --muted: #6c757d;
+      --bg: #f7f9fc;
+      --card: #ffffff;
+      --border: #e6eaf0;
+      --shadow: 0 10px 30px rgba(11,94,215,0.08);
+      --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-2: linear-gradient(135deg, #0b5ed7 0%, #1793ff 100%);
+      --gradient-3: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: 'Sarabun', 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Navigation */
+    .nav-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .logo i { font-size: 1.5rem; }
+
+    .nav-menu {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-link {
+      color: var(--dark);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    .nav-link:hover { color: var(--primary); }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after { width: 100%; }
+
+    /* Hero Section */
+    .hero {
+      margin-top: 80px;
+      padding: 4rem 2rem;
+      background: var(--gradient-2);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: rotate 30s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .hero-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      opacity: 0.95;
+      margin-bottom: 2rem;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem;
+      border-radius: 15px;
+      border: 1px solid rgba(255,255,255,0.2);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255,255,255,0.2);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Sections */
+    section {
+      padding: 4rem 0;
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .section-desc {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* TOGAF Architecture Stack */
+    .togaf-stack {
+      background: white;
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .togaf-stack::before {
+      content: 'TOGAF Framework';
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--gradient-3);
+      color: white;
+      padding: 0.5rem 1.5rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .architecture-layer {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .architecture-layer:hover {
+      transform: translateX(10px);
+      border-color: var(--primary);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .layer-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .layer-icon {
+      width: 50px;
+      height: 50px;
+      background: white;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--primary);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .layer-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .layer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .component-card {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    .component-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+      border-color: var(--primary);
+    }
+
+    .component-card h4 {
+      font-size: 1rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .component-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Customer Journey */
+    .journey-container {
+      background: white;
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+    }
+
+    .journey-timeline {
+      display: flex;
+      position: relative;
+      min-width: 1200px;
+      padding: 2rem 0;
+    }
+
+    .journey-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+      z-index: 1;
+    }
+
+    .journey-step {
+      flex: 1;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 1rem;
+    }
+
+    .step-icon {
+      width: 80px;
+      height: 80px;
+      background: white;
+      border: 4px solid var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .step-icon:hover {
+      transform: scale(1.1);
+      background: var(--primary);
+      color: white;
+    }
+
+    .step-content {
+      background: var(--light);
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+      width: 100%;
+      min-height: 150px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .step-content:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+
+    .step-title {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .step-details {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .step-time {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    /* KPI Dashboard */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .kpi-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--gradient-2);
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .kpi-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .kpi-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--light);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    .kpi-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .kpi-change.positive {
+      background: rgba(40, 167, 69, 0.1);
+      color: var(--accent);
+    }
+
+    .kpi-change.negative {
+      background: rgba(220, 53, 69, 0.1);
+      color: var(--danger);
+    }
+
+    .kpi-chart {
+      margin-top: 1rem;
+      height: 80px;
+      background: linear-gradient(to right, rgba(11, 94, 215, 0.1), rgba(11, 94, 215, 0.3));
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-chart::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: var(--primary);
+      opacity: 0.2;
+      border-radius: 10px 10px 0 0;
+    }
+
+    /* Technology Stack Grid */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .tech-category {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .tech-category-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .tech-category-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--gradient-2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .tech-category-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .tech-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .tech-tag {
+      background: var(--light);
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      color: var(--dark);
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .tech-tag:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Security Badge */
+    .security-badge {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: white;
+      border-radius: 15px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 100;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .security-badge-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--gradient-3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .security-badge-text {
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .security-badge-status {
+      font-size: 0.85rem;
+      color: var(--accent);
+    }
+
+    /* Roadmap Timeline */
+    .roadmap-container {
+      background: white;
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: var(--shadow);
+    }
+
+    .roadmap-timeline {
+      position: relative;
+      padding: 2rem 0;
+    }
+
+    .roadmap-line {
+      position: absolute;
+      left: 50px;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--primary) 0%, var(--accent) 100%);
+    }
+
+    .roadmap-item {
+      position: relative;
+      padding-left: 100px;
+      margin-bottom: 3rem;
+    }
+
+    .roadmap-year {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 80px;
+      height: 80px;
+      background: white;
+      border: 4px solid var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .roadmap-content {
+      background: var(--light);
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .roadmap-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 1rem;
+    }
+
+    .roadmap-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .roadmap-tag {
+      background: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: white;
+      padding: 3rem 0;
+      text-align: center;
+      margin-top: 4rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .tech-grid { grid-template-columns: repeat(2, 1fr); }
+      .journey-timeline { min-width: 100%; flex-direction: column; }
+      .journey-line { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+      .nav-menu { display: none; }
+      .tech-grid { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: 1fr; }
+      .roadmap-item { padding-left: 70px; }
+      .roadmap-year { width: 50px; height: 50px; font-size: 1rem; }
+      .security-badge { bottom: 1rem; right: 1rem; padding: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav-wrapper">
+    <div class="nav-container">
+      <div class="logo">
+        <i class="fas fa-university"></i>
+        <span>กยศ. Enterprise Architecture</span>
+      </div>
+      <ul class="nav-menu">
+        <li><a href="#overview" class="nav-link">Overview</a></li>
+        <li><a href="#architecture" class="nav-link">Architecture</a></li>
+        <li><a href="#journey" class="nav-link">Journey</a></li>
+        <li><a href="#kpi" class="nav-link">KPIs</a></li>
+        <li><a href="#roadmap" class="nav-link">Roadmap</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Digital Transformation Journey</h1>
+      <p class="hero-subtitle">กองทุนเงินให้กู้ยืมเพื่อการศึกษา - Customer-Centric Digital Organization</p>
+      
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-number">7.15M</span>
+          <span class="stat-label">บัญชีผู้กู้ยืม</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">90%</span>
+          <span class="stat-label">Self-Service Coverage</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">50K</span>
+          <span class="stat-label">ธุรกรรม/วัน</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">24/7</span>
+          <span class="stat-label">Digital Services</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">ISO 27001</span>
+          <span class="stat-label">Security Certified</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">Zero Trust</span>
+          <span class="stat-label">Architecture</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOGAF Architecture Stack -->
+  <section id="architecture" class="container">
+    <div class="section-header">
+      <h2 class="section-title">Enterprise Architecture Stack</h2>
+      <p class="section-desc">สถาปัตยกรรมองค์กรแบบครบวงจร 5 ชั้น ตามกรอบ TOGAF</p>
+    </div>
+
+    <div class="togaf-stack">
+      <!-- Business Architecture -->
+      <div class="architecture-layer">
+        <div class="layer-header">
+          <div class="layer-icon"><i class="fas fa-sitemap"></i></div>
+          <h3 class="layer-title">1. Business Architecture</h3>
+        </div>
+        <div class="layer-content">
+          <div class="component-card">
+            <h4><i class="fas fa-users"></i> Customer Journey</h4>
+            <p>ครอบคลุม End-to-End ตั้งแต่ยื่นกู้ → อนุมัติ → เบิกจ่าย → ชำระหนี้ → ติดตามหนี้</p>
+          </div>
+          <div class="component-card">
+            <h4><i class="fas fa-handshake"></i> Stakeholder Engagement</h4>
+            <p>ผู้กู้ยืม 7.15M | สถานศึกษา 4,000+ | ทนายความ 200+ | หน่วยงาน 50+</p>
+          </div>
+          <div class="component-card">
+            <h4><i class="fas fa-chart-line"></i> Business Capabilities</h4>
+            <p>Self-Service 90% | Approval 7 วัน | Disbursement 3 วัน | Collection Analytics</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Architecture -->
+      <div class="architecture-layer">
+        <div class="layer-header">
+          <div class="layer-icon"><i class="fas fa-database"></i></div>
+          <h3 class="layer-title">2. Data Architecture</h3>
+        </div>
+        <div class="layer-content">
+          <div class="component-card">
+            <h4><i class="fas fa-server"></i> Big Data Platform</h4>
+            <p>Petabyte-scale | Object Storage | HDFS 50+ nodes | 10 GB/s throughput</p>
+          </div>
+          <div class="component-card">
+            <h4><i class="fas fa-user-shield"></i> Data Protection</h4>
+            <p>Dynamic/Static Masking | PII Discovery | PDPA Compliance | AES-256</p>
+          </div>
+          <div class="component-card">
+            <h4><i class="fas fa-exchange-alt"></i> Data Exchange</h4>
+            <p>REST API | OAuth 2.0 | TH e-GIF | Kafka Streaming | Blockchain-ready</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Application Architecture -->
+      <div class="architecture-layer">
+        <div class="layer-header">
+          <div class="layer-icon"><i class="fas fa-cube"></i></div>
+          <h3 class="layer-title">3. Application Architecture</h3>
+        </div>
+        <div class="layer-content">
+          <div class="component-card">
+            <h4><i class="fas fa-laptop-code"></i> Core Systems</h4>
+            <p>DSL Platform | CRM 360° | Contact Center | 50,000 transactions/day</p>
+          </div>
+          <div class="component-card">
+            <h4><i class="fas fa-chart-bar"></i> Analytics</h4>
+            <p>Power BI/Tableau | ML/DL Models | Predictive Analytics | Real-time Dashboard</p>
+          </div>
+          <div class="component-card">
+            <h4><i class="fas fa-puzzle-piece"></i> Supporting Systems</h4>
+            <p>AI Chatbot 92% accuracy | SMS Gateway 500K/day | DMS 50M+ docs</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technology Architecture -->
+      <div class="architecture-layer">
+        <div class="layer-header">
+          <div class="layer-icon"><i class="fas fa-microchip"></i></div>
+          <h3 class="layer-title">4. Technology Architecture</h3>
+        </div>
+        <div class="layer-content">
+          <div class="component-card">
+            <h4><i class="fas fa-server"></i> Infrastructure</h4>
+            <p>HCI | Oracle 19c RAC | 100 Gbps SDN | VMware vSphere</p>
+          </div>
+          <div class="component-card">
+            <h4><i class="fas fa-cloud"></i> Cloud Services</h4>
+            <p>LMS 10K users | Backup 3-2-1 | DR Site RTO 4hr RPO 15min</p>
+          </div>
+          <div class="component-card">
+            <h4><i class="fas fa-desktop"></i> End-User</h4>
+            <p>Desktop 444 | Notebook 60 | Windows 11 | M365 | 36-48 months lease</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security & Governance -->
+      <div class="architecture-layer" style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);">
+        <div class="layer-header">
+          <div class="layer-icon"><i class="fas fa-shield-alt"></i></div>
+          <h3 class="layer-title">5. Security & Governance (Cross-cutting)</h3>
+        </div>
+        <div class="layer-content">
+          <div class="component-card">
+            <h4><i class="fas fa-lock"></i> Framework</h4>
+            <p>ISO 27001:2022 | Zero Trust (ZTNA) | Never Trust, Always Verify</p>
+          </div>
+          <div class="component-card">
+            <h4><i class="fas fa-user-secret"></i> Protection</h4>
+            <p>IPS/NGFW | SOC/SIEM 24/7 | AI Threat Detection | 30s Response</p>
+          </div>
+          <div class="component-card">
+            <h4><i class="fas fa-balance-scale"></i> Compliance</h4>
+            <p>PDPA GPPC | Audit Trail 3 years | RBAC/ABAC | PAM</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Customer Journey -->
+  <section id="journey" class="container">
+    <div class="section-header">
+      <h2 class="section-title">Customer Journey</h2>
+      <p class="section-desc">กระบวนการให้บริการแบบ End-to-End ด้วยเทคโนโลยีดิจิทัล</p>
+    </div>
+
+    <div class="journey-container">
+      <div class="journey-timeline">
+        <div class="journey-line"></div>
+        
+        <div class="journey-step">
+          <div class="step-icon"><i class="fas fa-file-alt"></i></div>
+          <div class="step-content">
+            <h4 class="step-title">ยื่นกู้ (Application)</h4>
+            <p class="step-details">
+              DOPA Digital ID<br>
+              AI Assistant + OCR<br>
+              Rule Engine<br>
+              Save Draft & Progress
+            </p>
+            <span class="step-time">15 นาที</span>
+          </div>
+        </div>
+
+        <div class="journey-step">
+          <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+          <div class="step-content">
+            <h4 class="step-title">อนุมัติ (Approval)</h4>
+            <p class="step-details">
+              Workflow Automation<br>
+              AI Scoring<br>
+              5-Agency Verification<br>
+              Digital Signature
+            </p>
+            <span class="step-time">7 วัน</span>
+          </div>
+        </div>
+
+        <div class="journey-step">
+          <div class="step-icon"><i class="fas fa-money-bill-wave"></i></div>
+          <div class="step-content">
+            <h4 class="step-title">เบิกจ่าย (Disbursement)</h4>
+            <p class="step-details">
+              PromptPay/Bank<br>
+              Smart Contract<br>
+              e-Receipt<br>
+              Payment Tracking
+            </p>
+            <span class="step-time">3 วันทำการ</span>
+          </div>
+        </div>
+
+        <div class="journey-step">
+          <div class="step-icon"><i class="fas fa-wallet"></i></div>
+          <div class="step-content">
+            <h4 class="step-title">ชำระหนี้ (Repayment)</h4>
+            <p class="step-details">
+              10+ Channels<br>
+              Flexible Payment<br>
+              Auto-reminder<br>
+              Tax Deduction
+            </p>
+            <span class="step-time">Real-time</span>
+          </div>
+        </div>
+
+        <div class="journey-step">
+          <div class="step-icon"><i class="fas fa-balance-scale"></i></div>
+          <div class="step-content">
+            <h4 class="step-title">ติดตามหนี้ (Collection)</h4>
+            <p class="step-details">
+              Predictive Analytics<br>
+              Omni-channel<br>
+              Legal Tracking<br>
+              Debt Restructuring
+            </p>
+            <span class="step-time">Automated</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KPI Dashboard -->
+  <section id="kpi" class="container">
+    <div class="section-header">
+      <h2 class="section-title">Key Performance Indicators</h2>
+      <p class="section-desc">ตัวชี้วัดผลการดำเนินงานและความสำเร็จของ Digital Transformation</p>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">Self-Service Coverage</span>
+          <div class="kpi-icon"><i class="fas fa-laptop"></i></div>
+        </div>
+        <div class="kpi-value">90%</div>
+        <span class="kpi-change positive">
+          <i class="fas fa-arrow-up"></i> +15% YoY
+        </span>
+        <div class="kpi-chart"></div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">System Availability</span>
+          <div class="kpi-icon"><i class="fas fa-server"></i></div>
+        </div>
+        <div class="kpi-value">99.95%</div>
+        <span class="kpi-change positive">
+          <i class="fas fa-arrow-up"></i> +0.05% QoQ
+        </span>
+        <div class="kpi-chart"></div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">Security Incidents</span>
+          <div class="kpi-icon"><i class="fas fa-shield-alt"></i></div>
+        </div>
+        <div class="kpi-value">Zero</div>
+        <span class="kpi-change positive">
+          <i class="fas fa-check-circle"></i> PII Protected
+        </span>
+        <div class="kpi-chart"></div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">Processing Time</span>
+          <div class="kpi-icon"><i class="fas fa-clock"></i></div>
+        </div>
+        <div class="kpi-value">7 Days</div>
+        <span class="kpi-change positive">
+          <i class="fas fa-arrow-down"></i> -50% Reduction
+        </span>
+        <div class="kpi-chart"></div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">Customer Satisfaction</span>
+          <div class="kpi-icon"><i class="fas fa-smile"></i></div>
+        </div>
+        <div class="kpi-value">85%</div>
+        <span class="kpi-change positive">
+          <i class="fas fa-arrow-up"></i> +8% Improvement
+        </span>
+        <div class="kpi-chart"></div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">Digital Adoption</span>
+          <div class="kpi-icon"><i class="fas fa-mobile-alt"></i></div>
+        </div>
+        <div class="kpi-value">80%</div>
+        <span class="kpi-change positive">
+          <i class="fas fa-arrow-up"></i> +25% Growth
+        </span>
+        <div class="kpi-chart"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technology Stack -->
+  <section class="container">
+    <div class="section-header">
+      <h2 class="section-title">Technology Stack</h2>
+      <p class="section-desc">เทคโนโลยีและเครื่องมือที่ใช้ในการพัฒนาและดำเนินงาน</p>
+    </div>
+
+    <div class="tech-grid">
+      <div class="tech-category">
+        <div class="tech-category-header">
+          <div class="tech-category-icon"><i class="fas fa-database"></i></div>
+          <h3 class="tech-category-title">Data & Analytics</h3>
+        </div>
+        <div class="tech-items">
+          <span class="tech-tag">Oracle 19c</span>
+          <span class="tech-tag">Apache Hadoop</span>
+          <span class="tech-tag">Apache Spark</span>
+          <span class="tech-tag">Power BI</span>
+          <span class="tech-tag">Tableau</span>
+          <span class="tech-tag">Apache Kafka</span>
+          <span class="tech-tag">Object Storage</span>
+        </div>
+      </div>
+
+      <div class="tech-category">
+        <div class="tech-category-header">
+          <div class="tech-category-icon"><i class="fas fa-shield-alt"></i></div>
+          <h3 class="tech-category-title">Security</h3>
+        </div>
+        <div class="tech-items">
+          <span class="tech-tag">Zero Trust</span>
+          <span class="tech-tag">IPS/NGFW</span>
+          <span class="tech-tag">SOC/SIEM</span>
+          <span class="tech-tag">Data Masking</span>
+          <span class="tech-tag">OAuth 2.0</span>
+          <span class="tech-tag">TLS 1.3</span>
+          <span class="tech-tag">ISO 27001</span>
+        </div>
+      </div>
+
+      <div class="tech-category">
+        <div class="tech-category-header">
+          <div class="tech-category-icon"><i class="fas fa-cloud"></i></div>
+          <h3 class="tech-category-title">Infrastructure</h3>
+        </div>
+        <div class="tech-items">
+          <span class="tech-tag">HCI</span>
+          <span class="tech-tag">VMware vSphere</span>
+          <span class="tech-tag">SDN 100Gbps</span>
+          <span class="tech-tag">Cloud LMS</span>
+          <span class="tech-tag">DR Site</span>
+          <span class="tech-tag">Backup 3-2-1</span>
+          <span class="tech-tag">CDN</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Roadmap -->
+  <section id="roadmap" class="container">
+    <div class="section-header">
+      <h2 class="section-title">Digital Transformation Roadmap</h2>
+      <p class="section-desc">แผนการพัฒนาระยะ 5 ปี (2566-2570)</p>
+    </div>
+
+    <div class="roadmap-container">
+      <div class="roadmap-timeline">
+        <div class="roadmap-line"></div>
+        
+        <div class="roadmap-item">
+          <div class="roadmap-year">2566</div>
+          <div class="roadmap-content">
+            <h4 class="roadmap-title">Foundation & Security</h4>
+            <div class="roadmap-items">
+              <span class="roadmap-tag">ISO 27001 Certification</span>
+              <span class="roadmap-tag">Data Engineering Setup</span>
+              <span class="roadmap-tag">DSL Core Development</span>
+              <span class="roadmap-tag">ISMS Implementation</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-year">2567</div>
+          <div class="roadmap-content">
+            <h4 class="roadmap-title">Digital Expansion</h4>
+            <div class="roadmap-items">
+              <span class="roadmap-tag">Portal/Mobile Launch</span>
+              <span class="roadmap-tag">Analytics Dashboard</span>
+              <span class="roadmap-tag">API Gateway</span>
+              <span class="roadmap-tag">CRM Integration</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-year">2568</div>
+          <div class="roadmap-content">
+            <h4 class="roadmap-title">Intelligence & Automation</h4>
+            <div class="roadmap-items">
+              <span class="roadmap-tag">AI Chatbot 24/7</span>
+              <span class="roadmap-tag">50+ BI Dashboards</span>
+              <span class="roadmap-tag">DR Site Active</span>
+              <span class="roadmap-tag">ML Models</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-year">2569</div>
+          <div class="roadmap-content">
+            <h4 class="roadmap-title">Advanced Security & Scale</h4>
+            <div class="roadmap-items">
+              <span class="roadmap-tag">Zero Trust Full Deploy</span>
+              <span class="roadmap-tag">SOC/SIEM with AI</span>
+              <span class="roadmap-tag">Data Masking</span>
+              <span class="roadmap-tag">DSL Enhancement</span>
+              <span class="roadmap-tag">Platform Scaling</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-year">2570</div>
+          <div class="roadmap-content">
+            <h4 class="roadmap-title">Optimization & Excellence</h4>
+            <div class="roadmap-items">
+              <span class="roadmap-tag">Collection Analytics</span>
+              <span class="roadmap-tag">Board KPI Dashboard</span>
+              <span class="roadmap-tag">Process Optimization</span>
+              <span class="roadmap-tag">Continuous Improvement</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security Badge -->
+  <div class="security-badge">
+    <div class="security-badge-icon">
+      <i class="fas fa-shield-check"></i>
+    </div>
+    <div>
+      <div class="security-badge-text">Protected by Zero Trust</div>
+      <div class="security-badge-status">ISO 27001:2022 Certified</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Student Loan Fund (กยศ.) - Enterprise Architecture Framework</p>
+      <p>Powered by TOGAF® Standard | Digital Transformation Excellence</p>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scroll for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Add scroll effect to navigation
+    window.addEventListener('scroll', function() {
+      const nav = document.querySelector('.nav-wrapper');
+      if (window.scrollY > 100) {
+        nav.style.background = 'rgba(255,255,255,0.98)';
+        nav.style.boxShadow = '0 2px 20px rgba(0,0,0,0.15)';
+      } else {
+        nav.style.background = 'rgba(255,255,255,0.95)';
+        nav.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
+      }
+    });
+
+    // Animate elements on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observe all cards and sections
+    document.querySelectorAll('.kpi-card, .tech-category, .architecture-layer, .roadmap-item').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'all 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
