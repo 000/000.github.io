@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กยศ. (SLF) - Enterprise Architecture Visualization</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0056b3; /* Deep Blue */
+            --secondary-color: #007bff; /* Bright Blue */
+            --accent-color: #28a745; /* Green for Success/Action */
+            --dark-bg: #1a202c; /* Dark Background */
+            --light-bg: #f8f9fa; /* Light Background */
+            --card-bg: #ffffff;
+            --text-light: #f1f1f1;
+            --text-dark: #333;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            margin: 0;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- Header --- */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-bg));
+            color: var(--text-light);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--accent-color);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.8rem;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        /* --- Section Titles --- */
+        .section-title {
+            text-align: center;
+            margin: 50px 0 40px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--accent-color);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+        
+        /* --- Strategic Pillars Section --- */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+        .pillar-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-top: 4px solid var(--secondary-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .pillar-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        .pillar-card .icon {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        .pillar-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        /* --- Core Architecture Diagram --- */
+        .ea-diagram {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        .security-envelope {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 3px dashed var(--accent-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .security-label {
+            background: var(--card-bg);
+            padding: 5px 15px;
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 1.1rem;
+            transform: rotate(-45deg);
+            white-space: nowrap;
+            opacity: 0.8;
+        }
+        .security-label i {
+            margin-right: 8px;
+        }
+        .ea-layer {
+            background-color: rgba(0, 123, 255, 0.05);
+            border: 1px solid rgba(0, 123, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+        .ea-layer h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+        .layer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .ea-item {
+            background: rgba(255,255,255,0.8);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ea-item i {
+            color: var(--secondary-color);
+        }
+        .arrow-down {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin: -10px 0;
+        }
+        
+        /* --- Stakeholder & Tech Stack Section --- */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+        .detail-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--primary-color);
+            display: flex;
+            flex-direction: column;
+        }
+        .detail-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .detail-card-header .icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+        .detail-card-header h3 {
+            margin: 0;
+            font-size: 1.6rem;
+        }
+        .detail-card ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+        .detail-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: flex-start;
+        }
+        .detail-card li:last-child {
+            border-bottom: none;
+        }
+        .detail-card li .fa-check-circle {
+            color: var(--accent-color);
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.2rem; }
+            .header p { font-size: 1rem; }
+            .section-title { font-size: 1.8rem; }
+            .ea-diagram { padding: 20px; }
+            .security-label { font-size: 0.8rem; transform: rotate(0); position: absolute; top: 15px; left: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <h1>สถาปัตยกรรมองค์กร (Enterprise Architecture)</h1>
+            <p>กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section id="vision">
+            <h2 class="section-title">วิสัยทัศน์และเป้าหมายเชิงกลยุทธ์</h2>
+            <div class="pillars-grid">
+                <div class="pillar-card">
+                    <div class="icon"><i class="fas fa-cogs"></i></div>
+                    <h3>Digital Transformation</h3>
+                    <p>ขับเคลื่อนองค์กรสู่ดิจิทัลเต็มรูปแบบเพื่อเพิ่มประสิทธิภาพและความโปร่งใส</p>
+                </div>
+                <div class="pillar-card">
+                    <div class="icon"><i class="fas fa-database"></i></div>
+                    <h3>Data-Driven Organization</h3>
+                    <p>ใช้ข้อมูลเป็นศูนย์กลางในการตัดสินใจเชิงนโยบายและพัฒนานวัตกรรมบริการ</p>
+                </div>
+                <div class="pillar-card">
+                    <div class="icon"><i class="fas fa-handshake-angle"></i></div>
+                    <h3>Service & Engagement</h3>
+                    <p>ยกระดับประสบการณ์และการมีส่วนร่วมของผู้มีส่วนได้ส่วนเสียทุกกลุ่ม</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="architecture">
+            <h2 class="section-title">ภาพรวมสถาปัตยกรรมองค์กร</h2>
+            <div class="ea-diagram">
+                <div class="security-envelope">
+                     <span class="security-label"><i class="fas fa-shield-alt"></i> Zero Trust Security & Governance</span>
+                </div>
+                
+                <div class="ea-layer">
+                    <h3><i class="fas fa-users"></i> Stakeholders (ผู้มีส่วนได้ส่วนเสีย)</h3>
+                    <div class="layer-content">
+                        <span class="ea-item"><i class="fas fa-user-graduate"></i>ผู้กู้ยืม</span>
+                        <span class="ea-item"><i class="fas fa-user-tie"></i>เจ้าหน้าที่ กยศ.</span>
+                        <span class="ea-item"><i class="fas fa-school"></i>สถานศึกษา</span>
+                        <span class="ea-item"><i class="fas fa-gavel"></i>สำนักงานทนายความ</span>
+                        <span class="ea-item"><i class="fas fa-sitemap"></i>หน่วยงานภายนอก</span>
+                    </div>
+                </div>
+                <p class="arrow-down" align="center"><i class="fas fa-arrow-down"></i></p>
+
+                <div class="ea-layer">
+                    <h3><i class="fas fa-concierge-bell"></i> Business & Application Services (บริการและแอปพลิเคชัน)</h3>
+                    <div class="layer-content">
+                        <span class="ea-item">Real-time Dashboards</span>
+                        <span class="ea-item">AI/ML Risk Analysis</span>
+                        <span class="ea-item">Generative AI Support</span>
+                        <span class="ea-item">Automated Verification</span>
+                        <span class="ea-item">Case Prioritization</span>
+                    </div>
+                </div>
+                <p class="arrow-down" align="center"><i class="fas fa-arrow-down"></i></p>
+
+                <div class="ea-layer">
+                    <h3><i class="fas fa-layer-group"></i> Data & Technology Platform (แพลตฟอร์มข้อมูลและเทคโนโลยี)</h3>
+                    <div class="layer-content">
+                        <span class="ea-item">Big Data Platform</span>
+                        <span class="ea-item">Object Storage (Petabyte-Scale)</span>
+                        <span class="ea-item">Distributed File System</span>
+                        <span class="ea-item">Analytics & BI Tools</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stakeholders">
+            <h2 class="section-title">นวัตกรรมบริการเพื่อผู้มีส่วนได้ส่วนเสีย</h2>
+            <div class="details-grid">
+                <div class="detail-card">
+                    <div class="detail-card-header">
+                        <div class="icon"><i class="fas fa-user-graduate"></i></div>
+                        <h3>ผู้กู้ยืม</h3>
+                    </div>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i>ระบบคัดกรองคุณสมบัติด้วย AI</li>
+                        <li><i class="fas fa-check-circle"></i>Dashboard สถานะหนี้และการชำระแบบ Real-time</li>
+                        <li><i class="fas fa-check-circle"></i>เครื่องมือช่วยวางแผนทางการเงิน</li>
+                    </ul>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-header">
+                        <div class="icon"><i class="fas fa-user-tie"></i></div>
+                        <h3>เจ้าหน้าที่ กยศ.</h3>
+                    </div>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i>AI วิเคราะห์ความเสี่ยงผิดนัดชำระหนี้</li>
+                        <li><i class="fas fa-check-circle"></i>Generative AI ช่วยตัดสินใจและตอบคำถาม</li>
+                        <li><i class="fas fa-check-circle"></i>Data Visualization เพื่อการสั่งการที่รวดเร็ว</li>
+                    </ul>
+                </div>
+                 <div class="detail-card">
+                    <div class="detail-card-header">
+                        <div class="icon"><i class="fas fa-school"></i></div>
+                        <h3>สถานศึกษา</h3>
+                    </div>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i>ระบบตรวจสอบและรับรองข้อมูลนักศึกษาอัตโนมัติ</li>
+                        <li><i class="fas fa-check-circle"></i>เชื่อมโยงข้อมูลกับกองทุนฯ แบบ Real-time</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section id="tech-stack">
+            <h2 class="section-title">สถาปัตยกรรมเทคโนโลยีและความปลอดภัย</h2>
+             <div class="details-grid">
+                <div class="detail-card">
+                    <div class="detail-card-header">
+                        <div class="icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3>Cybersecurity</h3>
+                    </div>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i>สถาปัตยกรรมแบบ **Zero Trust**</li>
+                        <li><i class="fas fa-check-circle"></i>**SOC/SIEM** เสริมด้วย AI ตรวจจับ **Zero-Day Threats**</li>
+                        <li><i class="fas fa-check-circle"></i>**Data Masking** และการปฏิบัติตาม **PDPA**</li>
+                    </ul>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-header">
+                        <div class="icon"><i class="fas fa-database"></i></div>
+                        <h3>Data Architecture</h3>
+                    </div>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i>แพลตฟอร์ม **Big Data** รองรับข้อมูลระดับ **Petabyte**</li>
+                        <li><i class="fas fa-check-circle"></i>ใช้ **Object Storage** และ **Distributed File System**</li>
+                        <li><i class="fas fa-check-circle"></i>โครงสร้างพื้นฐานสำหรับ ML/DL และ Generative AI</li>
+                    </ul>
+                </div>
+                 <div class="detail-card">
+                    <div class="detail-card-header">
+                        <div class="icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>Analytics & BI</h3>
+                    </div>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i>ใช้เครื่องมือชั้นนำ เช่น **Power BI, Tableau**</li>
+                        <li><i class="fas fa-check-circle"></i>สร้าง **Interactive Dashboards**</li>
+                        <li><i class="fas fa-check-circle"></i>รองรับการวิเคราะห์ข้อมูลทุกระดับ (ผู้บริหารถึงปฏิบัติการ)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Student Loan Fund (SLF) - Enterprise Architecture Visualization</p>
+    </footer>
+
+</body>
+</html>
