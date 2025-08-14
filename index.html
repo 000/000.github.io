@@ -1,139 +1,164 @@
-<!DOCTYPE html>
+Put your HTML text here<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Tanat Tonguthaisri - Freelance Data Engineer specializing in ad hoc data engineering assignments in Thailand.">
-  <meta name="keywords" content="data engineering, freelance, Thailand, data pipelines, database optimization">
-  <title>Tanat Tonguthaisri - Data Engineering Freelancer</title>
-  <style>
-    /* CSS Styling */
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Professional portfolio for Tanat Tonguthaisri, an Information Technology Specialist and Digital Transformation Strategist in Thailand's public sector.">
+    <meta name="author" content="Tanat Tonguthaisri">
+    
+    <title>Tanat Tonguthaisri | IT Specialist & Digital Transformation Strategist</title>
 
-    header {
-      background-color: #f4f4f4;
-      padding: 20px;
-      text-align: center;
-    }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
 
-    header h1 {
-      margin: 0;
-      font-size: 2.5em;
-    }
+    <link rel="stylesheet" href="style.css">
 
-    header p {
-      margin: 5px 0;
-      font-size: 1.2em;
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Tanat Tonguthaisri",
+      "jobTitle": "Information Technology Specialist",
+      "description": "A driving force behind the digital transformation of Thailand's Student Loan Fund, blending deep technical expertise with a strategic vision for the future of public sector technology.",
+      "gender": "Male",
+      "homeLocation": {
+        "@type": "Place",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Nonthaburi",
+          "addressCountry": "TH"
+        }
+      },
+      "workLocation": {
+        "@type": "Place",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Bangkok",
+          "addressCountry": "TH"
+        }
+      },
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Student Loan Fund (Thailand) — กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)"
+      },
+      "alumniOf": {
+        "@type": "CollegeOrUniversity",
+        "name": "RMIT University",
+        "location": "Melbourne, Australia"
+      },
+      "knowsAbout":
     }
-
-    nav a {
-      margin: 0 10px;
-      text-decoration: none;
-      color: #007bff;
-    }
-
-    main {
-      padding: 20px;
-    }
-
-    section {
-      margin-bottom: 40px;
-    }
-
-    h2 {
-      color: #007bff;
-    }
-
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    ul li {
-      background: #f4f4f4;
-      margin: 5px 0;
-      padding: 10px;
-      border-radius: 5px;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    footer {
-      background-color: #f4f4f4;
-      text-align: center;
-      padding: 10px;
-      width: 100%;
-    }
-
-    @media (max-width: 768px) {
-      header h1 {
-        font-size: 2em;
-      }
-
-      nav a {
-        display: block;
-        margin: 10px 0;
-      }
-    }
-  </style>
+    </script>
 </head>
-<body>
-  <header>
-    <h1>Tanat Tonguthaisri</h1>
-    <p>Data Engineering Freelancer</p>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#contact">Contact</a>
-      <a href="#policies">Policies</a>
-    </nav>
-  </header>
+<body data-lang="en">
+    <div id="custom-cursor"></div>
 
-  <main>
-    <section id="about">
-      <h2>About Me</h2>
-      <p>As a sole proprietor based in Thailand, I specialize in providing freelance data engineering services. My expertise lies in handling ad hoc assignments, offering tailored solutions to meet your data processing, integration, and analysis needs. Whether you need to streamline your data pipelines, optimize database performance, or develop custom data solutions, I am here to help.</p>
-      <!-- Replace the image path with your own image hosted in your GitHub repository -->
-      <img src="/Tanat-FullBody.jpg" alt="Tanat Tonguthaisri, Data Engineer">
-    </section>
+    <header>
+        <div class="language-switcher">
+            <button data-lang-target="en" class="lang-btn active">EN</button>
+            <span>|</span>
+            <button data-lang-target="th" class="lang-btn">TH</button>
+        </div>
+        <button id="theme-toggle" aria-label="Toggle dark mode">
+            <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.25a.75.75 0 0 1.75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1.75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.697 5.303a.75.75 0 0 1 1.06-1.06l1.591 1.59a.75.75 0 1 1-1.06 1.06l-1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1.75.75ZM17.636 17.636a.75.75 0 1 1-1.06-1.06l1.59-1.591a.75.75 0 1 1 1.06 1.06l-1.59 1.591ZM12 18.75a.75.75 0 0 1.75.75V21a.75.75 0 0 1-1.5 0v-1.5a.75.75 0 0 1.75-.75ZM5.303 18.697a.75.75 0 0 1-1.06-1.06l1.59-1.591a.75.75 0 1 1 1.06 1.06l-1.59 1.59ZM4.5 12a.75.75 0 0 1-.75.75H1.5a.75.75 0 0 1 0-1.5h2.25a.75.75 0 0 1.75.75ZM6.364 6.364a.75.75 0 1 1-1.06-1.06l1.591-1.59a.75.75 0 1 1 1.06 1.06l-1.591 1.59Z"/></svg>
+            <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1.162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69a.75.75 0 0 1.981.981A10.503 10.503 0 0 1 12 22.5C6.201 22.5 1.5 17.799 1.5 12A10.503 10.503 0 0 1 2.537 5.071a.75.75 0 0 1.819-.162l4.184 1.395a.75.75 0 0 1.606.606l1.395 4.184Zm-3.242 8.13a.75.75 0 0 1 1.06-1.06l1.06 1.06a.75.75 0 0 1-1.06 1.06l-1.06-1.06Z" clip-rule="evenodd" /></svg>
+        </button>
+    </header>
 
-    <section id="services">
-      <h2>Services Offered</h2>
-      <ul>
-        <li>Data Pipeline Development</li>
-        <li>Database Optimization</li>
-        <li>Custom Data Solutions</li>
-        <li>Data Integration and ETL Processes</li>
-        <li>Data Analysis and Reporting</li>
-      </ul>
-    </section>
+    <main>
+        <section id="hero" class="scroll-reveal">
+            <div class="hero-content">
+                <h1>Tanat Tonguthaisri</h1>
+                <h2 class="i18n">
+                    <span lang="en">Information Technology Specialist | Digital Transformation Strategist | Public Sector Innovator</span>
+                    <span lang="th">ผู้เชี่ยวชาญด้านเทคโนโลยีสารสนเทศ | นักยุทธศาสตร์การเปลี่ยนแปลงทางดิจิทัล | นวัตกรภาครัฐ</span>
+                </h2>
+                <p class="i18n">
+                    <span lang="en">As a driving force behind the digital transformation of Thailand's Student Loan Fund, Tanat Tonguthaisri is at the forefront of modernizing one of the nation's most vital educational finance institutions. He is instrumental in managing and innovating the complex systems that oversee a portfolio exceeding 200 billion baht and serve over 5 million borrowers, blending deep technical expertise with a strategic vision for the future of public sector technology.</span>
+                    <span lang="th">ในฐานะพลังขับเคลื่อนเบื้องหลังการเปลี่ยนแปลงทางดิจิทัลของกองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.) ธนัช ตงอุไทยศรี คือผู้อยู่แถวหน้าของการพัฒนานาสถาบันการเงินเพื่อการศึกษาที่สำคัญที่สุดแห่งหนึ่งของประเทศให้ทันสมัย เขามีบทบาทสำคัญในการบริหารจัดการและสร้างสรรค์นวัตกรรมให้กับระบบอันซับซ้อนที่ดูแลพอร์ตสินเชื่อมูลค่ากว่า 2 แสนล้านบาท และให้บริการผู้กู้ยืมกว่า 5 ล้านราย โดยผสมผสานความเชี่ยวชาญทางเทคนิคเชิงลึกเข้ากับวิสัยทัศน์เชิงกลยุทธ์สำหรับอนาคตของเทคโนโลยีในภาครัฐ</span>
+                </p>
+            </div>
+        </section>
 
-    <section id="contact">
-      <h2>Contact</h2>
-      <p>For any inquiries or support, please contact me at: <a href="mailto:xxx@kon.in.th">xxx@kon.in.th</a></p>
-      <p><a href="https://ibb.co/Wyh6SvG"><img src="https://i.ibb.co/PhLNBGF/Pra-Khru-Wilart-Copy.jpg" alt="Pra-Khru-Wilart-Copy" border="0" /></a></p>
-    </section>
+        <section id="expertise" class="scroll-reveal" aria-labelledby="expertise-heading">
+            <h3 id="expertise-heading" class="section-title i18n"><span lang="en">Professional Expertise & Education</span><span lang="th">ความเชี่ยวชาญและประวัติการศึกษา</span></h3>
+            <div class="bento-grid">
+                <div class="bento-item">
+                    <h4 class="i18n"><span lang="en">Academic Foundation</span><span lang="th">รากฐานทางวิชาการ</span></h4>
+                    <p class="i18n">
+                        <span lang="en">Tanat’s robust technical foundation is built on dual bachelor's degrees in Computer Systems Engineering and Computer Science, and is further distinguished by a Master of Computer Engineering from RMIT University in Melbourne, Australia. This unique academic background empowers him with a holistic understanding of technology, from system architecture to hands-on implementation.</span>
+                        <span lang="th">รากฐานทางเทคนิคที่แข็งแกร่งของธนัชสร้างขึ้นจากปริญญาตรีสองใบในสาขาวิศวกรรมคอมพิวเตอร์และวิทยาการคอมพิวเตอร์ และโดดเด่นยิ่งขึ้นด้วยปริญญาโทสาขาวิศวกรรมคอมพิวเตอร์จาก RMIT University ในเมลเบิร์น ประเทศออสเตรเลีย พื้นฐานทางวิชาการที่เป็นเอกลักษณ์นี้ทำให้เขามีความเข้าใจในเทคโนโลยีอย่างรอบด้าน ตั้งแต่สถาปัตยกรรมระบบไปจนถึงการลงมือปฏิบัติจริง</span>
+                    </p>
+                </div>
+                <div class="bento-item">
+                    <h4 class="i18n"><span lang="en">Strategic Development</span><span lang="th">การพัฒนาเชิงกลยุทธ์</span></h4>
+                    <p class="i18n">
+                        <span lang="en">Serving as a key liaison and ideator for proof-of-concept initiatives, including AI+Chat and AI+Code implementations, to explore and validate next-generation solutions.</span>
+                        <span lang="th">ทำหน้าที่เป็นผู้ประสานงานและผู้ริเริ่มแนวคิดหลักสำหรับโครงการริเริ่มพิสูจน์แนวคิด (Proof-of-Concept) รวมถึงการนำ AI+Chat และ AI+Code มาใช้ เพื่อสำรวจและตรวจสอบโซลูชันแห่งอนาคต</span>
+                    </p>
+                </div>
+                <div class="bento-item">
+                    <h4 class="i18n"><span lang="en">Agile Problem-Solving</span><span lang="th">การแก้ปัญหาแบบ Agile</span></h4>
+                    <p class="i18n">
+                        <span lang="en">Possessing the agility to perform hands-on Python development, ensuring that critical processes like debt payment reallocation and recalculation are not only maintained but continuously improved.</span>
+                        <span lang="th">มีความคล่องตัวในการพัฒนาด้วยภาษา Python เพื่อให้แน่ใจว่ากระบวนการที่สำคัญ เช่น การจัดสรรและคำนวณการชำระหนี้ใหม่ ไม่เพียงแต่ได้รับการดูแลรักษา แต่ยังได้รับการปรับปรุงอย่างต่อเนื่อง</span>
+                    </p>
+                </div>
+                <div class="bento-item">
+                    <h4 class="i18n"><span lang="en">Cross-Functional Leadership</span><span lang="th">ความเป็นผู้นำข้ามสายงาน</span></h4>
+                    <p class="i18n">
+                        <span lang="en">Bridging the gap between technical teams, management, and external partners to ensure seamless project delivery and alignment with the Fund's mission.</span>
+                        <span lang="th">เชื่อมช่องว่างระหว่างทีมเทคนิค ฝ่ายบริหาร และพันธมิตรภายนอก เพื่อให้การส่งมอบโครงการเป็นไปอย่างราบรื่นและสอดคล้องกับภารกิจของกองทุน</span>
+                    </p>
+                </div>
+            </div>
+        </section>
 
-    <section id="policies">
-      <h2>Policies</h2>
-      <h3>Refund and Dispute Policy</h3>
-      <p>Due to the nature of freelance data engineering services, refunds are not typically offered. However, if you are not satisfied with the delivered work, please contact me within 7 days of project completion to discuss possible resolutions. Each case will be evaluated individually, and partial refunds or rework may be offered at my discretion.</p>
-      <h3>Cancellation Policy</h3>
-      <p>Clients may cancel a project at any time. If cancellation occurs before the project starts, no fees will be charged. If cancellation occurs after work has begun, a cancellation fee equivalent to the work completed up to that point will be charged. Please provide at least 48 hours notice for cancellations to minimize disruption.</p>
-    </section>
-  </main>
+        <section id="contributions" class="scroll-reveal" aria-labelledby="contributions-heading">
+            <h3 id="contributions-heading" class="section-title i18n"><span lang="en">Notable Contributions & Impact</span><span lang="th">ผลงานที่โดดเด่นและผลกระทบ</span></h3>
+            <div id="timeline-embed" style="width: 100%; height: 600px"></div>
+        </section>
 
-  <footer>
-    <p>&copy; 2025 Tanat Tonguthaisri. All rights reserved.</p>
-  </footer>
+        <section id="vision" class="scroll-reveal" aria-labelledby="vision-heading">
+            <h3 id="vision-heading" class="section-title i18n"><span lang="en">Vision & Current Focus</span><span lang="th">วิสัยทัศน์และภารกิจปัจจุบัน</span></h3>
+            <div class="vision-content">
+                <p class="i18n">
+                    <span lang="en">Tanat is a strong advocate for customer-centric digital transformation that balances cutting-edge innovation with the imperatives of security, governance, and accessibility. He is committed to leveraging technology to create more equitable access to education financing for all Thai citizens.</span>
+                    <span lang="th">ธนัชเป็นผู้สนับสนุนการเปลี่ยนแปลงทางดิจิทัลที่ยึดลูกค้าเป็นศูนย์กลาง ซึ่งสร้างสมดุลระหว่างนวัตกรรมล้ำสมัยกับความจำเป็นด้านความปลอดภัย การกำกับดูแล และการเข้าถึงได้ เขาอุทิศตนเพื่อใช้ประโยชน์จากเทคโนโลยีในการสร้างการเข้าถึงแหล่งเงินทุนเพื่อการศึกษาที่เท่าเทียมกันมากขึ้นสำหรับพลเมืองไทยทุกคน</span>
+                </p>
+                <div class="bento-grid">
+                    <div class="bento-item">
+                        <h4 class="i18n"><span lang="en">Data Engineering Platforms</span><span lang="th">แพลตฟอร์มวิศวกรรมข้อมูล</span></h4>
+                        <p class="i18n"><span lang="en">Implementing comprehensive data engineering platforms for advanced analytics.</span><span lang="th">การสร้างแพลตฟอร์มวิศวกรรมข้อมูลที่ครอบคลุมสำหรับการวิเคราะห์ขั้นสูง</span></p>
+                    </div>
+                    <div class="bento-item">
+                        <h4 class="i18n"><span lang="en">Enhanced Cybersecurity</span><span lang="th">การยกระดับความปลอดภัยไซเบอร์</span></h4>
+                        <p class="i18n"><span lang="en">Enhancing cybersecurity measures to counter evolving threats.</span><span lang="th">การปรับปรุงมาตรการความปลอดภัยทางไซเบอร์เพื่อรับมือกับภัยคุกคามที่เปลี่ยนแปลงตลอดเวลา</span></p>
+                    </div>
+                    <div class="bento-item">
+                        <h4 class="i18n"><span lang="en">AI-Driven Solutions</span><span lang="th">โซลูชันที่ขับเคลื่อนด้วย AI</span></h4>
+                        <p class="i18n"><span lang="en">Developing AI-driven solutions to improve both operational efficiency and the borrower experience.</span><span lang="th">การพัฒนาโซลูชันที่ขับเคลื่อนด้วย AI เพื่อปรับปรุงทั้งประสิทธิภาพการดำเนินงานและประสบการณ์ของผู้กู้ยืม</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p class="i18n">
+            <span lang="en">Tanat Tonguthaisri stands at the crossroads of public finance, education, and technology. His work not only transforms an institution but also helps shape a more accessible and efficient future for millions of students across Thailand.</span>
+            <span lang="th">ธนัช ตงอุไทยศรี ยืนอยู่บนทางแยกของการเงินภาครัฐ การศึกษา และเทคโนโลยี ผลงานของเขาไม่เพียงแต่เปลี่ยนแปลงสถาบัน แต่ยังช่วยกำหนดอนาคตที่เข้าถึงได้ง่ายและมีประสิทธิภาพมากขึ้นสำหรับนักเรียนหลายล้านคนทั่วประเทศไทย</span>
+        </p>
+        <p class="contact-info">
+            <strong>Contact:</strong> Information Technology Specialist, Student Loan Fund, Thailand
+        </p>
+    </footer>
+
+    <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
