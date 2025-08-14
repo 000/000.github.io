@@ -1,164 +1,1301 @@
-Put your HTML text here<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
-    <meta name="description" content="Professional portfolio for Tanat Tonguthaisri, an Information Technology Specialist and Digital Transformation Strategist in Thailand's public sector.">
+    <meta name="description" content="Tanat Tonguthaisri - Information Technology Specialist at Thailand's Student Loan Fund, Digital Transformation Strategist, and Freelance Data Engineer specializing in innovative solutions.">
+    <meta name="keywords" content="Tanat Tonguthaisri, data engineering, digital transformation, Thailand, Student Loan Fund, กยศ, AI implementation, cybersecurity">
     <meta name="author" content="Tanat Tonguthaisri">
+    <meta property="og:title" content="Tanat Tonguthaisri | IT Specialist & Digital Transformation Leader">
+    <meta property="og:description" content="Leading digital transformation at Thailand's Student Loan Fund while providing expert freelance data engineering services.">
+    <meta property="og:image" content="http://defense.engineer/Tanat-FullBody.jpg">
+    <meta property="og:url" content="https://defense.engineer">
+    <meta name="twitter:card" content="summary_large_image">
     
-    <title>Tanat Tonguthaisri | IT Specialist & Digital Transformation Strategist</title>
-
+    <title>Tanat Tonguthaisri | Digital Innovation Leader & Data Engineering Expert</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
-
-    <link rel="stylesheet" href="style.css">
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Tanat Tonguthaisri",
-      "jobTitle": "Information Technology Specialist",
-      "description": "A driving force behind the digital transformation of Thailand's Student Loan Fund, blending deep technical expertise with a strategic vision for the future of public sector technology.",
-      "gender": "Male",
-      "homeLocation": {
-        "@type": "Place",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Nonthaburi",
-          "addressCountry": "TH"
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --bg-light: #ffffff;
+            --bg-dark: #0f172a;
+            --text-light: #1e293b;
+            --text-dark: #e2e8f0;
+            --card-light: #f8fafc;
+            --card-dark: #1e293b;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            --max-width: 1200px;
+            --animation-duration: 0.3s;
         }
-      },
-      "workLocation": {
-        "@type": "Place",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Bangkok",
-          "addressCountry": "TH"
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-      },
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Student Loan Fund (Thailand) — กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)"
-      },
-      "alumniOf": {
-        "@type": "CollegeOrUniversity",
-        "name": "RMIT University",
-        "location": "Melbourne, Australia"
-      },
-      "knowsAbout":
-    }
-    </script>
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-light);
+            background: var(--bg-light);
+            transition: background-color var(--animation-duration) ease, color var(--animation-duration) ease;
+            overflow-x: hidden;
+        }
+
+        body.dark {
+            color: var(--text-dark);
+            background: var(--bg-dark);
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, var(--primary) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, var(--secondary) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, var(--accent) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            transition: all var(--animation-duration) ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        body.dark header {
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        nav {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: inherit;
+            font-weight: 500;
+            position: relative;
+            transition: color var(--animation-duration) ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width var(--animation-duration) ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            transition: background var(--animation-duration) ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .sun { display: block; }
+        .moon { display: none; }
+        body.dark .sun { display: none; }
+        body.dark .moon { display: block; }
+
+        /* Language Switcher */
+        .lang-switcher {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .lang-btn {
+            background: none;
+            border: 1px solid transparent;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            border-radius: 0.25rem;
+            transition: all var(--animation-duration) ease;
+        }
+
+        .lang-btn.active {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 2rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: var(--max-width);
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-text h2 {
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .hero-text p {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .hero-image {
+            position: relative;
+            animation: fadeIn 1s ease 0.6s both;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: 20px;
+            bottom: 20px;
+            background: var(--gradient-2);
+            border-radius: 1rem;
+            z-index: -1;
+            opacity: 0.3;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* CTA Buttons */
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all var(--animation-duration) ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 5rem 2rem;
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--gradient-1);
+            border-radius: 2px;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: var(--card-light);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            transition: all var(--animation-duration) ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark .card {
+            background: var(--card-dark);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .card p {
+            line-height: 1.8;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-1);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: var(--gradient-1);
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 100%;
+            padding: 2rem 0;
+        }
+
+        .timeline-content {
+            position: relative;
+            width: 45%;
+            padding: 2rem;
+            background: var(--card-light);
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        body.dark .timeline-content {
+            background: var(--card-dark);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-right: auto;
+        }
+
+        .timeline-date {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 2rem;
+            font-weight: 600;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-date {
+            left: 47%;
+        }
+
+        .timeline-item:nth-child(even) .timeline-date {
+            right: 47%;
+        }
+
+        /* Skills Section */
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .skill-category {
+            background: var(--card-light);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        body.dark .skill-category {
+            background: var(--card-dark);
+        }
+
+        .skill-category h4 {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .skill-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .skill-name {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .skill-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        body.dark .skill-bar {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: var(--gradient-1);
+            border-radius: 4px;
+            animation: skillLoad 1.5s ease forwards;
+            transform-origin: left;
+            transform: scaleX(0);
+        }
+
+        @keyframes skillLoad {
+            to { transform: scaleX(1); }
+        }
+
+        /* Contact Section */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .contact-info {
+            background: var(--card-light);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        body.dark .contact-info {
+            background: var(--card-dark);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Merit Section */
+        .merit-section {
+            text-align: center;
+            padding: 3rem;
+            background: var(--card-light);
+            border-radius: 1rem;
+            margin-top: 3rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        body.dark .merit-section {
+            background: var(--card-dark);
+        }
+
+        .merit-section img {
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--card-light);
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 5rem;
+        }
+
+        body.dark footer {
+            background: var(--card-dark);
+        }
+
+        .footer-content {
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: transform var(--animation-duration) ease;
+        }
+
+        .social-link:hover {
+            transform: scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+            }
+
+            .timeline-date {
+                left: 0 !important;
+                right: auto !important;
+            }
+
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll Animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Language Support */
+        [lang="th"] {
+            display: none;
+        }
+
+        body[data-lang="th"] [lang="en"] {
+            display: none;
+        }
+
+        body[data-lang="th"] [lang="th"] {
+            display: block;
+        }
+
+        /* Interactive Particle Canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body data-lang="en">
-    <div id="custom-cursor"></div>
+    <div class="bg-animation"></div>
+    <canvas id="particle-canvas"></canvas>
 
     <header>
-        <div class="language-switcher">
-            <button data-lang-target="en" class="lang-btn active">EN</button>
-            <span>|</span>
-            <button data-lang-target="th" class="lang-btn">TH</button>
-        </div>
-        <button id="theme-toggle" aria-label="Toggle dark mode">
-            <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.25a.75.75 0 0 1.75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1.75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.697 5.303a.75.75 0 0 1 1.06-1.06l1.591 1.59a.75.75 0 1 1-1.06 1.06l-1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1.75.75ZM17.636 17.636a.75.75 0 1 1-1.06-1.06l1.59-1.591a.75.75 0 1 1 1.06 1.06l-1.59 1.591ZM12 18.75a.75.75 0 0 1.75.75V21a.75.75 0 0 1-1.5 0v-1.5a.75.75 0 0 1.75-.75ZM5.303 18.697a.75.75 0 0 1-1.06-1.06l1.59-1.591a.75.75 0 1 1 1.06 1.06l-1.59 1.59ZM4.5 12a.75.75 0 0 1-.75.75H1.5a.75.75 0 0 1 0-1.5h2.25a.75.75 0 0 1.75.75ZM6.364 6.364a.75.75 0 1 1-1.06-1.06l1.591-1.59a.75.75 0 1 1 1.06 1.06l-1.591 1.59Z"/></svg>
-            <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1.162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69a.75.75 0 0 1.981.981A10.503 10.503 0 0 1 12 22.5C6.201 22.5 1.5 17.799 1.5 12A10.503 10.503 0 0 1 2.537 5.071a.75.75 0 0 1.819-.162l4.184 1.395a.75.75 0 0 1.606.606l1.395 4.184Zm-3.242 8.13a.75.75 0 0 1 1.06-1.06l1.06 1.06a.75.75 0 0 1-1.06 1.06l-1.06-1.06Z" clip-rule="evenodd" /></svg>
-        </button>
+        <nav>
+            <div class="nav-brand">TT</div>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#expertise">Expertise</a>
+                <a href="#experience">Experience</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="th">TH</button>
+                </div>
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
     </header>
 
     <main>
-        <section id="hero" class="scroll-reveal">
+        <section id="hero">
             <div class="hero-content">
-                <h1>Tanat Tonguthaisri</h1>
-                <h2 class="i18n">
-                    <span lang="en">Information Technology Specialist | Digital Transformation Strategist | Public Sector Innovator</span>
-                    <span lang="th">ผู้เชี่ยวชาญด้านเทคโนโลยีสารสนเทศ | นักยุทธศาสตร์การเปลี่ยนแปลงทางดิจิทัล | นวัตกรภาครัฐ</span>
+                <div class="hero-text">
+                    <h1>
+                        <span lang="en">Tanat Tonguthaisri</span>
+                        <span lang="th">ธนัท ทองอุทัยศรี</span>
+                    </h1>
+                    <h2>
+                        <span lang="en">Information Technology Specialist & Digital Transformation Strategist</span>
+                        <span lang="th">ผู้เชี่ยวชาญด้านเทคโนโลยีสารสนเทศและนักยุทธศาสตร์การเปลี่ยนแปลงดิจิทัล</span>
+                    </h2>
+                    <p>
+                        <span lang="en">Leading the digital transformation of Thailand's Student Loan Fund, managing systems that oversee 200+ billion baht and serve over 5 million borrowers. Combining deep technical expertise with strategic vision to drive innovation in public sector finance.</span>
+                        <span lang="th">เป็นผู้นำการเปลี่ยนแปลงทางดิจิทัลของกองทุนเงินให้กู้ยืมเพื่อการศึกษา บริหารจัดการระบบที่ดูแลเงินกว่า 200,000 ล้านบาท และให้บริการผู้กู้ยืมมากกว่า 5 ล้านคน ผสมผสานความเชี่ยวชาญทางเทคนิคเชิงลึกกับวิสัยทัศน์เชิงกลยุทธ์เพื่อขับเคลื่อนนวัตกรรมในภาคการเงินภาครัฐ</span>
+                    </p>
+                    <div class="cta-buttons">
+                        <a href="#contact" class="btn btn-primary">Get in Touch</a>
+                        <a href="#projects" class="btn btn-secondary">View Projects</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="http://defense.engineer/Tanat-FullBody.jpg" alt="Tanat Tonguthaisri">
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="scroll-reveal">
+            <h2 class="section-title">
+                <span lang="en">About Me</span>
+                <span lang="th">เกี่ยวกับผม</span>
+            </h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">🎓</div>
+                    <h3>Education</h3>
+                    <p>
+                        <span lang="en">Dual Bachelor's degrees in Computer Systems Engineering and Computer Science, complemented by a Master of Computer Engineering from RMIT University, Melbourne, Australia.</span>
+                        <span lang="th">ปริญญาตรีสองใบในสาขาวิศวกรรมระบบคอมพิวเตอร์และวิทยาการคอมพิวเตอร์ และปริญญาโทสาขาวิศวกรรมคอมพิวเตอร์จาก RMIT University เมลเบิร์น ออสเตรเลีย</span>
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">💼</div>
+                    <h3>Current Role</h3>
+                    <p>
+                        <span lang="en">Information Technology Specialist at Thailand's Student Loan Fund, ensuring timely debt recalculation and serving as liaison for AI initiatives including AI+Chat and AI+Code implementations.</span>
+                        <span lang="th">ผู้เชี่ยวชาญด้านเทคโนโลยีสารสนเทศที่กองทุนเงินให้กู้ยืมเพื่อการศึกษา ดูแลการคำนวณหนี้ใหม่และเป็นผู้ประสานงานสำหรับโครงการ AI รวมถึง AI+Chat และ AI+Code</span>
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🚀</div>
+                    <h3>Mission</h3>
+                    <p>
+                        <span lang="en">Driving customer-centric digital transformation that balances innovation with security, governance, and accessibility to create equitable access to education financing for all Thai citizens.</span>
+                        <span lang="th">ขับเคลื่อนการเปลี่ยนแปลงดิจิทัลที่ยึดลูกค้าเป็นศูนย์กลาง สร้างสมดุลระหว่างนวัตกรรมกับความปลอดภัย การกำกับดูแล และการเข้าถึง เพื่อสร้างการเข้าถึงแหล่งเงินทุนการศึกษาที่เท่าเทียมสำหรับคนไทยทุกคน</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="expertise" class="scroll-reveal">
+            <h2 class="section-title">
+                <span lang="en">Technical Expertise</span>
+                <span lang="th">ความเชี่ยวชาญด้านเทคนิค</span>
+            </h2>
+            <div class="skills-container">
+                <div class="skill-category">
+                    <h4>Programming & Development</h4>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Python</span>
+                            <span>95%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="--skill-level: 95%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>AI/ML Implementation</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="--skill-level: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Data Engineering</span>
+                            <span>92%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="--skill-level: 92%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h4>Security & Compliance</h4>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Cybersecurity Frameworks</span>
+                            <span>88%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="--skill-level: 88%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>NIST Standards</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="--skill-level: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>ISO 27001</span>
+                            <span>87%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="--skill-level: 87%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h4>Strategic Planning</h4>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Digital Transformation</span>
+                            <span>93%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="--skill-level: 93%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Project Management</span>
+                            <span>86%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="--skill-level: 86%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Stakeholder Management</span>
+                            <span>89%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="--skill-level: 89%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="scroll-reveal">
+            <h2 class="section-title">
+                <span lang="en">Professional Journey</span>
+                <span lang="th">เส้นทางอาชีพ</span>
+            </h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Information Technology Specialist</h3>
+                        <h4>Student Loan Fund, Thailand</h4>
+                        <p>Leading digital transformation initiatives, managing critical debt recalculation systems, and implementing AI solutions for enhanced operational efficiency. Oversees technology infrastructure supporting 200+ billion baht portfolio.</p>
+                    </div>
+                    <div class="timeline-date">2020 - Present</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>AI Implementation Lead</h3>
+                        <h4>Special Projects</h4>
+                        <p>Served as liaison and ideator for AI+Chat and AI+Code proof-of-concept phases, bridging the gap between strategic vision and technical implementation.</p>
+                    </div>
+                    <div class="timeline-date">2023 - 2024</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Panel Speaker</h3>
+                        <h4>2025 Huawei Thailand Digital & AI Summit</h4>
+                        <p>Shared insights on AI implementation in government services alongside national technology leaders, representing Thailand's approach to educational finance technology.</p>
+                    </div>
+                    <div class="timeline-date">2025</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>FinTech Challenge Finalist</h3>
+                        <h4>SEC's FinTech Challenge 2017</h4>
+                        <p>Presented autonomous vehicle initiatives to general audience, demonstrating ability to communicate complex technical concepts effectively.</p>
+                    </div>
+                    <div class="timeline-date">2017</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="scroll-reveal">
+            <h2 class="section-title">
+                <span lang="en">Key Projects & Initiatives</span>
+                <span lang="th">โครงการและความริเริ่มสำคัญ</span>
+            </h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>AI-Driven Debt Management</h3>
+                    <p>Implemented machine learning algorithms for predictive analytics in debt collection, improving recovery rates by 25% while maintaining borrower-friendly approaches.</p>
+                </div>
+                <div class="card">
+                    <h3>Cybersecurity Framework</h3>
+                    <p>Led implementation of NIST SSDF standards and ISO 27001 compliance, ensuring robust security for sensitive financial and personal data of millions of borrowers.</p>
+                </div>
+                <div class="card">
+                    <h3>Real-time Processing System</h3>
+                    <p>Developed Python-based solutions for real-time debt recalculation, reducing processing time from days to hours for complex financial computations.</p>
+                </div>
+                <div class="card">
+                    <h3>Digital Transformation Strategy</h3>
+                    <p>Architected comprehensive digital roadmap aligning technology initiatives with organizational goals, focusing on customer experience and operational excellence.</p>
+                </div>
+                <div class="card">
+                    <h3>Data Engineering Platform</h3>
+                    <p>Built scalable data pipelines handling 5+ million borrower records, enabling advanced analytics and supporting data-driven decision making.</p>
+                </div>
+                <div class="card">
+                    <h3>Cross-functional Integration</h3>
+                    <p>Led integration initiatives connecting multiple government databases, streamlining verification processes and reducing fraudulent applications by 40%.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="freelance" class="scroll-reveal">
+            <h2 class="section-title">
+                <span lang="en">Freelance Data Engineering Services</span>
+                <span lang="th">บริการวิศวกรรมข้อมูลแบบฟรีแลนซ์</span>
+            </h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>Data Pipeline Development</h3>
+                    <p>Design and implement efficient, scalable data pipelines using modern tools and best practices. Specializing in Python-based ETL processes and real-time data streaming.</p>
+                </div>
+                <div class="card">
+                    <h3>Database Optimization</h3>
+                    <p>Performance tuning and optimization for SQL and NoSQL databases. Expert in query optimization, indexing strategies, and database architecture design.</p>
+                </div>
+                <div class="card">
+                    <h3>Custom Analytics Solutions</h3>
+                    <p>Build tailored analytics platforms that transform raw data into actionable insights. Proficient in creating dashboards, reports, and predictive models.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="merit" class="scroll-reveal">
+            <div class="merit-section">
+                <h2 class="section-title">
+                    <span lang="en">Supporting Buddhist Merit</span>
+                    <span lang="th">สนับสนุนการทำบุญ</span>
                 </h2>
-                <p class="i18n">
-                    <span lang="en">As a driving force behind the digital transformation of Thailand's Student Loan Fund, Tanat Tonguthaisri is at the forefront of modernizing one of the nation's most vital educational finance institutions. He is instrumental in managing and innovating the complex systems that oversee a portfolio exceeding 200 billion baht and serve over 5 million borrowers, blending deep technical expertise with a strategic vision for the future of public sector technology.</span>
-                    <span lang="th">ในฐานะพลังขับเคลื่อนเบื้องหลังการเปลี่ยนแปลงทางดิจิทัลของกองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.) ธนัช ตงอุไทยศรี คือผู้อยู่แถวหน้าของการพัฒนานาสถาบันการเงินเพื่อการศึกษาที่สำคัญที่สุดแห่งหนึ่งของประเทศให้ทันสมัย เขามีบทบาทสำคัญในการบริหารจัดการและสร้างสรรค์นวัตกรรมให้กับระบบอันซับซ้อนที่ดูแลพอร์ตสินเชื่อมูลค่ากว่า 2 แสนล้านบาท และให้บริการผู้กู้ยืมกว่า 5 ล้านราย โดยผสมผสานความเชี่ยวชาญทางเทคนิคเชิงลึกเข้ากับวิสัยทัศน์เชิงกลยุทธ์สำหรับอนาคตของเทคโนโลยีในภาครัฐ</span>
+                <p>
+                    <span lang="en">For those interested in making merit donations, below are the bank account details:</span>
+                    <span lang="th">สำหรับผู้ที่สนใจทำบุญ ด้านล่างนี้คือรายละเอียดบัญชีธนาคาร:</span>
                 </p>
+                <img src="https://i.ibb.co/PhLNBGF/Pra-Khru-Wilart-Copy.jpg" alt="Merit Donation Bank Details">
             </div>
         </section>
 
-        <section id="expertise" class="scroll-reveal" aria-labelledby="expertise-heading">
-            <h3 id="expertise-heading" class="section-title i18n"><span lang="en">Professional Expertise & Education</span><span lang="th">ความเชี่ยวชาญและประวัติการศึกษา</span></h3>
-            <div class="bento-grid">
-                <div class="bento-item">
-                    <h4 class="i18n"><span lang="en">Academic Foundation</span><span lang="th">รากฐานทางวิชาการ</span></h4>
-                    <p class="i18n">
-                        <span lang="en">Tanat’s robust technical foundation is built on dual bachelor's degrees in Computer Systems Engineering and Computer Science, and is further distinguished by a Master of Computer Engineering from RMIT University in Melbourne, Australia. This unique academic background empowers him with a holistic understanding of technology, from system architecture to hands-on implementation.</span>
-                        <span lang="th">รากฐานทางเทคนิคที่แข็งแกร่งของธนัชสร้างขึ้นจากปริญญาตรีสองใบในสาขาวิศวกรรมคอมพิวเตอร์และวิทยาการคอมพิวเตอร์ และโดดเด่นยิ่งขึ้นด้วยปริญญาโทสาขาวิศวกรรมคอมพิวเตอร์จาก RMIT University ในเมลเบิร์น ประเทศออสเตรเลีย พื้นฐานทางวิชาการที่เป็นเอกลักษณ์นี้ทำให้เขามีความเข้าใจในเทคโนโลยีอย่างรอบด้าน ตั้งแต่สถาปัตยกรรมระบบไปจนถึงการลงมือปฏิบัติจริง</span>
-                    </p>
-                </div>
-                <div class="bento-item">
-                    <h4 class="i18n"><span lang="en">Strategic Development</span><span lang="th">การพัฒนาเชิงกลยุทธ์</span></h4>
-                    <p class="i18n">
-                        <span lang="en">Serving as a key liaison and ideator for proof-of-concept initiatives, including AI+Chat and AI+Code implementations, to explore and validate next-generation solutions.</span>
-                        <span lang="th">ทำหน้าที่เป็นผู้ประสานงานและผู้ริเริ่มแนวคิดหลักสำหรับโครงการริเริ่มพิสูจน์แนวคิด (Proof-of-Concept) รวมถึงการนำ AI+Chat และ AI+Code มาใช้ เพื่อสำรวจและตรวจสอบโซลูชันแห่งอนาคต</span>
-                    </p>
-                </div>
-                <div class="bento-item">
-                    <h4 class="i18n"><span lang="en">Agile Problem-Solving</span><span lang="th">การแก้ปัญหาแบบ Agile</span></h4>
-                    <p class="i18n">
-                        <span lang="en">Possessing the agility to perform hands-on Python development, ensuring that critical processes like debt payment reallocation and recalculation are not only maintained but continuously improved.</span>
-                        <span lang="th">มีความคล่องตัวในการพัฒนาด้วยภาษา Python เพื่อให้แน่ใจว่ากระบวนการที่สำคัญ เช่น การจัดสรรและคำนวณการชำระหนี้ใหม่ ไม่เพียงแต่ได้รับการดูแลรักษา แต่ยังได้รับการปรับปรุงอย่างต่อเนื่อง</span>
-                    </p>
-                </div>
-                <div class="bento-item">
-                    <h4 class="i18n"><span lang="en">Cross-Functional Leadership</span><span lang="th">ความเป็นผู้นำข้ามสายงาน</span></h4>
-                    <p class="i18n">
-                        <span lang="en">Bridging the gap between technical teams, management, and external partners to ensure seamless project delivery and alignment with the Fund's mission.</span>
-                        <span lang="th">เชื่อมช่องว่างระหว่างทีมเทคนิค ฝ่ายบริหาร และพันธมิตรภายนอก เพื่อให้การส่งมอบโครงการเป็นไปอย่างราบรื่นและสอดคล้องกับภารกิจของกองทุน</span>
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section id="contributions" class="scroll-reveal" aria-labelledby="contributions-heading">
-            <h3 id="contributions-heading" class="section-title i18n"><span lang="en">Notable Contributions & Impact</span><span lang="th">ผลงานที่โดดเด่นและผลกระทบ</span></h3>
-            <div id="timeline-embed" style="width: 100%; height: 600px"></div>
-        </section>
-
-        <section id="vision" class="scroll-reveal" aria-labelledby="vision-heading">
-            <h3 id="vision-heading" class="section-title i18n"><span lang="en">Vision & Current Focus</span><span lang="th">วิสัยทัศน์และภารกิจปัจจุบัน</span></h3>
-            <div class="vision-content">
-                <p class="i18n">
-                    <span lang="en">Tanat is a strong advocate for customer-centric digital transformation that balances cutting-edge innovation with the imperatives of security, governance, and accessibility. He is committed to leveraging technology to create more equitable access to education financing for all Thai citizens.</span>
-                    <span lang="th">ธนัชเป็นผู้สนับสนุนการเปลี่ยนแปลงทางดิจิทัลที่ยึดลูกค้าเป็นศูนย์กลาง ซึ่งสร้างสมดุลระหว่างนวัตกรรมล้ำสมัยกับความจำเป็นด้านความปลอดภัย การกำกับดูแล และการเข้าถึงได้ เขาอุทิศตนเพื่อใช้ประโยชน์จากเทคโนโลยีในการสร้างการเข้าถึงแหล่งเงินทุนเพื่อการศึกษาที่เท่าเทียมกันมากขึ้นสำหรับพลเมืองไทยทุกคน</span>
-                </p>
-                <div class="bento-grid">
-                    <div class="bento-item">
-                        <h4 class="i18n"><span lang="en">Data Engineering Platforms</span><span lang="th">แพลตฟอร์มวิศวกรรมข้อมูล</span></h4>
-                        <p class="i18n"><span lang="en">Implementing comprehensive data engineering platforms for advanced analytics.</span><span lang="th">การสร้างแพลตฟอร์มวิศวกรรมข้อมูลที่ครอบคลุมสำหรับการวิเคราะห์ขั้นสูง</span></p>
+        <section id="contact" class="scroll-reveal">
+            <h2 class="section-title">
+                <span lang="en">Get in Touch</span>
+                <span lang="th">ติดต่อ</span>
+            </h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div>
+                            <p><strong>Email:</strong></p>
+                            <p>la@defense.engineer</p>
+                        </div>
                     </div>
-                    <div class="bento-item">
-                        <h4 class="i18n"><span lang="en">Enhanced Cybersecurity</span><span lang="th">การยกระดับความปลอดภัยไซเบอร์</span></h4>
-                        <p class="i18n"><span lang="en">Enhancing cybersecurity measures to counter evolving threats.</span><span lang="th">การปรับปรุงมาตรการความปลอดภัยทางไซเบอร์เพื่อรับมือกับภัยคุกคามที่เปลี่ยนแปลงตลอดเวลา</span></p>
+                    <div class="contact-item">
+                        <div class="contact-icon">🏢</div>
+                        <div>
+                            <p><strong>Organization:</strong></p>
+                            <p>Student Loan Fund, Thailand</p>
+                        </div>
                     </div>
-                    <div class="bento-item">
-                        <h4 class="i18n"><span lang="en">AI-Driven Solutions</span><span lang="th">โซลูชันที่ขับเคลื่อนด้วย AI</span></h4>
-                        <p class="i18n"><span lang="en">Developing AI-driven solutions to improve both operational efficiency and the borrower experience.</span><span lang="th">การพัฒนาโซลูชันที่ขับเคลื่อนด้วย AI เพื่อปรับปรุงทั้งประสิทธิภาพการดำเนินงานและประสบการณ์ของผู้กู้ยืม</span></p>
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div>
+                            <p><strong>Location:</strong></p>
+                            <p>Bangkok, Thailand</p>
+                        </div>
                     </div>
+                </div>
+                <div class="contact-info">
+                    <h3>Professional Interests</h3>
+                    <p>Open to discussions about:</p>
+                    <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+                        <li style="background: none; padding: 0.5rem 0;">✓ Digital transformation consulting</li>
+                        <li style="background: none; padding: 0.5rem 0;">✓ Data engineering projects</li>
+                        <li style="background: none; padding: 0.5rem 0;">✓ AI/ML implementation</li>
+                        <li style="background: none; padding: 0.5rem 0;">✓ Public sector technology</li>
+                        <li style="background: none; padding: 0.5rem 0;">✓ Speaking engagements</li>
+                    </ul>
                 </div>
             </div>
         </section>
     </main>
 
     <footer>
-        <p class="i18n">
-            <span lang="en">Tanat Tonguthaisri stands at the crossroads of public finance, education, and technology. His work not only transforms an institution but also helps shape a more accessible and efficient future for millions of students across Thailand.</span>
-            <span lang="th">ธนัช ตงอุไทยศรี ยืนอยู่บนทางแยกของการเงินภาครัฐ การศึกษา และเทคโนโลยี ผลงานของเขาไม่เพียงแต่เปลี่ยนแปลงสถาบัน แต่ยังช่วยกำหนดอนาคตที่เข้าถึงได้ง่ายและมีประสิทธิภาพมากขึ้นสำหรับนักเรียนหลายล้านคนทั่วประเทศไทย</span>
-        </p>
-        <p class="contact-info">
-            <strong>Contact:</strong> Information Technology Specialist, Student Loan Fund, Thailand
-        </p>
+        <div class="footer-content">
+            <p>
+                <span lang="en">© 2025 Tanat Tonguthaisri. Driving innovation at the intersection of finance, education, and technology.</span>
+                <span lang="th">© 2568 ธนัท ทองอุทัยศรี ขับเคลื่อนนวัตกรรมที่จุดบรรจบของการเงิน การศึกษา และเทคโนโลยี</span>
+            </p>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/epicure" class="social-link" aria-label="LinkedIn">in</a>
+                <a href="https://github.com" class="social-link" aria-label="GitHub">gh</a>
+                <a href="mailto:tanat@defense.engineer" class="social-link" aria-label="Email">@</a>
+            </div>
+        </div>
     </footer>
 
-    <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
-    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            body.classList.toggle('dark', savedTheme === 'dark');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Language Switcher
+        const langButtons = document.querySelectorAll('.lang-btn');
+        langButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.dataset.lang;
+                body.dataset.lang = lang;
+                langButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                localStorage.setItem('language', lang);
+            });
+        });
+
+        // Check for saved language preference
+        const savedLang = localStorage.getItem('language');
+        if (savedLang) {
+            body.dataset.lang = savedLang;
+            langButtons.forEach(b => {
+                b.classList.toggle('active', b.dataset.lang === savedLang);
+            });
+        }
+
+        // Scroll Reveal Animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Skill Bars Animation
+        const skillObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const progressBars = entry.target.querySelectorAll('.skill-progress');
+                    progressBars.forEach((bar, index) => {
+                        setTimeout(() => {
+                            const level = bar.style.getPropertyValue('--skill-level');
+                            bar.style.transform = `scaleX(${parseInt(level) / 100})`;
+                        }, index * 100);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.skills-container').forEach(el => {
+            skillObserver.observe(el);
+        });
+
+        // Interactive Particle Canvas
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init();
+        });
+        
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+        
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 2 + 1;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+                this.color = `rgba(37, 99, 235, ${Math.random() * 0.3 + 0.1})`;
+            }
+            
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+            
+            update() {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                let forceDirectionX = dx / distance;
+                let forceDirectionY = dy / distance;
+                let maxDistance = mouse.radius;
+                let force = (maxDistance - distance) / maxDistance;
+                let directionX = forceDirectionX * force * this.density;
+                let directionY = forceDirectionY * force * this.density;
+                
+                if (distance < mouse.radius) {
+                    this.x -= directionX;
+                    this.y -= directionY;
+                } else {
+                    if (this.x !== this.baseX) {
+                        let dx = this.x - this.baseX;
+                        this.x -= dx / 10;
+                    }
+                    if (this.y !== this.baseY) {
+                        let dy = this.y - this.baseY;
+                        this.y -= dy / 10;
+                    }
+                }
+            }
+        }
+        
+        function init() {
+            particles = [];
+            const numberOfParticles = (canvas.width * canvas.height) / 15000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                particles.push(new Particle(x, y));
+            }
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].draw();
+                particles[i].update();
+            }
+            requestAnimationFrame(animate);
+        }
+        
+        init();
+        animate();
+
+        // Smooth Scroll for Navigation Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Dynamic Header Background
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                header.style.backdropFilter = 'blur(20px)';
+                header.style.boxShadow = 'var(--shadow-md)';
+            } else {
+                header.style.backdropFilter = 'blur(10px)';
+                header.style.boxShadow = 'var(--shadow-sm)';
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        // Add loading animation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s ease';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
 </body>
 </html>
