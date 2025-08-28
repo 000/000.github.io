@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือปฏิบัติการ: กอบกู้โครงการ 345 ล้านบาท ด้วย Miro War Room</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- Global Variables & Setup --- */
+        :root {
+            --bg-color: #10141c;
+            --card-bg: #1b263b;
+            --text-color: #e0e0e0;
+            --primary-color: #415a77;
+            --accent-color: #e63946; /* สีแดงสำหรับความเร่งด่วน */
+            --highlight-color: #457b9d;
+            --warning-color: #fca311;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth; /* ทำให้การเลื่อนหน้าจอ Smooth */
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            background-color: var(--card-bg);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin: 0 20px;
+        }
+
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding-top: 150px;
+            padding-bottom: 100px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--card-bg), var(--bg-color));
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .hero h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+            color: var(--highlight-color);
+        }
+
+        .crisis-statement {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            background-color: rgba(230, 57, 70, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            display: inline-block;
+            max-width: 800px;
+            border: 1px solid var(--accent-color);
+            font-weight: 600;
+        }
+
+        /* --- Sections & Typography --- */
+        section {
+            padding: 100px 0;
+        }
+
+        h2.section-title {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            text-align: center;
+            font-weight: 600;
+            position: relative;
+            color: #fff;
+        }
+
+        h2.section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent-color);
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--highlight-color);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* --- Interactive Accordion --- */
+        .accordion-item {
+            border-bottom: 1px solid var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .accordion-header {
+            background-color: var(--card-bg);
+            padding: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .accordion-header:hover, .accordion-header.active {
+            background-color: var(--primary-color);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            background-color: var(--bg-color);
+            border-radius: 0 0 5px 5px;
+        }
+
+        .accordion-content-inner {
+            padding: 25px;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        /* --- Kanban Mockup --- */
+        .kanban-board {
+            display: flex;
+            overflow-x: auto;
+            padding: 20px;
+            background-color: var(--bg-color);
+            border-radius: 8px;
+        }
+
+        .kanban-column {
+            flex: 0 0 250px;
+            background-color: var(--card-bg);
+            margin-right: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .kanban-column h4 {
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .kanban-card {
+            background-color: #fff;
+            color: #333;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .severity-critical { border-left: 5px solid var(--accent-color); }
+        .severity-high { border-left: 5px solid var(--warning-color); }
+        .severity-medium { border-left: 5px solid #2196f3; }
+
+        /* --- Escalation Zone --- */
+        .escalation-zone {
+            border: 3px dashed var(--accent-color);
+            padding: 25px;
+            background-color: rgba(230, 57, 70, 0.1);
+            text-align: center;
+            margin-top: 30px;
+            border-radius: 8px;
+        }
+
+        /* --- RACI Matrix Table --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid var(--primary-color);
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* เน้นผู้รับผิดชอบสูงสุด (Accountable) */
+        td.raci-a { background-color: rgba(230, 57, 70, 0.3); font-weight: bold; }
+        td.raci-r { background-color: rgba(76, 175, 80, 0.3); }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--card-bg);
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .call-to-action {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            nav ul {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+            nav ul li {
+                margin: 5px 10px;
+            }
+            .hero {
+                padding-top: 120px;
+            }
+            h2.section-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="container">
+            <ul>
+                <li><a href="#intro">บทนำ</a></li>
+                <li><a href="#setup">1. ตั้งค่าบอร์ด</a></li>
+                <li><a href="#tracking">2. ติดตามปัญหา</a></li>
+                <li><a href="#escalation">3. การ Escalation</a></li>
+                <li><a href="#accountability">4. ความรับผิดชอบ</a></li>
+                <li><a href="#operations">5. การปฏิบัติการ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="intro">
+            <div class="container">
+                <h1>คู่มือปฏิบัติการ: กอบกู้โครงการ 345 ล้านบาท</h1>
+                <h2>การสร้าง War Room เสมือนจริงด้วย Miro (Free Version)</h2>
+                <div class="crisis-statement">
+                    สถานการณ์วิกฤต: โครงการมูลค่า 345 ล้านบาท กำลังเผชิญกับความล่าช้าที่ยอมรับไม่ได้ ผลงานที่ส่งมอบไม่สามารถใช้งานได้จริง (มูลค่าไม่ถึง 1 ล้านบาท) และขาดความโปร่งใสในการบริหารจัดการ คู่มือนี้คือแนวทางปฏิบัติเพื่อยุติความคลุมเครือและสร้าง Accountability (ความรับผิดชอบ) ทันที!
+                </div>
+            </div>
+        </section>
+
+        <section id="setup">
+            <div class="container">
+                <h2 class="section-title">ขั้นตอนที่ 1: การตั้งค่าบอร์ด (Board Setup)</h2>
+                <div class="grid">
+                    <div class="card">
+                        <h3>1.1 สร้าง War Room</h3>
+                        <p>สมัครใช้งาน Miro (Free Plan) และสร้างบอร์ดใหม่ ตั้งชื่อให้ชัดเจนและสะท้อนความเร่งด่วน เช่น <code>[CRITICAL] DSL Project Recovery War Room - 345M</code>.</p>
+                    </div>
+                    <div class="card">
+                        <h3>1.2 เชิญผู้เกี่ยวข้อง (Stakeholders)</h3>
+                        <p>เชิญเฉพาะผู้มีอำนาจตัดสินใจและผู้ปฏิบัติงานหลักเท่านั้น (ฝ่ายบริหาร, PM, หัวหน้าทีมเทคนิค, ฝ่ายธุรกิจ, และตัวแทนหลักจาก Vendor) <strong>นี่คือบอร์ดสำหรับการแก้ปัญหา ไม่ใช่การสื่อสารทั่วไป</strong></p>
+                    </div>
+                    <div class="card">
+                        <h3>1.3 กำหนดโครงสร้าง (Frames)</h3>
+                        <p>ใช้ "Frames" ใน Miro เพื่อแบ่งพื้นที่การทำงานอย่างชัดเจน (Single Source of Truth):</p>
+                        <ul>
+                            <li>A: Issue Tracker (Kanban Board) - หัวใจหลัก</li>
+                            <li>B: Escalation Zone - พื้นที่ยกระดับปัญหาเร่งด่วน</li>
+                            <li>C: Timeline & Recovery Plan - แผนกอบกู้</li>
+                            <li>D: RACI Matrix - ใครรับผิดชอบอะไร</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tracking" style="background-color: var(--card-bg);">
+            <div class="container">
+                <h2 class="section-title">ขั้นตอนที่ 2: ระบบติดตามปัญหา (Kanban)</h2>
+                <p style="text-align: center; margin-bottom: 40px;">หัวใจสำคัญคือการเปลี่ยนปัญหาที่กระจัดกระจาย ให้กลายเป็นงานที่มองเห็นได้ (Visualized Tasks) และติดตามสถานะได้จริง</p>
+
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>2.1 การกำหนดคอลัมน์ (Columns Standardization)</span>
+                            <span class="icon">▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <p>ใช้ Template "Kanban Framework" และปรับคอลัมน์ให้สะท้อนกระบวนการแก้ไขปัญหาที่แท้จริง:</p>
+                                <ol>
+                                    <li><strong>Backlog:</strong> ปัญหาที่พบใหม่ทั้งหมด รอการวิเคราะห์</li>
+                                    <li><strong>Prioritized (Critical/High):</strong> ปัญหาที่กระทบ Go-Live โดยตรง ต้องแก้ไขทันที</li>
+                                    <li><strong>Vendor Fixing:</strong> ปัญหาที่ส่งมอบให้ผู้รับจ้างดำเนินการ (ต้องมี Due Date กำกับ)</li>
+                                    <li><strong>Verification (UAT/Testing):</strong> รอการตรวจสอบความถูกต้องจาก Business User/ฝ่ายเทคนิค</li>
+                                    <li><strong>BLOCKED:</strong> งานที่ติดขัด ต้องการการตัดสินใจ หรือข้อมูลเพิ่มเติม (ต้องระบุสาเหตุ ห้ามค้างนาน)</li>
+                                    <li><strong>Done:</strong> ปัญหาที่ตรวจสอบผ่านและยอมรับแล้วเท่านั้น</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>2.2 มาตรฐานข้อมูลในการ์ด (Card Standardization)</span>
+                            <span class="icon">▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <p>ทุกปัญหาคือหนึ่งการ์ด และต้องมีข้อมูลบังคับดังนี้ เพื่อป้องกันการปฏิเสธความรับผิดชอบ:</p>
+                                <ul>
+                                    <li><strong>หัวข้อ:</strong> สรุปปัญหาให้กระชับ (เช่น "Recalculation Logic ผิดพลาด - กลุ่มคดี")</li>
+                                    <li><strong>Owner (ผู้รับผิดชอบหลัก):</strong> ต้อง Assign เป็นชื่อบุคคล <strong>ไม่ใช่ชื่อฝ่ายหรือบริษัท</strong></li>
+                                    <li><strong>Due Date:</strong> กำหนดเส้นตายที่ชัดเจนและเป็นจริง (ห้ามกำหนดลอยๆ)</li>
+                                    <li><strong>Severity (ความรุนแรง):</strong> ใช้สีการ์ดกำหนดความเร่งด่วน (แดง=Critical, ส้ม=High)</li>
+                                    <li><strong>Tags:</strong> ใช้ Tags เพื่อวิเคราะห์ Root Cause (เช่น #DataIntegrity, #BusinessLogic, #Performance, #Governance, #VendorIssue)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>2.3 การจำลอง Kanban Board (War Room)</span>
+                            <span class="icon">▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <div class="kanban-board">
+                                    <div class="kanban-column">
+                                        <h4>Backlog</h4>
+                                        <div class="kanban-card severity-medium">UI แสดงผลผิดพลาดบน Mobile</div>
+                                    </div>
+                                    <div class="kanban-column">
+                                        <h4>Prioritized</h4>
+                                        <div class="kanban-card severity-critical">Recalculation Logic ผิดพลาด (กลุ่มคดี)</div>
+                                        <div class="kanban-card severity-high">Data Snapshot หายไป (30 มิ.ย.)</div>
+                                    </div>
+                                    <div class="kanban-column">
+                                        <h4>Vendor Fixing</h4>
+                                        <div class="kanban-card severity-high">Performance Test ไม่ผ่านเกณฑ์</div>
+                                    </div>
+                                    <div class="kanban-column">
+                                        <h4>Verification</h4>
+                                        <div class="kanban-card severity-medium">แก้ไข Workflow การอนุมัติ</div>
+                                    </div>
+                                    <div class="kanban-column">
+                                        <h4>BLOCKED</h4>
+                                        <div class="kanban-card severity-critical">รอการยืนยัน Spec จากฝ่ายกฎหมาย (ล่าช้า 5 วัน)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="escalation">
+            <div class="container">
+                <h2 class="section-title">ขั้นตอนที่ 3: กระบวนการ Escalation (การยกระดับปัญหา)</h2>
+                <p style="text-align: center; margin-bottom: 40px;">สำหรับปัญหาที่ล่าช้า ส่อแววไม่โปร่งใส หรือต้องการการตัดสินใจระดับบริหารทันที</p>
+
+                <div class="card">
+                    <h3>3.1 เกณฑ์การยกระดับ (Escalation Triggers)</h3>
+                    <p>ต้องกำหนดเกณฑ์ที่ชัดเจนว่าเมื่อไหร่ที่ปัญหาต้องถูกยกระดับ:</p>
+                    <ul>
+                        <li>ปัญหา Critical/High ที่เกิน Due Date แม้แต่วันเดียว</li>
+                        <li>ปัญหาที่อยู่ในสถานะ "BLOCKED" นานเกิน 24 ชั่วโมง โดยไม่มีแผนแก้ไขชัดเจน</li>
+                        <li>ปัญหาที่ถูกตีกลับ (Verification ไม่ผ่าน) มากกว่า 2 ครั้งในเรื่องเดิม แสดงถึงความไม่เข้าใจในปัญหา หรือความไร้ความสามารถของ Vendor</li>
+                        <li>Vendor ไม่ให้ความร่วมมือ หรือไม่ส่งมอบเอกสารสำคัญ (เช่น Design, Architecture, Workflow)</li>
+                        <li>ประเด็นด้าน Governance หรือสัญญา (เช่น การละเว้นไม่คิดค่าปรับ, การพิจารณายกเลิกสัญญา)</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>3.2 วิธีการ Escalate บน Miro</h3>
+                    <ol>
+                        <li>ย้ายการ์ดปัญหาไปยัง <strong>Frame B: Escalation Zone</strong> ทันที</li>
+                        <li>เปลี่ยนสีการ์ดเป็น<strong>สีแดงเข้ม (Critical)</strong></li>
+                        <li>ใช้ฟังก์ชัน Comment และ Mention (<code>@ชื่อ</code>) ผู้บริหารที่มีอำนาจตัดสินใจโดยตรง (เช่น ประธานอนุกรรมการฯ)</li>
+                        <li><strong>ระบุสิ่งที่ต้องการอย่างชัดเจนใน Comment:</strong> "ต้องการการตัดสินใจภายใน [เวลา]" หรือ "ต้องการแนวทางดำเนินการทางกฎหมาย"</li>
+                    </ol>
+                    <div class="escalation-zone">
+                        <h4>🚨 ESCALATION ZONE (พื้นที่ยกระดับปัญหาเร่งด่วน) 🚨</h4>
+                        <p>พื้นที่สำหรับปัญหาที่ต้องการการแทรกแซงจากผู้บริหารทันที!</p>
+                        <div class="kanban-card severity-critical" style="margin: 15px auto; max-width: 500px; text-align: left;">
+                            <strong>ตัวอย่างการ์ด:</strong> Vendor ปฏิเสธการส่งมอบ Data Structure ตามสัญญา<br>
+                            <strong>Comment:</strong> @ประธานอนุกรรมการฯ ต้องการแนวทางดำเนินการตามสัญญาภายในวันนี้ 16:00 น.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="accountability" style="background-color: var(--card-bg);">
+            <div class="container">
+                <h2 class="section-title">ขั้นตอนที่ 4: กำหนดความรับผิดชอบ (RACI Matrix)</h2>
+                <p style="text-align: center; margin-bottom: 40px;">เพื่อตอบคำถามว่า "ใครรับผิดชอบสูงสุด?" และป้องกันการปัดความรับผิดชอบในภาพรวม ใช้ Frame D สร้าง RACI Matrix</p>
+
+                <div class="card">
+                    <h3>RACI คืออะไร?</h3>
+                    <ul>
+                        <li><strong>R (Responsible):</strong> ผู้ปฏิบัติงาน/ผู้ลงมือทำ</li>
+                        <li><strong>A (Accountable):</strong> ผู้รับผิดชอบสูงสุด ตัดสินใจ และรับผลกระทบ (ต้องมีเพียง 1 คนต่องาน)</li>
+                        <li><strong>C (Consulted):</strong> ผู้ให้คำปรึกษา/ผู้เชี่ยวชาญ</li>
+                        <li><strong>I (Informed):</strong> ผู้ที่ต้องได้รับแจ้งให้ทราบ</li>
+                    </ul>
+
+                    <h3>ตัวอย่าง RACI Matrix สำหรับโครงการวิกฤต DSL</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>งานหลัก (Key Task)</th>
+                                <th>Vendor (บ.เปรมฯ)</th>
+                                <th>ผอ.ฝ่าย IT (กยศ.)</th>
+                                <th>ผอ.ฝ่ายธุรกิจ (User)</th>
+                                <th>คณะกรรมการตรวจรับฯ</th>
+                                <th>ประธานอนุกรรมการ IT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>การแก้ไข Logic การคำนวณ (Recalculation)</td>
+                                <td class="raci-r">R</td>
+                                <td>C</td>
+                                <td class="raci-a">A (ยืนยันความถูกต้อง)</td>
+                                <td>I</td>
+                                <td>I</td>
+                            </tr>
+                            <tr>
+                                <td>การออกแบบ Data Structure/Workflow</td>
+                                <td class="raci-r">R</td>
+                                <td class="raci-a">A (อนุมัติการออกแบบ)</td>
+                                <td>C</td>
+                                <td>I</td>
+                                <td>I</td>
+                            </tr>
+                            <tr>
+                                <td>การทดสอบระบบ (UAT)</td>
+                                <td>C</td>
+                                <td>R</td>
+                                <td class="raci-r">R</td>
+                                <td class="raci-a">A</td>
+                                <td>I</td>
+                            </tr>
+                            <tr>
+                                <td>การเจรจาสัญญาและค่าปรับ</td>
+                                <td>-</td>
+                                <td>C</td>
+                                <td>C</td>
+                                <td class="raci-r">R</td>
+                                <td class="raci-a">A</td>
+                            </tr>
+                            <tr>
+                                <td>การตัดสินใจ Go/No Go Live</td>
+                                <td>I</td>
+                                <td>R (ให้ข้อมูล)</td>
+                                <td>R (ให้ข้อมูล)</td>
+                                <td>R</td>
+                                <td class="raci-a">A</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="operations">
+            <div class="container">
+                <h2 class="section-title">ขั้นตอนที่ 5: การปฏิบัติการรายวัน (Daily Operations)</h2>
+                <div class="grid">
+                    <div class="card">
+                        <h3>5.1 Daily Stand-up Meeting (War Room Session)</h3>
+                        <p>ทุกเช้า (15-30 นาที) ทีมงานหลักต้องประชุมหน้าบอร์ด Miro นี้เท่านั้น โฟกัสที่การ์ดในคอลัมน์ "BLOCKED" และ "Escalation Zone" ไม่ใช่การรายงานสถานะทั่วไป แต่เป็นการปลดล็อกปัญหา</p>
+                    </div>
+                    <div class="card">
+                        <h3>5.2 Single Source of Truth (SSOT)</h3>
+                        <p><strong>กฎเหล็ก:</strong> ห้ามรายงานนอกรอบ ห้ามส่งไฟล์ Excel, PowerPoint หรืออีเมลแยกต่างหาก ทุกอย่างต้องอัปเดตบนบอร์ดนี้ ความคืบหน้าต้องสะท้อนจากการเลื่อนการ์ดเท่านั้น</p>
+                    </div>
+                    <div class="card">
+                        <h3>5.3 Audit Trail & Transparency</h3>
+                        <p>ใช้ `Comments` ในการ์ดเพื่อบันทึกข้อสรุปและการตัดสินใจ ทุกการเปลี่ยนแปลงจะถูกบันทึกใน Activity Log ของ Miro ทำให้สามารถตรวจสอบย้อนหลังได้ว่าความล่าช้าเกิดขึ้นที่ใครและเมื่อไหร่</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="call-to-action">
+                เวลาเหลือน้อยลงทุกที เริ่มต้นสร้างความโปร่งใสและ Accountability เดี๋ยวนี้!
+            </div>
+            <p style="margin-top: 20px;">Project Recovery Guideline | © 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        // Accordion Logic
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('.icon');
+                const isActive = header.classList.contains('active');
+
+                // Close all open accordions first
+                document.querySelectorAll('.accordion-content').forEach(item => {
+                    item.style.maxHeight = null;
+                });
+                document.querySelectorAll('.accordion-header').forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelectorAll('.accordion-header .icon').forEach(item => {
+                    item.style.transform = 'rotate(0deg)';
+                });
+
+                // Open the clicked accordion if it wasn't active
+                if (!isActive) {
+                    header.classList.add('active');
+                    // Use scrollHeight for dynamic height calculation
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
