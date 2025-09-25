@@ -200,6 +200,14 @@
             100% { box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4); }
         }
 
+        .special-event {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
+            animation: pulse 1.5s infinite, sparkle 3s infinite;
+            line-height: 1.2;
+            padding: 6px 12px !important;
+        }
+
         .special-year {
             background: linear-gradient(135deg, #ffd700, #ffed4e);
             animation: sparkle 3s infinite;
@@ -376,7 +384,7 @@
             <div class="controls">
                 <button class="btn" onclick="animateTable()">✨ Animate Table</button>
                 <button class="btn" onclick="showVisualization()">📊 Show D3 Visualization</button>
-                <button class="btn" onclick="filterWeekends()">🎯 Filter Weekends</button>
+                <button class="btn" onclick="filterWeekends()">🎯 Highlight Weekends & Holidays</button>
                 <button class="btn" onclick="resetView()">🔄 Reset View</button>
                 <button class="btn" onclick="playSound()">🔊 Sound Effects</button>
                 <button class="btn" onclick="startFireworks()">🎆 Fireworks</button>
@@ -385,17 +393,17 @@
 
         <!-- Statistics Cards -->
         <div class="stats-container">
-            <div class="stat-card" onclick="highlightWeekdays('Monday')">
-                <div class="stat-number" id="monday-count">0</div>
-                <div class="stat-label">Mondays</div>
+            <div class="stat-card" onclick="highlightWeekdays('Saturday')">
+                <div class="stat-number" id="saturday-count">0</div>
+                <div class="stat-label">Saturdays</div>
             </div>
-            <div class="stat-card" onclick="highlightWeekdays('Friday')">
-                <div class="stat-number" id="friday-count">0</div>
-                <div class="stat-label">Fridays</div>
+            <div class="stat-card" onclick="highlightWeekdays('Sunday')">
+                <div class="stat-number" id="sunday-count">0</div>
+                <div class="stat-label">Sundays</div>
             </div>
             <div class="stat-card" onclick="highlightWeekdays('Weekend')">
                 <div class="stat-number" id="weekend-count">0</div>
-                <div class="stat-label">Weekends</div>
+                <div class="stat-label">Total Weekends</div>
             </div>
             <div class="stat-card" onclick="focusYear(2552)">
                 <div class="stat-number">2552</div>
@@ -434,17 +442,40 @@
 <tr><td class='year-col'>2551</td><td></td><td></td><td></td><td></td><td></td><td><span class='cell-content weekend-highlight' data-year="2551" data-day="Saturday">July 5th</span></td><td></td></tr>
 <tr id="year-2552" style="background: linear-gradient(90deg, rgba(255,215,0,0.2) 0%, rgba(255,237,78,0.2) 100%);">
     <td class='year-col special-year'>2552 ⭐</td>
-    <td></td><td></td><td></td><td></td><td></td><td></td>
     <td>
-        <span class='cell-content weekend-highlight' data-year="2552" data-day="Sunday" style="background: linear-gradient(135deg, #FFD700, #FFA500);">July 5th</span>
+        <span class='cell-content special-event' data-year="2552" data-day="Monday" style="background: linear-gradient(135deg, #FF6347, #FF8C00);">
+            July 6<br><small style="font-size: 0.7em;">วันหยุดพิเศษ</small>
+        </span>
+    </td>
+    <td>
+        <span class='cell-content special-event' data-year="2552" data-day="Tuesday" style="background: linear-gradient(135deg, #9370DB, #BA55D3);">
+            July 7<br><small style="font-size: 0.7em;">อาสาฬหบูชา</small>
+        </span>
+    </td>
+    <td>
+        <span class='cell-content special-event' data-year="2552" data-day="Wednesday" style="background: linear-gradient(135deg, #9370DB, #BA55D3);">
+            July 8<br><small style="font-size: 0.7em;">วันเข้าพรรษา</small>
+        </span>
+    </td>
+    <td>
+        <span class='cell-content special-event' data-year="2552" data-day="Thursday" style="background: linear-gradient(135deg, #20B2AA, #48D1CC);">
+            July 9<br><small style="font-size: 0.7em;">ชำระหนี้ กยศ.</small>
+        </span>
+    </td>
+    <td></td>
+    <td></td>
+    <td>
+        <span class='cell-content weekend-highlight' data-year="2552" data-day="Sunday" style="background: linear-gradient(135deg, #FFD700, #FFA500); font-size: 1.1em; font-weight: bold; box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);">
+            July 5th<br><small style="font-size: 0.65em;">ครบกำหนดชำระหนี้</small>
+        </span>
         <div class="special-info">
-            <strong>พ.ศ. 2552 - Special Events:</strong>
+            <strong>พ.ศ. 2552 - Special Buddhist Calendar Week:</strong>
             <ul class="event-list">
-                <li>📅 <strong>5 ก.ค.:</strong> วันครบกำหนดชำระหนี้</li>
-                <li>🏛️ <strong>6 ก.ค.:</strong> วันหยุดพิเศษ (มติ ครม.)</li>
-                <li>🙏 <strong>7 ก.ค.:</strong> วันอาสาฬหบูชา</li>
-                <li>☸️ <strong>8 ก.ค.:</strong> วันเข้าพรรษา</li>
-                <li>💰 <strong>9 ก.ค.:</strong> วันสุดท้ายชำระหนี้ กยศ.</li>
+                <li>📅 <strong>อา. 5 ก.ค.:</strong> วันครบกำหนดชำระหนี้ (Payment Due Date)</li>
+                <li>🏛️ <strong>จ. 6 ก.ค.:</strong> วันหยุดพิเศษ มติ ครม. (Cabinet Special Holiday)</li>
+                <li>🙏 <strong>อ. 7 ก.ค.:</strong> วันอาสาฬหบูชา (Asalha Bucha Day)</li>
+                <li>☸️ <strong>พ. 8 ก.ค.:</strong> วันเข้าพรรษา (Buddhist Lent Begins)</li>
+                <li>💰 <strong>พฤ. 9 ก.ค.:</strong> วันสุดท้ายชำระหนี้ กยศ. (Student Loan Final Payment)</li>
             </ul>
         </div>
     </td>
@@ -542,18 +573,21 @@
 
         // Count statistics
         function updateStatistics() {
-            const cells = document.querySelectorAll('.cell-content');
-            let mondayCount = 0, fridayCount = 0, weekendCount = 0;
+            const cells = document.querySelectorAll('.cell-content[data-year]');
+            let saturdayCount = 0, sundayCount = 0, weekendCount = 0;
             
             cells.forEach(cell => {
                 const day = cell.getAttribute('data-day');
-                if (day === 'Monday') mondayCount++;
-                if (day === 'Friday') fridayCount++;
-                if (day === 'Saturday' || day === 'Sunday') weekendCount++;
+                // Only count July 5th occurrences
+                if (cell.textContent.includes('July 5th')) {
+                    if (day === 'Saturday') saturdayCount++;
+                    if (day === 'Sunday') sundayCount++;
+                    if (day === 'Saturday' || day === 'Sunday') weekendCount++;
+                }
             });
             
-            document.getElementById('monday-count').textContent = mondayCount;
-            document.getElementById('friday-count').textContent = fridayCount;
+            document.getElementById('saturday-count').textContent = saturdayCount;
+            document.getElementById('sunday-count').textContent = sundayCount;
             document.getElementById('weekend-count').textContent = weekendCount;
         }
         updateStatistics();
@@ -564,12 +598,28 @@
                 const tooltip = document.getElementById('tooltip');
                 const year = this.getAttribute('data-year');
                 const day = this.getAttribute('data-day');
+                const dateText = this.innerText.split('\n')[0];
                 
-                tooltip.innerHTML = `
-                    <strong>Year ${year} B.E.</strong><br>
-                    July 5th falls on ${day}<br>
-                    ${year === '2552' ? '<br>🌟 Special Buddhist Events Year! 🌟' : ''}
-                `;
+                let tooltipContent = `<strong>Year ${year} B.E.</strong><br>`;
+                
+                if (year === '2552') {
+                    if (dateText.includes('July 5')) {
+                        tooltipContent += `July 5th falls on ${day}<br>วันครบกำหนดชำระหนี้`;
+                    } else if (dateText.includes('July 6')) {
+                        tooltipContent += `July 6th - ${day}<br>วันหยุดพิเศษ (มติ ครม.)`;
+                    } else if (dateText.includes('July 7')) {
+                        tooltipContent += `July 7th - ${day}<br>วันอาสาฬหบูชา`;
+                    } else if (dateText.includes('July 8')) {
+                        tooltipContent += `July 8th - ${day}<br>วันเข้าพรรษา`;
+                    } else if (dateText.includes('July 9')) {
+                        tooltipContent += `July 9th - ${day}<br>วันสุดท้ายชำระหนี้ กยศ.`;
+                    }
+                    tooltipContent += '<br>🌟 Special Buddhist Events Week! 🌟';
+                } else {
+                    tooltipContent += `July 5th falls on ${day}`;
+                }
+                
+                tooltip.innerHTML = tooltipContent;
                 tooltip.style.opacity = '1';
                 tooltip.style.left = e.pageX + 10 + 'px';
                 tooltip.style.top = e.pageY + 10 + 'px';
@@ -653,7 +703,8 @@
             const rows = document.querySelectorAll('tbody tr');
             rows.forEach(row => {
                 const hasWeekend = row.querySelector('.weekend-highlight');
-                if (!hasWeekend && row.id !== 'year-2552') {
+                const hasSpecialEvent = row.querySelector('.special-event');
+                if (!hasWeekend && !hasSpecialEvent && row.id !== 'year-2552') {
                     row.style.opacity = '0.3';
                     row.style.transform = 'scale(0.95)';
                 } else {
@@ -769,11 +820,14 @@
             const data = [];
             const cells = document.querySelectorAll('.cell-content');
             cells.forEach(cell => {
-                data.push({
-                    year: parseInt(cell.getAttribute('data-year')),
-                    day: cell.getAttribute('data-day'),
-                    isWeekend: cell.classList.contains('weekend-highlight')
-                });
+                // Only include July 5th dates in the visualization
+                if (cell.textContent.includes('July 5th')) {
+                    data.push({
+                        year: parseInt(cell.getAttribute('data-year')),
+                        day: cell.getAttribute('data-day'),
+                        isWeekend: cell.classList.contains('weekend-highlight')
+                    });
+                }
             });
             
             // Create Bar Chart
@@ -1028,6 +1082,18 @@
         // Auto-highlight special year on load
         setTimeout(() => {
             focusYear(2552);
+            // Also briefly highlight the special week
+            const specialCells = document.querySelectorAll('#year-2552 .cell-content');
+            specialCells.forEach((cell, index) => {
+                setTimeout(() => {
+                    cell.style.transform = 'scale(1.3) rotate(5deg)';
+                    cell.style.boxShadow = '0 0 40px rgba(255, 215, 0, 0.9)';
+                    setTimeout(() => {
+                        cell.style.transform = '';
+                        cell.style.boxShadow = '';
+                    }, 1000);
+                }, index * 200);
+            });
         }, 1500);
     </script>
 </body>
