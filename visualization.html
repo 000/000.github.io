@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Analysis Matrix - Interactive Visualization</title>
+    
+    <!-- D3.js v7 -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <!-- Google Fonts for Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables with Pantone Colors of the Year */
+        :root {
+            --classic-blue: #0F4C81;
+            --ultimate-gray: #939597;
+            --illuminating: #F5DF4D;
+            --very-peri: #6667AB;
+            --viva-magenta: #BB2649;
+            --peach-fuzz: #FFBE98;
+            --mocha-mousse: #A47764;
+            
+            /* UI Colors */
+            --bg-primary: #0a0e27;
+            --bg-secondary: #151932;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a9c9;
+            --border-color: #2a3456;
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, var(--very-peri) 0%, var(--viva-magenta) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--peach-fuzz) 0%, var(--mocha-mousse) 100%);
+            --gradient-dark: linear-gradient(180deg, #0a0e27 0%, #151932 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gradient-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.03;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--very-peri) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--viva-magenta) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, var(--peach-fuzz) 0%, transparent 50%);
+            animation: bgMove 20s ease-in-out infinite;
+        }
+        
+        @keyframes bgMove {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-20px, -20px) scale(1.1); }
+            66% { transform: translate(20px, -10px) scale(0.9); }
+        }
+        
+        /* Header */
+        .header {
+            padding: 2rem 0;
+            text-align: center;
+            background: rgba(21, 25, 50, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(102, 103, 171, 0.5)); }
+            to { filter: drop-shadow(0 0 30px rgba(187, 38, 73, 0.8)); }
+        }
+        
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        /* Control Panel */
+        .controls {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .control-group {
+            background: rgba(42, 52, 86, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        
+        .control-group:hover {
+            background: rgba(42, 52, 86, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 103, 171, 0.2);
+        }
+        
+        .control-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .control-group select,
+        .control-group input {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            min-width: 150px;
+            transition: all 0.3s ease;
+        }
+        
+        .control-group select:focus,
+        .control-group input:focus {
+            outline: none;
+            border-color: var(--very-peri);
+            box-shadow: 0 0 0 3px rgba(102, 103, 171, 0.1);
+        }
+        
+        .btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(187, 38, 73, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Statistics Cards */
+        .stats-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .stat-card {
+            background: rgba(42, 52, 86, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 103, 171, 0.2);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Matrix Container */
+        .matrix-container {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            background: rgba(21, 25, 50, 0.5);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+        
+        .matrix-header {
+            padding: 2rem;
+            background: rgba(42, 52, 86, 0.2);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .matrix-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        #matrix-viz {
+            padding: 2rem;
+            min-height: 600px;
+            position: relative;
+        }
+        
+        /* SVG Styles */
+        .cell {
+            stroke: var(--border-color);
+            stroke-width: 1;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .cell:hover {
+            stroke: var(--illuminating);
+            stroke-width: 2;
+            filter: brightness(1.2);
+        }
+        
+        .axis-label {
+            font-size: 12px;
+            fill: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .axis-label:hover {
+            fill: var(--illuminating);
+            cursor: pointer;
+        }
+        
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            padding: 1rem;
+            background: rgba(10, 14, 39, 0.95);
+            border: 1px solid var(--very-peri);
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .tooltip.show {
+            opacity: 1;
+        }
+        
+        .tooltip h3 {
+            color: var(--illuminating);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .tooltip p {
+            color: var(--text-primary);
+            margin: 0.25rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .tooltip .count {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--peach-fuzz);
+        }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            padding: 1.5rem;
+            background: rgba(42, 52, 86, 0.2);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .legend-color {
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .legend-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Loading Spinner */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--very-peri);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+            
+            #matrix-viz {
+                padding: 1rem;
+            }
+        }
+        
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* Focus styles for keyboard navigation */
+        *:focus-visible {
+            outline: 2px solid var(--very-peri);
+            outline-offset: 2px;
+        }
+        
+        /* Animation for data updates */
+        @keyframes dataUpdate {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        .updating {
+            animation: dataUpdate 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <header class="header">
+        <h1>Account Analysis Matrix</h1>
+        <p>Interactive Visualization of Account Distribution across Groups and Lots</p>
+    </header>
+    
+    <div class="controls">
+        <div class="control-group">
+            <label for="colorScheme">Color Scheme</label>
+            <select id="colorScheme">
+                <option value="pantone">Pantone Colors</option>
+                <option value="heat">Heat Map</option>
+                <option value="cool">Cool Tones</option>
+                <option value="vibrant">Vibrant</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <label for="cellSize">Cell Size</label>
+            <input type="range" id="cellSize" min="20" max="60" value="40">
+        </div>
+        
+        <div class="control-group">
+            <label for="filterGroup">Filter Group</label>
+            <select id="filterGroup">
+                <option value="all">All Groups</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <label for="filterLot">Filter Lot</label>
+            <select id="filterLot">
+                <option value="all">All Lots</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <button class="btn" onclick="resetView()">Reset View</button>
+        </div>
+    </div>
+    
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-value" id="totalAccounts">0</div>
+            <div class="stat-label">Total Accounts</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="totalGroups">0</div>
+            <div class="stat-label">Groups</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="totalLots">0</div>
+            <div class="stat-label">Lots</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="avgDensity">0</div>
+            <div class="stat-label">Avg Density</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="maxCluster">0</div>
+            <div class="stat-label">Max Cluster</div>
+        </div>
+    </div>
+    
+    <div class="matrix-container">
+        <div class="matrix-header">
+            <h2>Interactive Matrix Visualization</h2>
+            <p>Click on cells to view account details • Hover for quick stats</p>
+        </div>
+        
+        <div id="matrix-viz">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #0F4C81;"></div>
+                <span class="legend-label">0-10 Accounts</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #6667AB;"></div>
+                <span class="legend-label">11-50 Accounts</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #BB2649;"></div>
+                <span class="legend-label">51-100 Accounts</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #FFBE98;"></div>
+                <span class="legend-label">100+ Accounts</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tooltip" id="tooltip"></div>
+    
+    <script>
+        // Global variables
+        let data = null;
+        let currentColorScheme = 'pantone';
+        let cellSizeValue = 40;
+        let svg = null;
+        let xScale, yScale;
+        
+        // Color schemes
+        const colorSchemes = {
+            pantone: {
+                scale: d3.scaleSequential()
+                    .interpolator(d3.interpolateRgbBasis([
+                        '#0F4C81', // Classic Blue
+                        '#6667AB', // Very Peri
+                        '#BB2649', // Viva Magenta
+                        '#FFBE98', // Peach Fuzz
+                        '#F5DF4D'  // Illuminating
+                    ]))
+            },
+            heat: {
+                scale: d3.scaleSequential(d3.interpolateInferno)
+            },
+            cool: {
+                scale: d3.scaleSequential(d3.interpolateBlues)
+            },
+            vibrant: {
+                scale: d3.scaleSequential(d3.interpolateRainbow)
+            }
+        };
+        
+        // Load data
+        async function loadData() {
+            try {
+                // For demo purposes, generate sample data
+                // In production, this would load from visualization_data.json
+                data = generateSampleData();
+                initializeVisualization();
+                updateStatistics();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('matrix-viz').innerHTML = 
+                    '<p style="text-align: center; color: #ff6b6b;">Error loading data. Please check the console.</p>';
+            }
+        }
+        
+        // Generate sample data for demonstration
+        function generateSampleData() {
+            const groups = ['GROUP_A', 'GROUP_B', 'GROUP_C', 'GROUP_D', 'GROUP_E', 
+                          'GROUP_F', 'GROUP_G', 'GROUP_H', 'GROUP_I', 'GROUP_J'];
+            const lots = ['LOT_001', 'LOT_002', 'LOT_003', 'LOT_004', 'LOT_005',
+                         'LOT_006', 'LOT_007', 'LOT_008', 'LOT_009', 'LOT_010'];
+            
+            const matrix = [];
+            let totalAccounts = 0;
+            
+            for (let group of groups) {
+                for (let lot of lots) {
+                    const count = Math.floor(Math.random() * 150);
+                    const accounts = [];
+                    for (let i = 0; i < Math.min(count, 10); i++) {
+                        accounts.push(`ACC_${Math.random().toString(36).substr(2, 9).toUpperCase()}`);
+                    }
+                    matrix.push({
+                        group: group,
+                        lot: lot,
+                        count: count,
+                        accounts: accounts
+                    });
+                    totalAccounts += count;
+                }
+            }
+            
+            return {
+                groups: groups,
+                lots: lots,
+                matrix: matrix,
+                totalAccounts: totalAccounts
+            };
+        }
+        
+        // Initialize visualization
+        function initializeVisualization() {
+            // Clear loading spinner
+            document.getElementById('matrix-viz').innerHTML = '';
+            
+            // Set up dimensions
+            const margin = {top: 100, right: 50, bottom: 50, left: 100};
+            const width = Math.min(window.innerWidth - 100, 1300);
+            const height = 600;
+            
+            // Create SVG
+            svg = d3.select('#matrix-viz')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .attr('viewBox', `0 0 ${width} ${height}`)
+                .attr('preserveAspectRatio', 'xMidYMid meet');
+            
+            // Create scales
+            xScale = d3.scaleBand()
+                .domain(data.lots)
+                .range([margin.left, width - margin.right])
+                .padding(0.1);
+            
+            yScale = d3.scaleBand()
+                .domain(data.groups)
+                .range([margin.top, height - margin.bottom])
+                .padding(0.1);
+            
+            // Add gradient definitions
+            const defs = svg.append('defs');
+            
+            const gradient = defs.append('linearGradient')
+                .attr('id', 'cell-gradient')
+                .attr('x1', '0%')
+                .attr('y1', '0%')
+                .attr('x2', '100%')
+                .attr('y2', '100%');
+            
+            gradient.append('stop')
+                .attr('offset', '0%')
+                .attr('stop-color', '#6667AB')
+                .attr('stop-opacity', 0.8);
+            
+            gradient.append('stop')
+                .attr('offset', '100%')
+                .attr('stop-color', '#BB2649')
+                .attr('stop-opacity', 0.8);
+            
+            // Draw matrix
+            drawMatrix();
+            
+            // Add axes
+            drawAxes();
+            
+            // Populate filters
+            populateFilters();
+            
+            // Add event listeners
+            setupEventListeners();
+        }
+        
+        // Draw matrix cells
+        function drawMatrix() {
+            const maxCount = d3.max(data.matrix, d => d.count);
+            const colorScale = colorSchemes[currentColorScheme].scale.domain([0, maxCount]);
+            
+            // Create cell groups
+            const cells = svg.selectAll('.cell-group')
+                .data(data.matrix)
+                .enter()
+                .append('g')
+                .attr('class', 'cell-group')
+                .attr('transform', d => `translate(${xScale(d.lot)}, ${yScale(d.group)})`);
+            
+            // Add rectangles
+            cells.append('rect')
+                .attr('class', 'cell')
+                .attr('width', xScale.bandwidth())
+                .attr('height', yScale.bandwidth())
+                .attr('fill', d => d.count > 0 ? colorScale(d.count) : '#1a1f3a')
+                .attr('rx', 4)
+                .attr('ry', 4)
+                .on('mouseover', showTooltip)
+                .on('mousemove', moveTooltip)
+                .on('mouseout', hideTooltip)
+                .on('click', showDetails);
+            
+            // Add text labels for counts
+            cells.append('text')
+                .attr('x', xScale.bandwidth() / 2)
+                .attr('y', yScale.bandwidth() / 2)
+                .attr('text-anchor', 'middle')
+                .attr('dominant-baseline', 'middle')
+                .attr('fill', d => d.count > 50 ? '#ffffff' : '#a0a9c9')
+                .attr('font-size', '12px')
+                .attr('font-weight', '600')
+                .attr('pointer-events', 'none')
+                .text(d => d.count > 0 ? d.count : '');
+        }
+        
+        // Draw axes
+        function drawAxes() {
+            // X-axis (Lots)
+            svg.selectAll('.x-label')
+                .data(data.lots)
+                .enter()
+                .append('text')
+                .attr('class', 'axis-label x-label')
+                .attr('x', d => xScale(d) + xScale.bandwidth() / 2)
+                .attr('y', 80)
+                .attr('text-anchor', 'middle')
+                .text(d => d)
+                .on('click', d => filterByLot(d));
+            
+            // Y-axis (Groups)
+            svg.selectAll('.y-label')
+                .data(data.groups)
+                .enter()
+                .append('text')
+                .attr('class', 'axis-label y-label')
+                .attr('x', 80)
+                .attr('y', d => yScale(d) + yScale.bandwidth() / 2)
+                .attr('text-anchor', 'end')
+                .attr('dominant-baseline', 'middle')
+                .text(d => d)
+                .on('click', d => filterByGroup(d));
+            
+            // Axis titles
+            svg.append('text')
+                .attr('x', svg.attr('width') / 2)
+                .attr('y', 40)
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#F5DF4D')
+                .attr('font-size', '14px')
+                .attr('font-weight', '600')
+                .text('LOTS →');
+            
+            svg.append('text')
+                .attr('x', -svg.attr('height') / 2)
+                .attr('y', 20)
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#F5DF4D')
+                .attr('font-size', '14px')
+                .attr('font-weight', '600')
+                .attr('transform', 'rotate(-90, 20, 0)')
+                .text('GROUPS ↓');
+        }
+        
+        // Tooltip functions
+        function showTooltip(event, d) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.innerHTML = `
+                <h3>${d.group} × ${d.lot}</h3>
+                <p class="count">${d.count} accounts</p>
+                ${d.accounts.length > 0 ? 
+                    `<p style="font-size: 0.8rem; margin-top: 0.5rem;">Sample accounts:</p>
+                     <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #FFBE98;">
+                        ${d.accounts.slice(0, 3).join('<br>')}
+                        ${d.accounts.length > 3 ? '<br>...' : ''}
+                     </p>` : ''}
+            `;
+            tooltip.classList.add('show');
+        }
+        
+        function moveTooltip(event) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.style.left = (event.pageX + 10) + 'px';
+            tooltip.style.top = (event.pageY - 10) + 'px';
+        }
+        
+        function hideTooltip() {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.classList.remove('show');
+        }
+        
+        // Show detailed view
+        function showDetails(event, d) {
+            alert(`Details for ${d.group} × ${d.lot}:\n\nTotal Accounts: ${d.count}\n\nThis would open a detailed modal in production.`);
+        }
+        
+        // Filter functions
+        function filterByGroup(group) {
+            document.getElementById('filterGroup').value = group;
+            applyFilters();
+        }
+        
+        function filterByLot(lot) {
+            document.getElementById('filterLot').value = lot;
+            applyFilters();
+        }
+        
+        function applyFilters() {
+            const groupFilter = document.getElementById('filterGroup').value;
+            const lotFilter = document.getElementById('filterLot').value;
+            
+            svg.selectAll('.cell-group')
+                .style('opacity', d => {
+                    const groupMatch = groupFilter === 'all' || d.group === groupFilter;
+                    const lotMatch = lotFilter === 'all' || d.lot === lotFilter;
+                    return groupMatch && lotMatch ? 1 : 0.2;
+                });
+        }
+        
+        // Populate filter dropdowns
+        function populateFilters() {
+            const groupSelect = document.getElementById('filterGroup');
+            const lotSelect = document.getElementById('filterLot');
+            
+            data.groups.forEach(group => {
+                const option = document.createElement('option');
+                option.value = group;
+                option.textContent = group;
+                groupSelect.appendChild(option);
+            });
+            
+            data.lots.forEach(lot => {
+                const option = document.createElement('option');
+                option.value = lot;
+                option.textContent = lot;
+                lotSelect.appendChild(option);
+            });
+        }
+        
+        // Update statistics
+        function updateStatistics() {
+            const totalAccounts = data.matrix.reduce((sum, d) => sum + d.count, 0);
+            const avgDensity = Math.round(totalAccounts / data.matrix.length);
+            const maxCluster = Math.max(...data.matrix.map(d => d.count));
+            
+            // Animate counter updates
+            animateCounter('totalAccounts', totalAccounts);
+            animateCounter('totalGroups', data.groups.length);
+            animateCounter('totalLots', data.lots.length);
+            animateCounter('avgDensity', avgDensity);
+            animateCounter('maxCluster', maxCluster);
+        }
+        
+        // Animate counter
+        function animateCounter(id, target) {
+            const element = document.getElementById(id);
+            const duration = 1000;
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.round(current).toLocaleString();
+                element.classList.add('updating');
+                setTimeout(() => element.classList.remove('updating'), 500);
+            }, 16);
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Color scheme change
+            document.getElementById('colorScheme').addEventListener('change', (e) => {
+                currentColorScheme = e.target.value;
+                updateColors();
+            });
+            
+            // Cell size change
+            document.getElementById('cellSize').addEventListener('input', (e) => {
+                cellSizeValue = parseInt(e.target.value);
+                // In production, this would trigger a re-render with new cell sizes
+            });
+            
+            // Filter changes
+            document.getElementById('filterGroup').addEventListener('change', applyFilters);
+            document.getElementById('filterLot').addEventListener('change', applyFilters);
+        }
+        
+        // Update colors based on scheme
+        function updateColors() {
+            const maxCount = d3.max(data.matrix, d => d.count);
+            const colorScale = colorSchemes[currentColorScheme].scale.domain([0, maxCount]);
+            
+            svg.selectAll('.cell')
+                .transition()
+                .duration(500)
+                .attr('fill', d => d.count > 0 ? colorScale(d.count) : '#1a1f3a');
+        }
+        
+        // Reset view
+        function resetView() {
+            document.getElementById('filterGroup').value = 'all';
+            document.getElementById('filterLot').value = 'all';
+            document.getElementById('colorScheme').value = 'pantone';
+            document.getElementById('cellSize').value = 40;
+            currentColorScheme = 'pantone';
+            cellSizeValue = 40;
+            applyFilters();
+            updateColors();
+        }
+        
+        // Handle window resize
+        function handleResize() {
+            // In production, this would re-render the visualization
+            // to fit the new window size
+        }
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', loadData);
+        window.addEventListener('resize', handleResize);
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                resetView();
+            }
+        });
+    </script>
+</body>
+</html>
