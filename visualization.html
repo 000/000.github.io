@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Analysis - Adaptive Visualization v4.0</title>
+    <title>Account Analysis - Dynamic Logarithmic Visualization v3.1</title>
     
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -94,12 +94,6 @@
         .header p {
             color: var(--text-secondary);
             font-size: 1.1rem;
-        }
-        
-        .header .subtitle {
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-            color: var(--illuminating);
         }
         
         .controls {
@@ -485,10 +479,10 @@
     <div class="bg-animation"></div>
     
     <header class="header">
-        <h1>Account Analysis - Adaptive Visualization v4.0</h1>
-        <p>Interactive Matrix Visualization with Dynamic Scaling & LOT Consolidation</p>
-        <p class="subtitle">
-            Mode: CONSTRAINED | Generated: 2025-10-12 20:21:42
+        <h1>Account Analysis - Dynamic Logarithmic Visualization v3.1</h1>
+        <p>Interactive Visualization with Adaptive Color Scaling</p>
+        <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--illuminating);">
+            512GB Optimized | LOT5 Consolidated | Logarithmic Scale | Generated: 2025-10-22 02:50:18
         </p>
     </header>
     
@@ -558,7 +552,7 @@
         <div class="matrix-container">
             <div class="matrix-header">
                 <h2>GROUP × LOT Matrix</h2>
-                <p>Click cells for details • Hover for stats • Dynamic logarithmic scaling</p>
+                <p>Click cells for account details • Hover for stats • Dynamic logarithmic scaling</p>
                 <p id="group-lot-verification" style="margin-top: 0.5rem; color: var(--illuminating); font-size: 0.9rem;"></p>
                 <p id="group-lot-scale-info" class="scale-info"></p>
             </div>
@@ -581,7 +575,7 @@
         <div class="matrix-container">
             <div class="matrix-header">
                 <h2>LOT × GROUP_FLAG Matrix</h2>
-                <p>Click cells for details • Hover for stats • Dynamic logarithmic scaling</p>
+                <p>Click cells for account details • Hover for stats • Dynamic logarithmic scaling</p>
                 <p id="lot-flag-verification" style="margin-top: 0.5rem; color: var(--illuminating); font-size: 0.9rem;"></p>
                 <p id="lot-flag-scale-info" class="scale-info"></p>
             </div>
@@ -618,7 +612,19 @@
       "3",
       "4",
       "5",
-      "6"
+      "7",
+      "6_gf1_adj",
+      "6_gf1_adjsim",
+      "6_gf4_adj",
+      "6_gf2_adj",
+      "6_gf1_nosim",
+      "6_gf3_adjsim",
+      "6_gf3_adj",
+      "6_gf4_adjsim",
+      "6_gf4_nosim",
+      "6_gf2_adjsim",
+      "6_gf3_nosim",
+      "6_gf2_nosim"
     ],
     "matrix": [
       {
@@ -648,8 +654,68 @@
       },
       {
         "group": "GF1",
-        "lot": "6",
-        "count": 456023
+        "lot": "7",
+        "count": 36545
+      },
+      {
+        "group": "GF1",
+        "lot": "6_gf1_adj",
+        "count": 84506
+      },
+      {
+        "group": "GF1",
+        "lot": "6_gf1_adjsim",
+        "count": 54260
+      },
+      {
+        "group": "GF1",
+        "lot": "6_gf4_adj",
+        "count": 0
+      },
+      {
+        "group": "GF1",
+        "lot": "6_gf2_adj",
+        "count": 0
+      },
+      {
+        "group": "GF1",
+        "lot": "6_gf1_nosim",
+        "count": 337952
+      },
+      {
+        "group": "GF1",
+        "lot": "6_gf3_adjsim",
+        "count": 0
+      },
+      {
+        "group": "GF1",
+        "lot": "6_gf3_adj",
+        "count": 0
+      },
+      {
+        "group": "GF1",
+        "lot": "6_gf4_adjsim",
+        "count": 0
+      },
+      {
+        "group": "GF1",
+        "lot": "6_gf4_nosim",
+        "count": 0
+      },
+      {
+        "group": "GF1",
+        "lot": "6_gf2_adjsim",
+        "count": 0
+      },
+      {
+        "group": "GF1",
+        "lot": "6_gf3_nosim",
+        "count": 0
+      },
+      {
+        "group": "GF1",
+        "lot": "6_gf2_nosim",
+        "count": 0
       },
       {
         "group": "GF2",
@@ -678,8 +744,68 @@
       },
       {
         "group": "GF2",
-        "lot": "6",
-        "count": 564
+        "lot": "7",
+        "count": 19
+      },
+      {
+        "group": "GF2",
+        "lot": "6_gf1_adj",
+        "count": 0
+      },
+      {
+        "group": "GF2",
+        "lot": "6_gf1_adjsim",
+        "count": 0
+      },
+      {
+        "group": "GF2",
+        "lot": "6_gf4_adj",
+        "count": 0
+      },
+      {
+        "group": "GF2",
+        "lot": "6_gf2_adj",
+        "count": 48
+      },
+      {
+        "group": "GF2",
+        "lot": "6_gf1_nosim",
+        "count": 0
+      },
+      {
+        "group": "GF2",
+        "lot": "6_gf3_adjsim",
+        "count": 0
+      },
+      {
+        "group": "GF2",
+        "lot": "6_gf3_adj",
+        "count": 0
+      },
+      {
+        "group": "GF2",
+        "lot": "6_gf4_adjsim",
+        "count": 0
+      },
+      {
+        "group": "GF2",
+        "lot": "6_gf4_nosim",
+        "count": 0
+      },
+      {
+        "group": "GF2",
+        "lot": "6_gf2_adjsim",
+        "count": 534
+      },
+      {
+        "group": "GF2",
+        "lot": "6_gf3_nosim",
+        "count": 0
+      },
+      {
+        "group": "GF2",
+        "lot": "6_gf2_nosim",
+        "count": 1
       },
       {
         "group": "GF3",
@@ -708,8 +834,68 @@
       },
       {
         "group": "GF3",
-        "lot": "6",
-        "count": 147517
+        "lot": "7",
+        "count": 2882
+      },
+      {
+        "group": "GF3",
+        "lot": "6_gf1_adj",
+        "count": 0
+      },
+      {
+        "group": "GF3",
+        "lot": "6_gf1_adjsim",
+        "count": 0
+      },
+      {
+        "group": "GF3",
+        "lot": "6_gf4_adj",
+        "count": 0
+      },
+      {
+        "group": "GF3",
+        "lot": "6_gf2_adj",
+        "count": 0
+      },
+      {
+        "group": "GF3",
+        "lot": "6_gf1_nosim",
+        "count": 0
+      },
+      {
+        "group": "GF3",
+        "lot": "6_gf3_adjsim",
+        "count": 155268
+      },
+      {
+        "group": "GF3",
+        "lot": "6_gf3_adj",
+        "count": 554
+      },
+      {
+        "group": "GF3",
+        "lot": "6_gf4_adjsim",
+        "count": 0
+      },
+      {
+        "group": "GF3",
+        "lot": "6_gf4_nosim",
+        "count": 0
+      },
+      {
+        "group": "GF3",
+        "lot": "6_gf2_adjsim",
+        "count": 0
+      },
+      {
+        "group": "GF3",
+        "lot": "6_gf3_nosim",
+        "count": 546
+      },
+      {
+        "group": "GF3",
+        "lot": "6_gf2_nosim",
+        "count": 0
       },
       {
         "group": "GF4",
@@ -738,8 +924,68 @@
       },
       {
         "group": "GF4",
-        "lot": "6",
-        "count": 38525
+        "lot": "7",
+        "count": 909
+      },
+      {
+        "group": "GF4",
+        "lot": "6_gf1_adj",
+        "count": 0
+      },
+      {
+        "group": "GF4",
+        "lot": "6_gf1_adjsim",
+        "count": 0
+      },
+      {
+        "group": "GF4",
+        "lot": "6_gf4_adj",
+        "count": 228
+      },
+      {
+        "group": "GF4",
+        "lot": "6_gf2_adj",
+        "count": 0
+      },
+      {
+        "group": "GF4",
+        "lot": "6_gf1_nosim",
+        "count": 0
+      },
+      {
+        "group": "GF4",
+        "lot": "6_gf3_adjsim",
+        "count": 0
+      },
+      {
+        "group": "GF4",
+        "lot": "6_gf3_adj",
+        "count": 0
+      },
+      {
+        "group": "GF4",
+        "lot": "6_gf4_adjsim",
+        "count": 38853
+      },
+      {
+        "group": "GF4",
+        "lot": "6_gf4_nosim",
+        "count": 68
+      },
+      {
+        "group": "GF4",
+        "lot": "6_gf2_adjsim",
+        "count": 0
+      },
+      {
+        "group": "GF4",
+        "lot": "6_gf3_nosim",
+        "count": 0
+      },
+      {
+        "group": "GF4",
+        "lot": "6_gf2_nosim",
+        "count": 0
       }
     ]
   },
@@ -750,7 +996,19 @@
       "3",
       "4",
       "5",
-      "6"
+      "7",
+      "6_gf1_adj",
+      "6_gf1_adjsim",
+      "6_gf4_adj",
+      "6_gf2_adj",
+      "6_gf1_nosim",
+      "6_gf3_adjsim",
+      "6_gf3_adj",
+      "6_gf4_adjsim",
+      "6_gf4_nosim",
+      "6_gf2_adjsim",
+      "6_gf3_nosim",
+      "6_gf2_nosim"
     ],
     "flags": [
       1,
@@ -860,34 +1118,273 @@
         "count": 49739
       },
       {
-        "lot": "6",
+        "lot": "7",
         "flag": 1,
-        "count": 456023
+        "count": 36545
       },
       {
-        "lot": "6",
+        "lot": "7",
         "flag": 2,
-        "count": 564
+        "count": 19
       },
       {
-        "lot": "6",
+        "lot": "7",
         "flag": 3,
-        "count": 147517
+        "count": 2882
       },
       {
-        "lot": "6",
+        "lot": "7",
         "flag": 4,
-        "count": 38525
+        "count": 909
+      },
+      {
+        "lot": "6_gf1_adj",
+        "flag": 1,
+        "count": 84506
+      },
+      {
+        "lot": "6_gf1_adj",
+        "flag": 2,
+        "count": 0
+      },
+      {
+        "lot": "6_gf1_adj",
+        "flag": 3,
+        "count": 0
+      },
+      {
+        "lot": "6_gf1_adj",
+        "flag": 4,
+        "count": 0
+      },
+      {
+        "lot": "6_gf1_adjsim",
+        "flag": 1,
+        "count": 54260
+      },
+      {
+        "lot": "6_gf1_adjsim",
+        "flag": 2,
+        "count": 0
+      },
+      {
+        "lot": "6_gf1_adjsim",
+        "flag": 3,
+        "count": 0
+      },
+      {
+        "lot": "6_gf1_adjsim",
+        "flag": 4,
+        "count": 0
+      },
+      {
+        "lot": "6_gf4_adj",
+        "flag": 1,
+        "count": 0
+      },
+      {
+        "lot": "6_gf4_adj",
+        "flag": 2,
+        "count": 0
+      },
+      {
+        "lot": "6_gf4_adj",
+        "flag": 3,
+        "count": 0
+      },
+      {
+        "lot": "6_gf4_adj",
+        "flag": 4,
+        "count": 228
+      },
+      {
+        "lot": "6_gf2_adj",
+        "flag": 1,
+        "count": 0
+      },
+      {
+        "lot": "6_gf2_adj",
+        "flag": 2,
+        "count": 48
+      },
+      {
+        "lot": "6_gf2_adj",
+        "flag": 3,
+        "count": 0
+      },
+      {
+        "lot": "6_gf2_adj",
+        "flag": 4,
+        "count": 0
+      },
+      {
+        "lot": "6_gf1_nosim",
+        "flag": 1,
+        "count": 337952
+      },
+      {
+        "lot": "6_gf1_nosim",
+        "flag": 2,
+        "count": 0
+      },
+      {
+        "lot": "6_gf1_nosim",
+        "flag": 3,
+        "count": 0
+      },
+      {
+        "lot": "6_gf1_nosim",
+        "flag": 4,
+        "count": 0
+      },
+      {
+        "lot": "6_gf3_adjsim",
+        "flag": 1,
+        "count": 0
+      },
+      {
+        "lot": "6_gf3_adjsim",
+        "flag": 2,
+        "count": 0
+      },
+      {
+        "lot": "6_gf3_adjsim",
+        "flag": 3,
+        "count": 155268
+      },
+      {
+        "lot": "6_gf3_adjsim",
+        "flag": 4,
+        "count": 0
+      },
+      {
+        "lot": "6_gf3_adj",
+        "flag": 1,
+        "count": 0
+      },
+      {
+        "lot": "6_gf3_adj",
+        "flag": 2,
+        "count": 0
+      },
+      {
+        "lot": "6_gf3_adj",
+        "flag": 3,
+        "count": 554
+      },
+      {
+        "lot": "6_gf3_adj",
+        "flag": 4,
+        "count": 0
+      },
+      {
+        "lot": "6_gf4_adjsim",
+        "flag": 1,
+        "count": 0
+      },
+      {
+        "lot": "6_gf4_adjsim",
+        "flag": 2,
+        "count": 0
+      },
+      {
+        "lot": "6_gf4_adjsim",
+        "flag": 3,
+        "count": 0
+      },
+      {
+        "lot": "6_gf4_adjsim",
+        "flag": 4,
+        "count": 38853
+      },
+      {
+        "lot": "6_gf4_nosim",
+        "flag": 1,
+        "count": 0
+      },
+      {
+        "lot": "6_gf4_nosim",
+        "flag": 2,
+        "count": 0
+      },
+      {
+        "lot": "6_gf4_nosim",
+        "flag": 3,
+        "count": 0
+      },
+      {
+        "lot": "6_gf4_nosim",
+        "flag": 4,
+        "count": 68
+      },
+      {
+        "lot": "6_gf2_adjsim",
+        "flag": 1,
+        "count": 0
+      },
+      {
+        "lot": "6_gf2_adjsim",
+        "flag": 2,
+        "count": 534
+      },
+      {
+        "lot": "6_gf2_adjsim",
+        "flag": 3,
+        "count": 0
+      },
+      {
+        "lot": "6_gf2_adjsim",
+        "flag": 4,
+        "count": 0
+      },
+      {
+        "lot": "6_gf3_nosim",
+        "flag": 1,
+        "count": 0
+      },
+      {
+        "lot": "6_gf3_nosim",
+        "flag": 2,
+        "count": 0
+      },
+      {
+        "lot": "6_gf3_nosim",
+        "flag": 3,
+        "count": 546
+      },
+      {
+        "lot": "6_gf3_nosim",
+        "flag": 4,
+        "count": 0
+      },
+      {
+        "lot": "6_gf2_nosim",
+        "flag": 1,
+        "count": 0
+      },
+      {
+        "lot": "6_gf2_nosim",
+        "flag": 2,
+        "count": 1
+      },
+      {
+        "lot": "6_gf2_nosim",
+        "flag": 3,
+        "count": 0
+      },
+      {
+        "lot": "6_gf2_nosim",
+        "flag": 4,
+        "count": 0
       }
     ]
   },
   "metadata": {
-    "generated_at": "2025-10-12T20:21:42.374242",
-    "total_accounts": 4137638,
+    "generated_at": "2025-10-22T02:50:18.986219",
+    "total_accounts": 4167923,
     "total_groups": 4,
-    "total_lots": 6,
-    "performance_mode": "constrained",
-    "lot_consolidations": {},
+    "total_lots": 18,
+    "lot5_consolidated": true,
     "has_group_flags": true
   }
 };
@@ -900,6 +1397,7 @@
         let allCounts1 = [];
         let allCounts2 = [];
         
+        // Dynamic color schemes with interpolators
         const colorSchemes = {
             pantone: (t) => {
                 const colors = ['#0F4C81', '#6667AB', '#BB2649', '#FFBE98', '#F5DF4D'];
@@ -952,6 +1450,7 @@
             let maxVal = stats.max;
             
             if (scaleType === 'log') {
+                // Logarithmic scale
                 const logMin = Math.log10(minVal + 1);
                 const logMax = Math.log10(maxVal + 1);
                 
@@ -963,6 +1462,7 @@
                 };
                 
             } else if (scaleType === 'quantile') {
+                // Quantile-based scale
                 const quantileScale = d3.scaleQuantile()
                     .domain(sorted)
                     .range(d3.range(0, 1, 0.05));
@@ -974,6 +1474,7 @@
                 };
                 
             } else {
+                // Linear scale
                 scale = (value) => {
                     if (value === 0) return '#1a1f3a';
                     const t = (value - minVal) / (maxVal - minVal);
@@ -996,6 +1497,7 @@
                .attr('viewBox', `0 0 ${width} ${height}`)
                .attr('preserveAspectRatio', 'xMidYMid meet');
             
+            // Create gradient
             const defs = svg.append('defs');
             const gradient = defs.append('linearGradient')
                 .attr('id', `gradient-${svgId}`)
@@ -1027,6 +1529,7 @@
                 .attr('rx', 6)
                 .style('fill', `url(#gradient-${svgId})`);
             
+            // Update labels
             const labelsDiv = document.getElementById(labelsId);
             labelsDiv.innerHTML = `
                 <span class="legend-label">Min: ${formatNumber(Math.round(colorInfo.minVal))}</span>
@@ -1050,6 +1553,7 @@
             
             allCounts1 = data.matrix.map(d => d.count);
             
+            // Calculate totals
             const groupTotals = {};
             const lotTotals = {};
             let grandTotal = 0;
@@ -1078,7 +1582,7 @@
                 .attr('viewBox', `0 0 ${width} ${height}`)
                 .attr('preserveAspectRatio', 'xMinYMin meet')
                 .attr('role', 'img')
-                .attr('aria-label', 'GROUP by LOT matrix');
+                .attr('aria-label', 'GROUP by LOT matrix showing account counts with totals');
             
             const xScale = d3.scaleBand()
                 .domain(groupsWithTotal)
@@ -1092,6 +1596,7 @@
             
             drawMatrix(svg1, data.matrix, xScale, yScale, 'group', 'lot', false, colorInfo, allCounts1);
             
+            // Draw row totals
             data.lots.forEach(lot => {
                 const g = svg1.append('g')
                     .attr('transform', `translate(${xScale('TOTAL')}, ${yScale(lot)})`);
@@ -1101,7 +1606,8 @@
                     .attr('fill', '#2a3456')
                     .attr('stroke', '#F5DF4D')
                     .attr('stroke-width', 2)
-                    .attr('rx', 4);
+                    .attr('rx', 4)
+                    .attr('ry', 4);
                 g.append('text')
                     .attr('x', xScale.bandwidth() / 2)
                     .attr('y', yScale.bandwidth() / 2)
@@ -1111,6 +1617,7 @@
                     .text(formatNumber(lotTotals[lot] || 0));
             });
             
+            // Draw column totals
             data.groups.forEach(group => {
                 const g = svg1.append('g')
                     .attr('transform', `translate(${xScale(group)}, ${yScale('TOTAL')})`);
@@ -1120,7 +1627,8 @@
                     .attr('fill', '#2a3456')
                     .attr('stroke', '#F5DF4D')
                     .attr('stroke-width', 2)
-                    .attr('rx', 4);
+                    .attr('rx', 4)
+                    .attr('ry', 4);
                 g.append('text')
                     .attr('x', xScale.bandwidth() / 2)
                     .attr('y', yScale.bandwidth() / 2)
@@ -1130,6 +1638,7 @@
                     .text(formatNumber(groupTotals[group] || 0));
             });
             
+            // Draw grand total
             const grandTotalG = svg1.append('g')
                 .attr('transform', `translate(${xScale('TOTAL')}, ${yScale('TOTAL')})`);
             grandTotalG.append('rect')
@@ -1138,7 +1647,8 @@
                 .attr('fill', '#BB2649')
                 .attr('stroke', '#F5DF4D')
                 .attr('stroke-width', 3)
-                .attr('rx', 4);
+                .attr('rx', 4)
+                .attr('ry', 4);
             grandTotalG.append('text')
                 .attr('x', xScale.bandwidth() / 2)
                 .attr('y', yScale.bandwidth() / 2)
@@ -1151,6 +1661,7 @@
             
             drawAxes(svg1, groupsWithTotal, lotsWithTotal, xScale, yScale, 'GROUPS →', 'LOTS ↓', margin, width, height);
             
+            // Display verification
             const groupTotal = Object.values(groupTotals).reduce((sum, val) => sum + val, 0);
             const lotTotal = Object.values(lotTotals).reduce((sum, val) => sum + val, 0);
             const verificationEl = document.getElementById('group-lot-verification');
@@ -1162,6 +1673,7 @@
                 verificationEl.style.color = '#f87171';
             }
             
+            // Display scale info
             const scaleInfoEl = document.getElementById('group-lot-scale-info');
             const scaleTypeText = currentScaleType === 'log' ? 'Logarithmic' : (currentScaleType === 'quantile' ? 'Quantile' : 'Linear');
             scaleInfoEl.textContent = `Using ${scaleTypeText} scale | Range: ${formatNumber(Math.round(colorInfo.minVal))} - ${formatNumber(Math.round(colorInfo.maxVal))} accounts`;
@@ -1204,7 +1716,7 @@
                 .attr('viewBox', `0 0 ${width} ${height}`)
                 .attr('preserveAspectRatio', 'xMinYMin meet')
                 .attr('role', 'img')
-                .attr('aria-label', 'LOT by GROUP_FLAG matrix');
+                .attr('aria-label', 'LOT by GROUP_FLAG matrix showing account counts with totals');
             
             const xScale = d3.scaleBand()
                 .domain(flagsWithTotal)
@@ -1218,6 +1730,7 @@
             
             drawMatrix(svg2, data.matrix, xScale, yScale, 'flag', 'lot', true, colorInfo, allCounts2);
             
+            // Row totals
             data.lots.forEach(lot => {
                 const g = svg2.append('g')
                     .attr('transform', `translate(${xScale('TOTAL')}, ${yScale(lot)})`);
@@ -1227,7 +1740,8 @@
                     .attr('fill', '#2a3456')
                     .attr('stroke', '#F5DF4D')
                     .attr('stroke-width', 2)
-                    .attr('rx', 4);
+                    .attr('rx', 4)
+                    .attr('ry', 4);
                 g.append('text')
                     .attr('x', xScale.bandwidth() / 2)
                     .attr('y', yScale.bandwidth() / 2)
@@ -1237,6 +1751,7 @@
                     .text(formatNumber(lotTotals[lot] || 0));
             });
             
+            // Column totals
             data.flags.forEach(flag => {
                 const g = svg2.append('g')
                     .attr('transform', `translate(${xScale('FLAG_' + flag)}, ${yScale('TOTAL')})`);
@@ -1246,7 +1761,8 @@
                     .attr('fill', '#2a3456')
                     .attr('stroke', '#F5DF4D')
                     .attr('stroke-width', 2)
-                    .attr('rx', 4);
+                    .attr('rx', 4)
+                    .attr('ry', 4);
                 g.append('text')
                     .attr('x', xScale.bandwidth() / 2)
                     .attr('y', yScale.bandwidth() / 2)
@@ -1256,6 +1772,7 @@
                     .text(formatNumber(flagTotals[flag] || 0));
             });
             
+            // Grand total
             const grandTotalG = svg2.append('g')
                 .attr('transform', `translate(${xScale('TOTAL')}, ${yScale('TOTAL')})`);
             grandTotalG.append('rect')
@@ -1264,7 +1781,8 @@
                 .attr('fill', '#BB2649')
                 .attr('stroke', '#F5DF4D')
                 .attr('stroke-width', 3)
-                .attr('rx', 4);
+                .attr('rx', 4)
+                .attr('ry', 4);
             grandTotalG.append('text')
                 .attr('x', xScale.bandwidth() / 2)
                 .attr('y', yScale.bandwidth() / 2)
@@ -1277,6 +1795,7 @@
             
             drawAxes(svg2, flagsWithTotal, lotsWithTotal, xScale, yScale, 'GROUP FLAGS →', 'LOTS ↓', margin, width, height);
             
+            // Display verification
             const lotSum = Object.values(lotTotals).reduce((s, v) => s + v, 0);
             const flagSum = Object.values(flagTotals).reduce((s, v) => s + v, 0);
             const v2 = document.getElementById('lot-flag-verification');
@@ -1290,6 +1809,7 @@
                 }
             }
             
+            // Display scale info
             const scaleInfoEl = document.getElementById('lot-flag-scale-info');
             const scaleTypeText = currentScaleType === 'log' ? 'Logarithmic' : (currentScaleType === 'quantile' ? 'Quantile' : 'Linear');
             scaleInfoEl.textContent = `Using ${scaleTypeText} scale | Range: ${formatNumber(Math.round(colorInfo.minVal))} - ${formatNumber(Math.round(colorInfo.maxVal))} accounts`;
@@ -1297,7 +1817,7 @@
             createGradientLegend('legend-gradient-2', 'legend-labels-2', colorInfo, currentScaleType);
         }
         
-        function drawMatrix(svg, matrixData, xScale, yScale, xKey, yKey, isFlag, colorInfo, allCounts) {
+        function drawMatrix(svg, matrixData, xScale, yScale, xKey, yKey, isFlag = false, colorInfo, allCounts) {
             const cells = svg.selectAll('.cell-group')
                 .data(matrixData)
                 .enter()
@@ -1305,7 +1825,7 @@
                 .attr('class', 'cell-group')
                 .attr('transform', d => {
                     const xVal = isFlag ? 'FLAG_' + d[xKey] : d[xKey];
-                    const yVal = d[yKey];
+                    const yVal = isFlag ? d[yKey] : d[yKey];
                     return `translate(${xScale(xVal)}, ${yScale(yVal)})`;
                 });
             
@@ -1315,10 +1835,11 @@
                 .attr('height', yScale.bandwidth())
                 .attr('fill', d => colorInfo.scale(d.count))
                 .attr('rx', 4)
+                .attr('ry', 4)
                 .on('mouseover', (event, d) => showTooltip(event, d, allCounts))
                 .on('mousemove', moveTooltip)
                 .on('mouseout', hideTooltip)
-                .on('click', (event, d) => showDetails(d, allCounts));
+                .on('click', showDetails);
             
             cells.append('text')
                 .attr('x', xScale.bandwidth() / 2)
@@ -1333,6 +1854,8 @@
         }
         
         function drawAxes(svg, xLabels, yLabels, xScale, yScale, xTitle, yTitle, margin, width, height) {
+            const plotWidth  = width  - margin.left - margin.right;
+            const plotHeight = height - margin.top  - margin.bottom;
             const labelTooltip = document.getElementById('labelTooltip');
             
             svg.selectAll('.x-label')
@@ -1375,9 +1898,6 @@
                     }
                 })
                 .on('mouseout', () => labelTooltip.classList.remove('show'));
-            
-            const plotWidth = width - margin.left - margin.right;
-            const plotHeight = height - margin.top - margin.bottom;
             
             svg.append('text')
                 .attr('x', margin.left + plotWidth / 2)
@@ -1423,20 +1943,28 @@
             document.getElementById('tooltip').classList.remove('show');
         }
         
-        function showDetails(d, allCounts) {
+        function showDetails(event, d) {
             const label1 = d.group || d.lot;
             const label2 = d.lot || ('FLAG_' + d.flag);
-            const percentile = calculatePercentile(d.count, allCounts);
-            alert(`Details for ${label1} × ${label2}\n\nTotal Accounts: ${formatNumber(d.count)}\nPercentile: ${percentile.toFixed(1)}%`);
+            const percentile = calculatePercentile(d.count, event.target.__data__.count > 0 ? allCounts1 : allCounts2);
+            alert(`Details for ${label1} × ${label2}\n\nTotal Accounts: ${formatNumber(d.count)}\nPercentile: ${percentile.toFixed(1)}%\n\nClick OK to continue exploring the data.`);
         }
         
         function updateStatistics() {
             const metadata = VISUALIZATION_DATA.metadata;
             
-            if (metadata) {
-                animateCounter('totalAccounts', metadata.total_accounts || 0);
-                animateCounter('totalGroups', metadata.total_groups || 0);
-                animateCounter('totalLots', metadata.total_lots || 0);
+            if (metadata && metadata.total_accounts !== undefined) {
+                animateCounter('totalAccounts', metadata.total_accounts);
+                animateCounter('totalGroups', metadata.total_groups);
+                animateCounter('totalLots', metadata.total_lots);
+            } else {
+                const totalAccounts = VISUALIZATION_DATA.group_lot_matrix.matrix.reduce((sum, d) => sum + d.count, 0);
+                const totalGroups = VISUALIZATION_DATA.group_lot_matrix.groups.length;
+                const totalLots = VISUALIZATION_DATA.group_lot_matrix.lots.length;
+                
+                animateCounter('totalAccounts', totalAccounts);
+                animateCounter('totalGroups', totalGroups);
+                animateCounter('totalLots', totalLots);
             }
             
             const flags = VISUALIZATION_DATA?.lot_flag_matrix?.flags ?? [];
