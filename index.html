@@ -4,42 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
-    <meta name="description" content="Tanat Tonguthaisri - Information Technology Specialist at Thailand's Student Loan Fund, Digital Transformation Strategist, and Freelance Data Engineer specializing in innovative solutions.">
-    <meta name="keywords" content="Tanat Tonguthaisri, data engineering, digital transformation, Thailand, Student Loan Fund, กยศ, AI implementation, cybersecurity">
+    <meta name="description" content="Tanat Tonguthaisri - Cybersecurity Visionary, Cognitive SOAR Architect, and Pioneer in Financial Critical Infrastructure Defense">
+    <meta name="keywords" content="Tanat Tonguthaisri, Cognitive SOAR, Cybersecurity, Case-Based Reasoning, AI/ML, Data Engineering, Financial Infrastructure, Thailand, กยศ, DSc Candidate">
     <meta name="author" content="Tanat Tonguthaisri">
-    <meta property="og:title" content="Tanat Tonguthaisri | IT Specialist & Digital Transformation Leader">
-    <meta property="og:description" content="Leading digital transformation at Thailand's Student Loan Fund while providing expert freelance data engineering services.">
+    <meta property="og:title" content="Tanat Tonguthaisri | Cognitive SOAR Architect & Cybersecurity Luminary">
+    <meta property="og:description" content="Two decades of systematic mastery culminating in the revolutionary Cognitive SOAR framework for adaptive critical infrastructure defense.">
     <meta property="og:image" content="http://defense.engineer/Tanat-FullBody.jpg">
     <meta property="og:url" content="https://defense.engineer">
     <meta name="twitter:card" content="summary_large_image">
     
-    <title>Tanat Tonguthaisri | Digital Innovation Leader & Data Engineering Expert</title>
+    <title>Tanat Tonguthaisri | Cybersecurity Visionary & Cognitive Architecture Pioneer</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1e40af;
-            --secondary: #10b981;
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --secondary: #8b5cf6;
             --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
             --bg-light: #ffffff;
-            --bg-dark: #0f172a;
-            --text-light: #1e293b;
-            --text-dark: #e2e8f0;
+            --bg-dark: #020617;
+            --text-light: #0f172a;
+            --text-dark: #f1f5f9;
             --card-light: #f8fafc;
-            --card-dark: #1e293b;
-            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --card-dark: #0f172a;
+            --gradient-elite: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --gradient-cyber: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 50%, #ec4899 100%);
+            --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #dc2626 100%);
+            --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-            --max-width: 1200px;
-            --animation-duration: 0.3s;
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.15);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.2);
+            --shadow-glow: 0 0 30px rgb(14 165 233 / 0.3);
+            --max-width: 1400px;
+            --animation-duration: 0.4s;
         }
 
         * {
@@ -55,7 +58,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
+            line-height: 1.7;
             color: var(--text-light);
             background: var(--bg-light);
             transition: background-color var(--animation-duration) ease, color var(--animation-duration) ease;
@@ -67,7 +70,7 @@
             background: var(--bg-dark);
         }
 
-        /* Animated Background */
+        /* Elite Background Effects */
         .bg-animation {
             position: fixed;
             width: 100%;
@@ -75,7 +78,7 @@
             top: 0;
             left: 0;
             z-index: -1;
-            opacity: 0.03;
+            opacity: 0.04;
             pointer-events: none;
         }
 
@@ -90,7 +93,7 @@
                 radial-gradient(circle at 20% 80%, var(--primary) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, var(--secondary) 0%, transparent 50%),
                 radial-gradient(circle at 40% 40%, var(--accent) 0%, transparent 50%);
-            animation: rotate 30s linear infinite;
+            animation: rotate 40s linear infinite;
         }
 
         @keyframes rotate {
@@ -98,52 +101,58 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Navigation */
+        /* Elite Navigation */
         header {
             position: fixed;
             top: 0;
             width: 100%;
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.85);
             z-index: 1000;
             transition: all var(--animation-duration) ease;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
+            border-bottom: 1px solid rgba(14, 165, 233, 0.2);
         }
 
         body.dark header {
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(2, 6, 23, 0.85);
+            border-bottom: 1px solid rgba(14, 165, 233, 0.3);
         }
 
         nav {
             max-width: var(--max-width);
             margin: 0 auto;
-            padding: 1rem 2rem;
+            padding: 1.25rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .nav-brand {
-            font-size: 1.25rem;
-            font-weight: 700;
-            background: var(--gradient-1);
+            font-size: 1.5rem;
+            font-weight: 900;
+            font-family: 'Cinzel', serif;
+            background: var(--gradient-cyber);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: 1px;
         }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
             align-items: center;
         }
 
         .nav-links a {
             text-decoration: none;
             color: inherit;
-            font-weight: 500;
+            font-weight: 600;
             position: relative;
-            transition: color var(--animation-duration) ease;
+            transition: all var(--animation-duration) ease;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
         }
 
         .nav-links a::after {
@@ -152,9 +161,10 @@
             bottom: -5px;
             left: 0;
             width: 0;
-            height: 2px;
-            background: var(--primary);
+            height: 3px;
+            background: var(--gradient-cyber);
             transition: width var(--animation-duration) ease;
+            border-radius: 2px;
         }
 
         .nav-links a:hover::after {
@@ -164,22 +174,20 @@
         /* Theme Toggle */
         .theme-toggle {
             background: none;
-            border: none;
+            border: 2px solid transparent;
             cursor: pointer;
-            padding: 0.5rem;
+            padding: 0.6rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 0.5rem;
-            transition: background var(--animation-duration) ease;
+            border-radius: 0.75rem;
+            transition: all var(--animation-duration) ease;
         }
 
         .theme-toggle:hover {
-            background: rgba(0, 0, 0, 0.05);
-        }
-
-        body.dark .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(14, 165, 233, 0.1);
+            border-color: var(--primary);
+            transform: scale(1.1);
         }
 
         .theme-toggle svg {
@@ -201,62 +209,119 @@
 
         .lang-btn {
             background: none;
-            border: 1px solid transparent;
-            padding: 0.25rem 0.5rem;
+            border: 2px solid transparent;
+            padding: 0.4rem 0.8rem;
             cursor: pointer;
-            border-radius: 0.25rem;
+            border-radius: 0.5rem;
             transition: all var(--animation-duration) ease;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
         .lang-btn.active {
             border-color: var(--primary);
+            background: rgba(14, 165, 233, 0.1);
             color: var(--primary);
         }
 
-        /* Hero Section */
+        /* Hero Section - Elite Edition */
         #hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 6rem 2rem 2rem;
+            padding: 8rem 2rem 4rem;
             position: relative;
+            overflow: hidden;
         }
 
         .hero-content {
             max-width: var(--max-width);
             width: 100%;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 5rem;
             align-items: center;
         }
 
         .hero-text h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1rem;
-            background: var(--gradient-1);
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-cyber);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: fadeInUp 0.8s ease;
+            font-family: 'Cinzel', serif;
+            letter-spacing: -1px;
         }
 
-        .hero-text h2 {
-            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            animation: fadeInUp 0.8s ease 0.2s both;
-        }
-
-        .hero-text p {
-            font-size: 1.125rem;
-            line-height: 1.8;
+        .hero-subtitle {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            background: var(--gradient-elite);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease 0.2s both;
+            line-height: 1.3;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
             animation: fadeInUp 0.8s ease 0.4s both;
+            font-weight: 400;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(14, 165, 233, 0.05);
+            border-radius: 1rem;
+            border: 2px solid rgba(14, 165, 233, 0.2);
+            transition: all var(--animation-duration) ease;
+        }
+
+        body.dark .stat-item {
+            background: rgba(14, 165, 233, 0.1);
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-glow);
+            border-color: var(--primary);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            opacity: 0.8;
         }
 
         .hero-image {
@@ -267,28 +332,30 @@
         .hero-image img {
             width: 100%;
             height: auto;
-            border-radius: 1rem;
+            border-radius: 1.5rem;
             box-shadow: var(--shadow-xl);
+            border: 3px solid;
+            border-image: var(--gradient-cyber) 1;
         }
 
         .hero-image::before {
             content: '';
             position: absolute;
-            top: -20px;
-            left: -20px;
-            right: 20px;
-            bottom: 20px;
-            background: var(--gradient-2);
-            border-radius: 1rem;
+            top: -30px;
+            left: -30px;
+            right: 30px;
+            bottom: 30px;
+            background: var(--gradient-cyber);
+            border-radius: 1.5rem;
             z-index: -1;
-            opacity: 0.3;
-            animation: pulse 3s ease-in-out infinite;
+            opacity: 0.2;
+            animation: pulse 4s ease-in-out infinite;
         }
 
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(40px);
             }
             to {
                 opacity: 1;
@@ -302,100 +369,119 @@
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            0%, 100% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.05); opacity: 0.3; }
         }
 
-        /* CTA Buttons */
+        /* Elite CTA Buttons */
         .cta-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
             animation: fadeInUp 0.8s ease 0.6s both;
         }
 
         .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             transition: all var(--animation-duration) ease;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
         }
 
         .btn-primary {
-            background: var(--primary);
+            background: var(--gradient-cyber);
             color: white;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-lg);
+            border: none;
         }
 
         .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow);
         }
 
         .btn-secondary {
             background: transparent;
             color: var(--primary);
-            border: 2px solid var(--primary);
+            border: 3px solid var(--primary);
         }
 
         .btn-secondary:hover {
             background: var(--primary);
             color: white;
+            transform: translateY(-3px);
         }
 
-        /* Section Styles */
+        /* Section Styles - Enhanced */
         section {
-            padding: 5rem 2rem;
+            padding: 6rem 2rem;
             max-width: var(--max-width);
             margin: 0 auto;
         }
 
         .section-title {
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 700;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 900;
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
             position: relative;
             display: inline-block;
             width: 100%;
+            font-family: 'Cinzel', serif;
+            background: var(--gradient-elite);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .section-title::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: -15px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background: var(--gradient-1);
-            border-radius: 2px;
+            width: 100px;
+            height: 5px;
+            background: var(--gradient-cyber);
+            border-radius: 3px;
         }
 
-        /* Cards Grid */
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: -2rem auto 4rem;
+            line-height: 1.8;
+            opacity: 0.85;
+        }
+
+        /* Elite Cards Grid */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2.5rem;
+            margin-top: 4rem;
         }
 
         .card {
             background: var(--card-light);
-            border-radius: 1rem;
-            padding: 2rem;
+            border-radius: 1.5rem;
+            padding: 2.5rem;
             box-shadow: var(--shadow-md);
             transition: all var(--animation-duration) ease;
             position: relative;
             overflow: hidden;
+            border: 2px solid transparent;
         }
 
         body.dark .card {
             background: var(--card-dark);
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.1);
         }
 
         .card::before {
@@ -404,225 +490,282 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 4px;
-            background: var(--gradient-1);
+            height: 5px;
+            background: var(--gradient-cyber);
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-xl);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-glow);
+            border-color: var(--primary);
         }
 
         .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
+            font-size: 1.75rem;
+            margin-bottom: 1.25rem;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
         }
 
         .card p {
             line-height: 1.8;
+            font-size: 1.05rem;
         }
 
         .card-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--gradient-1);
-            border-radius: 0.5rem;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-cyber);
+            border-radius: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-
-        /* Timeline */
-        .timeline {
-            position: relative;
-            padding: 2rem 0;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 100%;
-            background: var(--gradient-1);
-        }
-
-        .timeline-item {
-            position: relative;
-            width: 100%;
-            padding: 2rem 0;
-        }
-
-        .timeline-content {
-            position: relative;
-            width: 45%;
-            padding: 2rem;
-            background: var(--card-light);
-            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
             box-shadow: var(--shadow-md);
         }
 
-        body.dark .timeline-content {
+        /* Elite Timeline */
+        #timeline-viz {
+            margin: 4rem 0;
+            min-height: 600px;
+        }
+
+        /* D3 Visualizations Container */
+        .viz-container {
+            background: var(--card-light);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            margin: 3rem 0;
+            box-shadow: var(--shadow-lg);
+            border: 2px solid rgba(14, 165, 233, 0.2);
+        }
+
+        body.dark .viz-container {
+            background: var(--card-dark);
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+
+        .viz-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Skills Radar Chart */
+        #skills-radar {
+            margin: 4rem 0;
+            min-height: 500px;
+        }
+
+        /* Network Graph */
+        #expertise-network {
+            margin: 4rem 0;
+            min-height: 600px;
+        }
+
+        /* Achievement Timeline */
+        .achievement-item {
+            background: var(--card-light);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 5px solid;
+            border-image: var(--gradient-cyber) 1;
+            transition: all var(--animation-duration) ease;
+        }
+
+        body.dark .achievement-item {
             background: var(--card-dark);
         }
 
-        .timeline-item:nth-child(odd) .timeline-content {
-            margin-left: auto;
+        .achievement-item:hover {
+            transform: translateX(10px);
+            box-shadow: var(--shadow-lg);
         }
 
-        .timeline-item:nth-child(even) .timeline-content {
-            margin-right: auto;
+        .achievement-year {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .timeline-date {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: 0.5rem 1rem;
-            background: var(--primary);
-            color: white;
-            border-radius: 2rem;
+        .achievement-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            color: var(--primary);
+        }
+
+        .achievement-org {
+            font-size: 1.1rem;
             font-weight: 600;
+            opacity: 0.8;
+            margin-bottom: 1rem;
         }
 
-        .timeline-item:nth-child(odd) .timeline-date {
-            left: 47%;
+        /* Certifications Badge Grid */
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
         }
 
-        .timeline-item:nth-child(even) .timeline-date {
-            right: 47%;
+        .cert-badge {
+            background: var(--card-light);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            border: 3px solid transparent;
+            transition: all var(--animation-duration) ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Skills Section */
-        .skills-container {
+        body.dark .cert-badge {
+            background: var(--card-dark);
+        }
+
+        .cert-badge::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--gradient-gold);
+            border-radius: 1rem;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity var(--animation-duration) ease;
+        }
+
+        .cert-badge:hover::before {
+            opacity: 1;
+        }
+
+        .cert-badge:hover {
+            transform: scale(1.05);
+            border-color: transparent;
+        }
+
+        .cert-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .cert-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cert-org {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Research Focus Areas */
+        .research-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
         }
 
-        .skill-category {
-            background: var(--card-light);
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: var(--shadow-md);
+        .research-card {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            border: 2px solid rgba(14, 165, 233, 0.3);
+            transition: all var(--animation-duration) ease;
         }
 
-        body.dark .skill-category {
-            background: var(--card-dark);
+        .research-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-glow);
+            border-color: var(--primary);
         }
 
-        .skill-category h4 {
-            font-size: 1.25rem;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
+        .research-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 1rem;
         }
 
-        .skill-item {
-            margin-bottom: 1.5rem;
-        }
-
-        .skill-name {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .skill-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        body.dark .skill-bar {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .skill-progress {
-            height: 100%;
-            background: var(--gradient-1);
-            border-radius: 4px;
-            animation: skillLoad 1.5s ease forwards;
-            transform-origin: left;
-            transform: scaleX(0);
-        }
-
-        @keyframes skillLoad {
-            to { transform: scaleX(1); }
+        .research-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
         }
 
         /* Contact Section */
         .contact-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            margin-top: 3rem;
+            gap: 4rem;
+            margin-top: 4rem;
         }
 
         .contact-info {
             background: var(--card-light);
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: var(--shadow-md);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 2px solid rgba(14, 165, 233, 0.2);
         }
 
         body.dark .contact-info {
             background: var(--card-dark);
+            border-color: rgba(14, 165, 233, 0.3);
         }
 
         .contact-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .contact-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient-1);
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-cyber);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-        }
-
-        /* Merit Section */
-        .merit-section {
-            text-align: center;
-            padding: 3rem;
-            background: var(--card-light);
-            border-radius: 1rem;
-            margin-top: 3rem;
-            box-shadow: var(--shadow-md);
-        }
-
-        body.dark .merit-section {
-            background: var(--card-dark);
-        }
-
-        .merit-section img {
-            max-width: 400px;
-            width: 100%;
-            height: auto;
-            border-radius: 0.5rem;
-            margin-top: 1rem;
+            font-size: 1.5rem;
+            flex-shrink: 0;
         }
 
         /* Footer */
         footer {
             background: var(--card-light);
-            padding: 3rem 2rem;
+            padding: 4rem 2rem;
             text-align: center;
-            margin-top: 5rem;
+            margin-top: 6rem;
+            border-top: 3px solid;
+            border-image: var(--gradient-cyber) 1;
         }
 
         body.dark footer {
@@ -637,50 +780,35 @@
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            margin-top: 2rem;
+            gap: 1.5rem;
+            margin-top: 2.5rem;
         }
 
         .social-link {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient-1);
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-cyber);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             text-decoration: none;
-            transition: transform var(--animation-duration) ease;
+            transition: all var(--animation-duration) ease;
+            font-weight: 700;
+            font-size: 1.1rem;
         }
 
         .social-link:hover {
-            transform: scale(1.1);
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: var(--shadow-glow);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
+        /* Responsive Design */
+        @media (max-width: 1024px) {
             .hero-content {
                 grid-template-columns: 1fr;
-                text-align: center;
-            }
-
-            .timeline::before {
-                left: 30px;
-            }
-
-            .timeline-content {
-                width: calc(100% - 60px);
-                margin-left: 60px !important;
-            }
-
-            .timeline-date {
-                left: 0 !important;
-                right: auto !important;
+                gap: 3rem;
             }
 
             .contact-container {
@@ -688,11 +816,30 @@
             }
         }
 
-        /* Scroll Animations */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+        }
+
+        /* Scroll Reveal Animations */
         .scroll-reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
+            transform: translateY(40px);
+            transition: all 1s ease;
         }
 
         .scroll-reveal.active {
@@ -713,7 +860,7 @@
             display: block;
         }
 
-        /* Interactive Particle Canvas */
+        /* Particle Canvas */
         #particle-canvas {
             position: fixed;
             top: 0;
@@ -723,6 +870,19 @@
             z-index: -1;
             pointer-events: none;
         }
+
+        /* Tooltip Styles */
+        .tooltip {
+            position: absolute;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            border-radius: 8px;
+            pointer-events: none;
+            font-size: 0.9rem;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+        }
     </style>
 </head>
 <body data-lang="en">
@@ -731,12 +891,13 @@
 
     <header>
         <nav>
-            <div class="nav-brand">TT</div>
+            <div class="nav-brand">TANAT</div>
             <div class="nav-links">
                 <a href="#about">About</a>
+                <a href="#journey">Journey</a>
                 <a href="#expertise">Expertise</a>
-                <a href="#experience">Experience</a>
-                <a href="#projects">Projects</a>
+                <a href="#research">Research</a>
+                <a href="#achievements">Achievements</a>
                 <a href="#contact">Contact</a>
                 <div class="lang-switcher">
                     <button class="lang-btn active" data-lang="en">EN</button>
@@ -770,286 +931,337 @@
                         <span lang="en">Tanat Tonguthaisri</span>
                         <span lang="th">ธนัท ทองอุทัยศรี</span>
                     </h1>
-                    <h2>
-                        <span lang="en">Information Technology Specialist & Digital Transformation Strategist</span>
-                        <span lang="th">ผู้เชี่ยวชาญด้านเทคโนโลยีสารสนเทศและนักยุทธศาสตร์การเปลี่ยนแปลงดิจิทัล</span>
-                    </h2>
-                    <p>
-                        <span lang="en">Leading the digital transformation of Thailand's Student Loan Fund, managing systems that oversee 200+ billion baht and serve over 5 million borrowers. Combining deep technical expertise with strategic vision to drive innovation in public sector finance.</span>
-                        <span lang="th">เป็นผู้นำการเปลี่ยนแปลงทางดิจิทัลของกองทุนเงินให้กู้ยืมเพื่อการศึกษา บริหารจัดการระบบที่ดูแลเงินกว่า 200,000 ล้านบาท และให้บริการผู้กู้ยืมมากกว่า 5 ล้านคน ผสมผสานความเชี่ยวชาญทางเทคนิคเชิงลึกกับวิสัยทัศน์เชิงกลยุทธ์เพื่อขับเคลื่อนนวัตกรรมในภาคการเงินภาครัฐ</span>
+                    <div class="hero-subtitle">
+                        <span lang="en">Cognitive SOAR Architect | Cybersecurity Visionary | DSc Candidate</span>
+                        <span lang="th">สถาปนิก Cognitive SOAR | ผู้นำด้านความมั่นคงปลอดภัยไซเบอร์ | ผู้สมัครปริญญาเอก</span>
+                    </div>
+                    <p class="hero-description">
+                        <span lang="en">Two decades of systematic mastery culminating in revolutionary adaptive security architecture. Defending Thailand's Financial Critical Infrastructure processing 200+ billion baht through Vectorized Case-Based Reasoning, Transformer Embeddings, and Formal Logic Verification. Where academic rigor meets operational excellence.</span>
+                        <span lang="th">สองทศวรรษแห่งการพัฒนาอย่างเป็นระบบ นำไปสู่สถาปัตยกรรมความปลอดภัยที่ปรับตัวได้อย่างปฏิวัติวงการ ปกป้องโครงสร้างพื้นฐานทางการเงินสำคัญของไทยที่มีมูลค่ากว่า 200,000 ล้านบาท ผ่าน Vectorized Case-Based Reasoning, Transformer Embeddings และ Formal Logic Verification</span>
                     </p>
                     <div class="cta-buttons">
-                        <a href="#contact" class="btn btn-primary">Get in Touch</a>
-                        <a href="#projects" class="btn btn-secondary">View Projects</a>
+                        <a href="#research" class="btn btn-primary">Explore Research →</a>
+                        <a href="#contact" class="btn btn-secondary">Connect</a>
+                    </div>
+                    
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">20+</span>
+                            <span class="stat-label">Years Elite Experience</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">7M+</span>
+                            <span class="stat-label">Accounts Protected</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">₿200B+</span>
+                            <span class="stat-label">Assets Secured</span>
+                        </div>
                     </div>
                 </div>
                 <div class="hero-image">
-                    <img src="http://defense.engineer/Tanat-FullBody.jpg" alt="Tanat Tonguthaisri">
+                    <img src="http://defense.engineer/Tanat-FullBody.jpg" alt="Tanat Tonguthaisri - Cybersecurity Visionary">
                 </div>
             </div>
         </section>
 
         <section id="about" class="scroll-reveal">
             <h2 class="section-title">
-                <span lang="en">About Me</span>
-                <span lang="th">เกี่ยวกับผม</span>
+                <span lang="en">The Architect's Foundation</span>
+                <span lang="th">รากฐานของสถาปนิก</span>
             </h2>
+            <p class="section-subtitle">
+                <span lang="en">A deliberate convergence of AI mastery, data engineering excellence, and cybersecurity leadership</span>
+                <span lang="th">การบรรจบกันอย่างมีเป้าหมายของความเชี่ยวชาญด้าน AI วิศวกรรมข้อมูล และภาวะผู้นำด้านความมั่นคงปลอดภัยไซเบอร์</span>
+            </p>
             <div class="cards-grid">
                 <div class="card">
                     <div class="card-icon">🎓</div>
-                    <h3>Education</h3>
+                    <h3>Academic Excellence</h3>
                     <p>
-                        <span lang="en">Dual Bachelor's degrees in Computer Systems Engineering and Computer Science, complemented by a Master of Computer Engineering from RMIT University, Melbourne, Australia.</span>
-                        <span lang="th">ปริญญาตรีสองใบในสาขาวิศวกรรมระบบคอมพิวเตอร์และวิทยาการคอมพิวเตอร์ และปริญญาโทสาขาวิศวกรรมคอมพิวเตอร์จาก RMIT University เมลเบิร์น ออสเตรเลีย</span>
+                        <span lang="en">Master of Engineering from RMIT University, pioneering Case-Based Reasoning research (2004) that presciently established the foundations of today's Cognitive SOAR framework. Double Bachelor's in Computer Engineering and Computer Science provided the dual systems-algorithmic perspective essential for cognitive architecture design.</span>
+                        <span lang="th">ปริญญาโทวิศวกรรมศาสตร์จาก RMIT University วิจัยบุกเบิก Case-Based Reasoning (2004) ที่วางรากฐานของ Cognitive SOAR framework ในปัจจุบัน ปริญญาตรี 2 ใบในวิศวกรรมคอมพิวเตอร์และวิทยาการคอมพิวเตอร์</span>
                     </p>
                 </div>
                 <div class="card">
-                    <div class="card-icon">💼</div>
-                    <h3>Current Role</h3>
+                    <div class="card-icon">🛡️</div>
+                    <h3>Critical Infrastructure Defense</h3>
                     <p>
-                        <span lang="en">Information Technology Specialist at Thailand's Student Loan Fund, ensuring timely debt recalculation and serving as liaison for AI initiatives including AI+Chat and AI+Code implementations.</span>
-                        <span lang="th">ผู้เชี่ยวชาญด้านเทคโนโลยีสารสนเทศที่กองทุนเงินให้กู้ยืมเพื่อการศึกษา ดูแลการคำนวณหนี้ใหม่และเป็นผู้ประสานงานสำหรับโครงการ AI รวมถึง AI+Chat และ AI+Code</span>
+                        <span lang="en">Currently managing cybersecurity for Thailand's Student Loan Fund—Financial Critical Infrastructure processing 7+ million accounts and 200+ billion baht. Architecting production-grade vector pipelines (50M+ daily events) and deploying sub-10ms similarity search across 10M+ records. Where theory becomes operational reality.</span>
+                        <span lang="th">ปัจจุบันบริหารความมั่นคงปลอดภัยไซเบอร์ให้กองทุน กยศ. ซึ่งเป็นโครงสร้างพื้นฐานทางการเงินสำคัญที่ประมวลผลบัญชีกว่า 7 ล้านบัญชีและมูลค่ากว่า 200,000 ล้านบาท</span>
                     </p>
                 </div>
                 <div class="card">
                     <div class="card-icon">🚀</div>
-                    <h3>Mission</h3>
+                    <h3>Research Mission</h3>
                     <p>
-                        <span lang="en">Driving customer-centric digital transformation that balances innovation with security, governance, and accessibility to create equitable access to education financing for all Thai citizens.</span>
-                        <span lang="th">ขับเคลื่อนการเปลี่ยนแปลงดิจิทัลที่ยึดลูกค้าเป็นศูนย์กลาง สร้างสมดุลระหว่างนวัตกรรมกับความปลอดภัย การกำกับดูแล และการเข้าถึง เพื่อสร้างการเข้าถึงแหล่งเงินทุนการศึกษาที่เท่าเทียมสำหรับคนไทยทุกคน</span>
+                        <span lang="en">Pursuing Doctor of Science at Capitol Technology University to formalize the Cognitive SOAR framework—transcending static automation through Vectorized Case-Based Reasoning, LLM-powered synthesis, and Formal Verification. Solving the catastrophic 70% failure rate of traditional SOAR against novel threats.</span>
+                        <span lang="th">กำลังศึกษาปริญญาเอกวิทยาศาสตร์ที่ Capitol Technology University เพื่อพัฒนา Cognitive SOAR framework ที่แก้ปัญหาอัตราความล้มเหลว 70% ของ SOAR แบบดั้งเดิมต่อภัยคุกคามรูปแบบใหม่</span>
                     </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="journey" class="scroll-reveal">
+            <h2 class="section-title">
+                <span lang="en">Professional Evolution</span>
+                <span lang="th">วิวัฒนาการทางอาชีพ</span>
+            </h2>
+            <p class="section-subtitle">
+                <span lang="en">Each role strategically selected to build convergent expertise for cognitive security automation</span>
+                <span lang="th">แต่ละบทบาทได้รับการคัดเลือกอย่างมีกลยุทธ์เพื่อสร้างความเชี่ยวชาญที่บรรจบกันสำหรับระบบอัตโนมัติด้านความปลอดภัยแบบปัญญาประดิษฐ์</span>
+            </p>
+            
+            <div class="viz-container">
+                <h3 class="viz-title">Career Trajectory: 20 Years of Systematic Mastery</h3>
+                <div id="timeline-viz"></div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <div class="achievement-item">
+                    <div class="achievement-year">2023 - Present</div>
+                    <div class="achievement-title">Information Technology Specialist</div>
+                    <div class="achievement-org">Student Loan Fund (กยศ.) - Financial Critical Infrastructure</div>
+                    <p><strong>The Crucible:</strong> Managing security for 200B+ baht infrastructure where March 2024 zero-day APT exposed complete SOAR failure (47-minute manual response). Architected production vector pipelines (Airflow DAGs: 3hrs → 12min), deployed 768-dimensional fraud detection (sub-10ms on 10M+ records), and survived State Audit Office scrutiny requiring mathematical proof—the validation that black-box AI is unacceptable for FCI.</p>
+                </div>
+
+                <div class="achievement-item">
+                    <div class="achievement-year">2022 - 2023</div>
+                    <div class="achievement-title">Project Manager</div>
+                    <div class="achievement-org">Electronic Transactions Development Agency (ETDA)</div>
+                    <p><strong>National PKI Architecture:</strong> Led gap analysis for Thailand's CA infrastructure against WebTrust/Chrome Root Program. Mastered formal architectural assessment—identifying deficiencies and validating solutions—the exact skill set required to diagnose SOAR failures and validate C-SOAR's production deployability.</p>
+                </div>
+
+                <div class="achievement-item">
+                    <div class="achievement-year">2020 - 2022</div>
+                    <div class="achievement-title">Senior Computer Specialist</div>
+                    <div class="achievement-org">Thailand Professional Qualification Institute</div>
+                    <p><strong>Modern Data Stack Mastery:</strong> Pioneered Astronomer (managed Airflow), Cassandra/Astra DB with vector search, MongoDB Atlas, FastAPI (10K req/sec). Gained production expertise with the exact technology stack C-SOAR requires: Airflow for cognitive orchestration, distributed vector databases for Incident Memory.</p>
+                </div>
+
+                <div class="achievement-item">
+                    <div class="achievement-year">2019 - 2020</div>
+                    <div class="achievement-title">Advisor & Senior Programmer</div>
+                    <div class="achievement-org">Royal Thai Army Cyber Center</div>
+                    <p><strong>The Epiphany:</strong> Advised AI-augmented defense against 50K+ daily alerts (94% false positives). Observed expert analysts defeating APTs through analogical reasoning—"this reminds me of 2017 campaign." This human case-based cognitive process became C-SOAR's architectural blueprint.</p>
+                </div>
+
+                <div class="achievement-item">
+                    <div class="achievement-year">2018 - 2019</div>
+                    <div class="achievement-title">Innovation Manager</div>
+                    <div class="achievement-org">National Science & Technology Development Agency (NSTDA)</div>
+                    <p><strong>AI for National Security:</strong> Led R&D for autonomous systems, counter-terrorism financing, OSINT using transformer-based Thai NLP. Explored dual-use AI, predictive maintenance, WMD proliferation controls. Built transformer expertise (embeddings) and multi-modal fusion (analogous to SIEM+EDR+TI integration).</p>
+                </div>
+
+                <div class="achievement-item">
+                    <div class="achievement-year">2010 - 2018</div>
+                    <div class="achievement-title">Researcher</div>
+                    <div class="achievement-org">NSTDA Academy</div>
+                    <p><strong>8 Years Deep AI Research:</strong> Swarm Intelligence (Bee's Algorithm), evolutionary algorithms, reinforcement learning. Published research on multi-objective optimization—balancing competing constraints (speed vs. accuracy vs. safety) critical for C-SOAR's formal verification. Represented Thailand internationally for 5 consecutive years at ITPEC.</p>
+                </div>
+
+                <div class="achievement-item">
+                    <div class="achievement-year">2002 - 2009</div>
+                    <div class="achievement-title">E-Business Consultant</div>
+                    <div class="achievement-org">Melbourne IT Ltd., Australia</div>
+                    <p><strong>Production CBR Systems:</strong> 7 years deploying Case-Based Reasoning for IT service desk (73% first-call resolution). Scaled case libraries to 100,000+ incidents, encountering O(n²) performance degradation—the motivation for C-SOAR's vectorized O(log n) approach. Where academic theory became commercial reality.</p>
+                </div>
+
+                <div class="achievement-item">
+                    <div class="achievement-year">2004</div>
+                    <div class="achievement-title">Master's Thesis</div>
+                    <div class="achievement-org">RMIT University, Australia</div>
+                    <p><strong>The Genesis:</strong> "Enhancing Academic Advisement using Case-Based Reasoning" (87% accuracy). Proved expertise-as-experiences, similarity-based retrieval, and precedent transparency—the three principles that define C-SOAR 20 years later. The foundation was laid.</p>
                 </div>
             </div>
         </section>
 
         <section id="expertise" class="scroll-reveal">
             <h2 class="section-title">
-                <span lang="en">Technical Expertise</span>
-                <span lang="th">ความเชี่ยวชาญด้านเทคนิค</span>
+                <span lang="en">Technical Dominance</span>
+                <span lang="th">การครองความเชี่ยวชาญทางเทคนิค</span>
             </h2>
-            <div class="skills-container">
-                <div class="skill-category">
-                    <h4>Programming & Development</h4>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>Python</span>
-                            <span>95%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="--skill-level: 95%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>AI/ML Implementation</span>
-                            <span>90%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="--skill-level: 90%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>Data Engineering</span>
-                            <span>92%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="--skill-level: 92%"></div>
-                        </div>
-                    </div>
+            <p class="section-subtitle">
+                <span lang="en">Elite-level proficiency across the convergent domains of Cognitive SOAR</span>
+                <span lang="th">ความชำนาญระดับสูงสุดในทุกด้านที่บรรจบกันของ Cognitive SOAR</span>
+            </p>
+
+            <div class="viz-container">
+                <h3 class="viz-title">Expertise Radar: Multi-Domain Mastery</h3>
+                <div id="skills-radar"></div>
+            </div>
+
+            <div class="viz-container">
+                <h3 class="viz-title">Knowledge Network: Interconnected Competencies</h3>
+                <div id="expertise-network"></div>
+            </div>
+
+            <div class="cert-grid">
+                <div class="cert-badge">
+                    <div class="cert-icon">🛡️</div>
+                    <div class="cert-name">CISSP</div>
+                    <div class="cert-org">(ISC)² | Since 2015</div>
                 </div>
-                <div class="skill-category">
-                    <h4>Security & Compliance</h4>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>Cybersecurity Frameworks</span>
-                            <span>88%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="--skill-level: 88%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>NIST Standards</span>
-                            <span>85%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="--skill-level: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>ISO 27001</span>
-                            <span>87%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="--skill-level: 87%"></div>
-                        </div>
-                    </div>
+                <div class="cert-badge">
+                    <div class="cert-icon">🔍</div>
+                    <div class="cert-name">CEH</div>
+                    <div class="cert-org">EC Council | 2025</div>
                 </div>
-                <div class="skill-category">
-                    <h4>Strategic Planning</h4>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>Digital Transformation</span>
-                            <span>93%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="--skill-level: 93%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>Project Management</span>
-                            <span>86%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="--skill-level: 86%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name">
-                            <span>Stakeholder Management</span>
-                            <span>89%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="--skill-level: 89%"></div>
-                        </div>
-                    </div>
+                <div class="cert-badge">
+                    <div class="cert-icon">🕵️</div>
+                    <div class="cert-name">CHFI</div>
+                    <div class="cert-org">EC Council | 2025</div>
+                </div>
+                <div class="cert-badge">
+                    <div class="cert-icon">🎓</div>
+                    <div class="cert-name">M.Eng</div>
+                    <div class="cert-org">RMIT | 2004</div>
                 </div>
             </div>
         </section>
 
-        <section id="experience" class="scroll-reveal">
+        <section id="research" class="scroll-reveal">
             <h2 class="section-title">
-                <span lang="en">Professional Journey</span>
-                <span lang="th">เส้นทางอาชีพ</span>
+                <span lang="en">Cognitive SOAR Framework</span>
+                <span lang="th">กรอบงาน Cognitive SOAR</span>
             </h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h3>Information Technology Specialist</h3>
-                        <h4>Student Loan Fund, Thailand</h4>
-                        <p>Leading digital transformation initiatives, managing critical debt recalculation systems, and implementing AI solutions for enhanced operational efficiency. Oversees technology infrastructure supporting 200+ billion baht portfolio.</p>
-                    </div>
-                    <div class="timeline-date">2020 - Present</div>
+            <p class="section-subtitle">
+                <span lang="en">The culmination of 20 years: transcending static automation through cognitive architecture</span>
+                <span lang="th">จุดสุดยอดของ 20 ปี: ก้าวข้ามระบบอัตโนมัติแบบคงที่ผ่านสถาปัตยกรรมปัญญาประดิษฐ์</span>
+            </p>
+
+            <div class="research-grid">
+                <div class="research-card">
+                    <div class="research-number">01</div>
+                    <div class="research-title">Vectorized Case-Based Reasoning</div>
+                    <p>Transforming 20 years of CBR expertise into production-grade 768-dimensional embeddings achieving sub-10ms similarity search across millions of incidents. O(n²) → O(log n) breakthrough enabling real-time cognitive retrieval.</p>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h3>AI Implementation Lead</h3>
-                        <h4>Special Projects</h4>
-                        <p>Served as liaison and ideator for AI+Chat and AI+Code proof-of-concept phases, bridging the gap between strategic vision and technical implementation.</p>
-                    </div>
-                    <div class="timeline-date">2023 - 2024</div>
+                <div class="research-card">
+                    <div class="research-number">02</div>
+                    <div class="research-title">LLM-Powered Synthesis</div>
+                    <p>Local transformer models (no API dependency) generating contextual response strategies by synthesizing multiple historical cases. Achieving 30-second zero-day response vs. 47-minute manual intervention—the operational validation.</p>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h3>Panel Speaker</h3>
-                        <h4>2025 Huawei Thailand Digital & AI Summit</h4>
-                        <p>Shared insights on AI implementation in government services alongside national technology leaders, representing Thailand's approach to educational finance technology.</p>
-                    </div>
-                    <div class="timeline-date">2025</div>
+                <div class="research-card">
+                    <div class="research-number">03</div>
+                    <div class="research-title">Formal Logic Verification</div>
+                    <p>Mathematical proof of safety invariants learned from Bank of Thailand compliance requirements. Ensuring "do no harm" guarantees for autonomous actions in Financial Critical Infrastructure—where black-box AI is legally unacceptable.</p>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-content">
-                        <h3>FinTech Challenge Finalist</h3>
-                        <h4>SEC's FinTech Challenge 2017</h4>
-                        <p>Presented autonomous vehicle initiatives to general audience, demonstrating ability to communicate complex technical concepts effectively.</p>
-                    </div>
-                    <div class="timeline-date">2017</div>
+                <div class="research-card">
+                    <div class="research-number">04</div>
+                    <div class="research-title">Production Data Engineering</div>
+                    <p>Apache Airflow orchestration (3hrs → 12min optimization), dbt transformations, Cassandra/vector DB deployment. The modern data stack powering continuous cognitive pipeline at 50M+ events/day proven in production FCI environment.</p>
+                </div>
+                <div class="research-card">
+                    <div class="research-number">05</div>
+                    <div class="research-title">Explainable Autonomous Actions</div>
+                    <p>Precedent-based transparency inherited from CBR foundation—every automated decision traceable to historical cases. Meeting regulatory audit requirements (PDPA, State Audit Office) that pure deep learning cannot satisfy.</p>
+                </div>
+                <div class="research-card">
+                    <div class="research-number">06</div>
+                    <div class="research-title">Empirical Validation</div>
+                    <p>Real-world testing against captured APT campaigns, simulated zero-day attacks (Burp Suite, Exploit Pack), and comparative benchmarking against traditional SOAR. Moving from operational failure to measurable success—transcending the 70% novel threat failure rate.</p>
                 </div>
             </div>
-        </section>
 
-        <section id="projects" class="scroll-reveal">
-            <h2 class="section-title">
-                <span lang="en">Key Projects & Initiatives</span>
-                <span lang="th">โครงการและความริเริ่มสำคัญ</span>
-            </h2>
-            <div class="cards-grid">
-                <div class="card">
-                    <h3>AI-Driven Debt Management</h3>
-                    <p>Implemented machine learning algorithms for predictive analytics in debt collection, improving recovery rates by 25% while maintaining borrower-friendly approaches.</p>
-                </div>
-                <div class="card">
-                    <h3>Cybersecurity Framework</h3>
-                    <p>Led implementation of NIST SSDF standards and ISO 27001 compliance, ensuring robust security for sensitive financial and personal data of millions of borrowers.</p>
-                </div>
-                <div class="card">
-                    <h3>Real-time Processing System</h3>
-                    <p>Developed Python-based solutions for real-time debt recalculation, reducing processing time from days to hours for complex financial computations.</p>
-                </div>
-                <div class="card">
-                    <h3>Digital Transformation Strategy</h3>
-                    <p>Architected comprehensive digital roadmap aligning technology initiatives with organizational goals, focusing on customer experience and operational excellence.</p>
-                </div>
-                <div class="card">
-                    <h3>Data Engineering Platform</h3>
-                    <p>Built scalable data pipelines handling 5+ million borrower records, enabling advanced analytics and supporting data-driven decision making.</p>
-                </div>
-                <div class="card">
-                    <h3>Cross-functional Integration</h3>
-                    <p>Led integration initiatives connecting multiple government databases, streamlining verification processes and reducing fraudulent applications by 40%.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="freelance" class="scroll-reveal">
-            <h2 class="section-title">
-                <span lang="en">Freelance Data Engineering Services</span>
-                <span lang="th">บริการวิศวกรรมข้อมูลแบบฟรีแลนซ์</span>
-            </h2>
-            <div class="cards-grid">
-                <div class="card">
-                    <h3>Data Pipeline Development</h3>
-                    <p>Design and implement efficient, scalable data pipelines using modern tools and best practices. Specializing in Python-based ETL processes and real-time data streaming.</p>
-                </div>
-                <div class="card">
-                    <h3>Database Optimization</h3>
-                    <p>Performance tuning and optimization for SQL and NoSQL databases. Expert in query optimization, indexing strategies, and database architecture design.</p>
-                </div>
-                <div class="card">
-                    <h3>Custom Analytics Solutions</h3>
-                    <p>Build tailored analytics platforms that transform raw data into actionable insights. Proficient in creating dashboards, reports, and predictive models.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="merit" class="scroll-reveal">
-            <div class="merit-section">
-                <h2 class="section-title">
-                    <span lang="en">Supporting Buddhist Merit</span>
-                    <span lang="th">สนับสนุนการทำบุญ</span>
-                </h2>
-                <p>
-                    <span lang="en">For those interested in making merit donations, below are the bank account details:</span>
-                    <span lang="th">สำหรับผู้ที่สนใจทำบุญ ด้านล่างนี้คือรายละเอียดบัญชีธนาคาร:</span>
+            <div style="margin-top: 4rem; padding: 3rem; background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border-radius: 1.5rem; border: 2px solid rgba(14, 165, 233, 0.3);">
+                <h3 style="font-size: 2rem; font-weight: 800; margin-bottom: 1.5rem; background: var(--gradient-cyber); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Why Capitol Technology University</h3>
+                <p style="font-size: 1.15rem; line-height: 1.8; margin-bottom: 1rem;">
+                    <span lang="en">Your Doctor of Science program uniquely values <strong>practitioner-scholars</strong> who bridge operational gaps through rigorous research. My career demonstrates precisely this trajectory: <strong>identifying SOAR's failure</strong> through operational experience at scale (7M accounts, ₿200B+), <strong>recognizing theoretical solutions</strong> through academic study (20 years from CBR foundations to transformer architectures), and <strong>possessing technical depth</strong> to validate empirically (production vector pipelines, formal verification under regulatory scrutiny).</span>
+                    <span lang="th">โปรแกรมปริญญาเอกวิทยาศาสตร์ของท่านให้คุณค่ากับ <strong>นักวิชาการ-ผู้ปฏิบัติ</strong> ที่เชื่อมช่องว่างในการปฏิบัติงานผ่านการวิจัยที่เข้มงวด ประสบการณ์ของผมแสดงให้เห็นเส้นทางนี้อย่างชัดเจน</span>
                 </p>
-                <img src="https://i.ibb.co/PhLNBGF/Pra-Khru-Wilart-Copy.jpg" alt="Merit Donation Bank Details">
+                <p style="font-size: 1.15rem; line-height: 1.8;">
+                    <span lang="en">The <strong>C-SOAR framework isn't speculative</strong>—it's the crystallization of two decades systematically building toward this contribution. SOAR has failed (Gartner 2024), FCI is under siege (300x attack frequency), regulations mandate explainability (GDPR, GLBA, PDPA), technology has matured (transformers, vector DBs, local LLMs), and I possess the <strong>unique convergence</strong> of CBR expertise, production data engineering, financial sector experience, and security credentials to deliver this solution. This isn't merely research interest—it's the <strong>inevitable culmination</strong> of a career deliberately constructed to address this precise challenge.</span>
+                    <span lang="th">กรอบงาน C-SOAR ไม่ใช่แค่ทฤษฎี แต่เป็นผลลัพธ์ของการสร้างความเชี่ยวชาญอย่างเป็นระบบเป็นเวลากว่า 20 ปี นี่ไม่ใช่แค่ความสนใจในการวิจัย แต่เป็น <strong>จุดสุดยอดที่หลีกเลี่ยงไม่ได้</strong> ของอาชีพที่สร้างขึ้นมาอย่างมีเจตนาเพื่อรับมือกับความท้าทายนี้โดยเฉพาะ</span>
+                </p>
+            </div>
+        </section>
+
+        <section id="achievements" class="scroll-reveal">
+            <h2 class="section-title">
+                <span lang="en">Recognition & Impact</span>
+                <span lang="th">การยอมรับและผลกระทบ</span>
+            </h2>
+            <p class="section-subtitle">
+                <span lang="en">Validated expertise through competitive innovation, strategic advisory, and thought leadership</span>
+                <span lang="th">ความเชี่ยวชาญที่ได้รับการรับรองผ่านนวัตกรรม การให้คำปรึกษาเชิงกลยุทธ์ และภาวะผู้นำทางความคิด</span>
+            </p>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">🏆</div>
+                    <h3>Competitive Innovation</h3>
+                    <p><strong>Siam RegTech:</strong> Top 10 finalist (SEC/BOT/OIC) - Advanced ML for Anti-Money Laundering in highly regulated financial sector.<br><br>
+                    <strong>Learn Sabai:</strong> Top 100 (SIPA) - Swarm Intelligence (Bee's Algorithm) for adaptive learning systems.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">👔</div>
+                    <h3>Strategic Advisory</h3>
+                    <p><strong>Graduate Scholarship Committees:</strong> Selected by Bank of Thailand, Civil Service Commission, NESDB (2022, 2024) to evaluate candidates for advanced Cybersecurity & Data Analytics specialization.<br><br>
+                    <strong>Postdoctoral Fellowship:</strong> Reviewer for National Security R&D Center (2019).</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🎤</div>
+                    <h3>Thought Leadership</h3>
+                    <p><strong>Cloud Security Alliance ASEAN Summit 2021:</strong> Panelist on "Assume Nothing, Believe Nobody, Check Everything"<br><br>
+                    <strong>Israel Homeland Security 2019:</strong> Keynote on Thailand's national security architecture<br><br>
+                    <strong>TechSauce Global Summit 2019:</strong> Autonomous Vehicle security panel</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem; padding: 3rem; background: var(--card-light); border-radius: 1.5rem; border: 3px solid; border-image: var(--gradient-gold) 1;">
+                <h3 style="font-size: 2rem; font-weight: 800; margin-bottom: 2rem; text-align: center; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">International Recognition</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🌏</div>
+                        <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 0.5rem;">ITPEC Representative</div>
+                        <div style="opacity: 0.8;">5 consecutive years representing Thailand at international IT professional examination councils</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🎓</div>
+                        <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 0.5rem;">JICA Keynote</div>
+                        <div style="opacity: 0.8;">Delivered special lecture to executive-level audience from Japan, Bangladesh, Indonesia, Brunei, Cambodia (2014)</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔐</div>
+                        <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 0.5rem;">National PKI Authority</div>
+                        <div style="opacity: 0.8;">Led modernization of Thailand's critical digital identity infrastructure to international standards</div>
+                    </div>
+                </div>
             </div>
         </section>
 
         <section id="contact" class="scroll-reveal">
             <h2 class="section-title">
-                <span lang="en">Get in Touch</span>
+                <span lang="en">Connect</span>
                 <span lang="th">ติดต่อ</span>
             </h2>
+            <p class="section-subtitle">
+                <span lang="en">Open to doctoral research collaboration, strategic advisory, and thought leadership opportunities</span>
+                <span lang="th">เปิดรับความร่วมมือด้านการวิจัยปริญญาเอก การให้คำปรึกษาเชิงกลยุทธ์ และโอกาสด้านภาวะผู้นำทางความคิด</span>
+            </p>
+
             <div class="contact-container">
                 <div class="contact-info">
-                    <h3>Contact Information</h3>
+                    <h3 style="font-size: 1.75rem; margin-bottom: 2rem; background: var(--gradient-cyber); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 800;">Contact Information</h3>
                     <div class="contact-item">
                         <div class="contact-icon">📧</div>
                         <div>
                             <p><strong>Email:</strong></p>
-                            <p>la@defense.engineer</p>
+                            <p>ii@ieee.org<br>la@defense.engineer</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📱</div>
+                        <div>
+                            <p><strong>Phone:</strong></p>
+                            <p>+66 89-936-5955 (ID: social)</p>
                         </div>
                     </div>
                     <div class="contact-item">
                         <div class="contact-icon">🏢</div>
                         <div>
                             <p><strong>Organization:</strong></p>
-                            <p>Student Loan Fund, Thailand</p>
+                            <p>Student Loan Fund (กยศ.)<br>Financial Critical Infrastructure</p>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -1061,30 +1273,53 @@
                     </div>
                 </div>
                 <div class="contact-info">
-                    <h3>Professional Interests</h3>
-                    <p>Open to discussions about:</p>
-                    <ul style="list-style: none; padding: 0; margin-top: 1rem;">
-                        <li style="background: none; padding: 0.5rem 0;">✓ Digital transformation consulting</li>
-                        <li style="background: none; padding: 0.5rem 0;">✓ Data engineering projects</li>
-                        <li style="background: none; padding: 0.5rem 0;">✓ AI/ML implementation</li>
-                        <li style="background: none; padding: 0.5rem 0;">✓ Public sector technology</li>
-                        <li style="background: none; padding: 0.5rem 0;">✓ Speaking engagements</li>
+                    <h3 style="font-size: 1.75rem; margin-bottom: 2rem; background: var(--gradient-elite); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 800;">Engagement Opportunities</h3>
+                    <ul style="list-style: none; padding: 0; margin-top: 1.5rem;">
+                        <li style="background: none; padding: 1rem 0; font-size: 1.05rem; border-bottom: 1px solid rgba(14, 165, 233, 0.2);">
+                            <strong>🎓 Doctoral Research Collaboration:</strong> Cognitive SOAR framework development, empirical validation, joint publications
+                        </li>
+                        <li style="background: none; padding: 1rem 0; font-size: 1.05rem; border-bottom: 1px solid rgba(14, 165, 233, 0.2);">
+                            <strong>💼 Strategic Advisory:</strong> Financial Critical Infrastructure security, AI/ML implementation, data governance
+                        </li>
+                        <li style="background: none; padding: 1rem 0; font-size: 1.05rem; border-bottom: 1px solid rgba(14, 165, 233, 0.2);">
+                            <strong>🗣️ Keynote Speaking:</strong> Cognitive security automation, case-based reasoning, adaptive defense architectures
+                        </li>
+                        <li style="background: none; padding: 1rem 0; font-size: 1.05rem; border-bottom: 1px solid rgba(14, 165, 233, 0.2);">
+                            <strong>🔬 Applied Research:</strong> Vector embeddings, formal verification, production AI/ML systems
+                        </li>
+                        <li style="background: none; padding: 1rem 0; font-size: 1.05rem;">
+                            <strong>🛠️ Technical Consulting:</strong> Modern data stack, Apache Airflow, vector databases, cybersecurity architecture
+                        </li>
                     </ul>
                 </div>
+            </div>
+
+            <div style="margin-top: 4rem; text-align: center; padding: 3rem; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%); border-radius: 1.5rem; border: 2px solid rgba(139, 92, 246, 0.3);">
+                <h3 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 1.5rem; background: var(--gradient-elite); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Merit Support</h3>
+                <p style="font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.8;">
+                    <span lang="en">For those interested in making Buddhist merit donations, bank account details available below:</span>
+                    <span lang="th">สำหรับผู้ที่สนใจทำบุญ รายละเอียดบัญชีธนาคารด้านล่าง:</span>
+                </p>
+                <img src="https://i.ibb.co/PhLNBGF/Pra-Khru-Wilart-Copy.jpg" alt="Merit Donation Details" style="max-width: 500px; width: 100%; border-radius: 1rem; box-shadow: var(--shadow-lg);">
             </div>
         </section>
     </main>
 
     <footer>
         <div class="footer-content">
-            <p>
-                <span lang="en">© 2025 Tanat Tonguthaisri. Driving innovation at the intersection of finance, education, and technology.</span>
-                <span lang="th">© 2568 ธนัท ทองอุทัยศรี ขับเคลื่อนนวัตกรรมที่จุดบรรจบของการเงิน การศึกษา และเทคโนโลยี</span>
+            <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem;">
+                <span lang="en">© 2025 Tanat Tonguthaisri | Bridging Theory and Practice in Cognitive Security</span>
+                <span lang="th">© 2568 ธนัท ทองอุทัยศรี | เชื่อมทฤษฎีกับการปฏิบัติในด้านความปลอดภัยแบบปัญญาประดิษฐ์</span>
             </p>
+            <p style="opacity: 0.7; margin-bottom: 0.5rem;">
+                <span lang="en">Two decades of systematic mastery culminating in revolutionary cognitive architecture</span>
+                <span lang="th">สองทศวรรษแห่งการพัฒนาอย่างเป็นระบบ นำไปสู่สถาปัตยกรรมปัญญาประดิษฐ์ที่ปฏิวัติวงการ</span>
+            </p>
+            <p style="font-size: 0.9rem; opacity: 0.6;">CISSP | CEH | CHFI | M.Eng (RMIT) | DSc Candidate (Capitol Technology University)</p>
             <div class="social-links">
                 <a href="https://linkedin.com/in/epicure" class="social-link" aria-label="LinkedIn">in</a>
                 <a href="https://github.com/000" class="social-link" aria-label="GitHub">gh</a>
-                <a href="mailto:la@defense.engineer" class="social-link" aria-label="Email">@</a>
+                <a href="mailto:ii@ieee.org" class="social-link" aria-label="Email">@</a>
             </div>
         </div>
     </footer>
@@ -1095,7 +1330,6 @@
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
         
-        // Check for saved theme preference
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
             body.classList.toggle('dark', savedTheme === 'dark');
@@ -1118,7 +1352,6 @@
             });
         });
 
-        // Check for saved language preference
         const savedLang = localStorage.getItem('language');
         if (savedLang) {
             body.dataset.lang = savedLang;
@@ -1145,24 +1378,383 @@
             observer.observe(el);
         });
 
-        // Skill Bars Animation
-        const skillObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const progressBars = entry.target.querySelectorAll('.skill-progress');
-                    progressBars.forEach((bar, index) => {
-                        setTimeout(() => {
-                            const level = bar.style.getPropertyValue('--skill-level');
-                            bar.style.transform = `scaleX(${parseInt(level) / 100})`;
-                        }, index * 100);
-                    });
-                }
-            });
-        }, observerOptions);
+        // D3.js Timeline Visualization
+        function createTimeline() {
+            const container = d3.select('#timeline-viz');
+            container.selectAll('*').remove();
+            
+            const margin = {top: 40, right: 40, bottom: 60, left: 200};
+            const width = container.node().getBoundingClientRect().width - margin.left - margin.right;
+            const height = 500 - margin.top - margin.bottom;
 
-        document.querySelectorAll('.skills-container').forEach(el => {
-            skillObserver.observe(el);
-        });
+            const svg = container.append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+
+            const data = [
+                {year: 2004, role: 'CBR Pioneer', org: 'RMIT', impact: 95, color: '#8b5cf6'},
+                {year: 2009, role: 'Production CBR', org: 'Melbourne IT', impact: 85, color: '#0ea5e9'},
+                {year: 2010, role: 'Digital Forensics', org: 'NECTEC', impact: 75, color: '#10b981'},
+                {year: 2018, role: 'AI Research', org: 'NSTDA', impact: 88, color: '#f59e0b'},
+                {year: 2019, role: 'National Security AI', org: 'NSTDA', impact: 90, color: '#ef4444'},
+                {year: 2020, role: 'Military Cyber', org: 'Army Cyber', impact: 92, color: '#8b5cf6'},
+                {year: 2022, role: 'National PKI', org: 'ETDA', impact: 87, color: '#0ea5e9'},
+                {year: 2023, role: 'FCI Defense', org: 'กยศ.', impact: 98, color: '#ec4899'}
+            ];
+
+            const xScale = d3.scaleLinear()
+                .domain([2004, 2025])
+                .range([0, width]);
+
+            const yScale = d3.scaleLinear()
+                .domain([0, 100])
+                .range([height, 0]);
+
+            // Add grid
+            svg.append('g')
+                .attr('class', 'grid')
+                .attr('opacity', 0.1)
+                .call(d3.axisLeft(yScale).tickSize(-width).tickFormat(''));
+
+            // Add line
+            const line = d3.line()
+                .x(d => xScale(d.year))
+                .y(d => yScale(d.impact))
+                .curve(d3.curveMonotoneX);
+
+            svg.append('path')
+                .datum(data)
+                .attr('fill', 'none')
+                .attr('stroke', 'url(#gradient)')
+                .attr('stroke-width', 4)
+                .attr('d', line);
+
+            // Add gradient
+            const gradient = svg.append('defs')
+                .append('linearGradient')
+                .attr('id', 'gradient')
+                .attr('gradientUnits', 'userSpaceOnUse')
+                .attr('x1', 0).attr('y1', 0)
+                .attr('x2', width).attr('y2', 0);
+
+            gradient.append('stop')
+                .attr('offset', '0%')
+                .attr('stop-color', '#667eea');
+
+            gradient.append('stop')
+                .attr('offset', '50%')
+                .attr('stop-color', '#0ea5e9');
+
+            gradient.append('stop')
+                .attr('offset', '100%')
+                .attr('stop-color', '#ec4899');
+
+            // Add points
+            const tooltip = d3.select('body').append('div')
+                .attr('class', 'tooltip')
+                .style('opacity', 0);
+
+            svg.selectAll('.dot')
+                .data(data)
+                .enter().append('circle')
+                .attr('class', 'dot')
+                .attr('cx', d => xScale(d.year))
+                .attr('cy', d => yScale(d.impact))
+                .attr('r', 8)
+                .attr('fill', d => d.color)
+                .attr('stroke', '#fff')
+                .attr('stroke-width', 3)
+                .style('cursor', 'pointer')
+                .on('mouseover', function(event, d) {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr('r', 12);
+                    
+                    tooltip.transition()
+                        .duration(200)
+                        .style('opacity', .9);
+                    tooltip.html(`<strong>${d.year}: ${d.role}</strong><br/>${d.org}<br/>Impact: ${d.impact}/100`)
+                        .style('left', (event.pageX + 10) + 'px')
+                        .style('top', (event.pageY - 28) + 'px');
+                })
+                .on('mouseout', function() {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr('r', 8);
+                    
+                    tooltip.transition()
+                        .duration(500)
+                        .style('opacity', 0);
+                });
+
+            // Add labels
+            svg.selectAll('.label')
+                .data(data)
+                .enter().append('text')
+                .attr('class', 'label')
+                .attr('x', d => xScale(d.year))
+                .attr('y', d => yScale(d.impact) - 15)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '11px')
+                .attr('font-weight', '600')
+                .attr('fill', body.classList.contains('dark') ? '#f1f5f9' : '#0f172a')
+                .text(d => d.role);
+
+            // Axes
+            svg.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(xScale).tickFormat(d3.format('d')))
+                .style('font-size', '12px')
+                .style('font-weight', '600');
+
+            svg.append('g')
+                .call(d3.axisLeft(yScale))
+                .style('font-size', '12px')
+                .style('font-weight', '600');
+
+            // Axis labels
+            svg.append('text')
+                .attr('x', width / 2)
+                .attr('y', height + 50)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '14px')
+                .attr('font-weight', '700')
+                .attr('fill', body.classList.contains('dark') ? '#f1f5f9' : '#0f172a')
+                .text('Year');
+
+            svg.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('x', -height / 2)
+                .attr('y', -150)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '14px')
+                .attr('font-weight', '700')
+                .attr('fill', body.classList.contains('dark') ? '#f1f5f9' : '#0f172a')
+                .text('Strategic Impact & Expertise Level');
+        }
+
+        // D3.js Skills Radar Chart
+        function createSkillsRadar() {
+            const container = d3.select('#skills-radar');
+            container.selectAll('*').remove();
+            
+            const margin = {top: 60, right: 60, bottom: 60, left: 60};
+            const width = Math.min(600, container.node().getBoundingClientRect().width) - margin.left - margin.right;
+            const height = width;
+            const radius = width / 2;
+
+            const svg = container.append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', `translate(${width/2 + margin.left},${height/2 + margin.top})`);
+
+            const skills = [
+                {axis: 'Case-Based Reasoning', value: 95},
+                {axis: 'AI/ML', value: 92},
+                {axis: 'Data Engineering', value: 90},
+                {axis: 'Cybersecurity', value: 93},
+                {axis: 'Vector Embeddings', value: 88},
+                {axis: 'Formal Verification', value: 85},
+                {axis: 'Production Systems', value: 91},
+                {axis: 'Research', value: 87}
+            ];
+
+            const angleSlice = Math.PI * 2 / skills.length;
+
+            // Circular grid
+            const levels = 5;
+            for (let i = 1; i <= levels; i++) {
+                const levelFactor = radius * i / levels;
+                svg.append('circle')
+                    .attr('r', levelFactor)
+                    .attr('fill', 'none')
+                    .attr('stroke', body.classList.contains('dark') ? '#334155' : '#cbd5e1')
+                    .attr('stroke-width', 1)
+                    .attr('opacity', 0.3);
+            }
+
+            // Axis lines
+            skills.forEach((d, i) => {
+                svg.append('line')
+                    .attr('x1', 0)
+                    .attr('y1', 0)
+                    .attr('x2', radius * Math.cos(angleSlice * i - Math.PI / 2))
+                    .attr('y2', radius * Math.sin(angleSlice * i - Math.PI / 2))
+                    .attr('stroke', body.classList.contains('dark') ? '#334155' : '#cbd5e1')
+                    .attr('stroke-width', 2);
+            });
+
+            // Skill labels
+            skills.forEach((d, i) => {
+                const angle = angleSlice * i - Math.PI / 2;
+                const labelRadius = radius * 1.15;
+                svg.append('text')
+                    .attr('x', labelRadius * Math.cos(angle))
+                    .attr('y', labelRadius * Math.sin(angle))
+                    .attr('text-anchor', 'middle')
+                    .attr('font-size', '13px')
+                    .attr('font-weight', '700')
+                    .attr('fill', body.classList.contains('dark') ? '#f1f5f9' : '#0f172a')
+                    .text(d.axis);
+            });
+
+            // Data area
+            const radarLine = d3.lineRadial()
+                .radius(d => radius * d.value / 100)
+                .angle((d, i) => angleSlice * i)
+                .curve(d3.curveCardinalClosed);
+
+            svg.append('path')
+                .datum(skills)
+                .attr('d', radarLine)
+                .attr('fill', 'url(#radarGradient)')
+                .attr('fill-opacity', 0.3)
+                .attr('stroke', '#0ea5e9')
+                .attr('stroke-width', 3);
+
+            // Gradient
+            const radarGradient = svg.append('defs')
+                .append('radialGradient')
+                .attr('id', 'radarGradient');
+
+            radarGradient.append('stop')
+                .attr('offset', '0%')
+                .attr('stop-color', '#8b5cf6');
+
+            radarGradient.append('stop')
+                .attr('offset', '100%')
+                .attr('stop-color', '#0ea5e9');
+
+            // Data points
+            skills.forEach((d, i) => {
+                const angle = angleSlice * i - Math.PI / 2;
+                const r = radius * d.value / 100;
+                svg.append('circle')
+                    .attr('cx', r * Math.cos(angle))
+                    .attr('cy', r * Math.sin(angle))
+                    .attr('r', 6)
+                    .attr('fill', '#0ea5e9')
+                    .attr('stroke', '#fff')
+                    .attr('stroke-width', 2);
+            });
+        }
+
+        // D3.js Expertise Network Graph
+        function createExpertiseNetwork() {
+            const container = d3.select('#expertise-network');
+            container.selectAll('*').remove();
+            
+            const width = container.node().getBoundingClientRect().width;
+            const height = 600;
+
+            const svg = container.append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            const nodes = [
+                {id: 'C-SOAR', group: 1, size: 30},
+                {id: 'CBR', group: 2, size: 20},
+                {id: 'Vector DB', group: 2, size: 20},
+                {id: 'LLM', group: 2, size: 20},
+                {id: 'Formal Logic', group: 2, size: 20},
+                {id: 'Python', group: 3, size: 15},
+                {id: 'Airflow', group: 3, size: 15},
+                {id: 'Transformers', group: 3, size: 15},
+                {id: 'SIEM', group: 3, size: 15},
+                {id: 'FCI', group: 4, size: 12},
+                {id: 'CISSP', group: 4, size: 12},
+                {id: 'PDPA', group: 4, size: 12},
+                {id: 'Audit', group: 4, size: 12}
+            ];
+
+            const links = [
+                {source: 'C-SOAR', target: 'CBR', value: 10},
+                {source: 'C-SOAR', target: 'Vector DB', value: 10},
+                {source: 'C-SOAR', target: 'LLM', value: 10},
+                {source: 'C-SOAR', target: 'Formal Logic', value: 10},
+                {source: 'CBR', target: 'Python', value: 5},
+                {source: 'CBR', target: 'Transformers', value: 5},
+                {source: 'Vector DB', target: 'Airflow', value: 5},
+                {source: 'LLM', target: 'Transformers', value: 5},
+                {source: 'Formal Logic', target: 'Audit', value: 5},
+                {source: 'C-SOAR', target: 'FCI', value: 8},
+                {source: 'C-SOAR', target: 'SIEM', value: 8},
+                {source: 'FCI', target: 'PDPA', value: 3},
+                {source: 'FCI', target: 'CISSP', value: 3}
+            ];
+
+            const simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id).distance(100))
+                .force('charge', d3.forceManyBody().strength(-300))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(d => d.size + 10));
+
+            const link = svg.append('g')
+                .selectAll('line')
+                .data(links)
+                .enter().append('line')
+                .attr('stroke', body.classList.contains('dark') ? '#334155' : '#cbd5e1')
+                .attr('stroke-width', d => Math.sqrt(d.value))
+                .attr('opacity', 0.6);
+
+            const node = svg.append('g')
+                .selectAll('g')
+                .data(nodes)
+                .enter().append('g')
+                .call(d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended));
+
+            node.append('circle')
+                .attr('r', d => d.size)
+                .attr('fill', d => {
+                    const colors = ['#ec4899', '#8b5cf6', '#0ea5e9', '#10b981'];
+                    return colors[d.group - 1];
+                })
+                .attr('stroke', '#fff')
+                .attr('stroke-width', 3);
+
+            node.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '.3em')
+                .attr('font-size', d => d.size > 20 ? '14px' : '11px')
+                .attr('font-weight', '700')
+                .attr('fill', '#fff')
+                .text(d => d.id);
+
+            simulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+
+                node.attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+        }
 
         // Interactive Particle Canvas
         const canvas = document.getElementById('particle-canvas');
@@ -1178,6 +1770,9 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             init();
+            createTimeline();
+            createSkillsRadar();
+            createExpertiseNetwork();
         });
         
         window.addEventListener('mousemove', (e) => {
@@ -1189,11 +1784,11 @@
             constructor(x, y) {
                 this.x = x;
                 this.y = y;
-                this.size = Math.random() * 2 + 1;
+                this.size = Math.random() * 2.5 + 1;
                 this.baseX = this.x;
                 this.baseY = this.y;
                 this.density = (Math.random() * 30) + 1;
-                this.color = `rgba(37, 99, 235, ${Math.random() * 0.3 + 0.1})`;
+                this.color = `rgba(14, 165, 233, ${Math.random() * 0.4 + 0.1})`;
             }
             
             draw() {
@@ -1233,7 +1828,7 @@
         
         function init() {
             particles = [];
-            const numberOfParticles = (canvas.width * canvas.height) / 15000;
+            const numberOfParticles = (canvas.width * canvas.height) / 12000;
             for (let i = 0; i < numberOfParticles; i++) {
                 let x = Math.random() * canvas.width;
                 let y = Math.random() * canvas.height;
@@ -1253,13 +1848,18 @@
         init();
         animate();
 
-        // Smooth Scroll for Navigation Links
+        // Initialize D3 visualizations
+        createTimeline();
+        createSkillsRadar();
+        createExpertiseNetwork();
+
+        // Smooth Scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    const headerOffset = 80;
+                    const headerOffset = 100;
                     const elementPosition = target.getBoundingClientRect().top;
                     const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
                     
@@ -1271,28 +1871,28 @@
             });
         });
 
-        // Dynamic Header Background
+        // Dynamic Header
         let lastScroll = 0;
         window.addEventListener('scroll', () => {
             const header = document.querySelector('header');
             const currentScroll = window.pageYOffset;
             
             if (currentScroll > 100) {
+                header.style.backdropFilter = 'blur(30px)';
+                header.style.boxShadow = 'var(--shadow-lg)';
+            } else {
                 header.style.backdropFilter = 'blur(20px)';
                 header.style.boxShadow = 'var(--shadow-md)';
-            } else {
-                header.style.backdropFilter = 'blur(10px)';
-                header.style.boxShadow = 'var(--shadow-sm)';
             }
             
             lastScroll = currentScroll;
         });
 
-        // Add loading animation
+        // Page Load Animation
         window.addEventListener('load', () => {
             document.body.style.opacity = '0';
             setTimeout(() => {
-                document.body.style.transition = 'opacity 0.5s ease';
+                document.body.style.transition = 'opacity 0.6s ease';
                 document.body.style.opacity = '1';
             }, 100);
         });
