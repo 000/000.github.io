@@ -1,0 +1,2514 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานข้อเท็จจริง - โครงการ DSL Platform</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-white: #FFFFFF;
+            --primary-black: #1D1D1F;
+            --accent-blue: #0071E3;
+            --accent-blue-hover: #0077ED;
+            --gray-100: #F5F5F7;
+            --gray-200: #E8E8ED;
+            --gray-300: #D2D2D7;
+            --gray-500: #86868B;
+            --gray-700: #6E6E73;
+            --success-green: #34C759;
+            --warning-orange: #FF9500;
+            --danger-red: #FF3B30;
+            --purple: #AF52DE;
+            --teal: #5AC8FA;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
+            --transition-fast: 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --transition-medium: 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --transition-slow: 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-100);
+            color: var(--primary-black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-black);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-black);
+        }
+
+        .nav-links a.active {
+            color: var(--accent-blue);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -16px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-blue);
+            border-radius: 1px;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 24px 80px;
+            text-align: center;
+            background: linear-gradient(180deg, var(--primary-white) 0%, var(--gray-100) 100%);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--accent-blue);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--primary-black) 0%, var(--gray-700) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--gray-700);
+            max-width: 720px;
+            margin: 0 auto 32px;
+            font-weight: 400;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--gray-500);
+        }
+
+        .meta-item svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 80px 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-description {
+            font-size: 18px;
+            color: var(--gray-700);
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 64px;
+        }
+
+        .stat-card {
+            background: var(--primary-white);
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-medium);
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .stat-icon.blue { background: rgba(0, 113, 227, 0.1); color: var(--accent-blue); }
+        .stat-icon.green { background: rgba(52, 199, 89, 0.1); color: var(--success-green); }
+        .stat-icon.orange { background: rgba(255, 149, 0, 0.1); color: var(--warning-orange); }
+        .stat-icon.red { background: rgba(255, 59, 48, 0.1); color: var(--danger-red); }
+        .stat-icon.purple { background: rgba(175, 82, 222, 0.1); color: var(--purple); }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--gray-500);
+        }
+
+        /* Visualization Controls */
+        .viz-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .viz-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .viz-btn.primary {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .viz-btn.primary:hover {
+            background: var(--accent-blue-hover);
+            transform: scale(1.02);
+        }
+
+        .viz-btn.secondary {
+            background: var(--gray-200);
+            color: var(--primary-black);
+        }
+
+        .viz-btn.secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .viz-btn.active {
+            background: var(--primary-black);
+            color: white;
+        }
+
+        /* Filter Pills */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .filter-pill {
+            padding: 8px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            background: var(--primary-white);
+            font-family: inherit;
+        }
+
+        .filter-pill:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .filter-pill.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+        }
+
+        .filter-pill.conflict {
+            border-color: var(--danger-red);
+        }
+
+        .filter-pill.conflict.active {
+            background: var(--danger-red);
+            border-color: var(--danger-red);
+        }
+
+        /* Visualization Container */
+        .viz-container {
+            background: var(--primary-white);
+            border-radius: 24px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .viz-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .viz-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .viz-legend {
+            display: flex;
+            gap: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .viz-body {
+            padding: 32px;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #timeline-viz, #radial-viz, #hierarchy-viz {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Timeline Styles */
+        .timeline-node {
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .timeline-node:hover {
+            filter: brightness(1.1);
+        }
+
+        .timeline-node circle {
+            stroke-width: 3px;
+            stroke: white;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .timeline-link {
+            fill: none;
+            stroke: var(--gray-300);
+            stroke-width: 2px;
+        }
+
+        .timeline-label {
+            font-size: 12px;
+            font-weight: 500;
+            fill: var(--primary-black);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: var(--primary-white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            padding: 20px;
+            max-width: 360px;
+            z-index: 1001;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-fast);
+            border: 1px solid var(--gray-200);
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .tooltip-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .tooltip-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .tooltip-title {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .tooltip-date {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        .tooltip-body {
+            font-size: 14px;
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        .tooltip-tags {
+            display: flex;
+            gap: 6px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tooltip-tag {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .tooltip-tag.conflict {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--danger-red);
+        }
+
+        .tooltip-tag.decision {
+            background: rgba(0, 113, 227, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .tooltip-tag.document {
+            background: rgba(52, 199, 89, 0.1);
+            color: var(--success-green);
+        }
+
+        /* Detail Panel */
+        .detail-panel {
+            position: fixed;
+            top: 0;
+            right: -480px;
+            width: 480px;
+            height: 100vh;
+            background: var(--primary-white);
+            box-shadow: var(--shadow-lg);
+            z-index: 1002;
+            transition: right var(--transition-medium);
+            overflow-y: auto;
+        }
+
+        .detail-panel.open {
+            right: 0;
+        }
+
+        .detail-panel-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--primary-white);
+            z-index: 1;
+        }
+
+        .detail-panel-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--gray-100);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .detail-panel-close:hover {
+            background: var(--gray-200);
+        }
+
+        .detail-panel-body {
+            padding: 24px;
+        }
+
+        .detail-section {
+            margin-bottom: 24px;
+        }
+
+        .detail-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .detail-content {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--primary-black);
+        }
+
+        .detail-list {
+            list-style: none;
+        }
+
+        .detail-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .detail-list li:last-child {
+            border-bottom: none;
+        }
+
+        .detail-list-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Insights Section */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .insight-card {
+            background: var(--primary-white);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-medium);
+            border-left: 4px solid transparent;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .insight-card.conflict {
+            border-left-color: var(--danger-red);
+        }
+
+        .insight-card.warning {
+            border-left-color: var(--warning-orange);
+        }
+
+        .insight-card.info {
+            border-left-color: var(--accent-blue);
+        }
+
+        .insight-card.success {
+            border-left-color: var(--success-green);
+        }
+
+        .insight-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .insight-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .insight-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .insight-body {
+            font-size: 15px;
+            color: var(--gray-700);
+            line-height: 1.7;
+        }
+
+        .insight-footer {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .insight-date {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        .insight-link {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: gap var(--transition-fast);
+        }
+
+        .insight-link:hover {
+            gap: 8px;
+        }
+
+        /* Conflict Analysis */
+        .conflict-section {
+            background: linear-gradient(135deg, #FFF5F5 0%, #FFF 100%);
+            border-radius: 24px;
+            padding: 48px;
+            margin-top: 48px;
+        }
+
+        .conflict-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .conflict-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--danger-red);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .conflict-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .conflict-subtitle {
+            font-size: 15px;
+            color: var(--gray-700);
+        }
+
+        .conflict-timeline {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .conflict-timeline::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--danger-red);
+            opacity: 0.3;
+        }
+
+        .conflict-item {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .conflict-item::before {
+            content: '';
+            position: absolute;
+            left: -32px;
+            top: 28px;
+            width: 24px;
+            height: 24px;
+            background: var(--primary-white);
+            border: 3px solid var(--danger-red);
+            border-radius: 50%;
+        }
+
+        .conflict-item-date {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--danger-red);
+            margin-bottom: 8px;
+        }
+
+        .conflict-item-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .conflict-item-desc {
+            font-size: 14px;
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        /* Conclusion Section */
+        .conclusion-section {
+            background: var(--primary-black);
+            color: var(--primary-white);
+            border-radius: 24px;
+            padding: 64px;
+            text-align: center;
+            margin-top: 48px;
+        }
+
+        .conclusion-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .conclusion-text {
+            font-size: 18px;
+            opacity: 0.8;
+            max-width: 720px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
+        }
+
+        .conclusion-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        .conclusion-stat {
+            text-align: center;
+        }
+
+        .conclusion-stat-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .conclusion-stat-label {
+            font-size: 14px;
+            opacity: 0.6;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 48px 24px;
+            text-align: center;
+            border-top: 1px solid var(--gray-200);
+            margin-top: 80px;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .footer-links a {
+            font-size: 13px;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-medium);
+        }
+
+        .overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 100px 16px 60px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .section {
+                padding: 48px 16px;
+            }
+
+            .viz-body {
+                padding: 16px;
+                min-height: 400px;
+            }
+
+            .detail-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .conflict-section {
+                padding: 32px 24px;
+            }
+
+            .conclusion-section {
+                padding: 48px 24px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-500);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="#" class="nav-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                รายงานข้อเท็จจริง
+            </a>
+            <ul class="nav-links">
+                <li><a href="#overview" class="active">ภาพรวม</a></li>
+                <li><a href="#timeline">ลำดับเหตุการณ์</a></li>
+                <li><a href="#insights">ข้อสังเกต</a></li>
+                <li><a href="#conflicts">ข้อพิพาท</a></li>
+                <li><a href="#conclusion">สรุป</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="overview">
+        <div class="hero-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+            </svg>
+            รายงานข้อเท็จจริง
+        </div>
+        <h1>โครงการเช่าใช้บริการแพลตฟอร์ม<br>เทคโนโลยีดิจิทัล DSL</h1>
+        <p class="hero-subtitle">
+            รายงานลำดับเหตุการณ์และข้อเท็จจริงเกี่ยวกับการดำเนินการจัดจ้างเช่าใช้บริการแพลตฟอร์มเทคโนโลยีดิจิทัลสำหรับให้บริการระบบ DSL ระยะเวลา ๖๐ เดือน
+        </p>
+        <div class="hero-meta">
+            <div class="meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                มิถุนายน - สิงหาคม ๒๕๖๘
+            </div>
+            <div class="meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                นายธนัท ทองอุทัยศรี
+            </div>
+            <div class="meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                ฝ่ายเทคโนโลยีสารสนเทศ
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                </div>
+                <div class="stat-value">13</div>
+                <div class="stat-label">เหตุการณ์สำคัญ</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                </div>
+                <div class="stat-value">7</div>
+                <div class="stat-label">การประชุมคณะกรรมการ</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <div class="stat-value">3</div>
+                <div class="stat-label">ผู้ยื่นข้อเสนอ</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                </div>
+                <div class="stat-value">4</div>
+                <div class="stat-label">ประเด็นข้อพิพาท</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                </div>
+                <div class="stat-value">60</div>
+                <div class="stat-label">เดือน (ระยะเวลาโครงการ)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="section" id="timeline">
+        <div class="section-header">
+            <div class="section-label">ลำดับเหตุการณ์</div>
+            <h2 class="section-title">Timeline การดำเนินการ</h2>
+            <p class="section-description">
+                แสดงลำดับเหตุการณ์สำคัญตั้งแต่การแต่งตั้งคณะกรรมการจนถึงการยกเลิกการจัดจ้าง
+            </p>
+        </div>
+
+        <!-- Visualization Controls -->
+        <div class="viz-controls">
+            <button class="viz-btn active" data-view="timeline" onclick="switchView('timeline')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <circle cx="6" cy="12" r="2"/>
+                    <circle cx="12" cy="12" r="2"/>
+                    <circle cx="18" cy="12" r="2"/>
+                </svg>
+                Timeline แนวนอน
+            </button>
+            <button class="viz-btn secondary" data-view="radial" onclick="switchView('radial')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <circle cx="12" cy="12" r="4"/>
+                    <line x1="12" y1="2" x2="12" y2="6"/>
+                    <line x1="12" y1="18" x2="12" y2="22"/>
+                    <line x1="2" y1="12" x2="6" y2="12"/>
+                    <line x1="18" y1="12" x2="22" y2="12"/>
+                </svg>
+                Radial Layout
+            </button>
+            <button class="viz-btn secondary" data-view="hierarchy" onclick="switchView('hierarchy')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="2" width="6" height="4" rx="1"/>
+                    <rect x="2" y="18" width="6" height="4" rx="1"/>
+                    <rect x="16" y="18" width="6" height="4" rx="1"/>
+                    <line x1="12" y1="6" x2="12" y2="12"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <line x1="5" y1="12" x2="5" y2="18"/>
+                    <line x1="19" y1="12" x2="19" y2="18"/>
+                </svg>
+                Hierarchy Layout
+            </button>
+        </div>
+
+        <!-- Filter Pills -->
+        <div class="filter-container">
+            <button class="filter-pill active" data-filter="all" onclick="filterEvents('all')">ทั้งหมด</button>
+            <button class="filter-pill" data-filter="meeting" onclick="filterEvents('meeting')">การประชุม</button>
+            <button class="filter-pill" data-filter="document" onclick="filterEvents('document')">เอกสาร</button>
+            <button class="filter-pill" data-filter="decision" onclick="filterEvents('decision')">มติ/การตัดสินใจ</button>
+            <button class="filter-pill conflict" data-filter="conflict" onclick="filterEvents('conflict')">ข้อพิพาท</button>
+        </div>
+
+        <!-- Visualization Container -->
+        <div class="viz-container">
+            <div class="viz-header">
+                <div class="viz-title">ลำดับเหตุการณ์ มิถุนายน - สิงหาคม ๒๕๖๘</div>
+                <div class="viz-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: var(--accent-blue)"></div>
+                        การประชุม
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: var(--success-green)"></div>
+                        เอกสาร
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: var(--warning-orange)"></div>
+                        มติ/การตัดสินใจ
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: var(--danger-red)"></div>
+                        ข้อพิพาท
+                    </div>
+                </div>
+            </div>
+            <div class="viz-body">
+                <svg id="timeline-viz"></svg>
+                <svg id="radial-viz" style="display: none;"></svg>
+                <svg id="hierarchy-viz" style="display: none;"></svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Insights Section -->
+    <section class="section" id="insights">
+        <div class="section-header">
+            <div class="section-label">ข้อสังเกตสำคัญ</div>
+            <h2 class="section-title">ประเด็นที่ควรพิจารณา</h2>
+            <p class="section-description">
+                สรุปข้อสังเกตและประเด็นสำคัญจากการดำเนินการจัดจ้างโครงการ
+            </p>
+        </div>
+
+        <div class="insights-grid">
+            <div class="insight-card conflict">
+                <div class="insight-header">
+                    <div class="insight-icon" style="background: rgba(255, 59, 48, 0.1); color: var(--danger-red);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                    </div>
+                    <div class="insight-title">เอกสารบุคลากรไม่ครบถ้วน</div>
+                </div>
+                <div class="insight-body">
+                    บริษัท โทรคมนาคมแห่งชาติฯ และบริษัท สิริซอฟต์ฯ ยื่นเอกสารบุคลากรไม่ครบถ้วนตาม TOR ข้อ ๑๒.๒ ซึ่งตามหลักเกณฑ์ TOR หน้า ๔๘ ต้องถือว่าไม่ผ่านข้อเสนอทางเทคนิค
+                </div>
+                <div class="insight-footer">
+                    <span class="insight-date">๓๐ กรกฎาคม ๒๕๖๘</span>
+                    <a href="#" class="insight-link" onclick="showDetail('doc-issue')">
+                        ดูรายละเอียด
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="insight-card warning">
+                <div class="insight-header">
+                    <div class="insight-icon" style="background: rgba(255, 149, 0, 0.1); color: var(--warning-orange);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="12" y1="18" x2="12" y2="12"/>
+                            <line x1="12" y1="9" x2="12.01" y2="9"/>
+                        </svg>
+                    </div>
+                    <div class="insight-title">ข้อบกพร่องใน TOR</div>
+                </div>
+                <div class="insight-body">
+                    TOR มีข้อบกพร่องหลายประการ เช่น การกำหนด GPU ๓๐ หน่วยต่อ Node ที่ขัดกับมาตรฐานอุตสาหกรรม และความไม่สอดคล้องของเงื่อนไขเอกสารบุคลากร
+                </div>
+                <div class="insight-footer">
+                    <span class="insight-date">๑ สิงหาคม ๒๕๖๘</span>
+                    <a href="#" class="insight-link" onclick="showDetail('tor-issue')">
+                        ดูรายละเอียด
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="insight-card info">
+                <div class="insight-header">
+                    <div class="insight-icon" style="background: rgba(0, 113, 227, 0.1); color: var(--accent-blue);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <div class="insight-title">มติเสียงข้างมาก vs เสียงข้างน้อย</div>
+                </div>
+                <div class="insight-body">
+                    คณะกรรมการมีมติ ๔ ต่อ ๑ ให้ดำเนินการต่อ โดยนายธนัท ทองอุทัยศรี เป็นเสียงข้างน้อยที่สงวนความเห็นตามระเบียบกระทรวงการคลังฯ ข้อ ๗๕
+                </div>
+                <div class="insight-footer">
+                    <span class="insight-date">๓๐ กรกฎาคม ๒๕๖๘</span>
+                    <a href="#" class="insight-link" onclick="showDetail('vote-issue')">
+                        ดูรายละเอียด
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="insight-card success">
+                <div class="insight-header">
+                    <div class="insight-icon" style="background: rgba(52, 199, 89, 0.1); color: var(--success-green);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </div>
+                    <div class="insight-title">แผนสำรองฉุกเฉิน</div>
+                </div>
+                <div class="insight-body">
+                    กองทุนฯ มีแผนสำรองฉุกเฉินในการเช่าใช้บริการโครงสร้างพื้นฐานเป็นการชั่วคราว ๑๒ เดือน ทำให้ไม่มีความจำเป็นเร่งด่วนในการดำเนินการต่อ
+                </div>
+                <div class="insight-footer">
+                    <span class="insight-date">๑ สิงหาคม ๒๕๖๘</span>
+                    <a href="#" class="insight-link" onclick="showDetail('contingency')">
+                        ดูรายละเอียด
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="insight-card conflict">
+                <div class="insight-header">
+                    <div class="insight-icon" style="background: rgba(255, 59, 48, 0.1); color: var(--danger-red);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <div class="insight-title">การสื่อสารกับผู้ประกอบการ</div>
+                </div>
+                <div class="insight-body">
+                    หนังสือตอบกลับบริษัท โปรเอ็นฯ มีการลงรายละเอียดเกี่ยวกับการลงมติภายในมากเกินไป ซึ่งอาจเพิ่มความเสี่ยงในกรณีเกิดข้อพิพาท
+                </div>
+                <div class="insight-footer">
+                    <span class="insight-date">๗ สิงหาคม ๒๕๖๘</span>
+                    <a href="#" class="insight-link" onclick="showDetail('comm-issue')">
+                        ดูรายละเอียด
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="insight-card warning">
+                <div class="insight-header">
+                    <div class="insight-icon" style="background: rgba(255, 149, 0, 0.1); color: var(--warning-orange);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                    </div>
+                    <div class="insight-title">ความคลาดเคลื่อนเลขที่เอกสาร</div>
+                </div>
+                <div class="insight-body">
+                    รายงานการประชุมครั้งที่ ๗/๒๕๖๘ ระบุเลขที่เอกสารเป็น "กค ๕๑๒๒/๔๗๙๑" ซึ่งแตกต่างจากเลขที่ถูกต้อง "กค ๕๑๒๒/ว.๒๗๙๑"
+                </div>
+                <div class="insight-footer">
+                    <span class="insight-date">๒๒ สิงหาคม ๒๕๖๘</span>
+                    <a href="#" class="insight-link" onclick="showDetail('doc-error')">
+                        ดูรายละเอียด
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conflict Analysis Section -->
+        <div class="conflict-section" id="conflicts">
+            <div class="conflict-header">
+                <div class="conflict-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="conflict-title">ประเด็นข้อพิพาทและความขัดแย้ง</div>
+                    <div class="conflict-subtitle">สรุปประเด็นที่นำไปสู่การอุทธรณ์ของบริษัท โปรเอ็น คอร์ป จำกัด (มหาชน)</div>
+                </div>
+            </div>
+
+            <div class="conflict-timeline">
+                <div class="conflict-item">
+                    <div class="conflict-item-date">๓๐ กรกฎาคม ๒๕๖๘</div>
+                    <div class="conflict-item-title">จุดเริ่มต้นข้อพิพาท - การตีความ TOR ข้อ ๑๒.๒</div>
+                    <div class="conflict-item-desc">
+                        คณะกรรมการมีความเห็นแตกต่างกันในการตีความว่าผู้ยื่นข้อเสนอที่มีเอกสารบุคลากรไม่ครบถ้วนควรถือว่า "ไม่ผ่านข้อเสนอทางเทคนิค" หรือเพียง "ไม่ได้คะแนนในหมวดนั้น" ซึ่งส่งผลต่อการบังคับใช้ระเบียบข้อ ๗๕
+                    </div>
+                </div>
+
+                <div class="conflict-item">
+                    <div class="conflict-item-date">๓๐ กรกฎาคม ๒๕๖๘</div>
+                    <div class="conflict-item-title">มติเสียงข้างมาก ๔ ต่อ ๑</div>
+                    <div class="conflict-item-desc">
+                        คณะกรรมการเสียงข้างมากเห็นว่าทั้ง ๓ บริษัทผ่านคุณสมบัติและข้อเสนอทางเทคนิคแล้ว จึงไม่เข้าเงื่อนไขข้อ ๗๕ ในขณะที่นายธนัท ทองอุทัยศรี สงวนความเห็นว่าควรยึดตามถ้อยคำ TOR อย่างเคร่งครัด
+                    </div>
+                </div>
+
+                <div class="conflict-item">
+                    <div class="conflict-item-date">๑ สิงหาคม ๒๕๖๘</div>
+                    <div class="conflict-item-title">การเสนอทบทวน TOR</div>
+                    <div class="conflict-item-desc">
+                        ฝ่ายเทคโนโลยีสารสนเทศเสนอให้ทบทวน TOR เนื่องจากพบข้อบกพร่องหลายประการ และผู้จัดการกองทุนฯ ได้เห็นชอบการทบทวน ซึ่งนำไปสู่การยกเลิก TOR ฉบับเดิม
+                    </div>
+                </div>
+
+                <div class="conflict-item">
+                    <div class="conflict-item-date">๒๒ สิงหาคม ๒๕๖๘</div>
+                    <div class="conflict-item-title">มติยกเลิกการจัดจ้าง</div>
+                    <div class="conflict-item-desc">
+                        คณะกรรมการเช่าฯ มีมติเห็นชอบให้เสนอผู้จัดการกองทุนฯ ยกเลิกการเชิญเสนอราคาและการจัดจ้าง เนื่องจาก TOR ฉบับเดิมถูกยกเลิกและไม่สามารถใช้ในการดำเนินการคัดเลือกผู้รับจ้างต่อไปได้
+                    </div>
+                </div>
+
+                <div class="conflict-item">
+                    <div class="conflict-item-date">๒๓ กันยายน ๒๕๖๘</div>
+                    <div class="conflict-item-title">การอุทธรณ์ของบริษัท โปรเอ็นฯ</div>
+                    <div class="conflict-item-desc">
+                        บริษัท โปรเอ็น คอร์ป จำกัด (มหาชน) ยื่นหนังสืออุทธรณ์เลขที่ PROEN 68/0923-1 คัดค้านคำสั่งยกเลิกการเสนอราคาและการจัดจ้าง ซึ่งนำไปสู่การแต่งตั้งคณะกรรมการสอบสวนข้อเท็จจริง
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion Section -->
+    <section class="section" id="conclusion">
+        <div class="conclusion-section">
+            <h2 class="conclusion-title">สรุปผลการดำเนินการ</h2>
+            <p class="conclusion-text">
+                การจัดจ้างเช่าใช้บริการแพลตฟอร์มเทคโนโลยีดิจิทัลสำหรับให้บริการระบบ DSL ระยะเวลา ๖๐ เดือน ได้ถูกยกเลิกเนื่องจาก TOR มีข้อบกพร่องหลายประการ และผู้จัดการกองทุนฯ ได้เห็นชอบให้ทบทวน TOR ซึ่งทำให้ TOR ฉบับเดิมไม่สามารถใช้ในการดำเนินการคัดเลือกผู้รับจ้างต่อไปได้
+            </p>
+            <div class="conclusion-stats">
+                <div class="conclusion-stat">
+                    <div class="conclusion-stat-value">๖๖</div>
+                    <div class="conclusion-stat-label">วัน (ระยะเวลาดำเนินการ)</div>
+                </div>
+                <div class="conclusion-stat">
+                    <div class="conclusion-stat-value">๗</div>
+                    <div class="conclusion-stat-label">ครั้ง (การประชุมคณะกรรมการ)</div>
+                </div>
+                <div class="conclusion-stat">
+                    <div class="conclusion-stat-value">๑</div>
+                    <div class="conclusion-stat-label">ราย (ผู้ผ่านเกณฑ์ตาม TOR)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-text">
+            รายงานข้อเท็จจริงและลำดับเหตุการณ์ โดย นายธนัท ทองอุทัยศรี<br>
+            ผู้เชี่ยวชาญด้านเทคโนโลยีสารสนเทศ กองทุนเงินให้กู้ยืมเพื่อการศึกษา
+        </p>
+        <div class="footer-links">
+            <a href="#">ฝ่ายเทคโนโลยีสารสนเทศ</a>
+            <a href="#">กองทุนเงินให้กู้ยืมเพื่อการศึกษา</a>
+            <a href="#">พฤศจิกายน ๒๕๖๘</a>
+        </div>
+    </footer>
+
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip"></div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="closeDetail()"></div>
+
+    <!-- Detail Panel -->
+    <div class="detail-panel" id="detail-panel">
+        <div class="detail-panel-header">
+            <h3 id="detail-title">รายละเอียด</h3>
+            <button class="detail-panel-close" onclick="closeDetail()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+        <div class="detail-panel-body" id="detail-body">
+            <!-- Dynamic content -->
+        </div>
+    </div>
+
+    <script>
+        // Timeline Data
+        const timelineData = [
+            {
+                id: 1,
+                date: "๒๔ มิ.ย. ๒๕๖๘",
+                dateSort: "2025-06-24",
+                title: "แต่งตั้งคณะกรรมการเช่าฯ",
+                description: "กองทุนฯ มีคำสั่งที่ ๙๙/๒๕๖๘ แต่งตั้งคณะกรรมการเช่าโดยวิธีคัดเลือกโครงการเช่าใช้บริการแพลตฟอร์มเทคโนโลยีดิจิทัลสำหรับให้บริการระบบ DSL ระยะเวลา ๖๐ เดือน",
+                type: "document",
+                category: "document",
+                color: "#34C759"
+            },
+            {
+                id: 2,
+                date: "๑ ก.ค. ๒๕๖๘",
+                dateSort: "2025-07-01",
+                title: "ประชุมครั้งที่ ๑/๒๕๖๘ และ ๒/๒๕๖๘",
+                description: "พิจารณากรอบกฎหมาย ร่าง TOR หลักเกณฑ์ Price Performance และคัดเลือกผู้ประกอบการ ๑๒ ราย เพื่อเชิญชวนยื่นข้อเสนอ",
+                type: "meeting",
+                category: "meeting",
+                color: "#0071E3"
+            },
+            {
+                id: 3,
+                date: "๒ ก.ค. ๒๕๖๘",
+                dateSort: "2025-07-02",
+                title: "ออกหนังสือเชิญชวนเสนอราคา",
+                description: "กองทุนฯ ออกหนังสือเชิญชวน ที่ กค ๕๑๐๑/ว.๒๒๘๐ ถึงผู้ประกอบการ ๑๒ ราย กำหนดยื่นข้อเสนอภายใน ๒๒ ก.ค. ๒๕๖๘",
+                type: "document",
+                category: "document",
+                color: "#34C759"
+            },
+            {
+                id: 4,
+                date: "๑๔ ก.ค. ๒๕๖๘",
+                dateSort: "2025-07-14",
+                title: "ประชุมครั้งที่ ๓/๒๕๖๘",
+                description: "พิจารณาและตอบข้อซักถามเกี่ยวกับ TOR จากผู้ประกอบการ ๘ ราย และเผยแพร่คำชี้แจงผ่านระบบ e-GP",
+                type: "meeting",
+                category: "meeting",
+                color: "#0071E3"
+            },
+            {
+                id: 5,
+                date: "๒๒ ก.ค. ๒๕๖๘",
+                dateSort: "2025-07-22",
+                title: "วันครบกำหนดยื่นข้อเสนอ",
+                description: "มีผู้ยื่นข้อเสนอ ๓ ราย: บริษัท โทรคมนาคมแห่งชาติฯ, บริษัท สิริซอฟต์ฯ และบริษัท โปรเอ็น คอร์ปฯ",
+                type: "decision",
+                category: "decision",
+                color: "#FF9500"
+            },
+            {
+                id: 6,
+                date: "๒๔ ก.ค. ๒๕๖๘",
+                dateSort: "2025-07-24",
+                title: "ประชุมครั้งที่ ๔/๒๕๖๘",
+                description: "ตรวจสอบคุณสมบัติ เปิดซองราคา คำนวณคะแนน Price Performance บริษัท โปรเอ็นฯ ได้คะแนนสูงสุด ๘๕.๑๑๔๙ คะแนน",
+                type: "meeting",
+                category: "meeting",
+                color: "#0071E3"
+            },
+            {
+                id: 7,
+                date: "๓๐ ก.ค. ๒๕๖๘",
+                dateSort: "2025-07-30",
+                title: "ประชุมครั้งที่ ๕/๒๕๖๘ (จุดเริ่มต้นข้อพิพาท)",
+                description: "พบว่า ๒ บริษัทยื่นเอกสารบุคลากรไม่ครบ มติ ๔:๑ ให้ดำเนินการต่อ นายธนัท ทองอุทัยศรี สงวนความเห็น",
+                type: "conflict",
+                category: "conflict",
+                color: "#FF3B30"
+            },
+            {
+                id: 8,
+                date: "๓๑ ก.ค. ๒๕๖๘",
+                dateSort: "2025-07-31",
+                title: "บันทึก ฝอพ.๑๕๒๗/๒๕๖๘",
+                description: "ฝ่ายอำนวยการและพัสดุเสนอให้ทบทวนผลการพิจารณาตาม TOR ข้อ ๑๒.๒ และระเบียบข้อ ๕๖, ๗๕",
+                type: "document",
+                category: "document",
+                color: "#34C759"
+            },
+            {
+                id: 9,
+                date: "๑ ส.ค. ๒๕๖๘",
+                dateSort: "2025-08-01",
+                title: "บันทึก ฝทส.๙๖๑/๒๕๖๘",
+                description: "ฝ่ายเทคโนโลยีฯ เสนอทบทวน TOR เนื่องจากพบข้อบกพร่องหลายประการ ผู้จัดการกองทุนฯ เห็นชอบ",
+                type: "conflict",
+                category: "conflict",
+                color: "#FF3B30"
+            },
+            {
+                id: 10,
+                date: "๔ ส.ค. ๒๕๖๘",
+                dateSort: "2025-08-04",
+                title: "ประชุมครั้งที่ ๖/๒๕๖๘",
+                description: "มติให้ส่งเรื่องไปยังคณะกรรมการวินิจฉัยฯ กรมบัญชีกลาง และขอขยายระยะเวลารายงานผล",
+                type: "meeting",
+                category: "meeting",
+                color: "#0071E3"
+            },
+            {
+                id: 11,
+                date: "๗ ส.ค. ๒๕๖๘",
+                dateSort: "2025-08-07",
+                title: "หนังสือชี้แจงบริษัท โปรเอ็นฯ",
+                description: "ประธานคณะกรรมการเช่าฯ มีหนังสือ กค ๕๑๒๒/ว.๒๗๙๑ ชี้แจงความคืบหน้าและความเห็นที่แตกต่างของคณะกรรมการ",
+                type: "conflict",
+                category: "conflict",
+                color: "#FF3B30"
+            },
+            {
+                id: 12,
+                date: "๒๒ ส.ค. ๒๕๖๘",
+                dateSort: "2025-08-22",
+                title: "ประชุมครั้งที่ ๗/๒๕๖๘",
+                description: "มติยกเลิกการจัดจ้างเนื่องจาก TOR ฉบับเดิมถูกยกเลิก และไม่สามารถใช้ในการคัดเลือกผู้รับจ้างต่อไปได้",
+                type: "decision",
+                category: "decision",
+                color: "#FF9500"
+            },
+            {
+                id: 13,
+                date: "๒๘ ส.ค. ๒๕๖๘",
+                dateSort: "2025-08-28",
+                title: "แจ้งยกเลิกการจัดจ้าง",
+                description: "กองทุนฯ มีหนังสือ กค ๕๑๐๑/ว.๓๑๓๓ แจ้งผู้ยื่นข้อเสนอทั้ง ๓ รายให้ทราบคำสั่งยกเลิกการจัดจ้าง",
+                type: "document",
+                category: "document",
+                color: "#34C759"
+            }
+        ];
+
+        // Hierarchy Data
+        const hierarchyData = {
+            name: "โครงการ DSL Platform",
+            children: [
+                {
+                    name: "ขั้นตอนเตรียมการ",
+                    children: [
+                        { name: "แต่งตั้งคณะกรรมการ", date: "๒๔ มิ.ย.", type: "document" },
+                        { name: "พิจารณา TOR", date: "๑ ก.ค.", type: "meeting" },
+                        { name: "เชิญชวนเสนอราคา", date: "๒ ก.ค.", type: "document" }
+                    ]
+                },
+                {
+                    name: "ขั้นตอนพิจารณา",
+                    children: [
+                        { name: "ตอบข้อซักถาม", date: "๑๔ ก.ค.", type: "meeting" },
+                        { name: "รับข้อเสนอ ๓ ราย", date: "๒๒ ก.ค.", type: "decision" },
+                        { name: "ตรวจสอบคุณสมบัติ", date: "๒๔ ก.ค.", type: "meeting" }
+                    ]
+                },
+                {
+                    name: "ข้อพิพาท",
+                    children: [
+                        { name: "เอกสารไม่ครบ", date: "๓๐ ก.ค.", type: "conflict" },
+                        { name: "มติ ๔:๑", date: "๓๐ ก.ค.", type: "conflict" },
+                        { name: "ทบทวน TOR", date: "๑ ส.ค.", type: "conflict" }
+                    ]
+                },
+                {
+                    name: "ผลสรุป",
+                    children: [
+                        { name: "หารือกรมบัญชีกลาง", date: "๔ ส.ค.", type: "meeting" },
+                        { name: "ยกเลิกการจัดจ้าง", date: "๒๒ ส.ค.", type: "decision" },
+                        { name: "แจ้งผู้ยื่นข้อเสนอ", date: "๒๘ ส.ค.", type: "document" }
+                    ]
+                }
+            ]
+        };
+
+        // Detail Content
+        const detailContent = {
+            'doc-issue': {
+                title: 'ปัญหาเอกสารบุคลากรไม่ครบถ้วน',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-section-title">สาระสำคัญ</div>
+                        <div class="detail-content">
+                            จากการตรวจสอบเอกสารข้อเสนอด้านบุคลากรตาม TOR ข้อ ๑๒.๒ พบว่า บริษัท โทรคมนาคมแห่งชาติฯ และบริษัท สิริซอฟต์ฯ ยื่นเอกสารบุคลากรไม่ครบถ้วนตามที่กำหนดใน TOR หน้า ๔๘
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">เงื่อนไขตาม TOR</div>
+                        <div class="detail-content">
+                            TOR กำหนดว่า "หากผู้ยื่นข้อเสนอไม่มีบุคลากรที่มีคุณสมบัติและจำนวนบุคลากรครบทั้ง ๓ ด้าน คณะกรรมการพิจารณาผลจะไม่พิจารณาให้คะแนนในข้อนี้ และถือว่าไม่ผ่านข้อเสนอทางเทคนิค"
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">เอกสารที่ต้องยื่น</div>
+                        <ul class="detail-list">
+                            <li>
+                                <div class="detail-list-icon" style="background: rgba(0, 113, 227, 0.1); color: var(--accent-blue);">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    </svg>
+                                </div>
+                                สำเนาบัตรประจำตัวประชาชน
+                            </li>
+                            <li>
+                                <div class="detail-list-icon" style="background: rgba(0, 113, 227, 0.1); color: var(--accent-blue);">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    </svg>
+                                </div>
+                                หนังสือรับรองการทำงาน
+                            </li>
+                            <li>
+                                <div class="detail-list-icon" style="background: rgba(0, 113, 227, 0.1); color: var(--accent-blue);">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    </svg>
+                                </div>
+                                สำเนาวุฒิการศึกษา
+                            </li>
+                            <li>
+                                <div class="detail-list-icon" style="background: rgba(0, 113, 227, 0.1); color: var(--accent-blue);">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    </svg>
+                                </div>
+                                สำเนาใบประกาศนียบัตร (Certification)
+                            </li>
+                            <li>
+                                <div class="detail-list-icon" style="background: rgba(0, 113, 227, 0.1); color: var(--accent-blue);">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    </svg>
+                                </div>
+                                สำเนาสัญญาจ้างงานเป็นพนักงาน
+                            </li>
+                            <li>
+                                <div class="detail-list-icon" style="background: rgba(0, 113, 227, 0.1); color: var(--accent-blue);">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    </svg>
+                                </div>
+                                หลักฐานการนำส่งเงินสมทบประกันสังคม
+                            </li>
+                        </ul>
+                    </div>
+                `
+            },
+            'tor-issue': {
+                title: 'ข้อบกพร่องใน TOR',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-section-title">ประเด็นที่ ๑: GPU Specification</div>
+                        <div class="detail-content">
+                            การกำหนดคุณลักษณะของระบบประมวลผล (Compute Nodes) ในข้อ ๔.๕.๕.๗ ที่ระบุให้มี GPU ไม่น้อยกว่า ๓๐ หน่วยต่อ Node ซึ่งอาจทำให้เกิดความสับสนและความเข้าใจไม่ตรงกันเกี่ยวกับคุณสมบัติที่ต้องการ
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">ประเด็นที่ ๒: ความไม่สอดคล้องของเงื่อนไข</div>
+                        <div class="detail-content">
+                            ความไม่สอดคล้องกันระหว่าง TOR ข้อ ๑๑ "หลักฐานการยื่นข้อเสนอ" โดยเฉพาะข้อ ๒.๖ เรื่องหลักฐานของบุคลากร กับ TOR ข้อ ๔.๙.๕ ว่าด้วยการบริหารโครงการ
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">ประเด็นที่ ๓: ปัญหาสำหรับรัฐวิสาหกิจ</div>
+                        <div class="detail-content">
+                            การกำหนดให้ใช้หลักฐานประกันสังคมร่วมกับ TOR ข้อ ๕.๒ ที่ถือว่าเป็น "สาระสำคัญในการพิจารณา" ทำให้ผู้ยื่นข้อเสนอจากหน่วยงานของรัฐที่ได้รับการยกเว้นไม่ต้องนำส่งเงินสมทบประกันสังคมอาจไม่สามารถจัดเตรียมเอกสารได้ตรงตามถ้อยคำ TOR
+                        </div>
+                    </div>
+                `
+            },
+            'vote-issue': {
+                title: 'มติเสียงข้างมาก vs เสียงข้างน้อย',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-section-title">ความเห็นเสียงข้างมาก (๔ เสียง)</div>
+                        <div class="detail-content">
+                            <strong>นายปรเมศวร์ สังข์เอี่ยม, ผศ.ดร.สมนึก คีรีโต, นายภาณุวัตร ลาภผล, นายทนงเดช สุทธิวรรโณภาส</strong><br><br>
+                            เห็นว่าทั้ง ๓ บริษัทผ่านคุณสมบัติและข้อเสนอทางเทคนิคแล้ว การไม่ครบเอกสารบุคลากรเป็นเพียงการไม่ได้คะแนนในหมวด Performance ไม่ใช่การไม่ผ่านข้อเสนอทางเทคนิค จึงไม่เข้าเงื่อนไขข้อ ๗๕
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">ความเห็นเสียงข้างน้อย (๑ เสียง)</div>
+                        <div class="detail-content">
+                            <strong>นายธนัท ทองอุทัยศรี</strong><br><br>
+                            เห็นว่าเมื่อ TOR ระบุเงื่อนไขด้านบุคลากรอย่างชัดเจน และมีผู้ผ่านเงื่อนไขตาม TOR เพียงรายเดียว คณะกรรมการควรยึดถือระเบียบกระทรวงการคลังฯ ข้อ ๗๕ ประกอบข้อ ๕๖ ตามลายลักษณ์อักษร
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">เหตุผลของความเห็นแย้ง</div>
+                        <ul class="detail-list">
+                            <li>
+                                <div class="detail-list-icon" style="background: rgba(255, 59, 48, 0.1); color: var(--danger-red);">๑</div>
+                                ด้านระเบียบและหลักการแข่งขันที่เป็นธรรม
+                            </li>
+                            <li>
+                                <div class="detail-list-icon" style="background: rgba(255, 59, 48, 0.1); color: var(--danger-red);">๒</div>
+                                ด้านความโปร่งใสและการตรวจสอบภายนอก
+                            </li>
+                            <li>
+                                <div class="detail-list-icon" style="background: rgba(255, 59, 48, 0.1); color: var(--danger-red);">๓</div>
+                                ด้านความชัดเจนและสมบูรณ์ของ TOR
+                            </li>
+                            <li>
+                                <div class="detail-list-icon" style="background: rgba(255, 59, 48, 0.1); color: var(--danger-red);">๔</div>
+                                ด้านความจำเป็นเร่งด่วนและแผนรองรับ
+                            </li>
+                        </ul>
+                    </div>
+                `
+            },
+            'contingency': {
+                title: 'แผนสำรองฉุกเฉิน',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-section-title">รายละเอียดแผนสำรอง</div>
+                        <div class="detail-content">
+                            กองทุนฯ มีแผนสำรองฉุกเฉินในการเช่าใช้บริการโครงสร้างพื้นฐานเป็นการชั่วคราวเพื่อให้บริการระบบ DSL ได้อย่างต่อเนื่อง โดยอยู่ระหว่างขออนุมัติเช่าใช้โครงสร้างพื้นฐานเดิมต่อเนื่อง ๑๒ เดือน
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">ผลกระทบต่อการดำเนินการ</div>
+                        <div class="detail-content">
+                            เนื่องจากมีแผนสำรองฉุกเฉินรองรับ การจัดจ้างตาม TOR ฉบับนี้จึงไม่อยู่ในสถานะ "เร่งด่วน" อีกต่อไป ทำให้สามารถยกเลิกการจัดจ้างและเริ่มกระบวนการใหม่ภายใต้ TOR ฉบับใหม่ได้โดยไม่กระทบต่อการให้บริการ
+                        </div>
+                    </div>
+                `
+            },
+            'comm-issue': {
+                title: 'ปัญหาการสื่อสารกับผู้ประกอบการ',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-section-title">หนังสือที่เป็นปัญหา</div>
+                        <div class="detail-content">
+                            หนังสือกองทุนฯ ที่ กค ๕๑๒๒/ว.๒๗๙๑ ลงวันที่ ๗ สิงหาคม ๒๕๖๘ ซึ่งประธานคณะกรรมการเช่าฯ มีถึงบริษัท โปรเอ็นฯ เพื่อชี้แจงความคืบหน้า
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">ข้อสังเกตของนายธนัท ทองอุทัยศรี</div>
+                        <div class="detail-content">
+                            เนื้อหาในหนังสือดังกล่าวมีการลงรายละเอียดเกี่ยวกับการลงมติภายในของคณะกรรมการฯ มากเกินไป ทั้งๆ ที่ในขณะนั้นยังไม่มีข้อยุติในประเด็นข้อกฎหมาย ควรตอบในภาพรวมว่า "อยู่ระหว่างการดำเนินการ/พิจารณา" โดยไม่ลงรายละเอียดมากนัก
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">ความเสี่ยง</div>
+                        <div class="detail-content">
+                            การเปิดเผยรายละเอียดการลงมติภายในอาจเพิ่มความเสี่ยงในกรณีเกิดข้อพิพาทหรือการอุทธรณ์ในภายหลัง
+                        </div>
+                    </div>
+                `
+            },
+            'doc-error': {
+                title: 'ความคลาดเคลื่อนเลขที่เอกสาร',
+                content: `
+                    <div class="detail-section">
+                        <div class="detail-section-title">ข้อผิดพลาดที่พบ</div>
+                        <div class="detail-content">
+                            ในรายงานการประชุมครั้งที่ ๗/๒๕๖๘ ส่วน "๒. การดำเนินการ" มีการอ้างถึงหนังสือกองทุนฯ ลงวันที่ ๗ สิงหาคม ๒๕๖๘ โดยระบุเลขที่เอกสารเป็น <strong>"กค ๕๑๒๒/๔๗๙๑"</strong>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">เลขที่ถูกต้อง</div>
+                        <div class="detail-content">
+                            เลขที่เอกสารที่ถูกต้องตามหนังสือราชการฉบับจริงคือ <strong>"กค ๕๑๒๒/ว.๒๗๙๑"</strong>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-section-title">ข้อเสนอแนะ</div>
+                        <div class="detail-content">
+                            ควรแก้ไขเลขที่เอกสารในรายงานการประชุมให้ถูกต้องตามเอกสารราชการฉบับจริง เพื่อประโยชน์ในการตรวจสอบข้อเท็จจริง
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        // Current state
+        let currentView = 'timeline';
+        let currentFilter = 'all';
+        let filteredData = [...timelineData];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            drawTimeline();
+            setupScrollSpy();
+        });
+
+        // Switch visualization view
+        function switchView(view) {
+            currentView = view;
+            
+            // Update buttons
+            document.querySelectorAll('.viz-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('secondary');
+            });
+            document.querySelector(`[data-view="${view}"]`).classList.remove('secondary');
+            document.querySelector(`[data-view="${view}"]`).classList.add('active');
+
+            // Hide all visualizations
+            document.getElementById('timeline-viz').style.display = 'none';
+            document.getElementById('radial-viz').style.display = 'none';
+            document.getElementById('hierarchy-viz').style.display = 'none';
+
+            // Show selected visualization
+            document.getElementById(`${view}-viz`).style.display = 'block';
+
+            // Draw visualization
+            if (view === 'timeline') {
+                drawTimeline();
+            } else if (view === 'radial') {
+                drawRadial();
+            } else if (view === 'hierarchy') {
+                drawHierarchy();
+            }
+        }
+
+        // Filter events
+        function filterEvents(filter) {
+            currentFilter = filter;
+            
+            // Update filter pills
+            document.querySelectorAll('.filter-pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+            document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+
+            // Filter data
+            if (filter === 'all') {
+                filteredData = [...timelineData];
+            } else {
+                filteredData = timelineData.filter(d => d.category === filter);
+            }
+
+            // Redraw current visualization
+            if (currentView === 'timeline') {
+                drawTimeline();
+            } else if (currentView === 'radial') {
+                drawRadial();
+            }
+        }
+
+        // Draw Timeline
+        function drawTimeline() {
+            const container = document.getElementById('timeline-viz');
+            const containerRect = container.parentElement.getBoundingClientRect();
+            const width = containerRect.width - 64;
+            const height = 500;
+            const margin = { top: 60, right: 40, bottom: 60, left: 40 };
+
+            // Clear previous
+            d3.select('#timeline-viz').selectAll('*').remove();
+
+            const svg = d3.select('#timeline-viz')
+                .attr('width', width)
+                .attr('height', height);
+
+            const innerWidth = width - margin.left - margin.right;
+            const innerHeight = height - margin.top - margin.bottom;
+
+            const g = svg.append('g')
+                .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+            // X Scale
+            const xScale = d3.scalePoint()
+                .domain(filteredData.map(d => d.id))
+                .range([0, innerWidth])
+                .padding(0.5);
+
+            // Draw timeline line
+            g.append('line')
+                .attr('x1', 0)
+                .attr('y1', innerHeight / 2)
+                .attr('x2', innerWidth)
+                .attr('y2', innerHeight / 2)
+                .attr('stroke', '#E8E8ED')
+                .attr('stroke-width', 3)
+                .attr('stroke-linecap', 'round');
+
+            // Draw nodes
+            const nodes = g.selectAll('.node')
+                .data(filteredData)
+                .enter()
+                .append('g')
+                .attr('class', 'timeline-node')
+                .attr('transform', d => `translate(${xScale(d.id)}, ${innerHeight / 2})`)
+                .style('opacity', 0)
+                .on('mouseover', function(event, d) {
+                    showTooltip(event, d);
+                    d3.select(this).select('circle')
+                        .transition()
+                        .duration(200)
+                        .attr('r', 18);
+                })
+                .on('mouseout', function() {
+                    hideTooltip();
+                    d3.select(this).select('circle')
+                        .transition()
+                        .duration(200)
+                        .attr('r', 14);
+                })
+                .on('click', function(event, d) {
+                    showEventDetail(d);
+                });
+
+            // Animate nodes in
+            nodes.transition()
+                .duration(500)
+                .delay((d, i) => i * 100)
+                .style('opacity', 1);
+
+            // Node circles
+            nodes.append('circle')
+                .attr('r', 0)
+                .attr('fill', d => d.color)
+                .attr('stroke', 'white')
+                .attr('stroke-width', 3)
+                .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))')
+                .transition()
+                .duration(500)
+                .delay((d, i) => i * 100)
+                .attr('r', 14);
+
+            // Node icons
+            nodes.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '0.35em')
+                .attr('fill', 'white')
+                .attr('font-size', '10px')
+                .attr('font-weight', 'bold')
+                .text(d => d.id);
+
+            // Date labels (alternating top/bottom)
+            nodes.append('text')
+                .attr('class', 'timeline-label')
+                .attr('text-anchor', 'middle')
+                .attr('y', (d, i) => i % 2 === 0 ? -35 : 35)
+                .attr('dy', (d, i) => i % 2 === 0 ? '0' : '0.8em')
+                .text(d => d.date)
+                .style('opacity', 0)
+                .transition()
+                .duration(500)
+                .delay((d, i) => i * 100 + 200)
+                .style('opacity', 1);
+
+            // Title labels
+            nodes.append('text')
+                .attr('class', 'timeline-label')
+                .attr('text-anchor', 'middle')
+                .attr('y', (d, i) => i % 2 === 0 ? -55 : 55)
+                .attr('dy', (d, i) => i % 2 === 0 ? '0' : '0.8em')
+                .text(d => d.title.length > 20 ? d.title.substring(0, 20) + '...' : d.title)
+                .style('font-size', '11px')
+                .style('fill', '#86868B')
+                .style('opacity', 0)
+                .transition()
+                .duration(500)
+                .delay((d, i) => i * 100 + 300)
+                .style('opacity', 1);
+
+            // Connecting lines
+            nodes.append('line')
+                .attr('x1', 0)
+                .attr('y1', (d, i) => i % 2 === 0 ? -20 : 20)
+                .attr('x2', 0)
+                .attr('y2', (d, i) => i % 2 === 0 ? -28 : 28)
+                .attr('stroke', d => d.color)
+                .attr('stroke-width', 2)
+                .attr('stroke-dasharray', '3,2')
+                .style('opacity', 0)
+                .transition()
+                .duration(500)
+                .delay((d, i) => i * 100 + 100)
+                .style('opacity', 0.5);
+        }
+
+        // Draw Radial Layout
+        function drawRadial() {
+            const container = document.getElementById('radial-viz');
+            const containerRect = container.parentElement.getBoundingClientRect();
+            const width = containerRect.width - 64;
+            const height = 550;
+            const radius = Math.min(width, height) / 2 - 80;
+
+            // Clear previous
+            d3.select('#radial-viz').selectAll('*').remove();
+
+            const svg = d3.select('#radial-viz')
+                .attr('width', width)
+                .attr('height', height);
+
+            const g = svg.append('g')
+                .attr('transform', `translate(${width / 2}, ${height / 2})`);
+
+            // Angle scale
+            const angleScale = d3.scalePoint()
+                .domain(filteredData.map(d => d.id))
+                .range([0, 2 * Math.PI - (2 * Math.PI / filteredData.length)]);
+
+            // Draw center circle
+            g.append('circle')
+                .attr('r', 50)
+                .attr('fill', '#1D1D1F')
+                .attr('opacity', 0)
+                .transition()
+                .duration(500)
+                .attr('opacity', 1);
+
+            g.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '-0.3em')
+                .attr('fill', 'white')
+                .attr('font-size', '12px')
+                .attr('font-weight', '600')
+                .text('DSL')
+                .style('opacity', 0)
+                .transition()
+                .duration(500)
+                .delay(200)
+                .style('opacity', 1);
+
+            g.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '1em')
+                .attr('fill', 'white')
+                .attr('font-size', '10px')
+                .text('Platform')
+                .style('opacity', 0)
+                .transition()
+                .duration(500)
+                .delay(200)
+                .style('opacity', 1);
+
+            // Draw connecting lines
+            filteredData.forEach((d, i) => {
+                const angle = angleScale(d.id) - Math.PI / 2;
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+
+                g.append('line')
+                    .attr('x1', Math.cos(angle) * 55)
+                    .attr('y1', Math.sin(angle) * 55)
+                    .attr('x2', Math.cos(angle) * 55)
+                    .attr('y2', Math.sin(angle) * 55)
+                    .attr('stroke', d.color)
+                    .attr('stroke-width', 2)
+                    .attr('opacity', 0.3)
+                    .transition()
+                    .duration(500)
+                    .delay(i * 50)
+                    .attr('x2', x)
+                    .attr('y2', y);
+            });
+
+            // Draw nodes
+            const nodes = g.selectAll('.radial-node')
+                .data(filteredData)
+                .enter()
+                .append('g')
+                .attr('class', 'timeline-node')
+                .attr('transform', d => {
+                    const angle = angleScale(d.id) - Math.PI / 2;
+                    return `translate(${Math.cos(angle) * radius}, ${Math.sin(angle) * radius})`;
+                })
+                .style('opacity', 0)
+                .on('mouseover', function(event, d) {
+                    showTooltip(event, d);
+                    d3.select(this).select('circle')
+                        .transition()
+                        .duration(200)
+                        .attr('r', 22);
+                })
+                .on('mouseout', function() {
+                    hideTooltip();
+                    d3.select(this).select('circle')
+                        .transition()
+                        .duration(200)
+                        .attr('r', 18);
+                })
+                .on('click', function(event, d) {
+                    showEventDetail(d);
+                });
+
+            nodes.transition()
+                .duration(500)
+                .delay((d, i) => i * 50 + 300)
+                .style('opacity', 1);
+
+            nodes.append('circle')
+                .attr('r', 18)
+                .attr('fill', d => d.color)
+                .attr('stroke', 'white')
+                .attr('stroke-width', 3)
+                .style('filter', 'drop-shadow(0 2px 6px rgba(0,0,0,0.2))');
+
+            nodes.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '0.35em')
+                .attr('fill', 'white')
+                .attr('font-size', '11px')
+                .attr('font-weight', 'bold')
+                .text(d => d.id);
+
+            // Labels
+            nodes.append('text')
+                .attr('text-anchor', d => {
+                    const angle = angleScale(d.id) - Math.PI / 2;
+                    return Math.cos(angle) > 0 ? 'start' : 'end';
+                })
+                .attr('x', d => {
+                    const angle = angleScale(d.id) - Math.PI / 2;
+                    return Math.cos(angle) > 0 ? 28 : -28;
+                })
+                .attr('dy', '0.35em')
+                .attr('font-size', '11px')
+                .attr('fill', '#1D1D1F')
+                .text(d => d.date);
+        }
+
+        // Draw Hierarchy Layout
+        function drawHierarchy() {
+            const container = document.getElementById('hierarchy-viz');
+            const containerRect = container.parentElement.getBoundingClientRect();
+            const width = containerRect.width - 64;
+            const height = 500;
+            const margin = { top: 40, right: 120, bottom: 40, left: 120 };
+
+            // Clear previous
+            d3.select('#hierarchy-viz').selectAll('*').remove();
+
+            const svg = d3.select('#hierarchy-viz')
+                .attr('width', width)
+                .attr('height', height);
+
+            const innerWidth = width - margin.left - margin.right;
+            const innerHeight = height - margin.top - margin.bottom;
+
+            const g = svg.append('g')
+                .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+            // Create hierarchy
+            const root = d3.hierarchy(hierarchyData);
+            
+            // Tree layout
+            const treeLayout = d3.tree()
+                .size([innerHeight, innerWidth]);
+
+            treeLayout(root);
+
+            // Color mapping
+            const typeColors = {
+                'document': '#34C759',
+                'meeting': '#0071E3',
+                'decision': '#FF9500',
+                'conflict': '#FF3B30'
+            };
+
+            // Draw links
+            g.selectAll('.link')
+                .data(root.links())
+                .enter()
+                .append('path')
+                .attr('class', 'timeline-link')
+                .attr('d', d3.linkHorizontal()
+                    .x(d => d.y)
+                    .y(d => d.x))
+                .attr('stroke-dasharray', function() {
+                    return this.getTotalLength();
+                })
+                .attr('stroke-dashoffset', function() {
+                    return this.getTotalLength();
+                })
+                .transition()
+                .duration(1000)
+                .attr('stroke-dashoffset', 0);
+
+            // Draw nodes
+            const nodes = g.selectAll('.node')
+                .data(root.descendants())
+                .enter()
+                .append('g')
+                .attr('class', 'timeline-node')
+                .attr('transform', d => `translate(${d.y}, ${d.x})`)
+                .style('opacity', 0)
+                .on('mouseover', function(event, d) {
+                    if (d.data.date) {
+                        showTooltip(event, {
+                            title: d.data.name,
+                            date: d.data.date,
+                            description: '',
+                            type: d.data.type
+                        });
+                    }
+                    d3.select(this).select('circle, rect')
+                        .transition()
+                        .duration(200)
+                        .attr('transform', 'scale(1.2)');
+                })
+                .on('mouseout', function() {
+                    hideTooltip();
+                    d3.select(this).select('circle, rect')
+                        .transition()
+                        .duration(200)
+                        .attr('transform', 'scale(1)');
+                });
+
+            nodes.transition()
+                .duration(500)
+                .delay((d, i) => i * 50)
+                .style('opacity', 1);
+
+            // Root node (rectangle)
+            nodes.filter(d => d.depth === 0)
+                .append('rect')
+                .attr('x', -60)
+                .attr('y', -20)
+                .attr('width', 120)
+                .attr('height', 40)
+                .attr('rx', 10)
+                .attr('fill', '#1D1D1F')
+                .style('filter', 'drop-shadow(0 2px 6px rgba(0,0,0,0.2))');
+
+            nodes.filter(d => d.depth === 0)
+                .append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '0.35em')
+                .attr('fill', 'white')
+                .attr('font-size', '12px')
+                .attr('font-weight', '600')
+                .text(d => d.data.name);
+
+            // Category nodes (larger circles)
+            nodes.filter(d => d.depth === 1)
+                .append('circle')
+                .attr('r', 24)
+                .attr('fill', '#F5F5F7')
+                .attr('stroke', '#1D1D1F')
+                .attr('stroke-width', 2)
+                .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))');
+
+            nodes.filter(d => d.depth === 1)
+                .append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '0.35em')
+                .attr('font-size', '9px')
+                .attr('font-weight', '600')
+                .attr('fill', '#1D1D1F')
+                .text(d => d.data.name.substring(0, 6));
+
+            // Leaf nodes (colored circles)
+            nodes.filter(d => d.depth === 2)
+                .append('circle')
+                .attr('r', 14)
+                .attr('fill', d => typeColors[d.data.type] || '#86868B')
+                .attr('stroke', 'white')
+                .attr('stroke-width', 2)
+                .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))');
+
+            // Leaf labels
+            nodes.filter(d => d.depth === 2)
+                .append('text')
+                .attr('x', 20)
+                .attr('dy', '0.35em')
+                .attr('font-size', '10px')
+                .attr('fill', '#1D1D1F')
+                .text(d => d.data.name);
+
+            nodes.filter(d => d.depth === 2)
+                .append('text')
+                .attr('x', 20)
+                .attr('dy', '1.5em')
+                .attr('font-size', '9px')
+                .attr('fill', '#86868B')
+                .text(d => d.data.date);
+        }
+
+        // Tooltip functions
+        function showTooltip(event, d) {
+            const tooltip = document.getElementById('tooltip');
+            const typeLabels = {
+                'document': 'เอกสาร',
+                'meeting': 'การประชุม',
+                'decision': 'มติ/การตัดสินใจ',
+                'conflict': 'ข้อพิพาท'
+            };
+
+            const typeColors = {
+                'document': 'rgba(52, 199, 89, 0.1)',
+                'meeting': 'rgba(0, 113, 227, 0.1)',
+                'decision': 'rgba(255, 149, 0, 0.1)',
+                'conflict': 'rgba(255, 59, 48, 0.1)'
+            };
+
+            const iconColors = {
+                'document': '#34C759',
+                'meeting': '#0071E3',
+                'decision': '#FF9500',
+                'conflict': '#FF3B30'
+            };
+
+            tooltip.innerHTML = `
+                <div class="tooltip-header">
+                    <div class="tooltip-icon" style="background: ${typeColors[d.type] || typeColors['document']}; color: ${iconColors[d.type] || iconColors['document']};">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            ${d.type === 'meeting' ? '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' : ''}
+                            ${d.type === 'document' ? '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>' : ''}
+                            ${d.type === 'decision' ? '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' : ''}
+                            ${d.type === 'conflict' ? '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>' : ''}
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="tooltip-title">${d.title}</div>
+                        <div class="tooltip-date">${d.date}</div>
+                    </div>
+                </div>
+                <div class="tooltip-body">${d.description}</div>
+                <div class="tooltip-tags">
+                    <span class="tooltip-tag ${d.type}">${typeLabels[d.type] || 'อื่นๆ'}</span>
+                </div>
+            `;
+
+            tooltip.classList.add('visible');
+
+            // Position tooltip
+            const tooltipRect = tooltip.getBoundingClientRect();
+            let left = event.clientX + 15;
+            let top = event.clientY + 15;
+
+            if (left + tooltipRect.width > window.innerWidth) {
+                left = event.clientX - tooltipRect.width - 15;
+            }
+            if (top + tooltipRect.height > window.innerHeight) {
+                top = event.clientY - tooltipRect.height - 15;
+            }
+
+            tooltip.style.left = left + 'px';
+            tooltip.style.top = top + 'px';
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').classList.remove('visible');
+        }
+
+        // Show event detail
+        function showEventDetail(d) {
+            const panel = document.getElementById('detail-panel');
+            const overlay = document.getElementById('overlay');
+            const title = document.getElementById('detail-title');
+            const body = document.getElementById('detail-body');
+
+            title.textContent = d.title;
+            body.innerHTML = `
+                <div class="detail-section">
+                    <div class="detail-section-title">วันที่</div>
+                    <div class="detail-content">${d.date}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-section-title">รายละเอียด</div>
+                    <div class="detail-content">${d.description}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-section-title">ประเภท</div>
+                    <div class="detail-content">
+                        <span class="tooltip-tag ${d.type}" style="display: inline-block;">
+                            ${d.type === 'meeting' ? 'การประชุม' : ''}
+                            ${d.type === 'document' ? 'เอกสาร' : ''}
+                            ${d.type === 'decision' ? 'มติ/การตัดสินใจ' : ''}
+                            ${d.type === 'conflict' ? 'ข้อพิพาท' : ''}
+                        </span>
+                    </div>
+                </div>
+            `;
+
+            panel.classList.add('open');
+            overlay.classList.add('visible');
+        }
+
+        // Show detail from insight cards
+        function showDetail(id) {
+            const panel = document.getElementById('detail-panel');
+            const overlay = document.getElementById('overlay');
+            const title = document.getElementById('detail-title');
+            const body = document.getElementById('detail-body');
+
+            const content = detailContent[id];
+            if (content) {
+                title.textContent = content.title;
+                body.innerHTML = content.content;
+            }
+
+            panel.classList.add('open');
+            overlay.classList.add('visible');
+        }
+
+        // Close detail panel
+        function closeDetail() {
+            document.getElementById('detail-panel').classList.remove('open');
+            document.getElementById('overlay').classList.remove('visible');
+        }
+
+        // Scroll spy for navigation
+        function setupScrollSpy() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-links a');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (scrollY >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (currentView === 'timeline') {
+                drawTimeline();
+            } else if (currentView === 'radial') {
+                drawRadial();
+            } else if (currentView === 'hierarchy') {
+                drawHierarchy();
+            }
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const target = document.querySelector(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
