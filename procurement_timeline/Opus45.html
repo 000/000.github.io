@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>การวิเคราะห์โครงการเช่าใช้บริการแพลตฟอร์ม DSL ระยะเวลา 60 เดือน</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Prompt:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1a1a2e;
+            --primary-blue: #0f3460;
+            --accent-red: #e94560;
+            --accent-orange: #ff6b35;
+            --accent-yellow: #f7b731;
+            --neutral-light: #f5f5f5;
+            --neutral-mid: #e0e0e0;
+            --text-dark: #2d2d2d;
+            --text-light: #666666;
+            --warning: #ff9800;
+            --danger: #dc3545;
+            --success: #28a745;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text-dark);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        h1 {
+            font-family: 'Prompt', sans-serif;
+            font-size: 3em;
+            font-weight: 900;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: var(--accent-red);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .header-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .meta-card {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+        }
+
+        .meta-label {
+            font-size: 0.85em;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .meta-value {
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        h2 {
+            font-family: 'Prompt', sans-serif;
+            font-size: 2.2em;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 25px;
+            border-left: 6px solid var(--accent-red);
+            padding-left: 20px;
+        }
+
+        h3 {
+            font-family: 'Prompt', sans-serif;
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin: 25px 0 15px 0;
+        }
+
+        .timeline-container {
+            position: relative;
+            margin: 40px 0;
+        }
+
+        .timeline-event {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-event:hover {
+            transform: scale(1.05);
+        }
+
+        .event-circle {
+            transition: all 0.3s ease;
+        }
+
+        .timeline-event:hover .event-circle {
+            r: 12;
+        }
+
+        .event-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .event-date {
+            font-size: 12px;
+            fill: var(--text-light);
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(26, 26, 46, 0.98);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            max-width: 500px;
+            font-size: 14px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+
+        .tooltip.active {
+            opacity: 1;
+        }
+
+        .tooltip-title {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--accent-orange);
+        }
+
+        .conflict-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .conflict-card {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border-left: 5px solid;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .conflict-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .conflict-card.critical {
+            border-left-color: var(--danger);
+        }
+
+        .conflict-card.warning {
+            border-left-color: var(--warning);
+        }
+
+        .conflict-card.info {
+            border-left-color: var(--primary-blue);
+        }
+
+        .conflict-title {
+            font-weight: 700;
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            color: var(--primary-dark);
+        }
+
+        .conflict-description {
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        .severity-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .severity-critical {
+            background: var(--danger);
+            color: white;
+        }
+
+        .severity-high {
+            background: var(--accent-orange);
+            color: white;
+        }
+
+        .severity-medium {
+            background: var(--warning);
+            color: white;
+        }
+
+        .voting-analysis {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .vote-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .vote-result {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background: var(--neutral-light);
+        }
+
+        .vote-result.agree {
+            border-left: 4px solid var(--success);
+        }
+
+        .vote-result.disagree {
+            border-left: 4px solid var(--danger);
+        }
+
+        .committee-member {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .key-insights {
+            background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-orange) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .insight-item {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .insight-item:last-child {
+            border-bottom: none;
+        }
+
+        .insight-number {
+            font-size: 2em;
+            font-weight: 900;
+            opacity: 0.5;
+            margin-right: 15px;
+            float: left;
+        }
+
+        .companies-involved {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .company-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid var(--neutral-mid);
+            transition: all 0.3s ease;
+        }
+
+        .company-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .company-name {
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+
+        .company-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-passed {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-failed {
+            background: var(--danger);
+            color: white;
+        }
+
+        .document-ref {
+            background: var(--neutral-light);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 0.9em;
+            border-left: 3px solid var(--primary-blue);
+        }
+
+        .timeline-legend {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--neutral-light);
+            border-radius: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            font-size: 0.9em;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.6em;
+            }
+
+            .voting-analysis {
+                grid-template-columns: 1fr;
+            }
+
+            .header-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation keyframes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.2s; }
+        .section:nth-child(4) { animation-delay: 0.3s; }
+        .section:nth-child(5) { animation-delay: 0.4s; }
+
+        .highlight-text {
+            background: linear-gradient(120deg, var(--accent-yellow) 0%, var(--accent-orange) 100%);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .regulation-ref {
+            color: var(--primary-blue);
+            font-weight: 600;
+            cursor: help;
+            border-bottom: 2px dotted var(--primary-blue);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>การวิเคราะห์โครงการเช่าใช้บริการแพลตฟอร์ม DSL</h1>
+            <div class="subtitle">รายงานข้อเท็จจริงและลำดับเหตุการณ์ - ระยะเวลา 60 เดือน</div>
+            
+            <div class="header-meta">
+                <div class="meta-card">
+                    <div class="meta-label">ผู้รายงาน</div>
+                    <div class="meta-value">นายธนัท ทองอุทัยศรี</div>
+                </div>
+                <div class="meta-card">
+                    <div class="meta-label">ตำแหน่ง</div>
+                    <div class="meta-value">ผู้เชี่ยวชาญด้าน IT</div>
+                </div>
+                <div class="meta-card">
+                    <div class="meta-label">ระยะเวลาโครงการ</div>
+                    <div class="meta-value">มิ.ย. - ส.ค. 2568</div>
+                </div>
+                <div class="meta-card">
+                    <div class="meta-label">ผู้ยื่นข้อเสนอ</div>
+                    <div class="meta-value">3 บริษัท</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="section">
+            <h2>📊 ภาพรวมประเด็นสำคัญ</h2>
+            <div class="key-insights">
+                <div class="insight-item">
+                    <span class="insight-number">01</span>
+                    <strong>ความขัดแย้งหลัก:</strong> การตีความ TOR ข้อ 12.2 เรื่องเอกสารบุคลากร - บริษัท 2 ในจาก 3 ยื่นเอกสารไม่ครบถ้วน ทำให้เกิดข้อถกเถียงว่าควรถือว่า "ไม่ผ่านข้อเสนอทางเทคนิค" หรือเป็นเพียง "ไม่ได้คะแนนในบางหมวด"
+                </div>
+                <div class="insight-item">
+                    <span class="insight-number">02</span>
+                    <strong>การลงมติแบ่งขั้ว:</strong> ประชุมครั้งที่ 5/2568 มีมติ 4:1 ให้ดำเนินการต่อ โดยนายธนัทเป็นเสียงข้างน้อยที่เห็นควรยกเลิกตาม <span class="regulation-ref">ระเบียบข้อ 75</span>
+                </div>
+                <div class="insight-item">
+                    <span class="insight-number">03</span>
+                    <strong>TOR มีข้อบกพร่อง:</strong> ฝ่ายเทคโนโลยีสารสนเทศพบปัญหาหลายประการ เช่น GPU 30 หน่วยต่อ Node ที่ขัดมาตรฐาน และเงื่อนไขประกันสังคมที่อาจกีดกันรัฐวิสาหกิจ
+                </div>
+                <div class="insight-item">
+                    <span class="insight-number">04</span>
+                    <strong>ผลลัพธ์:</strong> ประชุมครั้งที่ 7/2568 มีมติยกเลิกการจัดจ้าง เนื่องจากผู้จัดการกองทุนอนุมัติให้ทบทวน TOR และมีแผนสำรองฉุกเฉินรองรับแล้ว
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📅 Timeline เหตุการณ์สำคัญ</h2>
+            
+            <div class="timeline-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4CAF50;"></div>
+                    <span>การประชุม/มติ</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #2196F3;"></div>
+                    <span>หนังสือราชการ</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #FF9800;"></div>
+                    <span>ประเด็นขัดแย้ง</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #F44336;"></div>
+                    <span>จุดวิกฤต</span>
+                </div>
+            </div>
+
+            <div id="timeline" class="timeline-container"></div>
+        </div>
+
+        <div class="section">
+            <h2>🏢 บริษัทผู้ยื่นข้อเสนอ</h2>
+            <div class="companies-involved">
+                <div class="company-card">
+                    <div class="company-name">1. บริษัท โปรเอ็น คอร์ป จำกัด (มหาชน)</div>
+                    <span class="company-status status-passed">✓ ผ่านเอกสารบุคลากร</span>
+                    <p style="margin-top: 10px; color: var(--text-light);">คะแนนรวม: <strong>85.1149 คะแนน</strong> (สูงสุด)</p>
+                    <p style="margin-top: 5px; color: var(--text-light);">ยื่นเอกสารครบถ้วนตาม TOR ข้อ 12.2</p>
+                </div>
+                <div class="company-card">
+                    <div class="company-name">2. บริษัท โทรคมนาคมแห่งชาติ จำกัด (มหาชน)</div>
+                    <span class="company-status status-failed">✗ เอกสารไม่ครบถ้วน</span>
+                    <p style="margin-top: 10px; color: var(--text-light);">ยื่นเอกสารบุคลากรไม่ครบตาม TOR หน้า 48</p>
+                </div>
+                <div class="company-card">
+                    <div class="company-name">3. บริษัท สิริซอฟต์ จำกัด (มหาชน)</div>
+                    <span class="company-status status-failed">✗ เอกสารไม่ครบถ้วน</span>
+                    <p style="margin-top: 10px; color: var(--text-light);">ยื่นเอกสารบุคลากรไม่ครบตาม TOR หน้า 48</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚠️ ประเด็นความขัดแย้งและความผิดปกติ</h2>
+            
+            <div class="conflict-grid">
+                <div class="conflict-card critical">
+                    <span class="severity-badge severity-critical">วิกฤต</span>
+                    <div class="conflict-title">การตีความ TOR ข้อ 12.2 ขัดแย้งกัน</div>
+                    <div class="conflict-description">
+                        <strong>แนวคิด 2 ขั้ว:</strong>
+                        <ul style="margin-top: 10px;">
+                            <li><strong>ฝ่ายเสียงข้างมาก:</strong> มองว่าเอกสารไม่ครบเป็นเพียง "ไม่ได้คะแนน" ไม่ใช่ "ตกซองเทคนิค"</li>
+                            <li><strong>ฝ่ายเสียงข้างน้อย (นายธนัท):</strong> ยึด TOR หน้า 48 ที่ระบุชัดว่า "ไม่ผ่านข้อเสนอทางเทคนิค"</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="conflict-card critical">
+                    <span class="severity-badge severity-critical">วิกฤต</span>
+                    <div class="conflict-title">ความเสี่ยงตามระเบียบข้อ 75</div>
+                    <div class="conflict-description">
+                        กรณีมีผู้ผ่านเกณฑ์เพียง 1 ราย ระเบียบกระทรวงการคลังฯ ข้อ 75 กำหนดให้ <span class="highlight-text">ยกเลิกการจัดจ้าง</span> เว้นแต่มีเหตุผลสมควร แต่ที่ประชุมครั้งที่ 5/2568 มีมติ 4:1 ให้ดำเนินการต่อ
+                    </div>
+                </div>
+
+                <div class="conflict-card warning">
+                    <span class="severity-badge severity-high">สูง</span>
+                    <div class="conflict-title">TOR มีข้อบกพร่องหลายประการ</div>
+                    <div class="conflict-description">
+                        ฝ่ายเทคโนโลยีสารสนเทศรายงานว่า:
+                        <ul style="margin-top: 10px;">
+                            <li>GPU 30 หน่วยต่อ Node สับสนและขัดมาตรฐาน</li>
+                            <li>ความไม่สอดคล้องระหว่าง TOR ข้อ 11, 4.9.5 และ 12</li>
+                            <li>เงื่อนไขประกันสังคมอาจกีดกันรัฐวิสาหกิจ</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="conflict-card warning">
+                    <span class="severity-badge severity-high">สูง</span>
+                    <div class="conflict-title">การสื่อสารรายละเอียดภายในมากเกินไป</div>
+                    <div class="conflict-description">
+                        หนังสือ กค 5122/ว.2791 ลว. 7 ส.ค. 2568 ถึงบริษัทโปรเอ็น เปิดเผยรายละเอียดการลงมติภายในคณะกรรมการ ซึ่งนายธนัทเห็นว่า <strong>เสี่ยงในกรณีเกิดข้อพิพาท</strong> และควรตอบแค่ "อยู่ระหว่างดำเนินการ"
+                    </div>
+                </div>
+
+                <div class="conflict-card info">
+                    <span class="severity-badge severity-medium">ปานกลาง</span>
+                    <div class="conflict-title">ข้อผิดพลาดในเอกสาร</div>
+                    <div class="conflict-description">
+                        รายงานการประชุมครั้งที่ 7/2568 ระบุเลขที่หนังสือผิดเป็น "กค 5122/<strong>4</strong>791" แทนที่จะเป็น "กค 5122/<strong>ว.2</strong>791"
+                    </div>
+                </div>
+
+                <div class="conflict-card info">
+                    <span class="severity-badge severity-medium">ปานกลาง</span>
+                    <div class="conflict-title">การทบทวนมติย้อนหลัง</div>
+                    <div class="conflict-description">
+                        ฝ่ายอำนวยการและพัสดุออกบันทึก ฝอพ.1527/2568 เสนอให้ทบทวนมติครั้งที่ 5/2568 <strong>หลังจากมีมติไปแล้ว</strong> ซึ่งแสดงถึงกระบวนการตรวจสอบภายหลังที่เข้มข้น
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🗳️ การวิเคราะห์การลงมติ</h2>
+            <div class="voting-analysis">
+                <div class="vote-card">
+                    <h3>การประชุมครั้งที่ 5/2568 (30 ก.ค. 68)</h3>
+                    <p style="margin-bottom: 15px; color: var(--text-light);">ประเด็น: ให้ดำเนินการต่อหรือไม่ (ไม่ถือว่าเข้าข้อ 75)</p>
+                    
+                    <div class="vote-result agree">
+                        <span class="committee-member">✓ เห็นด้วย (4 เสียง)</span>
+                        <strong>80%</strong>
+                    </div>
+                    <ul style="margin-left: 20px; margin-top: 10px; color: var(--text-light);">
+                        <li>นายปรเมศวร์ สังข์เอี่ยม (ประธาน)</li>
+                        <li>ผศ.ดร.สมนึก คีรีโต</li>
+                        <li>นายภาณุวัตร ลาภผล</li>
+                        <li>นายทนงเดช สุทธิวรรโณภาส</li>
+                    </ul>
+
+                    <div class="vote-result disagree">
+                        <span class="committee-member">✗ ไม่เห็นด้วย (1 เสียง)</span>
+                        <strong>20%</strong>
+                    </div>
+                    <ul style="margin-left: 20px; margin-top: 10px; color: var(--text-light);">
+                        <li>นายธนัท ทองอุทัยศรี</li>
+                        <li style="font-style: italic;">→ สงวนความเห็นเป็นลายลักษณ์อักษร</li>
+                    </ul>
+                </div>
+
+                <div class="vote-card">
+                    <h3>เหตุผลความเห็นแย้ง</h3>
+                    <p style="margin-bottom: 15px;"><strong>นายธนัท ทองอุทัยศรี</strong> ให้เหตุผล 4 ด้าน:</p>
+                    
+                    <div style="padding: 15px; background: var(--neutral-light); border-radius: 8px; margin-bottom: 10px;">
+                        <strong>1. ด้านระเบียบ:</strong> ควรยึดข้อ 75 อย่างเคร่งครัด
+                    </div>
+                    <div style="padding: 15px; background: var(--neutral-light); border-radius: 8px; margin-bottom: 10px;">
+                        <strong>2. ด้านความโปร่งใส:</strong> เสี่ยงถูกตรวจสอบจากหน่วยงานภายนอก
+                    </div>
+                    <div style="padding: 15px; background: var(--neutral-light); border-radius: 8px; margin-bottom: 10px;">
+                        <strong>3. ด้าน TOR:</strong> ควรทบทวนและเริ่มใหม่
+                    </div>
+                    <div style="padding: 15px; background: var(--neutral-light); border-radius: 8px;">
+                        <strong>4. ด้านความจำเป็น:</strong> มีแผนสำรองแล้ว ไม่เร่งด่วน
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 บันทึกข้อความสำคัญ</h2>
+            
+            <div class="document-ref">
+                <strong>ฝอพ.1527/2568</strong> (31 ก.ค. 68)<br>
+                ฝ่ายอำนวยการและพัสดุ → เสนอให้ทบทวนผล เนื่องจากบริษัท 2 ราย "ไม่ผ่านข้อเสนอทางเทคนิค"
+            </div>
+
+            <div class="document-ref">
+                <strong>ฝทส.961/2568</strong> (1 ส.ค. 68)<br>
+                ฝ่ายเทคโนโลยีสารสนเทศ → รายงาน TOR มีข้อบกพร่องหลายประการ เสนอให้ทบทวน
+            </div>
+
+            <div class="document-ref">
+                <strong>ฝทส.974/2568</strong> (4 ส.ค. 68)<br>
+                ขอขยายระยะเวลารายงานผล อ้างมาตรา 67(3) พ.ร.บ.จัดซื้อจัดจ้างฯ
+            </div>
+
+            <div class="document-ref">
+                <strong>กค 5122/ว.2791</strong> (7 ส.ค. 68)<br>
+                ประธานฯ ตอบบริษัทโปรเอ็น - เปิดเผยรายละเอียดการพิจารณาภายใน
+            </div>
+
+            <div class="document-ref">
+                <strong>กค 5101/ว.3133</strong> (28 ส.ค. 68)<br>
+                แจ้งยกเลิกการเชิญเสนอราคาและการจัดจ้าง → บริษัทโปรเอ็นอุทธรณ์
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 สรุปและข้อสังเกตสำคัญ</h2>
+            
+            <h3>ลักษณะความขัดแย้งหลัก</h3>
+            <p>ความขัดแย้งในโครงการนี้เป็น <strong>ความขัดแย้งเชิงตีความกฎหมายและระเบียบ</strong> มากกว่าเรื่องผลประโยชน์หรือทุจริต โดยมีจุดศูนย์กลางอยู่ที่การตีความ TOR ข้อ 12.2 ว่าเอกสารบุคลากรไม่ครบถ้วนควรถือว่า "ไม่ผ่านข้อเสนอทางเทคนิค" หรือเป็นเพียง "ไม่ได้คะแนนในบางหมวด"</p>
+
+            <h3>จุดเปลี่ยนสำคัญ</h3>
+            <p>แม้การประชุมครั้งที่ 5/2568 จะมีมติให้ดำเนินการต่อ แต่ <span class="highlight-text">การที่ผู้จัดการกองทุนอนุมัติให้ทบทวน TOR</span> ตามข้อเสนอของฝ่ายเทคโนโลยีสารสนเทศ กลายเป็นจุดเปลี่ยนที่ทำให้คณะกรรมการมีมติยกเลิกการจัดจ้างในที่สุด เนื่องจากถือว่า TOR ฉบับเดิม "ไม่สามารถใช้ได้อีกต่อไป"</p>
+
+            <h3>ปัจจัยสนับสนุนการยกเลิก</h3>
+            <ul style="line-height: 2; margin: 15px 0;">
+                <li>มีแผนสำรองฉุกเฉิน (เช่าโครงสร้างพื้นฐานต่อเนื่อง 12 เดือน)</li>
+                <li>ฝ่ายอำนวยการและพัสดุเสนอให้ทบทวนมติ</li>
+                <li>ฝ่ายเทคโนโลยีรายงาน TOR มีปัญหาหลายประการ</li>
+                <li>ไม่มีความจำเป็นเร่งด่วนต้องเดินหน้าในสถานะที่มีความเสี่ยง</li>
+            </ul>
+
+            <h3>ความโปร่งใสและความรับผิดชอบ</h3>
+            <p>การที่นายธนัทจัดทำ <strong>"ความเห็นแย้ง"</strong> เป็นลายลักษณ์อักษรและการที่ฝ่ายต่างๆ มีบันทึกข้อความชี้ประเด็นปัญหาอย่างละเอียด แสดงให้เห็นถึงกระบวนการตรวจสอบถ่วงดุลภายใน อย่างไรก็ตาม การเปิดเผยรายละเอียดการลงมติภายในให้กับผู้ประกอบการอาจเป็นความเสี่ยงในกรณีเกิดข้อพิพาท</p>
+
+            <h3>ข้อเสนอแนะ</h3>
+            <div style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%); color: white; padding: 25px; border-radius: 12px; margin-top: 20px;">
+                <p style="margin-bottom: 15px;">เพื่อป้องกันปัญหาที่คล้ายกันในอนาคต ควร:</p>
+                <ol style="line-height: 2;">
+                    <li><strong>Market Sounding:</strong> สำรวจตลาดและรับฟังความคิดเห็นก่อนจัดทำ TOR ที่ซับซ้อน</li>
+                    <li><strong>เช็คลิสต์มาตรฐาน:</strong> จัดทำระบบตรวจสอบเอกสารอย่างเป็นระบบ</li>
+                    <li><strong>แนวทางสื่อสาร:</strong> กำหนดชัดเจนว่าข้อมูลใดเปิดเผยได้/ไม่ได้กับผู้ประกอบการ</li>
+                    <li><strong>การอบรม:</strong> อบรมการตีความระเบียบให้คณะกรรมการมีความเข้าใจตรงกัน</li>
+                </ol>
+            </div>
+        </div>
+
+        <footer>
+            <p>เอกสารนี้จัดทำขึ้นเพื่อวัตถุประสงค์ในการวิเคราะห์และนำเสนอข้อมูลเท่านั้น</p>
+            <p>ข้อมูลจากบันทึกข้อความฝ่ายเทคโนโลยีสารสนเทศ ลงวันที่ พฤศจิกายน 2568</p>
+            <p style="margin-top: 10px; opacity: 0.7;">สร้างด้วย D3.js และ HTML5 | Hosted on GitHub Pages</p>
+        </footer>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // Timeline data extracted from the document
+        const timelineData = [
+            {
+                date: "24 มิ.ย. 68",
+                title: "แต่งตั้งคณะกรรมการ",
+                description: "คำสั่ง 99/2568 แต่งตั้งคณะกรรมการเช่าโดยวิธีคัดเลือก",
+                type: "meeting",
+                color: "#4CAF50",
+                details: "กองทุนฯ แต่งตั้งคณะกรรมการเช่าโดยวิธีคัดเลือกโครงการเช่าใช้บริการแพลตฟอร์มเทคโนโลยีดิจิทัลฯ ระยะเวลา 60 เดือน"
+            },
+            {
+                date: "1 ก.ค. 68",
+                title: "ประชุมครั้งที่ 1-2/2568",
+                description: "พิจารณา TOR และคัดเลือกผู้ประกอบการ 12 ราย",
+                type: "meeting",
+                color: "#4CAF50",
+                details: "คณะกรรมการพิจารณากรอบกฎหมาย ร่าง TOR และหลักเกณฑ์การประเมินแบบ Price Performance รวมทั้งคัดเลือกผู้ประกอบการที่มีคุณสมบัติเหมาะสมจำนวน 12 ราย"
+            },
+            {
+                date: "2 ก.ค. 68",
+                title: "ออกหนังสือเชิญชวน",
+                description: "หนังสือ กค 5101/ว.2280 เชิญ 12 รายยื่นข้อเสนอ",
+                type: "document",
+                color: "#2196F3",
+                details: "กองทุนฯ ออกหนังสือเชิญชวนเสนอราคาถึงผู้ประกอบการ 12 ราย กำหนดยื่นข้อเสนอภายใน 22 ก.ค. 68"
+            },
+            {
+                date: "14 ก.ค. 68",
+                title: "ประชุมครั้งที่ 3/2568",
+                description: "ตอบข้อซักถามจากผู้ประกอบการ 8 ราย",
+                type: "meeting",
+                color: "#4CAF50",
+                details: "คณะกรรมการพิจารณาและตอบข้อซักถามเกี่ยวกับ TOR และเงื่อนไขการจัดจ้าง มอบหมายให้เผยแพร่ผ่านระบบ e-GP"
+            },
+            {
+                date: "22 ก.ค. 68",
+                title: "วันยื่นข้อเสนอ",
+                description: "มีผู้ยื่นข้อเสนอ 3 ราย",
+                type: "document",
+                color: "#2196F3",
+                details: "มีผู้ยื่นข้อเสนอ: (1) บริษัท โทรคมนาคมแห่งชาติฯ (2) บริษัท สิริซอฟต์ฯ (3) บริษัท โปรเอ็นฯ"
+            },
+            {
+                date: "24 ก.ค. 68",
+                title: "ประชุมครั้งที่ 4/2568",
+                description: "เปิดซองราคา - โปรเอ็นฯ ได้คะแนนสูงสุด 85.1149",
+                type: "meeting",
+                color: "#4CAF50",
+                details: "ตรวจสอบคุณสมบัติเบื้องต้น เปิดซองราคา คำนวณคะแนน Price Performance - บริษัท โปรเอ็นฯ ได้คะแนนสูงสุด แต่มอบหมายให้ตรวจสอบเอกสารบุคลากรอีกครั้ง"
+            },
+            {
+                date: "30 ก.ค. 68",
+                title: "ประชุมครั้งที่ 5/2568 ⚠️",
+                description: "จุดเริ่มต้นข้อพิพาท - มติ 4:1 ให้ดำเนินการต่อ",
+                type: "conflict",
+                color: "#FF9800",
+                details: "ฝ่ายเลขานุการรายงานว่าบริษัท 2 ราย ยื่นเอกสารไม่ครบ ที่ประชุมแบ่งขั้ว: เสียงข้างมาก 4 ท่านเห็นว่ายังไม่เข้าข้อ 75 ส่วนนายธนัทสงวนความเห็นเป็นลายลักษณ์อักษร"
+            },
+            {
+                date: "31 ก.ค. 68",
+                title: "บันทึก ฝอพ.1527/2568",
+                description: "ฝ่ายอำนวยการและพัสดุเสนอให้ทบทวนมติ",
+                type: "document",
+                color: "#2196F3",
+                details: "ฝ่ายอำนวยการและพัสดุชี้ว่าตาม TOR บริษัท 2 ราย 'ไม่ผ่านข้อเสนอทางเทคนิค' เสนอให้ดำเนินการตามข้อ 75"
+            },
+            {
+                date: "1 ส.ค. 68",
+                title: "บันทึก ฝทส.961/2568",
+                description: "ฝ่าย IT รายงาน TOR มีข้อบกพร่อง",
+                type: "conflict",
+                color: "#FF9800",
+                details: "ฝ่ายเทคโนโลยีสารสนเทศรายงานว่า TOR มีปัญหา: GPU 30 หน่วยสับสน, เงื่อนไขประกันสังคมอาจกีดกันรัฐวิสาหกิจ, ความไม่สอดคล้องหลายข้อ - ผู้จัดการกองทุนเห็นชอบให้ทบทวน TOR"
+            },
+            {
+                date: "4 ส.ค. 68",
+                title: "ประชุมครั้งที่ 6/2568",
+                description: "มติส่งเรื่องไปกรมบัญชีกลาง",
+                type: "meeting",
+                color: "#4CAF50",
+                details: "ทบทวนมติครั้งที่ 5 พิจารณาบันทึกของฝ่ายอำนวยการฯ และฝ่าย IT มีมติส่งเรื่องไปคณะกรรมการวินิจฉัยปัญหาฯ กรมบัญชีกลาง และขอขยายเวลารายงานผล"
+            },
+            {
+                date: "7 ส.ค. 68",
+                title: "หนังสือ กค 5122/ว.2791",
+                description: "ประธานฯ ตอบบริษัทโปรเอ็น",
+                type: "document",
+                color: "#2196F3",
+                details: "ประธานคณะกรรมการชี้แจงความคืบหน้าให้บริษัทโปรเอ็น โดยเปิดเผยรายละเอียดการลงมติภายใน - นายธนัทเห็นว่าเปิดเผยมากเกินไป"
+            },
+            {
+                date: "22 ส.ค. 68",
+                title: "ประชุมครั้งที่ 7/2568 🔴",
+                description: "มติยกเลิกการจัดจ้าง",
+                type: "critical",
+                color: "#F44336",
+                details: "ผู้อำนวยการฝ่ายอำนวยการและพัสดุชี้แจงว่าเมื่อผู้จัดการกองทุนอนุมัติให้ทบทวน TOR แล้ว ย่อมแสดงว่า TOR ฉบับเดิม 'ไม่สามารถใช้ได้' - คณะกรรมการมีมติเสนอยกเลิกการจัดจ้าง"
+            },
+            {
+                date: "28 ส.ค. 68",
+                title: "หนังสือ กค 5101/ว.3133",
+                description: "แจ้งยกเลิกการเชิญเสนอราคา",
+                type: "critical",
+                color: "#F44336",
+                details: "กองทุนฯ แจ้งผู้ยื่นข้อเสนอทั้ง 3 ราย ให้ทราบคำสั่งยกเลิกการเชิญเสนอราคาและการจัดจ้าง - บริษัทโปรเอ็นฯ นำมาอุทธรณ์"
+            }
+        ];
+
+        // Create timeline visualization
+        const margin = {top: 40, right: 40, bottom: 100, left: 40};
+        const width = document.getElementById('timeline').offsetWidth - margin.left - margin.right;
+        const height = 600 - margin.top - margin.bottom;
+
+        const svg = d3.select('#timeline')
+            .append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin.left},${margin.top})`);
+
+        // Create scales
+        const xScale = d3.scalePoint()
+            .domain(timelineData.map((d, i) => i))
+            .range([0, width])
+            .padding(0.5);
+
+        const yScale = d3.scaleLinear()
+            .domain([0, timelineData.length])
+            .range([0, height - 100]);
+
+        // Draw timeline line
+        svg.append('line')
+            .attr('x1', 0)
+            .attr('y1', height / 2)
+            .attr('x2', width)
+            .attr('y2', height / 2)
+            .attr('stroke', '#ddd')
+            .attr('stroke-width', 3);
+
+        // Create tooltip
+        const tooltip = d3.select('#tooltip');
+
+        // Draw events
+        const events = svg.selectAll('.timeline-event')
+            .data(timelineData)
+            .enter()
+            .append('g')
+            .attr('class', 'timeline-event')
+            .attr('transform', (d, i) => `translate(${xScale(i)},${height / 2})`);
+
+        events.append('circle')
+            .attr('class', 'event-circle')
+            .attr('r', 8)
+            .attr('fill', d => d.color)
+            .attr('stroke', 'white')
+            .attr('stroke-width', 3)
+            .style('cursor', 'pointer');
+
+        events.append('line')
+            .attr('x1', 0)
+            .attr('y1', 0)
+            .attr('x2', 0)
+            .attr('y2', (d, i) => i % 2 === 0 ? -80 : 80)
+            .attr('stroke', d => d.color)
+            .attr('stroke-width', 2)
+            .attr('stroke-dasharray', '5,5');
+
+        events.append('text')
+            .attr('class', 'event-date')
+            .attr('x', 0)
+            .attr('y', (d, i) => i % 2 === 0 ? -100 : 100)
+            .attr('text-anchor', 'middle')
+            .attr('font-weight', 'bold')
+            .attr('font-size', '14px')
+            .attr('fill', d => d.color)
+            .text(d => d.date);
+
+        events.append('text')
+            .attr('class', 'event-label')
+            .attr('x', 0)
+            .attr('y', (d, i) => i % 2 === 0 ? -115 : 115)
+            .attr('text-anchor', 'middle')
+            .attr('font-size', '12px')
+            .attr('fill', '#333')
+            .each(function(d) {
+                const words = d.title.split(' ');
+                const text = d3.select(this);
+                let line = [];
+                let lineNumber = 0;
+                const lineHeight = 1.2;
+                const y = text.attr('y');
+                const dy = d.title.indexOf('⚠️') !== -1 || d.title.indexOf('🔴') !== -1 ? 0 : 0;
+
+                words.forEach((word, i) => {
+                    line.push(word);
+                    text.text(line.join(' '));
+                    if (text.node().getComputedTextLength() > 100) {
+                        line.pop();
+                        text.text(line.join(' '));
+                        text.append('tspan')
+                            .attr('x', 0)
+                            .attr('y', y)
+                            .attr('dy', `${++lineNumber * lineHeight}em`)
+                            .text(word);
+                        line = [word];
+                    }
+                });
+            });
+
+        // Add interactivity
+        events.on('mouseover', function(event, d) {
+            tooltip.classed('active', true)
+                .style('left', (event.pageX + 20) + 'px')
+                .style('top', (event.pageY - 20) + 'px')
+                .html(`
+                    <div class="tooltip-title">${d.date}: ${d.title}</div>
+                    <div style="margin-top: 10px;">${d.details}</div>
+                `);
+        })
+        .on('mouseout', function() {
+            tooltip.classed('active', false);
+        })
+        .on('click', function(event, d) {
+            alert(`${d.date}: ${d.title}\n\n${d.details}`);
+        });
+
+        // Responsive behavior
+        window.addEventListener('resize', function() {
+            location.reload();
+        });
+    </script>
+</body>
+</html>
