@@ -1,0 +1,1415 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>BREAKDEV RED Community &amp; Evilginx Pro: A Comprehensive Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'serif': ['Playfair Display', 'serif'],
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#1e293b',
+                        secondary: '#475569',
+                        accent: '#dc2626',
+                        muted: '#64748b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
+        }
+        .text-shadow {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .prose-custom {
+            line-height: 1.75;
+        }
+        .citation-link {
+            color: #dc2626;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+        .citation-link:hover {
+            border-bottom-color: #dc2626;
+        }
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: #f8fafc;
+            border-right: 1px solid #e2e8f0;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+        }
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+        @media (max-width: 1024px) {
+            .toc-fixed {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            .toc-fixed.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        .hero-overlay {
+            background: linear-gradient(45deg, rgba(30, 41, 59, 0.9), rgba(71, 85, 105, 0.8));
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 2rem;
+            height: 60vh;
+        }
+        .bento-main {
+            grid-row: 1 / -1;
+        }
+        .bento-stats {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        /* Mermaid diagram styling */
+        .mermaid-container {
+            display: flex;
+            justify-content: center;
+            min-height: 300px;
+            max-height: 800px;
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mermaid-container .mermaid {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            cursor: grab;
+            transition: transform 0.3s ease;
+            transform-origin: center center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .mermaid-container .mermaid svg {
+            max-width: 100%;
+            height: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .mermaid-container .mermaid:active {
+            cursor: grabbing;
+        }
+
+        .mermaid-container.zoomed .mermaid {
+            height: 100%;
+            width: 100%;
+            cursor: grab;
+        }
+
+        .mermaid-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mermaid-control-btn {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #374151;
+            font-size: 14px;
+            min-width: 36px;
+            height: 36px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mermaid-control-btn:hover {
+            background: #f8fafc;
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        .mermaid-control-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Enhanced Mermaid theme for better contrast */
+        .mermaid svg {
+            max-width: none;
+            height: auto;
+            font-family: 'Inter', sans-serif;
+            background: transparent;
+        }
+        
+        /* Override Mermaid default styles for better contrast */
+        .mermaid .node rect,
+        .mermaid .node circle,
+        .mermaid .node ellipse,
+        .mermaid .node polygon {
+            stroke: #1e293b !important;
+            stroke-width: 2px !important;
+        }
+        
+        .mermaid .node .label {
+            color: #1e293b !important;
+            font-weight: 500 !important;
+            font-size: 14px !important;
+        }
+        
+        .mermaid .edgePath .path {
+            stroke: #475569 !important;
+            stroke-width: 2px !important;
+        }
+        
+        .mermaid .edgeLabel {
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            color: #1e293b !important;
+            font-weight: 500 !important;
+            padding: 4px 8px !important;
+            border-radius: 4px !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+        
+        /* Process diagram specific styling */
+        .mermaid .process-diagram .node {
+            fill: #f8fafc !important;
+            stroke: #1e293b !important;
+            stroke-width: 2px !important;
+        }
+        
+        .mermaid .process-diagram .node.process rect {
+            fill: #e0f2fe !important;
+            stroke: #0369a1 !important;
+        }
+        
+        .mermaid .process-diagram .node.decision rect {
+            fill: #fef3c7 !important;
+            stroke: #d97706 !important;
+        }
+        
+        .mermaid .process-diagram .node.terminal rect {
+            fill: #f3e8ff !important;
+            stroke: #7c3aed !important;
+        }
+        
+        .mermaid .process-diagram .node span {
+            color: #1e293b !important;
+            font-weight: 500 !important;
+        }
+        
+        /* Overview diagram specific styling */
+        .mermaid .overview-diagram .node.main rect {
+            fill: #ede9fe !important;
+            stroke: #7c3aed !important;
+        }
+        
+        .mermaid .overview-diagram .node.community rect {
+            fill: #dcfce7 !important;
+            stroke: #16a34a !important;
+        }
+        
+        .mermaid .overview-diagram .node.pro rect {
+            fill: #fef3c7 !important;
+            stroke: #d97706 !important;
+        }
+        
+        .mermaid .overview-diagram .node.features rect {
+            fill: #e0f2fe !important;
+            stroke: #0369a1 !important;
+        }
+        
+        .mermaid .overview-diagram .node span {
+            color: #1e293b !important;
+            font-weight: 500 !important;
+        }
+        .no-scroll {
+            overflow: hidden;
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body class="bg-gray-50 font-sans text-gray-800" style="overflow-x: hidden;">
+    <!-- Mobile TOC Toggle -->
+    <button id="toc-toggle" class="lg:hidden fixed top-4 left-4 z-50 bg-white p-3 rounded-lg shadow-lg border">
+      <i class="fas fa-bars text-gray-700"></i>
+    </button>
+
+    <!-- Fixed Table of Contents -->
+    <nav id="toc" class="toc-fixed">
+      <div class="mb-8">
+        <h3 class="font-serif text-lg font-semibold text-gray-900 mb-4">Table of Contents</h3>
+        <ul class="space-y-2 text-sm">
+          <li>
+            <a href="#overview" class="text-gray-600 hover:text-primary transition-colors block py-1">1. Overview</a>
+          </li>
+          <li>
+            <a href="#breakdev-red" class="text-gray-600 hover:text-primary transition-colors block py-1 ml-4">1.1 BREAKDEV RED Community</a>
+          </li>
+          <li>
+            <a href="#evilginx-pro" class="text-gray-600 hover:text-primary transition-colors block py-1 ml-4">1.2 Evilginx Pro</a>
+          </li>
+          <li>
+            <a href="#comparison" class="text-gray-600 hover:text-primary transition-colors block py-1">2. Free vs Paid Comparison</a>
+          </li>
+          <li>
+            <a href="#pricing" class="text-gray-600 hover:text-primary transition-colors block py-1">3. Pricing Structure</a>
+          </li>
+          <li>
+            <a href="#eligibility" class="text-gray-600 hover:text-primary transition-colors block py-1">4. Eligibility &amp; Application</a>
+          </li>
+          <li>
+            <a href="#government-case" class="text-gray-600 hover:text-primary transition-colors block py-1">5. Government Agency Considerations</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="border-t pt-4">
+        <h4 class="font-medium text-gray-900 mb-2">Quick Stats</h4>
+        <div class="space-y-2 text-xs text-gray-600">
+          <div class="flex justify-between">
+            <span>Community Members:</span>
+            <span class="font-semibold">1,840+</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Pro License:</span>
+            <span class="font-semibold">€1,400/year</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Overlay for closing TOC -->
+    <div id="toc-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section class="hero-gradient relative overflow-hidden">
+        <div class="hero-overlay absolute inset-0"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-8 py-16">
+          <div class="bento-grid">
+            <!-- Main Hero Content -->
+            <div class="bento-main flex flex-col justify-center">
+              <div class="mb-8">
+                <h1 class="font-serif text-4xl sm:text-5xl lg:text-7xl font-bold text-white mb-6 text-shadow leading-tight">
+                  <em class="italic">BREAKDEV RED</em>
+                  <br/>
+                  <span class="text-2xl sm:text-3xl lg:text-5xl font-light">Community &amp; Evilginx Pro</span>
+                </h1>
+                <p class="text-xl text-gray-200 max-w-2xl leading-relaxed">
+                  A comprehensive guide to the vetted professional community for red teamers and the exclusive Evilginx Pro phishing framework
+                </p>
+              </div>
+              <div class="flex items-center space-x-6 text-gray-300">
+                <div class="flex items-center space-x-2">
+                  <i class="fas fa-shield-alt text-accent"></i>
+                  <span>Vetted Community</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <i class="fas fa-code text-accent"></i>
+                  <span>Advanced Tools</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <i class="fas fa-users text-accent"></i>
+                  <span>Professional Network</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="bento-stats">
+              <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-white/20 flex flex-col justify-center">
+                <div class="text-3xl font-bold text-white mb-2">1,840+</div>
+                <div class="text-gray-200 text-sm">Verified Members</div>
+              </div>
+              <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-white/20 flex flex-col justify-center">
+                <div class="text-3xl font-bold text-white mb-2">€1,400</div>
+                <div class="text-gray-200 text-sm">Annual Pro License</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Elements -->
+        <div class="absolute top-20 right-20 w-32 h-32 bg-white/5 rounded-full blur-xl"></div>
+        <div class="absolute bottom-20 left-20 w-24 h-24 bg-accent/10 rounded-full blur-lg"></div>
+      </section>
+
+      <!-- Key Highlights -->
+      <section class="bg-white py-16">
+        <div class="max-w-7xl mx-auto px-8">
+          <div class="grid lg:grid-cols-3 gap-8">
+            <div class="text-center">
+              <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-lock text-2xl text-primary"></i>
+              </div>
+              <h3 class="font-serif text-xl font-semibold mb-2">Private Community</h3>
+              <p class="text-muted prose-custom">Vetted Discord server exclusively for professional red teamers and penetration testers</p>
+            </div>
+            <div class="text-center">
+              <div class="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-code-branch text-2xl text-accent"></i>
+              </div>
+              <h3 class="font-serif text-xl font-semibold mb-2">Phishlets Repository</h3>
+              <p class="text-muted prose-custom">Access to curated collection of phishing tools and configurations</p>
+            </div>
+            <div class="text-center">
+              <div class="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-cogs text-2xl text-secondary"></i>
+              </div>
+              <h3 class="font-serif text-xl font-semibold mb-2">Advanced Framework</h3>
+              <p class="text-muted prose-custom">Evilginx Pro with MFA bypass, detection evasion, and multi-server management</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Content Sections -->
+      <section id="overview" class="py-16 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-8">
+          <h2 class="font-serif text-4xl font-bold text-gray-900 mb-8">1. Overview of BREAKDEV RED and Evilginx Pro</h2>
+
+          <div class="bg-white rounded-xl shadow-sm border p-8 mb-12">
+            <p class="text-lg text-gray-700 prose-custom mb-6">
+              The BREAKDEV RED community represents a paradigm shift in professional cybersecurity collaboration, creating a secure ecosystem where elite red teamers can share knowledge and advanced tools. This comprehensive guide explores both the community&#39;s free tier and the exclusive Evilginx Pro licensing structure.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+              <div class="bg-gray-50 rounded-lg p-6">
+                <h4 class="font-serif text-xl font-semibold mb-4 text-primary">Community Focus</h4>
+                <ul class="space-y-2 text-gray-700 prose-custom">
+                  <li>• Safe exchange of ethical phishing techniques</li>
+                  <li>• Professional networking and career opportunities</li>
+                  <li>• Collaborative defense against modern threats</li>
+                  <li>• Direct developer feedback channel</li>
+                </ul>
+              </div>
+              <div class="bg-gray-50 rounded-lg p-6">
+                <h4 class="font-serif text-xl font-semibold mb-4 text-primary">Pro Tool Advantage</h4>
+                <ul class="space-y-2 text-gray-700 prose-custom">
+                  <li>• Advanced MFA bypass capabilities</li>
+                  <li>• Sophisticated detection evasion</li>
+                  <li>• Multi-server management architecture</li>
+                  <li>• Professional-grade reliability</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- BREAKDEV RED Community Section -->
+          <div id="breakdev-red" class="mb-16">
+            <h3 class="font-serif text-3xl font-bold text-gray-900 mb-8">1.1. BREAKDEV RED Community</h3>
+
+            <div class="bg-white rounded-xl shadow-sm border p-8 mb-8">
+              <h4 class="font-serif text-2xl font-semibold mb-6 text-primary">Purpose and Mission</h4>
+              <p class="text-gray-700 prose-custom mb-6">
+                The BREAKDEV RED community was established with the explicit mission of creating a secure and trusted environment for professional red teamers and penetration testers <a href="https://breakdev.org/breakdev-red/" class="citation-link">[635]</a>. The primary goal is to facilitate the safe exchange of knowledge, tips, and tricks related to the use of Evilginx and other ethical phishing techniques.
+              </p>
+
+              <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-r-lg mb-6">
+                <blockquote class="text-gray-700 italic prose-custom">
+                  &#34;By restricting membership to verified cybersecurity professionals, the community aims to prevent the misuse of sensitive information and advanced techniques by malicious actors.&#34;
+                </blockquote>
+              </div>
+
+              <p class="text-gray-700 prose-custom">
+                The community serves as a platform for continuous learning and professional development, enabling members to stay at the forefront of offensive security practices while ensuring shared knowledge is used for legitimate security testing <a href="https://breakdev.org/evilginx-pro-release/" class="citation-link">[717]</a>. With over <strong>1,840 verified members</strong>
+                <a href="https://www.linkedin.com/posts/kubagretzky_careers-activity-7393653313281536000--dBF" class="citation-link">[690]</a>, the community has established itself as a premier professional network.
+              </p>
+            </div>
+
+            <!-- Target Audience -->
+            <div class="bg-white rounded-xl shadow-sm border p-8 mb-8">
+              <h4 class="font-serif text-2xl font-semibold mb-6 text-primary">Target Audience: Professional Red Teamers</h4>
+              <div class="grid md:grid-cols-3 gap-6 mb-6">
+                <div class="text-center p-6 bg-gray-50 rounded-lg">
+                  <i class="fas fa-user-tie text-3xl text-accent mb-4"></i>
+                  <h5 class="font-semibold mb-2">Professional Status</h5>
+                  <p class="text-sm text-gray-600">Active cybersecurity professionals only</p>
+                </div>
+                <div class="text-center p-6 bg-gray-50 rounded-lg">
+                  <i class="fas fa-building text-3xl text-accent mb-4"></i>
+                  <h5 class="font-semibold mb-2">Legitimate Company</h5>
+                  <p class="text-sm text-gray-600">Employed by security service providers</p>
+                </div>
+                <div class="text-center p-6 bg-gray-50 rounded-lg">
+                  <i class="fas fa-envelope text-3xl text-accent mb-4"></i>
+                  <h5 class="font-semibold mb-2">Corporate Email</h5>
+                  <p class="text-sm text-gray-600">Company domain verification required</p>
+                </div>
+              </div>
+
+              <p class="text-gray-700 prose-custom">
+                The community is exclusively designed for professional red teamers and penetration testers actively employed by legitimate cybersecurity companies <a href="https://red.breakdev.org/join" class="citation-link">[634]</a>. This strict targeting ensures that resources and discussions remain confined to vetted professionals committed to defensive purposes.
+              </p>
+            </div>
+
+            <!-- Platform -->
+            <div class="bg-white rounded-xl shadow-sm border p-8">
+              <h4 class="font-serif text-2xl font-semibold mb-6 text-primary">Platform: Private Discord Server</h4>
+              <div class="flex items-center mb-6">
+                <img src="https://kimi-web-img.moonshot.cn/img/platform.theverge.com/c6efb3bf938df050da5a83797b2e552ef17381ed.png" alt="Discord server interface with security features" class="w-32 h-24 object-cover rounded-lg mr-6" size="medium" aspect="wide" style="photo" query="Discord server interface security" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+                <div>
+                  <h5 class="font-semibold mb-2">Discord Infrastructure</h5>
+                  <p class="text-gray-600 prose-custom">Robust platform with real-time chat, voice channels, and organized topic discussions</p>
+                </div>
+              </div>
+
+              <p class="text-gray-700 prose-custom mb-6">
+                The BREAKDEV RED community is hosted on a private Discord server, chosen for its robust features including real-time chat, voice channels, and organized discussion channels <a href="https://breakdev.org/breakdev-red/" class="citation-link">[635]</a>. Members have free access to a private Evilginx phishlets repository on GitHub, maintained by the creator and power users.
+              </p>
+
+              <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                <h5 class="font-semibold text-green-800 mb-3">Key Platform Benefits:</h5>
+                <ul class="space-y-2 text-green-700 prose-custom">
+                  <li>• Private repository access with curated phishlets</li>
+                  <li>• Real-time collaboration with vetted professionals</li>
+                  <li>• Direct developer communication channel</li>
+                  <li>• Organized topic-specific discussions</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Evilginx Pro Section -->
+          <div id="evilginx-pro" class="mb-16">
+            <h3 class="font-serif text-3xl font-bold text-gray-900 mb-8">1.2. Evilginx Pro</h3>
+
+            <div class="bg-white rounded-xl shadow-sm border p-8 mb-8">
+              <h4 class="font-serif text-2xl font-semibold mb-6 text-primary">Core Functionality: Advanced Phishing Framework</h4>
+
+              <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                  <img src="https://fixedplaceholder" alt="Evilginx Pro man-in-the-middle network diagram" class="w-full h-48 object-cover rounded-lg mb-4" size="medium" aspect="wide" style="linedrawing" query="Evilginx Pro man-in-the-middle attack network diagram" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+                  <h5 class="font-semibold mb-2">Man-in-the-Middle Architecture</h5>
+                  <p class="text-gray-600 text-sm prose-custom">Reverse proxy sitting between victim and legitimate websites</p>
+                </div>
+                <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+                  <h5 class="font-semibold text-red-800 mb-3">⚠️ Critical Capability</h5>
+                  <p class="text-red-700 prose-custom">
+                    Evilginx Pro acts as a sophisticated man-in-the-middle attack framework that can <strong>bypass multi-factor authentication (MFA)</strong>
+                    <a href="https://abnormal.ai/blog/cybercriminals-evilginx-mfa-bypass" class="citation-link">[642]</a> by intercepting session cookies.
+                  </p>
+                </div>
+              </div>
+
+              <p class="text-gray-700 prose-custom mb-6">
+                Evilginx Pro is a sophisticated, commercially licensed phishing framework designed specifically for advanced red teamers and security professionals <a href="https://evilginx.com/" class="citation-link">[626]</a>. The framework is constantly updated to keep pace with the latest anti-phishing defenses, making it a powerful tool for simulating real-world attacks.
+              </p>
+
+              <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg">
+                <h5 class="font-semibold text-amber-800 mb-2">Exclusivity Warning</h5>
+                <p class="text-amber-700 prose-custom">
+                  Access to Evilginx Pro is strictly limited to members of the BREAKDEV RED community <a href="https://breakdev.org/evilginx-pro-reveal/" class="citation-link">[624]</a>. This controlled distribution helps prevent misuse by malicious actors.
+                </p>
+              </div>
+            </div>
+
+            <!-- Key Features -->
+            <div class="bg-white rounded-xl shadow-sm border p-8">
+              <h4 class="font-serif text-2xl font-semibold mb-6 text-primary">Advanced Features</h4>
+
+              <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                  <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <i class="fas fa-robot text-blue-600"></i>
+                    </div>
+                    <div>
+                      <h5 class="font-semibold mb-2">Evilpuppet Integration</h5>
+                      <p class="text-gray-600 prose-custom">Interfaces with background browser to extract legitimate telemetry and evade client-side protections <a href="https://evilginx.com/features" class="citation-link">[657]</a>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <i class="fas fa-shield-alt text-green-600"></i>
+                    </div>
+                    <div>
+                      <h5 class="font-semibold mb-2">Advanced Evasion</h5>
+                      <p class="text-gray-600 prose-custom">URL rewriting, content obfuscation, and Botguard protection against automated scanners <a href="https://breakdev.org/evilginx-pro-reveal/" class="citation-link">[624]</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="space-y-6">
+                  <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <i class="fas fa-server text-purple-600"></i>
+                    </div>
+                    <div>
+                      <h5 class="font-semibold mb-2">Multi-Server Management</h5>
+                      <p class="text-gray-600 prose-custom">Client-server architecture to deploy and control unlimited server instances from single terminal <a href="https://evilginx.com/" class="citation-link">[719]</a>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <i class="fas fa-database text-orange-600"></i>
+                    </div>
+                    <div>
+                      <h5 class="font-semibold mb-2">API Access</h5>
+                      <p class="text-gray-600 prose-custom">Programmatic access to captured data for integration with existing workflows <a href="https://help.evilginx.com/pro/whats-new" class="citation-link">[531]</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Comparison Section -->
+      <section id="comparison" class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-8">
+          <h2 class="font-serif text-4xl font-bold text-gray-900 mb-8 text-center">2. Free vs Paid Tiers Comparison</h2>
+
+          <div class="bg-white rounded-xl shadow-lg border overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-4 text-left font-serif text-lg font-semibold text-gray-900">Feature</th>
+                    <th class="px-6 py-4 text-center font-serif text-lg font-semibold text-primary">Free Tier</th>
+                    <th class="px-6 py-4 text-center font-serif text-lg font-semibold text-accent">Paid Tier</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">Cost</td>
+                    <td class="px-6 py-4 text-center text-green-600 font-semibold">Free <a href="https://breakdev.org/breakdev-red/" class="citation-link">[635]</a>
+                    </td>
+                    <td class="px-6 py-4 text-center text-accent font-semibold">€1,400 per user per year <a href="https://evilginx.com/pricing" class="citation-link">[625]</a>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">Core Access</td>
+                    <td class="px-6 py-4 text-center text-gray-600">Private Discord server and community</td>
+                    <td class="px-6 py-4 text-center text-gray-600">Full Evilginx Pro framework and client</td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">Phishlets</td>
+                    <td class="px-6 py-4 text-center text-gray-600">Community-maintained GitHub repository <a href="https://breakdev.org/breakdev-red/" class="citation-link">[635]</a>
+                    </td>
+                    <td class="px-6 py-4 text-center text-gray-600">Same repository + advanced Pro framework capabilities</td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">Community</td>
+                    <td class="px-6 py-4 text-center text-gray-600">Full vetted Discord community access <a href="https://breakdev.org/breakdev-red/" class="citation-link">[635]</a>
+                    </td>
+                    <td class="px-6 py-4 text-center text-gray-600">Full access with Pro user status</td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">Phishing Framework</td>
+                    <td class="px-6 py-4 text-center text-gray-600">Evilginx Community Edition (CE)</td>
+                    <td class="px-6 py-4 text-center text-gray-600">Advanced Evilginx Pro framework <a href="https://breakdev.org/evilginx-pro-reveal/" class="citation-link">[624]</a>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">MFA Bypass</td>
+                    <td class="px-6 py-4 text-center text-gray-600">Yes (Community Edition)</td>
+                    <td class="px-6 py-4 text-center text-gray-600">Yes (Enhanced Pro framework) <a href="https://abnormal.ai/blog/cybercriminals-evilginx-mfa-bypass" class="citation-link">[642]</a>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">Evilpuppet Module</td>
+                    <td class="px-6 py-4 text-center text-red-600">❌ No</td>
+                    <td class="px-6 py-4 text-center text-green-600">✅ Yes <a href="https://evilginx.com/features" class="citation-link">[657]</a>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">Detection Evasion</td>
+                    <td class="px-6 py-4 text-center text-gray-600">Basic Community Edition capabilities</td>
+                    <td class="px-6 py-4 text-center text-gray-600">Advanced suite including URL rewriting, Botguard <a href="https://breakdev.org/evilginx-pro-reveal/" class="citation-link">[624]</a>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">Server Management</td>
+                    <td class="px-6 py-4 text-center text-gray-600">Manual individual server management</td>
+                    <td class="px-6 py-4 text-center text-gray-600">Client-server architecture for unlimited instances <a href="https://evilginx.com/" class="citation-link">[657]</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p class="text-sm text-gray-600 mt-4 text-center">
+            <em>Table 1: Comprehensive comparison of features and benefits between free community membership and paid Evilginx Pro license.</em>
+          </p>
+        </div>
+      </section>
+
+      <!-- Pricing Section -->
+      <section id="pricing" class="py-16 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-8">
+          <h2 class="font-serif text-4xl font-bold text-gray-900 mb-8">3. Pricing for Individual Users: Evilginx Pro</h2>
+
+          <div class="bg-white rounded-xl shadow-lg border p-8 mb-8">
+            <div class="text-center mb-8">
+              <div class="inline-block bg-accent text-white px-6 py-3 rounded-full text-lg font-semibold mb-4">
+                Annual Subscription Model
+              </div>
+              <div class="text-6xl font-bold text-gray-900 mb-2">€1,400</div>
+              <div class="text-xl text-gray-600">per user per year</div>
+              <p class="text-sm text-gray-500 mt-2">
+                <a href="https://evilginx.com/pricing" class="citation-link">[625]</a>
+              </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+              <div class="bg-blue-50 rounded-lg p-6">
+                <h4 class="font-serif text-xl font-semibold mb-4 text-blue-800">What&#39;s Included</h4>
+                <ul class="space-y-2 text-blue-700 prose-custom">
+                  <li>• Full Evilginx Pro framework access</li>
+                  <li>• Unlimited server deployments <a href="https://evilginx.com/" class="citation-link">[719]</a>
+                  </li>
+                  <li>• Private phishlets repository access</li>
+                  <li>• Community support and updates</li>
+                  <li>• API for programmatic data extraction <a href="https://help.evilginx.com/pro/whats-new" class="citation-link">[531]</a>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="bg-green-50 rounded-lg p-6">
+                <h4 class="font-serif text-xl font-semibold mb-4 text-green-800">Licensing Benefits</h4>
+                <ul class="space-y-2 text-green-700 prose-custom">
+                  <li>• Single-seat license model <a href="https://www.linkedin.com/posts/kubagretzky_the-evilginx-pro-pieces-are-finally-falling-activity-7275889213361807360-eBUA" class="citation-link">[627]</a>
+                  </li>
+                  <li>• Floating licenses for team reassignment <a href="https://www.linkedin.com/posts/kubagretzky_the-evilginx-pro-pieces-are-finally-falling-activity-7275889213361807360-eBUA" class="citation-link">[497]</a>
+                  </li>
+                  <li>• Renewal discounts available <a href="https://evilginx.com/pricing" class="citation-link">[625]</a>
+                  </li>
+                  <li>• 12-month subscription period</li>
+                  <li>• Professional-grade support</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-amber-50 border border-amber-200 rounded-lg p-6">
+            <h4 class="font-serif text-xl font-semibold mb-4 text-amber-800">Investment Justification</h4>
+            <p class="text-amber-700 prose-custom">
+              The €1,400 annual investment reflects the advanced capabilities and exclusivity of Evilginx Pro. For professional red teamers and penetration testing companies, the tool provides capabilities that can significantly enhance the effectiveness and realism of security assessments, making it a worthwhile investment for serious practitioners.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Eligibility Section -->
+      <section id="eligibility" class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-8">
+          <h2 class="font-serif text-4xl font-bold text-gray-900 mb-8">4. Eligibility and Application Process</h2>
+
+          <div class="bg-white rounded-xl shadow-lg border overflow-hidden mb-8">
+            <div class="bg-gray-50 px-8 py-6 border-b">
+              <h3 class="font-serif text-2xl font-semibold text-gray-900">Strict Eligibility Criteria</h3>
+            </div>
+
+            <div class="p-8">
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th class="px-6 py-4 text-left font-semibold text-gray-900">Requirement</th>
+                      <th class="px-6 py-4 text-left font-semibold text-gray-900">Description</th>
+                      <th class="px-6 py-4 text-left font-semibold text-gray-900">Why It&#39;s Required</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200">
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 font-medium text-gray-900">Professional Status</td>
+                      <td class="px-6 py-4 text-gray-600">Professional red teamers or penetration testers <a href="https://red.breakdev.org/join" class="citation-link">[634]</a>
+                      </td>
+                      <td class="px-6 py-4 text-gray-600">Ensure legitimate, work-related need for tools and information</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 font-medium text-gray-900">Employment</td>
+                      <td class="px-6 py-4 text-gray-600">Legitimate cybersecurity company offering legal penetration testing <a href="https://breakdev.org/breakdev-red/" class="citation-link">[635]</a>
+                      </td>
+                      <td class="px-6 py-4 text-gray-600">Verify employment at professional organization with ethical practices</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 font-medium text-gray-900">Company Email</td>
+                      <td class="px-6 py-4 text-gray-600">Contact email on company&#39;s corporate domain <a href="https://breakdev.org/breakdev-red/" class="citation-link">[635]</a>
+                      </td>
+                      <td class="px-6 py-4 text-gray-600">Primary verification method to confirm employment and prevent impersonation</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-6 py-4 font-medium text-gray-900">Public Website</td>
+                      <td class="px-6 py-4 text-gray-600">Company website outlining cybersecurity services <a href="https://breakdev.org/breakdev-red/" class="citation-link">[635]</a>
+                      </td>
+                      <td class="px-6 py-4 text-gray-600">Secondary verification ensuring genuine, operational business</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <p class="text-sm text-gray-600 mb-8 text-center">
+            <em>Table 2: Summary of strict eligibility criteria for BREAKDEV RED community membership.</em>
+          </p>
+
+          <!-- Application Process -->
+          <div class="bg-white rounded-xl shadow-lg border p-8">
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-primary">Application and Vetting Process</h3>
+
+            <div class="mb-8">
+              <div class="mermaid-container">
+                <div class="mermaid-controls">
+                  <button class="mermaid-control-btn zoom-in" title="放大">
+                    <i class="fas fa-search-plus"></i>
+                  </button>
+                  <button class="mermaid-control-btn zoom-out" title="缩小">
+                    <i class="fas fa-search-minus"></i>
+                  </button>
+                  <button class="mermaid-control-btn reset-zoom" title="重置">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                  </button>
+                  <button class="mermaid-control-btn fullscreen" title="全屏查看">
+                    <i class="fas fa-expand"></i>
+                  </button>
+                </div>
+                <div class="mermaid" id="application-process">
+                  flowchart TD
+                  A[&#34;Complete Online Registration Form&#34;] --&gt; B[&#34;Submit Application&#34;]
+                  B --&gt; C[&#34;Manual Review by Administrators&#34;]
+                  C --&gt; D{&#34;Verification Successful?&#34;}
+                  D --&gt;|&#34;Yes&#34;| E[&#34;Approval and Discord Invitation&#34;]
+                  D --&gt;|&#34;No&#34;| F[&#34;Application Rejected&#34;]
+                  E --&gt; G[&#34;Join Private Discord Server&#34;]
+
+                  style A fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#1e293b
+                  style B fill:#f8fafc,stroke:#475569,stroke-width:2px,color:#1e293b
+                  style C fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#1e293b
+                  style D fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#1e293b
+                  style E fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#1e293b
+                  style F fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#1e293b
+                  style G fill:#f3e8ff,stroke:#7c3aed,stroke-width:2px,color:#1e293b
+                </div>
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+              <div class="text-center p-6 bg-blue-50 rounded-lg">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span class="text-xl font-bold text-blue-600">1</span>
+                </div>
+                <h4 class="font-semibold mb-2">Online Registration</h4>
+                <p class="text-sm text-gray-600 prose-custom">Complete form with professional details, company email, and website information</p>
+              </div>
+
+              <div class="text-center p-6 bg-yellow-50 rounded-lg">
+                <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span class="text-xl font-bold text-yellow-600">2</span>
+                </div>
+                <h4 class="font-semibold mb-2">Manual Review</h4>
+                <p class="text-sm text-gray-600 prose-custom">Administrators verify employment, company legitimacy, and professional status</p>
+              </div>
+
+              <div class="text-center p-6 bg-green-50 rounded-lg">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span class="text-xl font-bold text-green-600">3</span>
+                </div>
+                <h4 class="font-semibold mb-2">Approval &amp; Invitation</h4>
+                <p class="text-sm text-gray-600 prose-custom">Successful applicants receive Discord server invitation to company email</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Government Agency Section -->
+      <section id="government-case" class="py-16 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-8">
+          <h2 class="font-serif text-4xl font-bold text-gray-900 mb-8">5. Applicability for Thai Government Agency (Student Loan Fund)</h2>
+
+          <div class="bg-white rounded-xl shadow-lg border p-8 mb-8">
+            <div class="bg-red-50 border-l-4 border-red-400 p-6 rounded-r-lg mb-6">
+              <h3 class="font-serif text-xl font-semibold text-red-800 mb-3">⚠️ Standard Eligibility Challenge</h3>
+              <p class="text-red-700 prose-custom">
+                A Thai government agency like the Student Loan Fund faces significant eligibility challenges as its <strong>core business is not related to cybersecurity</strong>. The BREAKDEV RED community&#39;s criteria specifically require applicants to be employed by legitimate cybersecurity firms offering penetration testing services <a href="https://breakdev.org/breakdev-red/" class="citation-link">[635]</a>.
+              </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+              <div class="bg-gray-50 rounded-lg p-6">
+                <h4 class="font-semibold mb-4 text-gray-800">Challenge Factors</h4>
+                <ul class="space-y-2 text-gray-700 prose-custom">
+                  <li>• Core business is financial/social, not security</li>
+                  <li>• Not a recognized cybersecurity service provider</li>
+                  <li>• Standard application likely to be rejected</li>
+                  <li>• Vetting process designed for private industry</li>
+                </ul>
+              </div>
+
+              <div class="bg-blue-50 rounded-lg p-6">
+                <h4 class="font-semibold mb-4 text-blue-800">Potential Mitigation Strategies</h4>
+                <ul class="space-y-2 text-blue-700 prose-custom">
+                  <li>• Highlight internal cybersecurity team role</li>
+                  <li>• Frame as &#34;internal red team&#34; function</li>
+                  <li>• Explain data protection responsibilities</li>
+                  <li>• Provide detailed security mandate documentation</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-6">
+              <h4 class="font-semibold text-amber-800 mb-3">Recommendation</h4>
+              <p class="text-amber-700 prose-custom">
+                <strong>Contact BREAKDEV RED directly for clarification</strong> before submitting an application. This proactive approach can save time and provide definitive guidance on eligibility criteria for government agencies with internal security functions.
+              </p>
+            </div>
+          </div>
+
+          <!-- Alternative Solutions -->
+          <div class="bg-white rounded-xl shadow-lg border p-8">
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-primary">Alternative Solutions if Ineligible</h3>
+
+            <div class="grid md:grid-cols-3 gap-6">
+              <div class="text-center p-6 bg-gray-50 rounded-lg">
+                <i class="fas fa-code text-3xl text-green-600 mb-4"></i>
+                <h4 class="font-semibold mb-2">Evilginx Community Edition</h4>
+                <p class="text-sm text-gray-600 prose-custom">Open-source version with core functionality, freely available without membership requirements</p>
+              </div>
+
+              <div class="text-center p-6 bg-gray-50 rounded-lg">
+                <i class="fas fa-users text-3xl text-blue-600 mb-4"></i>
+                <h4 class="font-semibold mb-2">Internal Training</h4>
+                <p class="text-sm text-gray-600 prose-custom">Focus on phishing awareness training and security best practices within the agency</p>
+              </div>
+
+              <div class="text-center p-6 bg-gray-50 rounded-lg">
+                <i class="fas fa-handshake text-3xl text-purple-600 mb-4"></i>
+                <h4 class="font-semibold mb-2">Industry Partnership</h4>
+                <p class="text-sm text-gray-600 prose-custom">Partner with accredited cybersecurity firms for professional assessments and training</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Community Overview Diagram -->
+      <section class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-8">
+          <h2 class="font-serif text-4xl font-bold text-gray-900 mb-8 text-center">BREAKDEV RED Ecosystem Overview</h2>
+          <div class="mermaid-container">
+            <div class="mermaid-controls">
+              <button class="mermaid-control-btn zoom-in" title="放大">
+                <i class="fas fa-search-plus"></i>
+              </button>
+              <button class="mermaid-control-btn zoom-out" title="缩小">
+                <i class="fas fa-search-minus"></i>
+              </button>
+              <button class="mermaid-control-btn reset-zoom" title="重置">
+                <i class="fas fa-expand-arrows-alt"></i>
+              </button>
+              <button class="mermaid-control-btn fullscreen" title="全屏查看">
+                <i class="fas fa-expand"></i>
+              </button>
+            </div>
+            <div class="mermaid" id="ecosystem-overview">
+              graph TB
+              A[&#34;BREAKDEV RED Ecosystem&#34;] --&gt; B[&#34;Free Community Tier&#34;]
+              A --&gt; C[&#34;Paid Pro Tier&#34;]
+
+              B --&gt; D[&#34;Private Discord Server&#34;]
+              B --&gt; E[&#34;Phishlets Repository&#34;]
+              B --&gt; F[&#34;Professional Network&#34;]
+              B --&gt; G[&#34;Knowledge Sharing&#34;]
+
+              C --&gt; H[&#34;Evilginx Pro Framework&#34;]
+              C --&gt; I[&#34;Advanced Features&#34;]
+              C --&gt; J[&#34;Priority Support&#34;]
+              C --&gt; K[&#34;Commercial License&#34;]
+
+              D --&gt; L[&#34;1,840+ Verified Members&#34;]
+              E --&gt; M[&#34;Curated Phishing Tools&#34;]
+              F --&gt; N[&#34;Career Opportunities&#34;]
+              G --&gt; O[&#34;Security Discussions&#34;]
+
+              H --&gt; P[&#34;MFA Bypass&#34;]
+              H --&gt; Q[&#34;Detection Evasion&#34;]
+              I --&gt; R[&#34;Evilpuppet Module&#34;]
+              I --&gt; S[&#34;Multi-Server Management&#34;]
+
+              style A fill:#1e293b,stroke:#475569,stroke-width:3px,color:#ffffff
+              style B fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#1e293b
+              style C fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#1e293b
+              style D fill:#f0fdf4,stroke:#22c55e,stroke-width:2px,color:#1e293b
+              style E fill:#f0fdf4,stroke:#22c55e,stroke-width:2px,color:#1e293b
+              style F fill:#f0fdf4,stroke:#22c55e,stroke-width:2px,color:#1e293b
+              style G fill:#f0fdf4,stroke:#22c55e,stroke-width:2px,color:#1e293b
+              style H fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#1e293b
+              style I fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#1e293b
+              style J fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#1e293b
+              style K fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#1e293b
+              style L fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#1e293b
+              style M fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#1e293b
+              style N fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#1e293b
+              style O fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#1e293b
+              style P fill:#f3f4f6,stroke:#6b7280,stroke-width:2px,color:#1e293b
+              style Q fill:#f3f4f6,stroke:#6b7280,stroke-width:2px,color:#1e293b
+              style R fill:#f3f4f6,stroke:#6b7280,stroke-width:2px,color:#1e293b
+              style S fill:#f3f4f6,stroke:#6b7280,stroke-width:2px,color:#1e293b
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-6xl mx-auto px-8">
+          <div class="grid md:grid-cols-3 gap-8">
+            <div>
+              <h3 class="font-serif text-xl font-semibold mb-4">Key Resources</h3>
+              <ul class="space-y-2 text-gray-300">
+                <li>
+                  <a href="https://breakdev.org/breakdev-red/" class="hover:text-white transition-colors">BREAKDEV RED Community</a>
+                </li>
+                <li>
+                  <a href="https://evilginx.com/" class="hover:text-white transition-colors">Evilginx Pro</a>
+                </li>
+                <li>
+                  <a href="https://red.breakdev.org/join" class="hover:text-white transition-colors">Membership Application</a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="font-serif text-xl font-semibold mb-4">Important Notes</h3>
+              <ul class="space-y-2 text-gray-300 text-sm prose-custom">
+                <li>• All tools intended for legitimate security testing only</li>
+                <li>• Strict vetting process ensures community integrity</li>
+                <li>• Professional cybersecurity credentials required</li>
+                <li>• Commercial licensing for advanced features</li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="font-serif text-xl font-semibold mb-4">Contact Information</h3>
+              <p class="text-gray-300 text-sm prose-custom">
+                For questions about eligibility or the application process, contact BREAKDEV RED administrators directly through their official channels before submitting an application.
+              </p>
+            </div>
+          </div>
+
+          <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
+            <p>This guide provides comprehensive information for professional cybersecurity practitioners. All pricing and features are subject to change. Verify current details through official channels.</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+        // Initialize Mermaid with enhanced configuration
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#f8fafc',
+                primaryTextColor: '#1e293b',
+                primaryBorderColor: '#1e293b',
+                lineColor: '#475569',
+                secondaryColor: '#f1f5f9',
+                tertiaryColor: '#ffffff',
+                background: '#ffffff',
+                mainBkg: '#f8fafc',
+                secondBkg: '#f1f5f9',
+                tertiaryBkg: '#ffffff',
+                // Enhanced contrast colors
+                nodeBorder: '#1e293b',
+                clusterBkg: '#f8fafc',
+                clusterBorder: '#475569',
+                defaultLinkColor: '#475569',
+                titleColor: '#1e293b',
+                edgeLabelBackground: 'rgba(255, 255, 255, 0.9)',
+                nodeTextColor: '#1e293b'
+            },
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20,
+                nodeSpacing: 50,
+                rankSpacing: 50,
+                diagramPadding: 20
+            },
+            fontFamily: 'Inter, sans-serif',
+            fontSize: 14,
+            // Ensure proper sizing and scaling
+            maxTextSize: 50000,
+            maxEdges: 200,
+            // Security settings
+            securityLevel: 'loose'
+        });
+
+        // Initialize Mermaid Controls for zoom and pan
+        function initializeMermaidControls() {
+            const containers = document.querySelectorAll('.mermaid-container');
+
+            containers.forEach(container => {
+            const mermaidElement = container.querySelector('.mermaid');
+            let scale = 1;
+            let isDragging = false;
+            let startX, startY, translateX = 0, translateY = 0;
+
+            // 触摸相关状态
+            let isTouch = false;
+            let touchStartTime = 0;
+            let initialDistance = 0;
+            let initialScale = 1;
+            let isPinching = false;
+
+            // Zoom controls
+            const zoomInBtn = container.querySelector('.zoom-in');
+            const zoomOutBtn = container.querySelector('.zoom-out');
+            const resetBtn = container.querySelector('.reset-zoom');
+            const fullscreenBtn = container.querySelector('.fullscreen');
+
+            function updateTransform() {
+                mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+                if (scale > 1) {
+                container.classList.add('zoomed');
+                } else {
+                container.classList.remove('zoomed');
+                }
+
+                mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+            }
+
+            if (zoomInBtn) {
+                zoomInBtn.addEventListener('click', () => {
+                scale = Math.min(scale * 1.25, 4);
+                updateTransform();
+                });
+            }
+
+            if (zoomOutBtn) {
+                zoomOutBtn.addEventListener('click', () => {
+                scale = Math.max(scale / 1.25, 0.3);
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+                updateTransform();
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+                });
+            }
+
+            if (fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', () => {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
+                }
+                });
+            }
+
+            // Mouse Events
+            mermaidElement.addEventListener('mousedown', (e) => {
+                if (isTouch) return; // 如果是触摸设备，忽略鼠标事件
+
+                isDragging = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+                mermaidElement.style.cursor = 'grabbing';
+                updateTransform();
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging && !isTouch) {
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseleave', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            // 获取两点之间的距离
+            function getTouchDistance(touch1, touch2) {
+                return Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+                );
+            }
+
+            // Touch Events - 触摸事件处理
+            mermaidElement.addEventListener('touchstart', (e) => {
+                isTouch = true;
+                touchStartTime = Date.now();
+
+                if (e.touches.length === 1) {
+                // 单指拖动
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+
+                } else if (e.touches.length === 2) {
+                // 双指缩放
+                isPinching = true;
+                isDragging = false;
+
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialDistance = getTouchDistance(touch1, touch2);
+                initialScale = scale;
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isDragging && !isPinching) {
+                // 单指拖动
+                const touch = e.touches[0];
+                translateX = touch.clientX - startX;
+                translateY = touch.clientY - startY;
+                updateTransform();
+
+                } else if (e.touches.length === 2 && isPinching) {
+                // 双指缩放
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = getTouchDistance(touch1, touch2);
+
+                if (initialDistance > 0) {
+                    const newScale = Math.min(Math.max(
+                    initialScale * (currentDistance / initialDistance),
+                    0.3
+                    ), 4);
+                    scale = newScale;
+                    updateTransform();
+                }
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchend', (e) => {
+                // 重置状态
+                if (e.touches.length === 0) {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                // 延迟重置isTouch，避免鼠标事件立即触发
+                setTimeout(() => {
+                    isTouch = false;
+                }, 100);
+                } else if (e.touches.length === 1 && isPinching) {
+                // 从双指变为单指，切换为拖动模式
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+                }
+
+                updateTransform();
+            });
+
+            mermaidElement.addEventListener('touchcancel', (e) => {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                setTimeout(() => {
+                isTouch = false;
+                }, 100);
+
+                updateTransform();
+            });
+
+            // Enhanced wheel zoom with better center point handling
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+                // Adjust translation to zoom towards center
+                if (newScale !== scale) {
+                const scaleDiff = newScale / scale;
+                translateX = translateX * scaleDiff;
+                translateY = translateY * scaleDiff;
+                scale = newScale;
+
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+
+                updateTransform();
+                }
+            });
+
+            // Initialize display
+            updateTransform();
+            });
+        }
+
+        // Initialize mermaid controls after mermaid renders
+        setTimeout(initializeMermaidControls, 1000);
+
+        // Mobile TOC Toggle
+        const tocToggle = document.getElementById('toc-toggle');
+        const toc = document.getElementById('toc');
+        const tocOverlay = document.getElementById('toc-overlay');
+        const body = document.body;
+
+        tocToggle.addEventListener('click', () => {
+            toc.classList.toggle('active');
+            tocOverlay.classList.toggle('hidden');
+            body.classList.toggle('no-scroll');
+        });
+
+        // Close TOC when overlay is clicked
+        tocOverlay.addEventListener('click', () => {
+            toc.classList.remove('active');
+            tocOverlay.classList.add('hidden');
+            body.classList.remove('no-scroll');
+        });
+
+        // Close TOC when window is resized to desktop size
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                toc.classList.remove('active');
+                tocOverlay.classList.add('hidden');
+                body.classList.remove('no-scroll');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Active TOC highlighting
+        const sections = document.querySelectorAll('section[id]');
+        const tocLinks = document.querySelectorAll('#toc a[href^="#"]');
+
+        function updateActiveTocLink() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.pageYOffset >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('text-primary', 'font-semibold');
+                link.classList.add('text-gray-600');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.remove('text-gray-600');
+                    link.classList.add('text-primary', 'font-semibold');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveTocLink);
+        updateActiveTocLink(); // Initial call
+    </script>
+  
+
+</body></html>
