@@ -1,0 +1,1455 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ACRONYM 3L Gore-Tex Pro Hardshells: The Definitive Technical Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Canela:wght@300;400;500;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        .canela { font-family: 'Canela', serif; }
+        .inter { font-family: 'Inter', sans-serif; }
+        
+        /* Mermaid diagram styling */
+        .mermaid-container {
+            display: flex;
+            justify-content: center;
+            min-height: 300px;
+            max-height: 800px;
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mermaid-container .mermaid {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            cursor: grab;
+            transition: transform 0.3s ease;
+            transform-origin: center center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none; /* 防止触摸设备上的默认行为 */
+            -webkit-user-select: none; /* 防止文本选择 */
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .mermaid-container .mermaid svg {
+            max-width: 100%;
+            height: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .mermaid-container .mermaid:active {
+            cursor: grabbing;
+        }
+
+        .mermaid-container.zoomed .mermaid {
+            height: 100%;
+            width: 100%;
+            cursor: grab;
+        }
+
+        .mermaid-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mermaid-control-btn {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #374151;
+            font-size: 14px;
+            min-width: 36px;
+            height: 36px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mermaid-control-btn:hover {
+            background: #f8fafc;
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        .mermaid-control-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Enhanced mermaid node styling with better contrast */
+        .mermaid .node rect,
+        .mermaid .node circle,
+        .mermaid .node ellipse,
+        .mermaid .node polygon {
+            stroke-width: 2px;
+            stroke: #374151;
+            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.1));
+        }
+        
+        /* Node type specific styling */
+        .mermaid .node[class*="default"] rect,
+        .mermaid .node[class*="default"] circle,
+        .mermaid .node[class*="default"] polygon {
+            fill: #f8fafc;
+            stroke: #64748b;
+        }
+        
+        .mermaid .node[class*="primary"] rect,
+        .mermaid .node[class*="primary"] circle,
+        .mermaid .node[class*="primary"] polygon {
+            fill: #1e40af;
+            stroke: #1d4ed8;
+        }
+        
+        .mermaid .node[class*="secondary"] rect,
+        .mermaid .node[class*="secondary"] circle,
+        .mermaid .node[class*="secondary"] polygon {
+            fill: #f1f5f9;
+            stroke: #64748b;
+        }
+        
+        .mermaid .node[class*="accent"] rect,
+        .mermaid .node[class*="accent"] circle,
+        .mermaid .node[class*="accent"] polygon {
+            fill: #dc2626;
+            stroke: #b91c1c;
+        }
+        
+        /* Text styling with high contrast */
+        .mermaid .node .label {
+            color: #111827;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+        }
+        
+        .mermaid .node[class*="primary"] .label {
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .mermaid .node[class*="accent"] .label {
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Edge styling */
+        .mermaid .edgePath .path {
+            stroke-width: 2px;
+            stroke: #6b7280;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+        }
+        
+        .mermaid .edgeLabel {
+            background-color: rgba(255, 255, 255, 0.95);
+            color: #374151;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Timeline specific styling */
+        .mermaid .section {
+            fill: #f8fafc;
+            stroke: #d1d5db;
+        }
+        
+        .mermaid .section-title {
+            fill: #374151;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+        }
+        
+        .mermaid .task {
+            fill: #f1f5f9;
+            stroke: #64748b;
+        }
+        
+        .mermaid .task-text {
+            fill: #374151;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        /* Ensure proper text contrast */
+        .mermaid text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        /* Responsive fixes for small screens */
+        @media (max-width: 768px) {
+            .mermaid-control-btn:not(.reset-zoom) {
+                display: none;
+            }
+            .mermaid-controls {
+                top: auto;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cobalt': '#1e40af',
+                        'graphite': '#374151',
+                        'muted': '#6b7280',
+                        'technical': '#f3f4f6',
+                        'cyber': '#0891b2'
+                    },
+                    fontFamily: {
+                        'canela': ['Canela', 'serif'],
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+  <base target="_blank">
+</head>
+
+  <body class="bg-white text-graphite inter">
+    <!-- Fixed Table of Contents -->
+    <nav id="toc" class="fixed left-0 top-0 h-full w-72 bg-gray-50 border-r border-gray-200 overflow-y-auto z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+      <div class="p-6">
+        <h3 class="font-canela text-lg font-medium text-graphite mb-6">Contents</h3>
+        <ul class="space-y-3 text-sm">
+          <li>
+            <a href="#hero" class="text-muted hover:text-cobalt transition-colors">Overview</a>
+          </li>
+          <li>
+            <a href="#models" class="text-muted hover:text-cobalt transition-colors">Model Classification</a>
+            <ul class="ml-4 mt-2 space-y-2">
+              <li>
+                <a href="#interops" class="text-muted hover:text-cobalt transition-colors">Interops Jackets</a>
+              </li>
+              <li>
+                <a href="#field" class="text-muted hover:text-cobalt transition-colors">Field Jackets</a>
+              </li>
+              <li>
+                <a href="#rider" class="text-muted hover:text-cobalt transition-colors">Rider Jackets</a>
+              </li>
+              <li>
+                <a href="#coats" class="text-muted hover:text-cobalt transition-colors">Coats</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#technologies" class="text-muted hover:text-cobalt transition-colors">Core Technologies</a>
+            <ul class="ml-4 mt-2 space-y-2">
+              <li>
+                <a href="#fabric" class="text-muted hover:text-cobalt transition-colors">Fabric Technology</a>
+              </li>
+              <li>
+                <a href="#systems" class="text-muted hover:text-cobalt transition-colors">Integrated Systems</a>
+              </li>
+              <li>
+                <a href="#subsystems" class="text-muted hover:text-cobalt transition-colors">Subsystems</a>
+              </li>
+              <li>
+                <a href="#construction" class="text-muted hover:text-cobalt transition-colors">Construction</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#comparison" class="text-muted hover:text-cobalt transition-colors">Model Comparison</a>
+          </li>
+          <li>
+            <a href="#availability" class="text-muted hover:text-cobalt transition-colors">Availability &amp; Pricing</a>
+            <ul class="ml-4 mt-2 space-y-2">
+              <li>
+                <a href="#singapore" class="text-muted hover:text-cobalt transition-colors">Singapore</a>
+              </li>
+              <li>
+                <a href="#international" class="text-muted hover:text-cobalt transition-colors">International</a>
+              </li>
+              <li>
+                <a href="#duties" class="text-muted hover:text-cobalt transition-colors">Thailand Import Duties</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Mobile TOC Toggle -->
+    <button id="toc-toggle" class="lg:hidden fixed top-4 left-4 z-50 bg-graphite text-white p-2 rounded-lg">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Overlay for mobile TOC -->
+    <div id="toc-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+    <!-- Main Content -->
+    <main class="lg:ml-72">
+      <!-- Hero Section -->
+      <section id="hero" class="relative overflow-hidden bg-gradient-to-br from-gray-50 to-white">
+        <div class="max-w-7xl mx-auto px-6 py-16">
+          <!-- Bento Grid Layout -->
+          <div class="grid grid-cols-1 gap-8 mb-16">
+            <!-- Main Title Area -->
+            <div class="col-span-1 lg:col-span-2">
+              <h1 class="font-canela text-3xl sm:text-4xl lg:text-6xl font-light leading-tight text-graphite mb-6">
+                <span class="italic text-cobalt">ACRONYM</span>
+                <br/>
+                3L Gore-Tex Pro
+                <br/>
+                <span class="text-2xl sm:text-3xl lg:text-4xl">Technical Analysis</span>
+              </h1>
+              <p class="text-base sm:text-lg text-muted max-w-2xl leading-relaxed">
+                A comprehensive examination of high-performance technical outerwear,
+                featuring advanced fabric technologies, modular systems architecture,
+                and avant-garde design philosophy.
+              </p>
+            </div>
+
+            <!-- Key Stats -->
+            <div class="bg-white p-4 sm:p-6 rounded-lg border border-gray-200 shadow-sm">
+              <h3 class="font-canela text-lg font-medium text-graphite mb-4">Technical Overview</h3>
+              <div class="space-y-3">
+                <div class="flex justify-between">
+                  <span class="text-muted">Fabric Technology</span>
+                  <span class="font-medium">3L Gore-Tex Pro</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-muted">Core Systems</span>
+                  <span class="font-medium">INTEROPS, SOUND, TEC SYS</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-muted">Singapore Pricing</span>
+                  <span class="font-medium">S$1,188 - S$1,888</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-muted">Thailand Import Duty</span>
+                  <span class="font-medium">20-30%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Visual Element -->
+            <div class="lg:col-span-2">
+              <img src="https://kimi-web-img.moonshot.cn/img/hues.co.jp/96dfe231bc6de3540536ac2dc39fb813e8f23ad8.jpg" alt="ACRONYM 3L Gore-Tex Pro technical jacket" class="w-full h-64 object-cover rounded-lg shadow-lg" size="medium" aspect="wide" style="photo" query="ACRONYM Gore-Tex jacket" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Model Classification -->
+      <section id="models" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+          <h2 class="font-canela text-4xl font-light text-graphite mb-12">Model Classification</h2>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <div class="lg:col-span-2">
+              <p class="text-lg text-muted leading-relaxed mb-6">
+                ACRONYM&#39;s collection represents the pinnacle of technical outerwear engineering,
+                with each model serving distinct performance and aesthetic purposes. The classification
+                system reflects both functional requirements and design philosophy.
+              </p>
+
+              <!-- Model Categories -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div id="interops" class="bg-gradient-to-br from-cobalt/5 to-cobalt/10 p-6 rounded-lg">
+                  <h3 class="font-canela text-xl font-medium text-cobalt mb-3">Interops Jackets</h3>
+                  <p class="text-muted text-sm mb-4">Modular systems with patented INTEROPS integration</p>
+                  <ul class="text-sm space-y-1">
+                    <li>• J1L-GT, J1WTS-GT</li>
+                    <li>• J110TS-GT</li>
+                    <li>• J115-GT-EX</li>
+                  </ul>
+                </div>
+
+                <div id="field" class="bg-gradient-to-br from-graphite/5 to-graphite/10 p-6 rounded-lg">
+                  <h3 class="font-canela text-xl font-medium text-graphite mb-3">Field Jackets</h3>
+                  <p class="text-muted text-sm mb-4">Military-inspired technical reimaginings</p>
+                  <ul class="text-sm space-y-1">
+                    <li>• J56-GT</li>
+                    <li>• J14-GT</li>
+                  </ul>
+                </div>
+
+                <div id="rider" class="bg-gradient-to-br from-cyber/5 to-cyber/10 p-6 rounded-lg">
+                  <h3 class="font-canela text-xl font-medium text-cyber mb-3">Rider Jackets</h3>
+                  <p class="text-muted text-sm mb-4">Minimalist motorcycle-inspired designs</p>
+                  <ul class="text-sm space-y-1">
+                    <li>• J68-GT</li>
+                  </ul>
+                </div>
+
+                <div id="coats" class="bg-gradient-to-br from-muted/10 to-muted/20 p-6 rounded-lg">
+                  <h3 class="font-canela text-xl font-medium text-muted mb-3">Coats</h3>
+                  <p class="text-muted text-sm mb-4">Full-length weather protection systems</p>
+                  <ul class="text-sm space-y-1">
+                    <li>• J122-GT</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Technology Evolution -->
+            <div class="bg-gray-50 p-6 rounded-lg">
+              <h3 class="font-canela text-lg font-medium text-graphite mb-4">Fabric Evolution</h3>
+              <div class="space-y-4">
+                <div class="border-l-4 border-cobalt pl-4">
+                  <h4 class="font-medium text-graphite">Most Breathable Technology</h4>
+                  <p class="text-sm text-muted">30-denier face textiles with Micro Grid™ backer</p>
+                </div>
+                <div class="border-l-4 border-cyber pl-4">
+                  <h4 class="font-medium text-graphite">Next Generation Pro</h4>
+                  <p class="text-sm text-muted">Up to 28% increased breathability</p>
+                </div>
+                <div class="border-l-4 border-graphite pl-4">
+                  <h4 class="font-medium text-graphite">C-Knit Backer</h4>
+                  <p class="text-sm text-muted">Enhanced flexibility and comfort</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Technology Integration Diagram -->
+          <div class="bg-white border border-gray-200 rounded-lg p-8">
+            <h3 class="font-canela text-2xl font-light text-graphite mb-6">System Integration Architecture</h3>
+            <div class="mermaid-container" id="mermaid-container-1">
+              <div class="mermaid-controls">
+                <button class="mermaid-control-btn zoom-in" title="放大">
+                  <i class="fas fa-search-plus"></i>
+                </button>
+                <button class="mermaid-control-btn zoom-out" title="缩小">
+                  <i class="fas fa-search-minus"></i>
+                </button>
+                <button class="mermaid-control-btn reset-zoom" title="重置">
+                  <i class="fas fa-expand-arrows-alt"></i>
+                </button>
+                <button class="mermaid-control-btn fullscreen" title="全屏查看">
+                  <i class="fas fa-expand"></i>
+                </button>
+              </div>
+              <div class="mermaid">
+                graph TB
+                A[&#34;3L Gore-Tex Pro Fabric&#34;] --&gt; B[&#34;Core Systems&#34;]
+                B --&gt; C[&#34;INTEROPS&#34;]
+                B --&gt; D[&#34;SOUND&#34;]
+                B --&gt; E[&#34;TEC SYS&#34;]
+
+                C --&gt; F[&#34;Bag Integration&#34;]
+                C --&gt; G[&#34;Modular Layering&#34;]
+
+                D --&gt; H[&#34;Audio Management&#34;]
+                D --&gt; I[&#34;ForceLock&#34;]
+
+                E --&gt; J[&#34;Accessory Mounting&#34;]
+                E --&gt; K[&#34;Custom Configuration&#34;]
+
+                L[&#34;Subsystems&#34;] --&gt; M[&#34;JacketSling&#34;]
+                L --&gt; N[&#34;AuxZip&#34;]
+                L --&gt; O[&#34;EscapeZip&#34;]
+                L --&gt; P[&#34;SpeedLock&#34;]
+
+                style A fill:#f8fafc,stroke:#374151,stroke-width:3px,color:#111827,font-weight:bold
+                style B fill:#dbeafe,stroke:#1e40af,stroke-width:3px,color:#111827,font-weight:bold
+                style C fill:#fef3c7,stroke:#d97706,stroke-width:3px,color:#111827,font-weight:bold
+                style D fill:#f3e8ff,stroke:#7c3aed,stroke-width:3px,color:#111827,font-weight:bold
+                style E fill:#ecfdf5,stroke:#059669,stroke-width:3px,color:#111827,font-weight:bold
+                style F fill:#f1f5f9,stroke:#64748b,stroke-width:2px,color:#111827,font-weight:500
+                style G fill:#f1f5f9,stroke:#64748b,stroke-width:2px,color:#111827,font-weight:500
+                style H fill:#f1f5f9,stroke:#64748b,stroke-width:2px,color:#111827,font-weight:500
+                style I fill:#f1f5f9,stroke:#64748b,stroke-width:2px,color:#111827,font-weight:500
+                style J fill:#f1f5f9,stroke:#64748b,stroke-width:2px,color:#111827,font-weight:500
+                style K fill:#f1f5f9,stroke:#64748b,stroke-width:2px,color:#111827,font-weight:500
+                style L fill:#fee2e2,stroke:#dc2626,stroke-width:3px,color:#111827,font-weight:bold
+                style M fill:#f1f5f9,stroke:#64748b,stroke-width:2px,color:#111827,font-weight:500
+                style N fill:#f1f5f9,stroke:#64748b,stroke-width:2px,color:#111827,font-weight:500
+                style O fill:#f1f5f9,stroke:#64748b,stroke-width:2px,color:#111827,font-weight:500
+                style P fill:#f1f5f9,stroke:#64748b,stroke-width:2px,color:#111827,font-weight:500
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Core Technologies -->
+      <section id="technologies" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+          <h2 class="font-canela text-4xl font-light text-graphite mb-12">Core Technologies</h2>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+            <!-- Fabric Technology -->
+            <div id="fabric" class="bg-white p-8 rounded-lg shadow-sm">
+              <h3 class="font-canela text-2xl font-medium text-graphite mb-6">3L GORE-TEX® PRO Fabric</h3>
+              <div class="space-y-6">
+                <div>
+                  <h4 class="font-medium text-graphite mb-3">Layer Construction</h4>
+                  <ul class="space-y-2 text-muted">
+                    <li>• <strong>Face Fabric:</strong> 100% Polyamide (Nylon) for durability</li>
+                    <li>• <strong>Membrane:</strong> Expanded PTFE (ePTFE) for waterproof/breathable performance</li>
+                    <li>• <strong>Backer:</strong> 100% Polyamide with Micro Grid™ technology</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-medium text-graphite mb-3">Performance Specifications</h4>
+                  <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span class="text-cobalt font-medium">Waterproof Rating</span>
+                      <p class="text-muted">GUARANTEED TO KEEP YOU DRY™</p>
+                    </div>
+                    <div>
+                      <span class="text-cobalt font-medium">Breathability</span>
+                      <p class="text-muted">Up to 28% improvement in latest generation</p>
+                    </div>
+                    <div>
+                      <span class="text-cobalt font-medium">Environmental Impact</span>
+                      <p class="text-muted">Solution-dyed backer reduces water usage</p>
+                    </div>
+                    <div>
+                      <span class="text-cobalt font-medium">Weight Optimization</span>
+                      <p class="text-muted">30-denier face textiles for lightweight performance</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Construction Detail -->
+            <div id="construction" class="bg-white p-8 rounded-lg shadow-sm">
+              <h3 class="font-canela text-2xl font-medium text-graphite mb-6">Precision Construction</h3>
+              <div class="space-y-6">
+                <div>
+                  <h4 class="font-medium text-graphite mb-3">Fully Seam-Sealed</h4>
+                  <p class="text-muted text-sm leading-relaxed">
+                    Every seam is carefully sealed to prevent water penetration,
+                    ensuring complete waterproof integrity even in the most demanding conditions.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="font-medium text-graphite mb-3">Water-Resistant Zippers</h4>
+                  <p class="text-muted text-sm leading-relaxed">
+                    Specialized zipper construction prevents water ingress through closures,
+                    maintaining protection at all entry points while preserving functionality.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="font-medium text-graphite mb-3">Reinforced Stress Points</h4>
+                  <p class="text-muted text-sm leading-relaxed">
+                    Strategic reinforcement at high-stress areas ensures long-term durability
+                    and maintains structural integrity through extended use.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Integrated Systems -->
+          <div id="systems" class="bg-white p-8 rounded-lg shadow-sm mb-12">
+            <h3 class="font-canela text-2xl font-medium text-graphite mb-8">Integrated Systems</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div>
+                <h4 class="font-canela text-xl text-cobalt mb-4">ǍCROŇYMř INTEROPSǽ</h4>
+                <p class="text-muted text-sm mb-4">
+                  Patented modular integration system enabling seamless connection with
+                  ACRONYM bags and accessories for unified carrying solutions.
+                </p>
+                <ul class="text-sm space-y-1 text-muted">
+                  <li>• Modular bag attachment</li>
+                  <li>• Layered clothing integration</li>
+                  <li>• Patented connection mechanism</li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 class="font-canela text-xl text-cyber mb-4">ǍCROŇYMř SOUNDǽ</h4>
+                <p class="text-muted text-sm mb-4">
+                  Audio management system with magnetic ForceLockǽ for securing
+                  earbuds and routing cables through garment architecture.
+                </p>
+                <ul class="text-sm space-y-1 text-muted">
+                  <li>• Removable ForceLockǽ</li>
+                  <li>• Cable routing channels</li>
+                  <li>• Magnetic attachment points</li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 class="font-canela text-xl text-graphite mb-4">ǍCROŇYMř TEC SYS</h4>
+                <p class="text-muted text-sm mb-4">
+                  Webbing grid system for modular accessory attachment,
+                  featuring multiple rows and channels for custom configuration.
+                </p>
+                <ul class="text-sm space-y-1 text-muted">
+                  <li>• J1WTS-GT: 2 rows × 10 channels</li>
+                  <li>• J110TS-GT: 2 rows × 4 channels</li>
+                  <li>• Modular pouch compatibility</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subsystems -->
+          <div id="subsystems" class="bg-white p-8 rounded-lg shadow-sm">
+            <h3 class="font-canela text-2xl font-medium text-graphite mb-8">Advanced Subsystems</h3>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+              <div class="text-center">
+                <div class="w-16 h-16 bg-cobalt/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <i class="fas fa-magnet text-cobalt text-xl"></i>
+                </div>
+                <h5 class="font-medium text-graphite mb-2">ForceLockǽ</h5>
+                <p class="text-xs text-muted">Magnetic attachment for small items</p>
+              </div>
+
+              <div class="text-center">
+                <div class="w-16 h-16 bg-cyber/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <i class="fas fa-shoulder-bag text-cyber text-xl"></i>
+                </div>
+                <h5 class="font-medium text-graphite mb-2">JacketSlingǽ</h5>
+                <p class="text-xs text-muted">Hands-free carrying solution</p>
+              </div>
+
+              <div class="text-center">
+                <div class="w-16 h-16 bg-graphite/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <i class="fas fa-layer-group text-graphite text-xl"></i>
+                </div>
+                <h5 class="font-medium text-graphite mb-2">AuxZipǽ</h5>
+                <p class="text-xs text-muted">Modular garment connection</p>
+              </div>
+
+              <div class="text-center">
+                <div class="w-16 h-16 bg-muted/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <i class="fas fa-bolt text-muted text-xl"></i>
+                </div>
+                <h5 class="font-medium text-graphite mb-2">EscapeZipǽ</h5>
+                <p class="text-xs text-muted">Rapid emergency removal</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Model Comparison -->
+      <section id="comparison" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+          <h2 class="font-canela text-4xl font-light text-graphite mb-12">Detailed Model Comparison</h2>
+
+          <!-- Model Specifications Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- J68-GT Rider Jacket -->
+            <div class="bg-gradient-to-br from-white to-gray-50 p-8 rounded-lg border border-gray-200">
+              <div class="flex items-center mb-6">
+                <img src="https://kimi-web-img.moonshot.cn/img/m.media-amazon.com/b34d4b071450d674b853bd8a83a1491fb38a0e2c.jpg" alt="ACRONYM J68-GT Rider Jacket" class="w-20 h-20 object-cover rounded-lg mr-4" size="small" aspect="square" style="photo" query="ACRONYM J68-GT Rider Jacket" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+                <div>
+                  <h3 class="font-canela text-xl font-medium text-graphite">J68-GT Rider Jacket</h3>
+                  <p class="text-sm text-muted">Minimalist motorcycle-inspired design</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-medium text-graphite mb-2">Key Features</h4>
+                  <ul class="text-sm space-y-1 text-muted">
+                    <li>• Precisely engineered gusset and sleeve system</li>
+                    <li>• Superior range of motion without action back pleats</li>
+                    <li>• Straight fit with sizes XS-XL</li>
+                    <li>• Enhanced breathability Gore-Tex Pro fabric</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 class="font-medium text-graphite mb-2">Integrated Subsystems</h4>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-cobalt/10 text-cobalt text-xs rounded">INTEROPS</span>
+                    <span class="px-2 py-1 bg-cyber/10 text-cyber text-xs rounded">SOUND</span>
+                    <span class="px-2 py-1 bg-graphite/10 text-graphite text-xs rounded">ForceLock</span>
+                    <span class="px-2 py-1 bg-muted/10 text-muted text-xs rounded">JacketSling</span>
+                    <span class="px-2 py-1 bg-muted/10 text-muted text-xs rounded">AuxZip</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-6 pt-4 border-t border-gray-200">
+                <a href="https://acrnm.com/J68-GT_SS23" class="text-cobalt text-sm hover:underline" target="_blank">
+                  View Technical Specs <i class="fas fa-external-link-alt ml-1"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- J110TS-GT Tec Sys -->
+            <div class="bg-gradient-to-br from-white to-gray-50 p-8 rounded-lg border border-gray-200">
+              <div class="flex items-center mb-6">
+                <img src="https://kimi-web-img.moonshot.cn/img/image-cdn.hypb.st/7e6e77c07d32d43017efd6053d05a8b8cb74d440.jpg" alt="ACRONYM J110TS-GT jacket with Tec Sys webbing" class="w-20 h-20 object-cover rounded-lg mr-4" size="small" aspect="square" style="photo" query="ACRONYM J110TS-GT jacket" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+                <div>
+                  <h3 class="font-canela text-xl font-medium text-graphite">J110TS-GT Tec Sys</h3>
+                  <p class="text-sm text-muted">Military-inspired modular system</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-medium text-graphite mb-2">Key Features</h4>
+                  <ul class="text-sm space-y-1 text-muted">
+                    <li>• Oversized shape with variable stage closure</li>
+                    <li>• Double rows of Tec Sys webbing (2×4 channels)</li>
+                    <li>• Perforated retroreflective skirt</li>
+                    <li>• Weight: 769g (size M)</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 class="font-medium text-graphite mb-2">Integrated Subsystems</h4>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-cobalt/10 text-cobalt text-xs rounded">TEC SYS</span>
+                    <span class="px-2 py-1 bg-cyber/10 text-cyber text-xs rounded">SOUND</span>
+                    <span class="px-2 py-1 bg-graphite/10 text-graphite text-xs rounded">ForceLock</span>
+                    <span class="px-2 py-1 bg-muted/10 text-muted text-xs rounded">SpeedLock</span>
+                    <span class="px-2 py-1 bg-muted/10 text-muted text-xs rounded">AuxZip</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-6 pt-4 border-t border-gray-200">
+                <a href="https://acrnm.com/J110TS-GT_FW2324" class="text-cobalt text-sm hover:underline" target="_blank">
+                  View Technical Specs <i class="fas fa-external-link-alt ml-1"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- J115-GT-EX -->
+            <div class="bg-gradient-to-br from-white to-gray-50 p-8 rounded-lg border border-gray-200">
+              <div class="flex items-center mb-6">
+                <img src="https://kimi-web-img.moonshot.cn/img/image.reversible.com/cdd5bed5895e3dddf3544e57fc066856422f85eb" alt="ACRONYM J115-GT-EX jacket with interops system" class="w-20 h-20 object-cover rounded-lg mr-4" size="small" aspect="square" style="photo" query="ACRONYM J115-GT-EX jacket" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+                <div>
+                  <h3 class="font-canela text-xl font-medium text-graphite">J115-GT-EX Interops</h3>
+                  <p class="text-sm text-muted">Asymmetric industrial elegance</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-medium text-graphite mb-2">Key Features</h4>
+                  <ul class="text-sm space-y-1 text-muted">
+                    <li>• Parka-like coverage with wide fit</li>
+                    <li>• Removable retroreflective silver sleeve</li>
+                    <li>• Multi-position convertible storm collar</li>
+                    <li>• Weight: 911g (size M)</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 class="font-medium text-graphite mb-2">Integrated Subsystems</h4>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-cobalt/10 text-cobalt text-xs rounded">INTEROPS</span>
+                    <span class="px-2 py-1 bg-cyber/10 text-cyber text-xs rounded">SOUND</span>
+                    <span class="px-2 py-1 bg-graphite/10 text-graphite text-xs rounded">ZipSling</span>
+                    <span class="px-2 py-1 bg-muted/10 text-muted text-xs rounded">TensionZip</span>
+                    <span class="px-2 py-1 bg-muted/10 text-muted text-xs rounded">EscapeZip</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-6 pt-4 border-t border-gray-200">
+                <a href="https://www.reversible.com/shopping/men/item/acronym-j115-gt-ex-3l-gore-tex-pro-interops-jacket-alpha-green-silver-608136149" class="text-cobalt text-sm hover:underline" target="_blank">
+                  View Technical Specs <i class="fas fa-external-link-alt ml-1"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- J1WTS-GT -->
+            <div class="bg-gradient-to-br from-white to-gray-50 p-8 rounded-lg border border-gray-200">
+              <div class="flex items-center mb-6">
+                <img src="https://kimi-web-img.moonshot.cn/img/is4.fwrdassets.com/fd14012b7b1f858d2bc0989dcba33c3b35ab18c8.jpg" alt="ACRONYM J1WTS-GT technical jacket" class="w-20 h-20 object-cover rounded-lg mr-4" size="small" aspect="square" style="photo" query="ACRONYM J1WTS-GT jacket" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+                <div>
+                  <h3 class="font-canela text-xl font-medium text-graphite">J1WTS-GT Flagship</h3>
+                  <p class="text-sm text-muted">Ultimate modular expression</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <h4 class="font-medium text-graphite mb-2">Key Features</h4>
+                  <ul class="text-sm space-y-1 text-muted">
+                    <li>• TEC SYS webbing (2 rows × 10 channels)</li>
+                    <li>• Multi-position convertible storm collar</li>
+                    <li>• Enhanced Gore-Tex Pro most breathable technology</li>
+                    <li>• Weight: 880g (size M)</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 class="font-medium text-graphite mb-2">Integrated Subsystems</h4>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-cobalt/10 text-cobalt text-xs rounded">INTEROPS</span>
+                    <span class="px-2 py-1 bg-cyber/10 text-cyber text-xs rounded">TEC SYS</span>
+                    <span class="px-2 py-1 bg-graphite/10 text-graphite text-xs rounded">SOUND</span>
+                    <span class="px-2 py-1 bg-muted/10 text-muted text-xs rounded">Gravity Pocket</span>
+                    <span class="px-2 py-1 bg-muted/10 text-muted text-xs rounded">AuxZip</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-6 pt-4 border-t border-gray-200">
+                <a href="https://labstoreworld.com/products/acronym-j1wts-gt-3l-gore-tex-pro-interops-jacket-black" class="text-cobalt text-sm hover:underline" target="_blank">
+                  View Technical Specs <i class="fas fa-external-link-alt ml-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Availability &amp; Pricing -->
+      <section id="availability" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+          <h2 class="font-canela text-4xl font-light text-graphite mb-12">Availability &amp; Pricing</h2>
+
+          <!-- Singapore Availability -->
+          <div id="singapore" class="mb-16">
+            <h3 class="font-canela text-2xl font-medium text-graphite mb-8">Singapore Retail Availability</h3>
+
+            <div class="grid grid-cols-1 gap-8 mb-12">
+              <div class="bg-white p-8 rounded-lg shadow-sm">
+                <h4 class="font-canela text-xl text-cobalt mb-6">Limited Edt</h4>
+                <div class="space-y-4">
+                  <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <div>
+                      <span class="font-medium text-graphite">J1WTS-GT</span>
+                      <p class="text-sm text-muted">Flagship Interops Jacket</p>
+                    </div>
+                    <div class="text-right">
+                      <span class="font-medium text-graphite">S$2,110</span>
+                      <p class="text-sm text-muted">In Stock</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <div>
+                      <span class="font-medium text-graphite">J115-GT-EX</span>
+                      <p class="text-sm text-muted">Exclusive Variant</p>
+                    </div>
+                    <div class="text-right">
+                      <span class="font-medium text-graphite">S$1,888</span>
+                      <p class="text-sm text-muted">In Stock</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-6 pt-4 border-t border-gray-200">
+                  <p class="text-sm text-muted mb-2">
+                    <i class="fas fa-truck mr-2"></i>Delivery: 1-3 working days processing + 1-2 days delivery
+                  </p>
+                  <p class="text-sm text-muted">
+                    <i class="fas fa-store mr-2"></i>In-store pickup available
+                  </p>
+                </div>
+              </div>
+
+              <div class="bg-white p-8 rounded-lg shadow-sm">
+                <h4 class="font-canela text-xl text-cyber mb-6">END. Clothing Singapore</h4>
+                <div class="space-y-4">
+                  <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <div>
+                      <span class="font-medium text-graphite">J115-GT</span>
+                      <p class="text-sm text-muted">Interops Hard Shell</p>
+                    </div>
+                    <div class="text-right">
+                      <span class="font-medium text-graphite">S$1,370</span>
+                      <p class="text-sm text-muted">In Stock</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <div>
+                      <span class="font-medium text-graphite">J110TS-GT</span>
+                      <p class="text-sm text-muted">Tec Hard Shell</p>
+                    </div>
+                    <div class="text-right">
+                      <span class="font-medium text-graphite">S$1,188</span>
+                      <p class="text-sm text-muted">In Stock</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-6 pt-4 border-t border-gray-200">
+                  <p class="text-sm text-muted">
+                    <i class="fas fa-globe mr-2"></i>Online orders with local currency pricing
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Unavailable Models -->
+            <div class="bg-white p-8 rounded-lg shadow-sm">
+              <h4 class="font-canela text-lg text-graphite mb-6">Models Not Currently Available in Singapore</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="p-4 border border-gray-200 rounded-lg">
+                  <h5 class="font-medium text-graphite mb-2">J68-GT</h5>
+                  <p class="text-sm text-muted mb-3">Rider Jacket</p>
+                  <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">International Only</span>
+                </div>
+                <div class="p-4 border border-gray-200 rounded-lg">
+                  <h5 class="font-medium text-graphite mb-2">J101-GT</h5>
+                  <p class="text-sm text-muted mb-3">Compact Interops</p>
+                  <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">International Only</span>
+                </div>
+                <div class="p-4 border border-gray-200 rounded-lg">
+                  <h5 class="font-medium text-graphite mb-2">J56-GT</h5>
+                  <p class="text-sm text-muted mb-3">Field Jacket</p>
+                  <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">International Only</span>
+                </div>
+                <div class="p-4 border border-gray-200 rounded-lg">
+                  <h5 class="font-medium text-graphite mb-2">J122-GT</h5>
+                  <p class="text-sm text-muted mb-3">Full-length Coat</p>
+                  <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">International Only</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- International Availability -->
+          <div id="international" class="mb-16">
+            <h3 class="font-canela text-2xl font-medium text-graphite mb-8">International Distribution</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="font-canela text-lg text-cobalt mb-4">North America</h4>
+                <h5 class="font-medium text-graphite mb-3">Reversible (Canada)</h5>
+                <ul class="text-sm space-y-2 text-muted mb-4">
+                  <li>• Wide selection of ACRONYM models</li>
+                  <li>• CAD pricing with international shipping</li>
+                  <li>• Excellent customer service</li>
+                  <li>• Regular stock updates</li>
+                </ul>
+                <a href="https://www.reversible.com" class="text-cobalt text-sm hover:underline" target="_blank">
+                  Visit Store <i class="fas fa-external-link-alt ml-1"></i>
+                </a>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="font-canela text-lg text-cyber mb-4">Europe</h4>
+                <h5 class="font-medium text-graphite mb-3">Official ACRONYM Website</h5>
+                <ul class="text-sm space-y-2 text-muted mb-4">
+                  <li>• Direct-to-consumer sales</li>
+                  <li>• Complete model lineup</li>
+                  <li>• EUR pricing</li>
+                  <li>• Latest releases and collaborations</li>
+                </ul>
+                <a href="https://acrnm.com" class="text-cobalt text-sm hover:underline" target="_blank">
+                  Visit Store <i class="fas fa-external-link-alt ml-1"></i>
+                </a>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="font-canela text-lg text-graphite mb-4">Other Regions</h4>
+                <h5 class="font-medium text-graphite mb-3">Specialized Retailers</h5>
+                <ul class="text-sm space-y-2 text-muted mb-4">
+                  <li>• Lab Store (International)</li>
+                  <li>• END. Clothing (Global)</li>
+                  <li>• Farfetch (Luxury Platform)</li>
+                  <li>• SSENSE (Fashion Forward)</li>
+                </ul>
+                <p class="text-sm text-muted">
+                  Availability varies by region and season
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Thailand Import Duties -->
+          <div id="duties" class="bg-white p-8 rounded-lg shadow-sm">
+            <h3 class="font-canela text-2xl font-medium text-graphite mb-8">Thailand Import Customs Duties</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <div>
+                <h4 class="font-medium text-graphite mb-4">Duty Calculation Components</h4>
+                <div class="space-y-3">
+                  <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span class="text-muted">Customs Duty Rate</span>
+                    <span class="font-medium text-graphite">30%</span>
+                  </div>
+                  <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span class="text-muted">VAT Rate</span>
+                    <span class="font-medium text-graphite">7%</span>
+                  </div>
+                  <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span class="text-muted">Processing Fees</span>
+                    <span class="font-medium text-graphite">Variable</span>
+                  </div>
+                  <div class="flex justify-between items-center py-2">
+                    <span class="text-muted">Total Estimated Duty</span>
+                    <span class="font-bold text-cobalt">20-30%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 class="font-medium text-graphite mb-4">Calculation Example</h4>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                      <span class="text-muted">Jacket Value (SGD)</span>
+                      <span>S$1,600</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-muted">Shipping &amp; Insurance</span>
+                      <span>S$100</span>
+                    </div>
+                    <hr class="my-2"/>
+                    <div class="flex justify-between font-medium">
+                      <span>CIF Value</span>
+                      <span>S$1,700</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Customs Duty (30%)</span>
+                      <span>S$510</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>VAT (7% on S$2,210)</span>
+                      <span>S$154.70</span>
+                    </div>
+                    <hr class="my-2"/>
+                    <div class="flex justify-between font-bold text-cobalt">
+                      <span>Total Duty Payable</span>
+                      <span>S$664.70</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div class="flex items-start">
+                <i class="fas fa-exclamation-triangle text-yellow-600 mt-1 mr-3"></i>
+                <div>
+                  <h5 class="font-medium text-yellow-800 mb-2">Important Notes</h5>
+                  <ul class="text-sm text-yellow-700 space-y-1">
+                    <li>• Rates subject to change - check with Thai customs authorities</li>
+                    <li>• No free trade agreements currently apply to these imports</li>
+                    <li>• Additional documentation may be required for customs clearance</li>
+                    <li>• Consider using a customs broker for complex imports</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-graphite text-white py-12">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div>
+              <h3 class="font-canela text-xl font-medium mb-4">Technical Analysis</h3>
+              <p class="text-gray-300 text-sm leading-relaxed">
+                Comprehensive examination of ACRONYM&#39;s 3L Gore-Tex Pro hardshell technology,
+                featuring advanced fabric systems, modular integration, and avant-garde design philosophy.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="font-medium mb-4">Key References</h4>
+              <ul class="text-sm text-gray-300 space-y-2">
+                <li>
+                  <a href="https://acrnm.com" class="hover:text-white transition-colors" target="_blank">Official ACRONYM Website</a>
+                </li>
+                <li>
+                  <a href="https://www.gore-tex.com" class="hover:text-white transition-colors" target="_blank">Gore-Tex Technology</a>
+                </li>
+                <li>
+                  <a href="https://limitededt.com" class="hover:text-white transition-colors" target="_blank">Limited Edt Singapore</a>
+                </li>
+                <li>
+                  <a href="https://www.endclothing.com/sg" class="hover:text-white transition-colors" target="_blank">END. Clothing Singapore</a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 class="font-medium mb-4">Technical Specifications</h4>
+              <ul class="text-sm text-gray-300 space-y-2">
+                <li>• 3L Gore-Tex Pro Fabric Technology</li>
+                <li>• INTEROPS Modular Integration System</li>
+                <li>• Fully Seam-Sealed Construction</li>
+                <li>• Proprietary Subsystem Architecture</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="border-t border-gray-600 mt-8 pt-8 text-center">
+            <p class="text-gray-400 text-sm">
+              This analysis is based on publicly available technical specifications and retailer information as of December 2025.
+              All pricing and availability information is subject to change.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+        // Toggle TOC on mobile
+        const tocToggle = document.getElementById('toc-toggle');
+        const tocOverlay = document.getElementById('toc-overlay');
+        const toc = document.getElementById('toc');
+        
+        function toggleToc() {
+            const isOpen = toc.classList.toggle('-translate-x-full');
+            tocOverlay.classList.toggle('hidden', isOpen);
+        }
+        
+        tocToggle.addEventListener('click', toggleToc);
+        tocOverlay.addEventListener('click', toggleToc);
+        
+        // Close TOC when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const isClickInsideToc = toc.contains(event.target);
+            const isClickOnToggle = tocToggle.contains(event.target);
+            const isMobile = window.innerWidth < 1024;
+            
+            if (isMobile && !isClickInsideToc && !isClickOnToggle && !toc.classList.contains('-translate-x-full')) {
+                toggleToc();
+            }
+        });
+
+        // Initialize Mermaid
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#f8fafc',
+                primaryTextColor: '#111827',
+                primaryBorderColor: '#374151',
+                lineColor: '#6b7280',
+                secondaryColor: '#f1f5f9',
+                tertiaryColor: '#ffffff',
+                background: '#ffffff',
+                mainBkg: '#f8fafc',
+                secondBkg: '#f1f5f9',
+                tertiaryBkg: '#ffffff',
+                fontFamily: 'Inter, sans-serif',
+                fontSize: '14px',
+                fontWeight: '600'
+            },
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20,
+                nodeSpacing: 50,
+                rankSpacing: 80
+            },
+            fontFamily: 'Inter, sans-serif'
+        });
+
+        // Initialize Mermaid Controls for zoom and pan
+        function initializeMermaidControls() {
+            const containers = document.querySelectorAll('.mermaid-container');
+
+            containers.forEach(container => {
+            const mermaidElement = container.querySelector('.mermaid');
+            let scale = 1;
+            let isDragging = false;
+            let startX, startY, translateX = 0, translateY = 0;
+
+            // 触摸相关状态
+            let isTouch = false;
+            let touchStartTime = 0;
+            let initialDistance = 0;
+            let initialScale = 1;
+            let isPinching = false;
+
+            // Zoom controls
+            const zoomInBtn = container.querySelector('.zoom-in');
+            const zoomOutBtn = container.querySelector('.zoom-out');
+            const resetBtn = container.querySelector('.reset-zoom');
+            const fullscreenBtn = container.querySelector('.fullscreen');
+
+            function updateTransform() {
+                mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+                if (scale > 1) {
+                container.classList.add('zoomed');
+                } else {
+                container.classList.remove('zoomed');
+                }
+
+                mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+            }
+
+            if (zoomInBtn) {
+                zoomInBtn.addEventListener('click', () => {
+                scale = Math.min(scale * 1.25, 4);
+                updateTransform();
+                });
+            }
+
+            if (zoomOutBtn) {
+                zoomOutBtn.addEventListener('click', () => {
+                scale = Math.max(scale / 1.25, 0.3);
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+                updateTransform();
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+                });
+            }
+
+            if (fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', () => {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
+                }
+                });
+            }
+
+            // Mouse Events
+            mermaidElement.addEventListener('mousedown', (e) => {
+                if (isTouch) return; // 如果是触摸设备，忽略鼠标事件
+
+                isDragging = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+                mermaidElement.style.cursor = 'grabbing';
+                updateTransform();
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging && !isTouch) {
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseleave', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            // 获取两点之间的距离
+            function getTouchDistance(touch1, touch2) {
+                return Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+                );
+            }
+
+            // Touch Events - 触摸事件处理
+            mermaidElement.addEventListener('touchstart', (e) => {
+                isTouch = true;
+                touchStartTime = Date.now();
+
+                if (e.touches.length === 1) {
+                // 单指拖动
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+
+                } else if (e.touches.length === 2) {
+                // 双指缩放
+                isPinching = true;
+                isDragging = false;
+
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialDistance = getTouchDistance(touch1, touch2);
+                initialScale = scale;
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isDragging && !isPinching) {
+                // 单指拖动
+                const touch = e.touches[0];
+                translateX = touch.clientX - startX;
+                translateY = touch.clientY - startY;
+                updateTransform();
+
+                } else if (e.touches.length === 2 && isPinching) {
+                // 双指缩放
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = getTouchDistance(touch1, touch2);
+
+                if (initialDistance > 0) {
+                    const newScale = Math.min(Math.max(
+                    initialScale * (currentDistance / initialDistance),
+                    0.3
+                    ), 4);
+                    scale = newScale;
+                    updateTransform();
+                }
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchend', (e) => {
+                // 重置状态
+                if (e.touches.length === 0) {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                // 延迟重置isTouch，避免鼠标事件立即触发
+                setTimeout(() => {
+                    isTouch = false;
+                }, 100);
+                } else if (e.touches.length === 1 && isPinching) {
+                // 从双指变为单指，切换为拖动模式
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+                }
+
+                updateTransform();
+            });
+
+            mermaidElement.addEventListener('touchcancel', (e) => {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                setTimeout(() => {
+                isTouch = false;
+                }, 100);
+
+                updateTransform();
+            });
+
+            // Enhanced wheel zoom with better center point handling
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+                // Adjust translation to zoom towards center
+                if (newScale !== scale) {
+                const scaleDiff = newScale / scale;
+                translateX = translateX * scaleDiff;
+                translateY = translateY * scaleDiff;
+                scale = newScale;
+
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+
+                updateTransform();
+                }
+            });
+
+            // Initialize display
+            updateTransform();
+            });
+        }
+
+        // Initialize the mermaid controls
+        document.addEventListener('DOMContentLoaded', initializeMermaidControls);
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Highlight active TOC section
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const tocLinks = document.querySelectorAll('#toc a[href^="#"]');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('text-cobalt', 'font-medium');
+                link.classList.add('text-muted');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.remove('text-muted');
+                    link.classList.add('text-cobalt', 'font-medium');
+                }
+            });
+        });
+    </script>
+  
+
+</body></html>
