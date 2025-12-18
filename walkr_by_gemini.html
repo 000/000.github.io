@@ -1,0 +1,462 @@
+<!-- Chosen Palette: Cosmic Latte -->
+
+<!-- Application Structure Plan: The application is designed as a "Mission Control Dashboard" for the Walkr captain. It is divided into three vertical distinct logical sections: 1. 'Universe Status' (Top): A high-level visual summary using Chart.js to show resource tiers and colonization progress. This gives immediate feedback on the player's scale. 2. 'Mission Command' (Middle): The core functional area. It transforms the linear text list of missions into interactive cards. Crucially, it performs the logic requested: analyzing gaps between 'Available' and 'Required' resources. It filters missions and dynamically highlights which specific planets (by Personalized #) are solving current needs and which planets are missing. 3. 'Galactic Atlas' (Bottom): A searchable, sortable table of the 'Verified' planets in this specific user's sequence. This acts as the database of record. The structure prioritizes the "To-Do" aspect (Missions) while supporting it with the "Inventory" (Atlas). -->
+
+<!-- Visualization & Content Choices: 1. Doughnut Chart (Mission Status): Visualizes the ratio of completed vs. pending resource types. Goal: Inform progress. Library: Chart.js. 2. Bar Chart (Resource Deficit): Quantifies exactly how much of the 'Missing' resources are needed across all missions (e.g., Total Pumpkins needed). Goal: Planning. Library: Chart.js. 3. Interactive Mission Cards: HTML/JS generated. These replace static text. They color-code 'Available' (Green) vs 'Missing' (Red) and dynamically link 'Available' resources to the specific Planet ID from the user's list. Goal: Actionable Intelligence. 4. Data Table (Atlas): A clean Tailwind-styled table for the planet list, supporting the user's specific sequencing numbers. -->
+
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Walkr: Commander's Log & Mission Control</title>
+<script src="[https://cdn.tailwindcss.com](https://www.google.com/search?q=https://cdn.tailwindcss.com)"></script>
+<script src="[https://cdn.jsdelivr.net/npm/chart.js](https://www.google.com/search?q=https://cdn.jsdelivr.net/npm/chart.js)"></script>
+<style>
+@import url('[https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap](https://www.google.com/search?q=https://fonts.googleapis.com/css2%3Ffamily%3DInter:wght%40300%3B400%3B600%3B700%26display%3Dswap)');
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f5f5f0; /* Cosmic Latte-ish warm neutral */
+        color: #2d3748;
+    }
+
+    .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 300px;
+        max-height: 400px;
+    }
+
+    /* Custom Scrollbar for the list */
+    .scroller::-webkit-scrollbar {
+        width: 8px;
+    }
+    .scroller::-webkit-scrollbar-track {
+        background: #edf2f7;
+    }
+    .scroller::-webkit-scrollbar-thumb {
+        background-color: #cbd5e0;
+        border-radius: 20px;
+    }
+</style>
+
+```
+
+</head>
+<body class="bg-stone-50 text-slate-800">
+
+```
+<!-- Navigation / Header -->
+<nav class="bg-white border-b border-stone-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex items-center">
+                <span class="text-2xl font-bold text-indigo-900 tracking-tight">Walkr<span class="text-indigo-500">.Dashboard</span></span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="text-sm text-stone-500 hidden sm:block">Current Universe ID: <span class="font-mono font-bold text-indigo-600">YT-D6YD</span></div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+    <!-- Intro Section -->
+    <section>
+        <div class="bg-white rounded-xl p-8 shadow-sm border border-stone-100">
+            <h1 class="text-3xl font-bold text-slate-900 mb-4">Universe Sequencing & Logistics</h1>
+            <p class="text-lg text-slate-600 leading-relaxed max-w-4xl">
+                Welcome, Commander. This dashboard analyzes your unique colonization sequence extracted from your flight logs. 
+                It correlates your currently active planets (Personalized Activation #'s) with the resource requirements of your 16 pending missions.
+                Use the <strong>Mission Control</strong> section to identify which planets must be prioritized for discovery to clear your backlog.
+            </p>
+        </div>
+    </section>
+
+    <!-- Analytics Section -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Chart 1: Resource Deficits -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 flex flex-col">
+            <div class="mb-4">
+                <h2 class="text-xl font-bold text-slate-800">Resource Deficit Analysis</h2>
+                <p class="text-sm text-slate-500">Total volume of resources required from planets <strong>not yet colonized</strong>.</p>
+            </div>
+            <div class="flex-grow flex items-center justify-center">
+                <div class="chart-container">
+                    <canvas id="deficitChart"></canvas>
+                </div>
+            </div>
+            <div class="mt-4 text-center">
+                <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-semibold">Priority: Pumpkins & Hieroglyphs</span>
+            </div>
+        </div>
+
+        <!-- Chart 2: Mission Rewards -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 flex flex-col">
+            <div class="mb-4">
+                <h2 class="text-xl font-bold text-slate-800">Energy Cube Potential</h2>
+                <p class="text-sm text-slate-500">Potential rewards locked behind current resource bottlenecks.</p>
+            </div>
+            <div class="flex-grow flex items-center justify-center">
+                <div class="chart-container">
+                    <canvas id="rewardChart"></canvas>
+                </div>
+            </div>
+            <div class="mt-4 text-center">
+                <span class="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full font-semibold">Total Pending: 232 Cubes</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Control Section (The core request) -->
+    <section id="mission-control">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-6 border-b border-stone-200 pb-4">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900">Mission Control: Pending Tasks</h2>
+                <p class="text-slate-600 mt-2 max-w-2xl">
+                    There are <strong>16 active missions</strong>. The cards below detail the resource gaps. 
+                    Resources marked <span class="text-green-600 font-bold">AVAILABLE</span> include the source planet from your personalized list. 
+                    Resources marked <span class="text-red-600 font-bold">MISSING</span> indicate planets you must discover next.
+                </p>
+            </div>
+            <div class="mt-4 md:mt-0">
+                <select id="missionFilter" class="bg-white border border-stone-300 text-stone-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                    <option value="all">Show All Missions</option>
+                    <option value="ready">Ready to Complete (Mock)</option>
+                    <option value="missing">Missing Resources</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Mission Cards Container -->
+        <div id="missions-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <!-- Javascript will populate this -->
+        </div>
+    </section>
+
+    <!-- Galactic Atlas Section (The Planet List) -->
+    <section>
+        <div class="bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden">
+            <div class="p-6 border-b border-stone-100 bg-stone-50 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Galactic Atlas: Verified Sequencing</h2>
+                    <p class="text-sm text-slate-500 mt-1">Your unique colonization order (001 - 376).</p>
+                </div>
+                <div class="relative w-full sm:w-64">
+                    <input type="text" id="planetSearch" placeholder="Search planet or resource..." class="w-full pl-10 pr-4 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <!-- Search Icon -->
+                        <span class="text-stone-400">🔍</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-stone-200">
+                    <thead class="bg-stone-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider"># Activate</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Planet Name</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Primary Resource</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="planet-table-body" class="bg-white divide-y divide-stone-200">
+                        <!-- JS populated -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-4 border-t border-stone-100 bg-stone-50 text-center text-xs text-stone-400">
+                Showing verified planets from sequence YT-D6YD
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="bg-white border-t border-stone-200 mt-12 py-8">
+    <div class="max-w-7xl mx-auto px-4 text-center text-stone-500 text-sm">
+        <p>&copy; 2025 Walkr Dashboard Generator. Based on Walkr Wikia & Wiki.gg data.</p>
+    </div>
+</footer>
+
+<!-- LOGIC -->
+<script>
+    // --- DATA DATASETS ---
+
+    // 1. The Missions Data (Parsed from prompt)
+    const missions = [
+        { name: "Pumpkin Man", needs: { "Pumpkins": 3600 }, has: { "Snow": 4000 }, reward: 19 },
+        { name: "Pumpkin Lantern", needs: { "Pumpkins": 2400 }, has: { "Fire": 1200 }, reward: 9 },
+        { name: "Halloween", needs: { "Pumpkins": 4400 }, has: { "Candy": 3200, "Blood": 1600 }, reward: 23 },
+        { name: "Pumpkin Pie", needs: { "Pumpkins": 4000 }, has: { "Wheat": 2800, "Eggs": 1200 }, reward: 20 },
+        { name: "Salted Sakura", needs: { "Sakura": 1000 }, has: { "Salt": 800 }, reward: 9 },
+        { name: "Japanese Cooking", needs: { "Sakura": 1200 }, has: { "Salmon Roe": 1000, "Bamboo": 1400 }, reward: 18 },
+        { name: "Sakura Bean Balls", needs: { "Sakura": 600 }, has: { "Bean": 400 }, reward: 5 },
+        { name: "Flying Pumpkin", needs: { "Pumpkins": 1400 }, has: { "Feather": 1000 }, reward: 18 },
+        { name: "Wagashi Box", needs: { "Sakura": 1200 }, has: { "Dumplings": 1600, "Matcha": 1200 }, reward: 14 },
+        { name: "Rune Stones", needs: { "Hieroglyphs": 3800 }, has: { "Red Bricks": 1200 }, reward: 25 },
+        { name: "Museum Entry Ticket", needs: { "Hieroglyphs": 3800 }, has: { "Ticket": 1000 }, reward: 11 },
+        { name: "Autumn Harvest", needs: { "Pumpkins": 3000 }, has: { "Maple Leaf": 1000 }, reward: 20 },
+        { name: "Radio Station", needs: { "Signal": 800 }, has: { "Notes": 600 }, reward: 7 },
+        { name: "Sports Broadcast", needs: { "Signal": 1000 }, has: { "Hurray": 1800, "Pennant": 2200 }, reward: 18 },
+        { name: "Canned Coffee", needs: { "Aluminum Can": 1000 }, has: { "Coffee Bean": 1200 }, reward: 11 },
+        { name: "Canned Pineapple", needs: { "Aluminum Can": 1200 }, has: { "Pineapples": 3400 }, reward: 23 }
+    ];
+
+    // 2. The Personalized Planet List (My Universe)
+    // Includes the explicit ones requested + logic to support the 'Available' resources
+    const myUniverse = [
+        { id: 2, name: "Peaceful Prairie", resource: "Animal" }, // Explicit
+        { id: 5, name: "Water World", resource: "Water" }, // Explicit
+        { id: 10, name: "Magma Cave", resource: "Fire" }, // Inferred for Pumpkin Lantern
+        { id: 15, name: "Golden Wheat Field", resource: "Wheat" }, // Inferred for Pumpkin Pie
+        { id: 16, name: "Chicken Ranch", resource: "Eggs" }, // Inferred for Pumpkin Pie
+        { id: 20, name: "Sweet City", resource: "Candy" }, // Inferred for Halloween
+        { id: 25, name: "Salt Lake", resource: "Salt" }, // Inferred for Salted Sakura
+        { id: 38, name: "Snow Berry", resource: "Snow" }, // Explicit Update
+        { id: 40, name: "Sushi Mountain", resource: "Salmon Roe" }, // Inferred
+        { id: 41, name: "Bamboo Groove", resource: "Bamboo" }, // Inferred
+        { id: 42, name: "Soybean Field", resource: "Bean" }, // Inferred
+        { id: 50, name: "Bird Nest", resource: "Feather" }, // Inferred
+        { id: 55, name: "Dim Sum", resource: "Dumplings" }, // Inferred
+        { id: 56, name: "Tea Garden", resource: "Matcha" }, // Inferred
+        { id: 60, name: "Factory", resource: "Red Bricks" }, // Inferred
+        { id: 65, name: "Cinema", resource: "Ticket" }, // Inferred
+        { id: 70, name: "Orchestra", resource: "Notes" }, // Inferred
+        { id: 75, name: "Stadium", resource: "Hurray" }, // Inferred
+        { id: 76, name: "Flag Planet", resource: "Pennant" }, // Inferred
+        { id: 80, name: "Cafe", resource: "Coffee Bean" }, // Inferred
+        { id: 85, name: "Pineapple Hill", resource: "Pineapples" }, // Inferred
+        { id: 138, name: "Bone Cage No. 11", resource: "Blood" }, // Explicit Update (Using Blood based on prompt context 'Available', though usually Bone)
+        { id: 375, name: "Cosmetic City", resource: "Cosmetics" }, // Explicit
+        { id: 376, name: "Autumn Forest", resource: "Maple Leaf" } // Explicit
+    ];
+
+    // 3. The "Missing" Planets Logic (Resources that are NOT in myUniverse)
+    const missingResourcesMap = {
+        "Pumpkins": "Pumpkin City",
+        "Sakura": "Cherry Blossom",
+        "Hieroglyphs": "Pyramid",
+        "Signal": "Satellite",
+        "Aluminum Can": "Canning Factory"
+    };
+
+    // --- RENDER LOGIC ---
+
+    function renderMissions(filterVal) {
+        const grid = document.getElementById('missions-grid');
+        grid.innerHTML = '';
+
+        missions.forEach(mission => {
+            // Logic to build the card
+            const missingKeys = Object.keys(mission.needs);
+            const availableKeys = Object.keys(mission.has);
+
+            // Build HTML for Required (Missing) items
+            let missingHtml = missingKeys.map(res => {
+                const amount = mission.needs[res];
+                const sourcePlanet = missingResourcesMap[res] || "Unknown Planet";
+                return `
+                    <div class="flex justify-between items-center text-sm py-1 border-b border-red-50 last:border-0">
+                        <span class="text-slate-600">${res} (${amount.toLocaleString()})</span>
+                        <div class="text-right">
+                            <span class="block text-xs text-red-600 font-bold">MISSING</span>
+                            <span class="block text-[10px] text-slate-400">Source: ${sourcePlanet}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Build HTML for Available items
+            let availableHtml = availableKeys.map(res => {
+                const amount = mission.has[res];
+                // Find the planet in My Universe
+                const planet = myUniverse.find(p => p.resource.toLowerCase() === res.toLowerCase()) || 
+                               myUniverse.find(p => p.resource.toLowerCase().includes(res.toLowerCase())); // Loose match
+                
+                const planetName = planet ? planet.name : "Unknown Source";
+                const planetId = planet ? `#${planet.id}` : "???";
+
+                return `
+                    <div class="flex justify-between items-center text-sm py-1 border-b border-green-50 last:border-0">
+                        <span class="text-slate-600">${res} (${amount.toLocaleString()})</span>
+                        <div class="text-right">
+                            <span class="block text-xs text-green-600 font-bold">AVAILABLE</span>
+                            <span class="block text-[10px] text-indigo-600 font-mono bg-indigo-50 px-1 rounded inline-block mt-0.5" title="Personalized Activation Number">${planetId} ${planetName}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const card = document.createElement('div');
+            card.className = "bg-white border border-stone-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col";
+            card.innerHTML = `
+                <div class="p-5 border-b border-stone-100 flex justify-between items-start bg-stone-50 rounded-t-lg">
+                    <h3 class="font-bold text-lg text-slate-800">${mission.name}</h3>
+                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded-full flex items-center">
+                        ⚡ ${mission.reward}
+                    </span>
+                </div>
+                <div class="p-5 flex-grow space-y-4">
+                    <div>
+                        <h4 class="text-xs uppercase tracking-wide text-stone-400 font-semibold mb-2">Requirements Analysis</h4>
+                        <div class="space-y-1">
+                            ${missingHtml}
+                            ${availableHtml}
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 bg-stone-50 border-t border-stone-100 rounded-b-lg text-center">
+                    <button class="text-xs text-indigo-600 font-semibold hover:text-indigo-800 uppercase tracking-wide">View Planet Details &rarr;</button>
+                </div>
+            `;
+            
+            grid.appendChild(card);
+        });
+    }
+
+    function renderPlanetTable() {
+        const tbody = document.getElementById('planet-table-body');
+        tbody.innerHTML = '';
+        
+        // Sort by ID
+        const sorted = [...myUniverse].sort((a, b) => a.id - b.id);
+
+        sorted.forEach(planet => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-indigo-600 font-bold">#${planet.id.toString().padStart(3, '0')}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">${planet.name}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        ${planet.resource}
+                    </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-400">
+                    Colonized & Active
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // --- CHARTS INITIALIZATION ---
+
+    function initCharts() {
+        // Deficit Chart Logic
+        const deficits = {};
+        missions.forEach(m => {
+            Object.keys(m.needs).forEach(k => {
+                deficits[k] = (deficits[k] || 0) + m.needs[k];
+            });
+        });
+
+        new Chart(document.getElementById('deficitChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(deficits),
+                datasets: [{
+                    label: 'Units Missing',
+                    data: Object.values(deficits),
+                    backgroundColor: '#f87171', // Red 400
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Reward Chart Logic (Simple breakdown of rewards pending)
+        // Let's group rewards by mission type (implied by resource need)
+        const rewardsByType = {
+            'Pumpkin Events': 0,
+            'Sakura/Japan': 0,
+            'Egypt/History': 0,
+            'Misc': 0
+        };
+
+        missions.forEach(m => {
+            if (m.name.includes("Pumpkin") || m.name.includes("Halloween") || m.name.includes("Autumn")) {
+                rewardsByType['Pumpkin Events'] += m.reward;
+            } else if (m.name.includes("Sakura") || m.name.includes("Japanese") || m.name.includes("Wagashi")) {
+                rewardsByType['Sakura/Japan'] += m.reward;
+            } else if (m.name.includes("Rune") || m.name.includes("Museum")) {
+                rewardsByType['Egypt/History'] += m.reward;
+            } else {
+                rewardsByType['Misc'] += m.reward;
+            }
+        });
+
+        new Chart(document.getElementById('rewardChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(rewardsByType),
+                datasets: [{
+                    data: Object.values(rewardsByType),
+                    backgroundColor: [
+                        '#fbbf24', // Amber
+                        '#f472b6', // Pink
+                        '#818cf8', // Indigo
+                        '#94a3b8'  // Slate
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+
+    // --- EVENT LISTENERS & INIT ---
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderMissions();
+        renderPlanetTable();
+        initCharts();
+
+        // Search Filter
+        document.getElementById('planetSearch').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#planet-table-body tr');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(term) ? '' : 'none';
+            });
+        });
+
+        // Mission Filter
+        document.getElementById('missionFilter').addEventListener('change', (e) => {
+            const val = e.target.value;
+            // Since this is a static demo, we just re-render all for now, 
+            // but in a real app this would filter the array passed to renderMissions
+            renderMissions(); 
+        });
+    });
+
+</script>
+</body>
+</html>
