@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="description" content="Interactive Walkr Galactic Mission Network - Visualizing critical resource bottlenecks and mission dependencies">
+    <title>Walkr Mission Control | Xenoeconomic Atlas</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        /* ============================================
+           DESIGN SYSTEM: CYBER-VOID
+           ============================================ */
+        :root {
+            /* Theme Colors */
+            --space-void: #050510;
+            --space-deep: #0a0a1f;
+            --panel-bg: rgba(15, 20, 35, 0.85);
+            --border: rgba(255, 255, 255, 0.1);
+            
+            /* Semantic Status Colors */
+            --blocked-core: #ff4757;    /* Red for Blocked Planets */
+            --blocked-glow: rgba(255, 71, 87, 0.4);
+            --mission-core: #ffa502;    /* Amber for Missions */
+            --mission-glow: rgba(255, 165, 2, 0.4);
+            --available-core: #2ed573;  /* Green for Resources */
+            --available-glow: rgba(46, 213, 115, 0.4);
+            
+            /* Text & Accents */
+            --text-main: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-accent: #38bdf8;     /* Cyber Blue */
+            
+            /* Layout & Effects */
+            --header-height: 70px;
+            --sidebar-width: 300px;
+            --panel-width: 400px;
+            --glass-blur: blur(16px);
+            --transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ============================================
+           RESET & BASE
+           ============================================ */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background-color: var(--space-void);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Canvas Background */
+        #starfield {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           HEADER (HUD Style)
+           ============================================ */
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            background: rgba(5, 5, 16, 0.85);
+            backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px var(--text-accent));
+        }
+
+        .brand-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #fff, var(--text-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .brand-text p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ============================================
+           MAIN LAYOUT
+           ============================================ */
+        .app-shell {
+            display: flex;
+            height: 100vh;
+            padding-top: var(--header-height);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sidebar (Navigation) */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(10, 10, 31, 0.6);
+            backdrop-filter: var(--glass-blur);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            gap: 1rem;
+            z-index: 10;
+        }
+
+        .sidebar-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .cluster-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cluster-btn:hover {
+            background: rgba(255, 71, 87, 0.1);
+            border-color: var(--blocked-core);
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.15);
+        }
+
+        .cluster-btn h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 0 0 0.25rem 0;
+            color: var(--text-main);
+        }
+
+        .cluster-btn p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--blocked-core);
+            margin: 0;
+        }
+
+        /* Visualization Area */
+        .viz-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            cursor: grab;
+        }
+        .viz-container:active { cursor: grabbing; }
+
+        /* Detail Panel (Slide-over) */
+        .detail-panel {
+            position: absolute;
+            top: 0; right: 0; bottom: 0;
+            width: var(--panel-width);
+            background: rgba(13, 16, 37, 0.95);
+            border-left: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            transform: translateX(100%);
+            transition: transform var(--transition);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+        }
+
+        .detail-panel.open { transform: translateX(0); }
+
+        .panel-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: none; border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .planet-img-large {
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--text-accent);
+            margin-bottom: 1rem;
+            background: #000;
+            object-fit: cover;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            line-height: 1.2;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .panel-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: rgba(255,255,255,0.05);
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .panel-content {
+            padding: 2rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .lore-box {
+            background: rgba(0,0,0,0.3);
+            border-left: 2px solid var(--text-secondary);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-card .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .stat-card .label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+
+        /* Mission List in Panel */
+        .mission-list { list-style: none; padding: 0; margin: 0; }
+        .mission-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+        .mission-reward {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--mission-core);
+            font-weight: 700;
+        }
+
+        /* ============================================
+           D3 ELEMENTS
+           ============================================ */
+        .node circle { stroke-width: 2px; transition: all 0.3s; }
+        .node:hover circle { stroke: #fff; stroke-width: 3px; }
+        
+        .link { fill: none; stroke-opacity: 0.4; }
+        .link.missing { stroke: var(--blocked-core); stroke-dasharray: 4,4; }
+        .link.supply { stroke: var(--available-core); opacity: 0.3; }
+
+        .particle { fill: #fff; pointer-events: none; }
+
+        /* Legend */
+        .legend {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: rgba(5,5,16,0.9);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+        }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.8rem; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            padding: 0.8rem;
+            background: rgba(5,5,16,0.95);
+            border: 1px solid var(--text-accent);
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.1s;
+            z-index: 1000;
+            max-width: 250px;
+            font-size: 0.85rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="starfield"></canvas>
+
+    <div class="app-shell">
+        <header>
+            <div class="brand">
+                <div class="brand-logo">🪐</div>
+                <div class="brand-text">
+                    <h1>WALKR</h1>
+                    <p>Galactic Mission Network</p>
+                </div>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-val" style="color: var(--blocked-core)">5</span>
+                    <span class="stat-label">Blockers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-val" style="color: var(--mission-core)">16</span>
+                    <span class="stat-label">Missions</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-val" style="color: var(--text-accent)">109</span>
+                    <span class="stat-label">Total Cubes</span>
+                </div>
+            </div>
+        </header>
+
+        <div style="display: flex; flex: 1; overflow: hidden;">
+            <aside class="sidebar">
+                <div class="sidebar-title">Critical Bottlenecks</div>
+                <div id="clusterList">
+                    </div>
+            </aside>
+
+            <main class="viz-container" id="viz">
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="dot" style="background: var(--blocked-core); box-shadow: 0 0 8px var(--blocked-core)"></div>
+                        <span>Blocked Planet</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="dot" style="background: var(--mission-core);"></div>
+                        <span>Pending Mission</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="dot" style="background: var(--available-core);"></div>
+                        <span>Resource Source</span>
+                    </div>
+                </div>
+                
+                <div style="position: absolute; bottom: 2rem; left: 2rem; display: flex; gap: 10px; z-index: 10;">
+                    <button onclick="resetZoom()" style="background:rgba(255,255,255,0.1); border:1px solid var(--border); color:white; padding:8px 12px; border-radius:4px; cursor:pointer; font-family: 'Inter', sans-serif;">Reset View</button>
+                </div>
+            </main>
+
+            <aside class="detail-panel" id="detailPanel">
+                <div id="panelContent">
+                    </div>
+            </aside>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // ==========================================
+        // 1. DATA CONFIGURATION
+        // ==========================================
+        
+        // Using Special:FilePath for stable, direct image access from Fandom
+        // This prevents image links from breaking due to hash changes.
+        const getWikiImg = (name) => {
+            const cleanName = name.replace(/'/g, '%27').replace(/ /g, '_');
+            return `https://walkr.fandom.com/wiki/Special:FilePath/${cleanName}.png`;
+        };
+
+        const DATA = {
+            // The 5 Critical Blockers (Central Hubs)
+            blockers: [
+                { id: "b1", name: "Witch's Den", official: 43, resource: "Pumpkins", need: 18800, priority: 1, lore: "Deep within cauldron-shaped valleys, starchy silicates form the foundation for the galaxy's most prized pumpkin cultivation.", img: getWikiImg("Witch's Den") },
+                { id: "b2", name: "Sakura Temple", official: 95, resource: "Sakura", need: 4000, priority: 2, lore: "Ancient cherry blossom trees bloom eternally here. The petals contain rare compounds essential for traditional confectionery.", img: getWikiImg("Sakura Temple") },
+                { id: "b3", name: "Crocodile Riverside", official: 157, resource: "Hieroglyphs", need: 7600, priority: 3, lore: "Sandstone cliffs along the great river are inscribed with ancient symbols holding archaeological keys to the cosmos.", img: getWikiImg("Crocodile Riverside") },
+                { id: "b4", name: "Hyperdimension Network", official: 195, resource: "Signal", need: 1800, priority: 4, lore: "A nexus of quantum entanglement arrays. The signal waves generated here enable instantaneous communication across dimensions.", img: getWikiImg("Hyperdimension Network") },
+                { id: "b5", name: "Self-Service Rest Stop", official: 196, resource: "Aluminum Can", need: 2200, priority: 5, lore: "An industrial marvel where infinite recyclability is perfected. Supplies packaging materials to countless food worlds.", img: getWikiImg("Self-Service Rest Stop") }
+            ],
+            // Pending Missions
+            missions: [
+                // Witch's Den Cluster
+                { id: "m1", name: "Pumpkin Man", target: "b1", cubes: 10 },
+                { id: "m2", name: "Pumpkin Lantern", target: "b1", cubes: 8 },
+                { id: "m3", name: "Halloween", target: "b1", cubes: 25 }, 
+                { id: "m4", name: "Pumpkin Pie", target: "b1", cubes: 12 },
+                { id: "m5", name: "Flying Pumpkin", target: "b1", cubes: 15 },
+                { id: "m6", name: "Autumn Harvest", target: "b1", cubes: 18 },
+                // Sakura Cluster
+                { id: "m7", name: "Salted Sakura", target: "b2", cubes: 6 },
+                { id: "m8", name: "Japanese Cooking", target: "b2", cubes: 8 },
+                { id: "m9", name: "Sakura Bean Balls", target: "b2", cubes: 5 },
+                { id: "m10", name: "Wagashi Box", target: "b2", cubes: 10 },
+                // Crocodile Cluster
+                { id: "m11", name: "Rune Stones", target: "b3", cubes: 25 },
+                { id: "m12", name: "Museum Ticket", target: "b3", cubes: 12 },
+                // Hyperdimension Cluster
+                { id: "m13", name: "Radio Station", target: "b4", cubes: 8 },
+                { id: "m14", name: "Sports Broadcast", target: "b4", cubes: 10 },
+                // Rest Stop Cluster
+                { id: "m15", name: "Canned Coffee", target: "b5", cubes: 6 },
+                { id: "m16", name: "Canned Pineapple", target: "b5", cubes: 8 }
+            ],
+            // Available Resource Planets (Mapped to supply chains)
+            resources: [
+                // Witch's Den Sources
+                { name: "Snow World", pa: 11, provides: "Snow", to: "m1" },
+                { name: "Heart of Flames", pa: 40, provides: "Fire", to: "m2" },
+                { name: "Sugar Rush", pa: 66, provides: "Candy", to: "m3" },
+                { name: "Zombie Cortex", pa: 300, provides: "Brains", to: "m3" },
+                { name: "Sunset Savanna", pa: 116, provides: "Wheat", to: "m4" },
+                { name: "Eagle's Nest", pa: 41, provides: "Feather", to: "m5" },
+                { name: "Angel Ruins", pa: 17, provides: "Halo", to: "m5" },
+                { name: "Autumn Forest", pa: 376, provides: "Leaves", to: "m6" },
+                // Sakura Sources
+                { name: "Waving Ocean", pa: 28, provides: "Salt", to: "m7" },
+                { name: "Sushi Mountain", pa: 108, provides: "Rice", to: "m8" },
+                { name: "Black & White", pa: 114, provides: "Sesame", to: "m8" },
+                { name: "Dessert Saturn", pa: 27, provides: "Cream", to: "m9" },
+                { name: "Snow Berry", pa: 38, provides: "Hami Melon", to: "m9" }, // Specific Request
+                { name: "Juicy Peach", pa: 327, provides: "Peach", to: "m10" },
+                { name: "Matcha Valley", pa: 188, provides: "Matcha", to: "m10" },
+                // Crocodile Sources
+                { name: "Red Bricks Co", pa: 225, provides: "Brick", to: "m11" },
+                { name: "Bone Cage No. 11", pa: 138, provides: "Bones", to: "m11" }, // Specific Request
+                { name: "Crown Circus", pa: 308, provides: "Crowns", to: "m12" },
+                // Hyperdimension Sources
+                { name: "Cello Valley", pa: 175, provides: "Music", to: "m13" },
+                { name: "Infinite Racing", pa: 77, provides: "Speed", to: "m14" },
+                { name: "Race Track Party", pa: 215, provides: "Excitement", to: "m14" },
+                // Rest Stop Sources
+                { name: "Somnia Basin", pa: 7, provides: "Dreams", to: "m15" },
+                { name: "Pineapple Hill", pa: 150, provides: "Pineapple", to: "m16" }
+            ]
+        };
+
+        // Flatten data for D3
+        let nodes = [];
+        let links = [];
+
+        // 1. Add Blockers
+        DATA.blockers.forEach(b => {
+            nodes.push({ ...b, group: 'hub', r: 45 });
+        });
+
+        // 2. Add Missions
+        DATA.missions.forEach(m => {
+            nodes.push({ ...m, group: 'mission', r: 15 + (m.cubes * 0.6) }); // Size by Reward
+            links.push({ source: m.id, target: m.target, type: 'missing' });
+        });
+
+        // 3. Add Resources
+        DATA.resources.forEach((r, i) => {
+            const id = `r${i}`;
+            nodes.push({ ...r, id: id, group: 'resource', r: 10 });
+            links.push({ source: id, target: r.to, type: 'supply' });
+        });
+
+        // ============================================
+        // 2. STARFIELD BACKGROUND
+        // ============================================
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+
+        function initStars() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            stars = Array(250).fill().map(() => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 1.5,
+                speed: Math.random() * 0.3
+            }));
+        }
+
+        function animateStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#fff';
+            stars.forEach(s => {
+                s.y -= s.speed;
+                if (s.y < 0) s.y = canvas.height;
+                ctx.globalAlpha = Math.random() * 0.5 + 0.3;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(animateStars);
+        }
+
+        window.addEventListener('resize', initStars);
+        initStars();
+        animateStars();
+
+        // ============================================
+        // 3. D3 VISUALIZATION
+        // ============================================
+        const vizContainer = document.getElementById('viz');
+        const width = vizContainer.clientWidth;
+        const height = vizContainer.clientHeight;
+
+        const svg = d3.select("#viz").append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", [0, 0, width, height]);
+
+        const g = svg.append("g");
+
+        // Zoom
+        const zoom = d3.zoom()
+            .scaleExtent([0.1, 4])
+            .on('zoom', (e) => g.attr('transform', e.transform));
+        svg.call(zoom);
+
+        // Defs (Images & Gradients)
+        const defs = svg.append('defs');
+        
+        // Image Patterns
+        nodes.filter(d => d.group === 'hub').forEach(d => {
+            defs.append('pattern')
+                .attr('id', `img-${d.id}`)
+                .attr('height', 1).attr("width", 1)
+                .attr('patternContentUnits', 'objectBoundingBox')
+                .append('image')
+                .attr('height', 1).attr("width", 1)
+                .attr('preserveAspectRatio', 'none')
+                .attr('xlink:href', d.img)
+                // Fallback image on error
+                .attr('onerror', "this.href='https://walkr.wiki.gg/images/3/3c/Planet_Icon_Unknown.png'");
+        });
+
+        // Gradients
+        const mkGrad = (id, c1, c2) => {
+            const grad = defs.append('radialGradient').attr('id', id);
+            grad.append('stop').attr('offset', '0%').attr('stop-color', c1);
+            grad.append('stop').attr('offset', '100%').attr('stop-color', c2);
+        };
+        mkGrad('gradMission', '#fbbf24', '#b45309');
+        mkGrad('gradAvail', '#34d399', '#059669');
+
+        // Simulation
+        const simulation = d3.forceSimulation(nodes)
+            .force('link', d3.forceLink(links).id(d => d.id).distance(d => d.type === 'missing' ? 140 : 70))
+            .force('charge', d3.forceManyBody().strength(-400))
+            .force('collide', d3.forceCollide(d => d.r + 10).iterations(2))
+            .force('center', d3.forceCenter(width / 2, height / 2));
+
+        // Links
+        const link = g.append('g')
+            .selectAll('line')
+            .data(links)
+            .join('line')
+            .attr('class', d => `link ${d.type}`)
+            .attr('stroke', d => d.type === 'missing' ? 'var(--blocked-core)' : 'var(--available-core)')
+            .attr('stroke-width', d => d.type === 'missing' ? 2 : 1)
+            .attr('stroke-dasharray', d => d.type === 'missing' ? '5,5' : '0');
+
+        // Nodes
+        const node = g.append('g')
+            .selectAll('g')
+            .data(nodes)
+            .join('g')
+            .call(d3.drag()
+                .on('start', dragstarted)
+                .on('drag', dragged)
+                .on('end', dragended));
+
+        // Node Circles
+        node.append('circle')
+            .attr('r', d => d.r)
+            .attr('fill', d => {
+                if (d.group === 'hub') return `url(#img-${d.id})`;
+                if (d.group === 'mission') return 'url(#gradMission)';
+                return 'url(#gradAvail)';
+            })
+            .attr('stroke', d => {
+                if (d.group === 'hub') return 'var(--blocked-core)';
+                if (d.group === 'mission') return '#fff';
+                return 'none';
+            })
+            .attr('stroke-width', d => d.group === 'hub' ? 3 : 1)
+            .style('cursor', 'pointer');
+
+        // Node Labels (Text for non-image nodes)
+        node.filter(d => d.group !== 'hub').append('text')
+            .attr('dy', '0.35em')
+            .attr('text-anchor', 'middle')
+            .text(d => d.group === 'mission' ? '⚡' : '')
+            .style('font-size', d => d.r + 'px')
+            .style('pointer-events', 'none')
+            .style('fill', '#000');
+
+        // Hover Tooltip
+        const tooltip = d3.select('#tooltip');
+        node.on('mouseenter', (e, d) => {
+            tooltip.style('opacity', 1)
+                .style('left', (e.pageX + 15) + 'px')
+                .style('top', (e.pageY + 15) + 'px')
+                .html(`
+                    <div style="font-family:'Orbitron'; font-weight:700; color:#fff; margin-bottom:4px">${d.name}</div>
+                    <div style="font-family:'JetBrains Mono'; font-size:0.75rem; color:var(--text-accent)">${d.group.toUpperCase()}</div>
+                    ${d.cubes ? `<div style="color:var(--mission-core); font-weight:bold">+${d.cubes} Cubes</div>` : ''}
+                    ${d.pa ? `<div>PA #${d.pa}</div>` : ''}
+                `);
+        })
+        .on('mouseleave', () => tooltip.style('opacity', 0));
+
+        // Click Panel Interaction
+        const panel = document.getElementById('detailPanel');
+        const panelContent = document.getElementById('panelContent');
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'close-btn';
+        closeBtn.innerHTML = '×';
+        closeBtn.onclick = () => {
+            panel.classList.remove('open');
+            // Reset highlights
+            link.style('opacity', 1);
+            node.style('opacity', 1);
+        };
+
+        node.on('click', (e, d) => {
+            e.stopPropagation();
+            
+            // Highlight Connections
+            const connected = new Set([d.id]);
+            links.forEach(l => {
+                if (l.source.id === d.id) connected.add(l.target.id);
+                if (l.target.id === d.id) connected.add(l.source.id);
+            });
+            
+            node.style('opacity', n => connected.has(n.id) ? 1 : 0.2);
+            link.style('opacity', l => (connected.has(l.source.id) && connected.has(l.target.id)) ? 1 : 0.1);
+
+            // Open Panel
+            panel.classList.add('open');
+            
+            // Build Panel Content
+            let contentHtml = '';
+            
+            if (d.group === 'hub') {
+                const depMissions = DATA.missions.filter(m => m.target === d.id);
+                const totalCubes = depMissions.reduce((acc, m) => acc + m.cubes, 0);
+
+                contentHtml = `
+                    <div class="panel-header">
+                        <img src="${d.img}" class="planet-img-large" style="border-color: var(--blocked-core)">
+                        <div class="panel-title">${d.name}</div>
+                        <div class="panel-meta">OFFICIAL #${d.official}</div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="lore-box">"${d.lore}"</div>
+                        
+                        <div class="stat-grid">
+                            <div class="stat-card">
+                                <div class="value" style="color: var(--blocked-core)">${d.need.toLocaleString()}</div>
+                                <div class="label">MISSING RESOURCE</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="value" style="color: var(--mission-core)">${totalCubes}</div>
+                                <div class="label">CUBES LOCKED</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="value">#${d.priority}</div>
+                                <div class="label">PRIORITY</div>
+                            </div>
+                        </div>
+
+                        <h4 style="font-family:'Orbitron'; color:var(--text-secondary); margin-bottom:1rem;">BLOCKED MISSIONS</h4>
+                        <ul class="mission-list">
+                            ${depMissions.map(m => `
+                                <li class="mission-item">
+                                    <span>${m.name}</span>
+                                    <span class="mission-reward">+${m.cubes}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+            } else {
+                contentHtml = `
+                    <div class="panel-header">
+                         <div style="width:80px; height:80px; border-radius:50%; background:var(--${d.group === 'mission' ? 'mission' : 'available'}-core); display:flex; align-items:center; justify-content:center; font-size:2rem; margin-bottom:1rem; box-shadow: 0 0 25px var(--${d.group === 'mission' ? 'mission' : 'available'}-glow)">
+                            ${d.group === 'mission' ? '⚡' : '🌿'}
+                         </div>
+                        <div class="panel-title">${d.name}</div>
+                        <div class="panel-meta">${d.group === 'mission' ? 'MISSION' : `PA #${d.pa}`}</div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="stat-card">
+                            <div class="value" style="color: var(--text-accent)">${d.group === 'mission' ? d.cubes + ' Cubes' : d.provides}</div>
+                            <div class="label">${d.group === 'mission' ? 'REWARD' : 'PROVIDES'}</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            panelContent.innerHTML = '';
+            panelContent.appendChild(closeBtn);
+            panelContent.insertAdjacentHTML('beforeend', contentHtml);
+        });
+
+        // Close panel on background click
+        svg.on('click', () => {
+            panel.classList.remove('open');
+            node.style('opacity', 1);
+            link.style('opacity', 1);
+        });
+
+        // Simulation Tick
+        simulation.on('tick', () => {
+            link
+                .attr('x1', d => d.source.x)
+                .attr('y1', d => d.source.y)
+                .attr('x2', d => d.target.x)
+                .attr('y2', d => d.target.y);
+            node
+                .attr('transform', d => `translate(${d.x},${d.y})`);
+        });
+
+        // Particle System (Supply Flow)
+        const particleContainer = g.append('g');
+        function animateParticles() {
+            const supplyLinks = links.filter(l => l.type === 'supply');
+            // Spawn particle
+            if(Math.random() > 0.7) {
+                const l = supplyLinks[Math.floor(Math.random() * supplyLinks.length)];
+                particleContainer.append('circle')
+                    .attr('class', 'particle')
+                    .attr('r', 2)
+                    .attr('fill', '#fff')
+                    .attr('cx', l.source.x)
+                    .attr('cy', l.source.y)
+                    .transition().duration(1000).ease(d3.easeLinear)
+                    .attr('cx', l.target.x)
+                    .attr('cy', l.target.y)
+                    .remove();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // Sidebar Population
+        const clusterList = document.getElementById('clusterList');
+        DATA.blockers.forEach(b => {
+            const div = document.createElement('div');
+            div.className = 'cluster-btn';
+            div.innerHTML = `
+                <h3>${b.name}</h3>
+                <p>Needs ${b.resource}</p>
+            `;
+            div.onclick = () => {
+                const n = nodes.find(n => n.id === b.id);
+                if(n) {
+                    svg.transition().duration(750).call(
+                        zoom.transform,
+                        d3.zoomIdentity.translate(width/2, height/2).scale(1.5).translate(-n.x, -n.y)
+                    );
+                    // Trigger click logic manually to open panel
+                    node.filter(d => d.id === b.id).dispatch('click');
+                }
+            };
+            clusterList.appendChild(div);
+        });
+
+        // Drag Functions
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x; d.fy = d.y;
+        }
+        function dragged(event, d) {
+            d.fx = event.x; d.fy = event.y;
+        }
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null; d.fy = null;
+        }
+
+        // Controls
+        function resetZoom() {
+            svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+            panel.classList.remove('open');
+            node.style('opacity', 1);
+            link.style('opacity', 1);
+        }
+    </script>
+</body>
+</html>
