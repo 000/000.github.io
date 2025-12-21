@@ -1,0 +1,1302 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Modern Web Design: Creating Cohesive Visual Experiences with Interactive Elements</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #f8f8f8;
+            --accent: #d97706;
+            --text: #2d2d2d;
+            --neutral: #6b7280;
+            --earth-warm: #8b7355;
+            --earth-cool: #6b7280;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: linear-gradient(135deg, #fafafa 0%, #f4f4f4 100%);
+            overflow-x: hidden;
+        }
+        
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, 
+                rgba(26, 26, 26, 0.95) 0%, 
+                rgba(45, 45, 45, 0.9) 50%, 
+                rgba(217, 119, 6, 0.1) 100%);
+        }
+        
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: rgba(248, 248, 248, 0.98);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid #e5e7eb;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+        
+        .section-anchor {
+            scroll-margin-top: 2rem;
+        }
+        
+        .citation {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .citation:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+        
+        .interactive-element {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .interactive-element:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin: 2rem 0;
+        }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        
+        .hero-text-overlay {
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(45, 45, 45, 0.8) 100%);
+            backdrop-filter: blur(5px);
+        }
+        
+        .mermaid-container {
+            display: flex;
+            justify-content: center;
+            min-height: 300px;
+            max-height: 800px;
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mermaid-container .mermaid {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            cursor: grab;
+            transition: transform 0.3s ease;
+            transform-origin: center center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .mermaid-container .mermaid svg {
+            max-width: 100%;
+            height: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .mermaid-container .mermaid:active {
+            cursor: grabbing;
+        }
+
+        .mermaid-container.zoomed .mermaid {
+            height: 100%;
+            width: 100%;
+            cursor: grab;
+        }
+
+        .mermaid-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mermaid-control-btn {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #374151;
+            font-size: 14px;
+            min-width: 36px;
+            height: 36px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mermaid-control-btn:hover {
+            background: #f8fafc;
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        .mermaid-control-btn:active {
+            transform: scale(0.95);
+        }
+
+    @media (max-width: 1024px) {
+        .toc-fixed {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .toc-fixed.open {
+            transform: translateX(0);
+        }
+        
+        .main-content {
+            margin-left: 0;
+        }
+        
+        .bento-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .mermaid-control-btn:not(.reset-zoom) {
+            display: none;
+        }
+        .mermaid-controls {
+            top: auto;
+            bottom: 15px;
+            right: 15px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-text-overlay {
+            padding: 1.5rem;
+        }
+
+        .hero-text-overlay h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero-text-overlay p {
+            font-size: 1rem;
+        }
+
+        section {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+
+        .prose-lg p {
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .hero-text-overlay {
+            padding: 1rem;
+        }
+
+        .hero-text-overlay h1 {
+            font-size: 2rem;
+        }
+
+        .hero-text-overlay p {
+            font-size: 0.9rem;
+        }
+    }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body>
+    <!-- Table of Contents -->
+    <nav class="toc-fixed">
+      <div class="mb-8">
+        <h3 class="text-lg font-bold text-gray-900 mb-4 serif">Contents</h3>
+        <ul class="space-y-2 text-sm">
+          <li>
+            <a href="#introduction" class="citation block py-1">Introduction</a>
+          </li>
+          <li>
+            <a href="#design-philosophy" class="citation block py-1">Design Philosophy</a>
+          </li>
+          <li>
+            <a href="#interactive-elements" class="citation block py-1">Interactive Elements</a>
+          </li>
+          <li>
+            <a href="#d3js-visualization" class="citation block py-1">D3.js Visualization</a>
+          </li>
+          <li>
+            <a href="#layout-structure" class="citation block py-1">Layout &amp; Structure</a>
+          </li>
+          <li>
+            <a href="#case-studies" class="citation block py-1">Case Studies</a>
+          </li>
+          <li>
+            <a href="#implementation" class="citation block py-1">Implementation</a>
+          </li>
+          <li>
+            <a href="#conclusion" class="citation block py-1">Conclusion</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Mobile TOC Toggle -->
+    <button class="lg:hidden fixed top-4 left-4 z-50 bg-white p-2 rounded-lg shadow-lg" onclick="toggleTOC()">
+      <i class="fas fa-bars text-gray-700"></i>
+    </button>
+
+    <!-- Overlay for mobile TOC -->
+    <div id="toc-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden" onclick="closeTOC()"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section id="introduction" class="section-anchor relative min-h-[70vh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+          <img src="https://kimi-web-img.moonshot.cn/img/images.unsplash.com/66b7d24730c147c0e20245c019ece892aadf44a2" alt="Abstract geometric patterns and flowing forms in dark minimalist style" class="w-full h-full object-cover opacity-60" size="wallpaper" aspect="wide" query="abstract geometric patterns dark minimalist" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+        </div>
+        <div class="hero-gradient absolute inset-0"></div>
+
+        <div class="relative z-10 max-w-6xl mx-auto px-8">
+          <div class="bento-grid items-center">
+            <div class="hero-text-overlay p-8 rounded-2xl">
+              <h1 class="text-5xl lg:text-7xl font-bold text-white mb-6 serif italic leading-tight">
+                Creating Modern Websites with <span class="text-amber-400">Mixed Visual Styles</span>
+              </h1>
+              <p class="text-xl text-gray-200 mb-8 leading-relaxed">
+                A comprehensive guide to integrating diverse design aesthetics with interactive elements for compelling web experiences
+              </p>
+              <div class="flex items-center space-x-4 text-gray-300">
+                <span class="flex items-center"><i class="fas fa-calendar mr-2"></i>December 2025</span>
+                <span class="flex items-center"><i class="fas fa-clock mr-2"></i>15 min read</span>
+              </div>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20">
+              <h3 class="text-2xl font-bold text-white mb-4 serif">Key Insights</h3>
+              <ul class="space-y-3 text-gray-200">
+                <li class="flex items-start"><i class="fas fa-palette text-amber-400 mr-3 mt-1"></i>Balance contrast and harmony through unified design systems</li>
+                <li class="flex items-start"><i class="fas fa-chart-line text-amber-400 mr-3 mt-1"></i>Leverage D3.js for dynamic data visualization</li>
+                <li class="flex items-start"><i class="fas fa-mobile-alt text-amber-400 mr-3 mt-1"></i>Implement responsive layouts with modern CSS techniques</li>
+                <li class="flex items-start"><i class="fas fa-magic text-amber-400 mr-3 mt-1"></i>Create engaging micro-interactions and animations</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Design Philosophy Section -->
+      <section id="design-philosophy" class="section-anchor py-16 px-8 max-w-6xl mx-auto">
+        <h2 class="text-4xl font-bold mb-8 serif text-center">Design Philosophy &amp; Visual Style Integration</h2>
+
+        <div class="prose prose-lg max-w-none mb-12">
+          <p class="text-xl leading-relaxed text-gray-700 mb-6">
+            Establishing a cohesive visual language is paramount when mixing different styles on a website. This involves creating a consistent design system that governs the use of colors, typography, spacing, and interactive elements across all pages.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-12">
+          <div class="interactive-element bg-white p-8 rounded-2xl shadow-lg">
+            <h3 class="text-2xl font-bold mb-4 serif">Core Principles</h3>
+            <ul class="space-y-3">
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-600 mr-3 mt-1"></i>
+                <span>Establish a unified visual language across all elements</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-600 mr-3 mt-1"></i>
+                <span>Balance contrast and harmony through intentional design</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-600 mr-3 mt-1"></i>
+                <span>Use consistent color palettes and typography systems</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-600 mr-3 mt-1"></i>
+                <span>Ensure interactive elements feel cohesive and purposeful</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="interactive-element bg-gradient-to-br from-amber-50 to-orange-50 p-8 rounded-2xl border border-amber-200">
+            <h3 class="text-2xl font-bold mb-4 serif">2025 Design Trends</h3>
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-amber-600 rounded-full mr-3"></div>
+                <span class="font-medium">Ultra-Minimalism with High Impact</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-gray-800 rounded-full mr-3"></div>
+                <span class="font-medium">Neobrutalism Aesthetic</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-blue-600 rounded-full mr-3"></div>
+                <span class="font-medium">Modular Design Systems</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-purple-600 rounded-full mr-3"></div>
+                <span class="font-medium">Cinematic Scrolling Effects</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mermaid Diagram -->
+        <div class="mermaid-container">
+          <div class="mermaid-controls">
+            <button class="mermaid-control-btn zoom-in" title="放大">
+              <i class="fas fa-search-plus"></i>
+            </button>
+            <button class="mermaid-control-btn zoom-out" title="缩小">
+              <i class="fas fa-search-minus"></i>
+            </button>
+            <button class="mermaid-control-btn reset-zoom" title="重置">
+              <i class="fas fa-expand-arrows-alt"></i>
+            </button>
+            <button class="mermaid-control-btn fullscreen" title="全屏查看">
+              <i class="fas fa-expand"></i>
+            </button>
+          </div>
+          <div class="mermaid" id="design-process-diagram">
+            graph TD
+            A[&#34;Brand Values&#34;] --&gt; B[&#34;Visual Language&#34;]
+            B --&gt; C[&#34;Color Palette&#34;]
+            B --&gt; D[&#34;Typography System&#34;]
+            B --&gt; E[&#34;Interactive Elements&#34;]
+            C --&gt; F[&#34;Cohesive Design&#34;]
+            D --&gt; F
+            E --&gt; F
+            F --&gt; G[&#34;User Experience&#34;]
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Elements Section -->
+      <section id="interactive-elements" class="section-anchor py-16 px-8 max-w-6xl mx-auto bg-gray-50">
+        <h2 class="text-4xl font-bold mb-8 serif text-center">Interactive Elements &amp; Animation</h2>
+
+        <div class="grid lg:grid-cols-3 gap-8 mb-12">
+          <div class="interactive-element bg-white p-6 rounded-xl shadow-lg">
+            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+              <i class="fas fa-chart-bar text-blue-600 text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3 serif">Data Visualization</h3>
+            <p class="text-gray-600 mb-4">Interactive infographics and D3.js visualizations that allow users to explore complex data sets.</p>
+            <div class="text-sm text-blue-600 font-medium">Tools: D3.js, Chart.js, Lottie</div>
+          </div>
+
+          <div class="interactive-element bg-white p-6 rounded-xl shadow-lg">
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+              <i class="fas fa-hand-pointer text-green-600 text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3 serif">Micro-interactions</h3>
+            <p class="text-gray-600 mb-4">Dynamic cursor effects and hover states that provide immediate feedback and enhance usability.</p>
+            <div class="text-sm text-green-600 font-medium">Tools: GSAP, Framer Motion</div>
+          </div>
+
+          <div class="interactive-element bg-white p-6 rounded-xl shadow-lg">
+            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+              <i class="fas fa-microphone text-purple-600 text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3 serif">Voice UI</h3>
+            <p class="text-gray-600 mb-4">Emerging voice interfaces that enable hands-free interaction and improved accessibility.</p>
+            <div class="text-sm text-purple-600 font-medium">Tools: Web Speech API, Wit.ai</div>
+          </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-lg">
+          <h3 class="text-2xl font-bold mb-6 serif">Animation Best Practices</h3>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="text-lg font-semibold mb-4">Performance Optimization</h4>
+              <ul class="space-y-2 text-gray-700">
+                <li>• Use CSS animations for simple effects</li>
+                <li>• Minimize animated elements simultaneously</li>
+                <li>• Leverage hardware acceleration</li>
+                <li>• Test with Google Lighthouse</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="text-lg font-semibold mb-4">User Experience</h4>
+              <ul class="space-y-2 text-gray-700">
+                <li>• Animate with purpose, not decoration</li>
+                <li>• Provide clear visual feedback</li>
+                <li>• Maintain consistent timing</li>
+                <li>• Consider accessibility implications</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- D3.js Visualization Section -->
+      <section id="d3js-visualization" class="section-anchor py-16 px-8 max-w-6xl mx-auto">
+        <h2 class="text-4xl font-bold mb-8 serif text-center">D3.js for Data Visualization</h2>
+
+        <div class="prose prose-lg max-w-none mb-12">
+          <p class="text-xl leading-relaxed text-gray-700 mb-6">
+            D3.js, which stands for Data-Driven Documents, is a powerful JavaScript library for creating dynamic and interactive data visualizations. It provides unprecedented control over the final output by binding data to the DOM and manipulating elements based on that data.
+          </p>
+        </div>
+
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-2xl border border-blue-200 mb-12">
+          <h3 class="text-2xl font-bold mb-6 serif">Key Features &amp; Benefits</h3>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="text-lg font-semibold mb-3">Technical Advantages</h4>
+              <ul class="space-y-2">
+                <li>• Built on web standards (HTML, CSS, SVG)</li>
+                <li>• Scalable and resolution-independent</li>
+                <li>• Complete control over visual output</li>
+                <li>• Extensive customization capabilities</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="text-lg font-semibold mb-3">Integration Benefits</h4>
+              <ul class="space-y-2">
+                <li>• Seamless website integration</li>
+                <li>• Responsive design support</li>
+                <li>• React and Three.js compatibility</li>
+                <li>• Enterprise-level scalability</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+          <div class="interactive-element bg-white p-6 rounded-xl shadow-lg">
+            <h4 class="text-xl font-bold mb-4 serif">Implementation Process</h4>
+            <ol class="space-y-3">
+              <li class="flex items-start">
+                <span class="w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center text-sm mr-3 mt-0.5">1</span>
+                <span>Create responsive containers with SVG viewBox</span>
+              </li>
+              <li class="flex items-start">
+                <span class="w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center text-sm mr-3 mt-0.5">2</span>
+                <span>Structure HTML/CSS for D3.js integration</span>
+              </li>
+              <li class="flex items-start">
+                <span class="w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center text-sm mr-3 mt-0.5">3</span>
+                <span>Bind data using D3.js data-join pattern</span>
+              </li>
+              <li class="flex items-start">
+                <span class="w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center text-sm mr-3 mt-0.5">4</span>
+                <span>Apply styles and handle user interactions</span>
+              </li>
+            </ol>
+          </div>
+
+          <div class="interactive-element bg-gray-900 text-white p-6 rounded-xl">
+            <h4 class="text-xl font-bold mb-4 serif text-white">Code Example</h4>
+            <pre class="text-sm text-gray-300 overflow-x-auto"><code>// Responsive D3.js visualization
+const svg = d3.select(&#34;#chart&#34;)
+    .append(&#34;svg&#34;)
+    .attr(&#34;viewBox&#34;, `0 0 ${width} ${height}`)
+    .attr(&#34;preserveAspectRatio&#34;, &#34;xMidYMid meet&#34;);
+
+// Data binding with enter-update-exit
+const circles = svg.selectAll(&#34;circle&#34;)
+    .data(dataset);
+
+circles.enter()
+    .append(&#34;circle&#34;)
+    .attr(&#34;cx&#34;, d =&gt; xScale(d.x))
+    .attr(&#34;cy&#34;, d =&gt; yScale(d.y))
+    .attr(&#34;r&#34;, 0)
+    .transition()
+    .duration(1000)
+    .attr(&#34;r&#34;, d =&gt; radiusScale(d.value));</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Layout and Structure Section -->
+      <section id="layout-structure" class="section-anchor py-16 px-8 max-w-6xl mx-auto bg-gray-50">
+        <h2 class="text-4xl font-bold mb-8 serif text-center">Layout &amp; Structure</h2>
+
+        <div class="mb-12">
+          <img src="https://kimi-web-img.moonshot.cn/img/miro.medium.com/46134ccc7defc79bdf72eb7a10ddcb31743540c9.gif" alt="CSS Grid and Flexbox responsive web layout" class="w-full h-64 object-cover rounded-2xl shadow-lg mb-6" size="medium" aspect="wide" style="photo" query="CSS Grid Flexbox responsive layout" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-8 mb-12">
+          <div class="interactive-element bg-white p-6 rounded-xl shadow-lg">
+            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+              <i class="fas fa-th text-red-600 text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3 serif">CSS Grid</h3>
+            <p class="text-gray-600 mb-4">Two-dimensional layout system for complex page structures with precise row and column control.</p>
+            <div class="text-sm bg-red-50 px-3 py-1 rounded-full text-red-700 inline-block">2D Layouts</div>
+          </div>
+
+          <div class="interactive-element bg-white p-6 rounded-xl shadow-lg">
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+              <i class="fas fa-arrows-alt-h text-green-600 text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3 serif">Flexbox</h3>
+            <p class="text-gray-600 mb-4">One-dimensional layout for component-level alignment and flexible space distribution.</p>
+            <div class="text-sm bg-green-50 px-3 py-1 rounded-full text-green-700 inline-block">1D Components</div>
+          </div>
+
+          <div class="interactive-element bg-white p-6 rounded-xl shadow-lg">
+            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+              <i class="fas fa-layer-group text-purple-600 text-xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3 serif">Positioning</h3>
+            <p class="text-gray-600 mb-4">Advanced positioning for overlays, modals, and parallax effects with absolute precision.</p>
+            <div class="text-sm bg-purple-50 px-3 py-1 rounded-full text-purple-700 inline-block">Layering</div>
+          </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-lg">
+          <h3 class="text-2xl font-bold mb-6 serif">Responsive Design Strategy</h3>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="text-lg font-semibold mb-4 flex items-center">
+                <i class="fas fa-mobile-alt mr-2 text-blue-600"></i>
+                Mobile-First Approach
+              </h4>
+              <ul class="space-y-2 text-gray-700">
+                <li>• Design for smallest screens first</li>
+                <li>• Progressive enhancement for larger screens</li>
+                <li>• Touch-friendly interactions</li>
+                <li>• Optimized performance for mobile networks</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="text-lg font-semibold mb-4 flex items-center">
+                <i class="fas fa-desktop mr-2 text-green-600"></i>
+                Cross-Device Testing
+              </h4>
+              <ul class="space-y-2 text-gray-700">
+                <li>• Physical device testing</li>
+                <li>• Browser developer tools</li>
+                <li>• Google Lighthouse audits</li>
+                <li>• Network speed simulations</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Case Studies Section -->
+      <section id="case-studies" class="section-anchor py-16 px-8 max-w-6xl mx-auto">
+        <h2 class="text-4xl font-bold mb-8 serif text-center">Case Studies &amp; Inspirational Examples</h2>
+
+        <div class="grid lg:grid-cols-2 gap-8 mb-12">
+          <div class="interactive-element bg-white p-8 rounded-2xl shadow-lg">
+            <h3 class="text-2xl font-bold mb-4 serif">Rebellion Agency</h3>
+            <img src="https://fixedplaceholder" alt="Rebellion agency website with bold orange and black design" class="w-full h-48 object-cover rounded-lg mb-4" size="medium" aspect="wide" color="orange" style="photo" query="Rebellion agency website design" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+            <p class="text-gray-600 mb-4">Masterful use of minimalism, bold typography, and subtle interactive elements. The striking orange background with black and white elements creates high-contrast aesthetic with massive, statement-making headlines.</p>
+            <div class="flex items-center text-sm text-amber-600">
+              <i class="fas fa-star mr-2"></i>
+              <span>Key Feature: Subtle animated corner brackets</span>
+            </div>
+          </div>
+
+          <div class="interactive-element bg-white p-8 rounded-2xl shadow-lg">
+            <h3 class="text-2xl font-bold mb-4 serif">Stripe Press</h3>
+            <img src="https://fixedplaceholder" alt="Stripe Press website showcasing books with scrolling animations" class="w-full h-48 object-cover rounded-lg mb-4" size="medium" aspect="wide" query="Stripe Press website design" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+            <p class="text-gray-600 mb-4">Immersive narrative experience with scroll-triggered animations. Floating, rotating book covers respond to scrolling, creating tactile browsing experience with mixed media integration.</p>
+            <div class="flex items-center text-sm text-blue-600">
+              <i class="fas fa-scroll mr-2"></i>
+              <span>Key Feature: Cinematic scrolling effects</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-8 rounded-2xl border border-purple-200">
+          <h3 class="text-2xl font-bold mb-6 serif">Notable D3.js Showcase Projects</h3>
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-xl">
+              <h4 class="text-lg font-semibold mb-3">The Pudding</h4>
+              <p class="text-gray-600 text-sm mb-3">Interactive data stories and visual essays combining data visualization with compelling narratives.</p>
+              <span class="text-xs bg-purple-100 px-2 py-1 rounded-full text-purple-700">Digital Publication</span>
+            </div>
+            <div class="bg-white p-6 rounded-xl">
+              <h4 class="text-lg font-semibold mb-3">Gapminder</h4>
+              <p class="text-gray-600 text-sm mb-3">Global trend visualizations showing country changes over time in health, wealth, and education.</p>
+              <span class="text-xs bg-green-100 px-2 py-1 rounded-full text-green-700">Non-profit</span>
+            </div>
+            <div class="bg-white p-6 rounded-xl">
+              <h4 class="text-lg font-semibold mb-3">NY Times</h4>
+              <p class="text-gray-600 text-sm mb-3">Embedded data journalism with interactive charts and maps within articles.</p>
+              <span class="text-xs bg-blue-100 px-2 py-1 rounded-full text-blue-700">Media</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Implementation Section -->
+      <section id="implementation" class="section-anchor py-16 px-8 max-w-6xl mx-auto bg-gray-50">
+        <h2 class="text-4xl font-bold mb-8 serif text-center">Implementation Strategy</h2>
+
+        <div class="mermaid-container">
+          <div class="mermaid-controls">
+            <button class="mermaid-control-btn zoom-in" title="放大">
+              <i class="fas fa-search-plus"></i>
+            </button>
+            <button class="mermaid-control-btn zoom-out" title="缩小">
+              <i class="fas fa-search-minus"></i>
+            </button>
+            <button class="mermaid-control-btn reset-zoom" title="重置">
+              <i class="fas fa-expand-arrows-alt"></i>
+            </button>
+            <button class="mermaid-control-btn fullscreen" title="全屏查看">
+              <i class="fas fa-expand"></i>
+            </button>
+          </div>
+          <div class="mermaid" id="implementation-diagram">
+            graph LR
+            A[&#34;Planning&#34;] --&gt; B[&#34;Design System&#34;]
+            B --&gt; C[&#34;Development&#34;]
+            C --&gt; D[&#34;Testing&#34;]
+            D --&gt; E[&#34;Deployment&#34;]
+
+            B --&gt; B1[&#34;Color Palette&#34;]
+            B --&gt; B2[&#34;Typography&#34;]
+            B --&gt; B3[&#34;Components&#34;]
+
+            C --&gt; C1[&#34;HTML Structure&#34;]
+            C --&gt; C2[&#34;CSS Layout&#34;]
+            C --&gt; C3[&#34;JavaScript&#34;]
+            C --&gt; C4[&#34;D3.js&#34;]
+
+            D --&gt; D1[&#34;Performance&#34;]
+            D --&gt; D2[&#34;Responsive&#34;]
+            D --&gt; D3[&#34;Accessibility&#34;]
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+          <div class="interactive-element bg-white p-8 rounded-2xl shadow-lg">
+            <h3 class="text-2xl font-bold mb-6 serif">Development Stack</h3>
+            <div class="space-y-4">
+              <div class="flex items-center p-4 bg-blue-50 rounded-lg">
+                <i class="fab fa-html5 text-blue-600 text-xl mr-4"></i>
+                <div>
+                  <div class="font-semibold">HTML5</div>
+                  <div class="text-sm text-gray-600">Semantic structure and accessibility</div>
+                </div>
+              </div>
+              <div class="flex items-center p-4 bg-green-50 rounded-lg">
+                <i class="fab fa-css3-alt text-green-600 text-xl mr-4"></i>
+                <div>
+                  <div class="font-semibold">CSS3</div>
+                  <div class="text-sm text-gray-600">Grid, Flexbox, and animations</div>
+                </div>
+              </div>
+              <div class="flex items-center p-4 bg-yellow-50 rounded-lg">
+                <i class="fab fa-js text-yellow-600 text-xl mr-4"></i>
+                <div>
+                  <div class="font-semibold">JavaScript</div>
+                  <div class="text-sm text-gray-600">ES6+ and modern frameworks</div>
+                </div>
+              </div>
+              <div class="flex items-center p-4 bg-purple-50 rounded-lg">
+                <i class="fas fa-chart-bar text-purple-600 text-xl mr-4"></i>
+                <div>
+                  <div class="font-semibold">D3.js</div>
+                  <div class="text-sm text-gray-600">Data visualization and interaction</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="interactive-element bg-white p-8 rounded-2xl shadow-lg">
+            <h3 class="text-2xl font-bold mb-6 serif">Performance Considerations</h3>
+            <div class="space-y-6">
+              <div>
+                <h4 class="text-lg font-semibold mb-2">Animation Optimization</h4>
+                <ul class="space-y-1 text-gray-600 text-sm">
+                  <li>• Use CSS transforms for hardware acceleration</li>
+                  <li>• Implement requestAnimationFrame for smooth animations</li>
+                  <li>• Minimize DOM manipulation during animations</li>
+                  <li>• Use Intersection Observer for scroll-triggered effects</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="text-lg font-semibold mb-2">Asset Optimization</h4>
+                <ul class="space-y-1 text-gray-600 text-sm">
+                  <li>• Compress images and use modern formats (WebP)</li>
+                  <li>• Implement lazy loading for below-fold content</li>
+                  <li>• Bundle and minify JavaScript/CSS files</li>
+                  <li>• Use CDN for static assets</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Conclusion Section -->
+      <section id="conclusion" class="section-anchor py-16 px-8 max-w-6xl mx-auto">
+        <h2 class="text-4xl font-bold mb-8 serif text-center">Conclusion</h2>
+
+        <div class="prose prose-lg max-w-none mb-12">
+          <p class="text-xl leading-relaxed text-gray-700 mb-6">
+            Creating a modern website with mixed visual styles and interactive elements requires a delicate balance between creativity and consistency. The key lies in establishing a strong visual language that can accommodate diverse aesthetic choices while maintaining a cohesive user experience.
+          </p>
+
+          <p class="text-lg leading-relaxed text-gray-600 mb-8">
+            By integrating cutting-edge technologies like D3.js for data visualization, implementing responsive layouts with modern CSS techniques, and carefully orchestrating animations and micro-interactions, designers can create websites that are both visually stunning and highly functional.
+          </p>
+        </div>
+
+        <div class="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-8 rounded-2xl mb-8">
+          <h3 class="text-2xl font-bold mb-6 serif text-white">Key Takeaways</h3>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="text-lg font-semibold mb-3 text-amber-400">Design Principles</h4>
+              <ul class="space-y-2 text-gray-300">
+                <li>• Establish a cohesive visual language</li>
+                <li>• Balance contrast with harmony</li>
+                <li>• Maintain consistent color and typography</li>
+                <li>• Ensure accessibility across all devices</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="text-lg font-semibold mb-3 text-amber-400">Technical Implementation</h4>
+              <ul class="space-y-2 text-gray-300">
+                <li>• Leverage modern CSS layout techniques</li>
+                <li>• Integrate D3.js for data visualization</li>
+                <li>• Optimize performance for animations</li>
+                <li>• Test thoroughly across platforms</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <blockquote class="text-2xl italic text-gray-700 serif mb-6">
+            &#34;The best designs are those that seamlessly blend form and function, creating experiences that are both beautiful and purposeful.&#34;
+          </blockquote>
+          <p class="text-gray-600">
+            As we move forward in 2025, the integration of diverse visual styles with interactive elements will continue to define the cutting edge of web design, creating more engaging and memorable digital experiences.
+          </p>
+        </div>
+      </section>
+
+      <!-- Footer with Citations -->
+      <footer class="bg-gray-900 text-white py-12 px-8">
+        <div class="max-w-6xl mx-auto">
+          <h3 class="text-xl font-bold mb-6 serif">References</h3>
+          <div class="grid md:grid-cols-2 gap-6 text-sm">
+            <div>
+              <h4 class="font-semibold mb-3 text-amber-400">Design Resources</h4>
+              <ul class="space-y-2 text-gray-300">
+                <li>
+                  <a href="https://www.thewebfactory.us/blogs/30-best-web-design-trends-styles-for-2025/" class="citation">Web Design Trends for 2025</a>
+                </li>
+                <li>
+                  <a href="https://www.eleken.co/blog-posts/best-website-design-examples" class="citation">Best Website Design Examples</a>
+                </li>
+                <li>
+                  <a href="https://www.sliderrevolution.com/design/websites-with-interactive-animations/" class="citation">Interactive Animation Examples</a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold mb-3 text-amber-400">Technical Documentation</h4>
+              <ul class="space-y-2 text-gray-300">
+                <li>
+                  <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style" class="citation">MDN Web API Documentation</a>
+                </li>
+                <li>
+                  <a href="https://www.usdsi.org/data-science-insights/how-to-build-interactive-data-visualization-with-d3-js" class="citation">D3.js Visualization Guide</a>
+                </li>
+                <li>
+                  <a href="https://www.linkedin.com/pulse/how-incorporate-interactive-graphics-web-design-projects-baker-augde" class="citation">Interactive Graphics in Web Design</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#ffffff',
+                primaryTextColor: '#1a1a1a',
+                primaryBorderColor: '#d97706',
+                lineColor: '#6b7280',
+                secondaryColor: '#f8f8f8',
+                tertiaryColor: '#fef3c7',
+                background: '#ffffff',
+                mainBkg: '#ffffff',
+                secondBkg: '#f8f8f8',
+                tertiaryBkg: '#fef3c7',
+                clusterBkg: '#f8f8f8',
+                clusterBorder: '#d97706',
+                defaultLinkColor: '#6b7280',
+                titleColor: '#1a1a1a',
+                edgeLabelBackground: '#ffffff',
+                nodeTextColor: '#1a1a1a',
+                actorBorder: '#d97706',
+                actorBkg: '#ffffff',
+                actorTextColor: '#1a1a1a',
+                actorLineColor: '#6b7280',
+                signalColor: '#1a1a1a',
+                signalTextColor: '#1a1a1a',
+                labelBoxBkgColor: '#ffffff',
+                labelBoxBorderColor: '#d97706',
+                labelTextColor: '#1a1a1a',
+                loopTextColor: '#1a1a1a',
+                noteBorderColor: '#d97706',
+                noteBkgColor: '#fef3c7',
+                noteTextColor: '#1a1a1a',
+                activationBorderColor: '#d97706',
+                activationBkgColor: '#ffffff',
+                sectionBkgColor: '#f8f8f8',
+                altSectionBkgColor: '#fef3c7',
+                gridColor: '#e5e7eb',
+                c0: '#ffffff',
+                c1: '#f8f8f8',
+                c2: '#fef3c7',
+                c3: '#fed7aa',
+                c4: '#fdba74',
+                c5: '#fb923c',
+                c6: '#f97316',
+                c7: '#ea580c',
+                pie1: '#fed7aa',
+                pie2: '#fdba74',
+                pie3: '#fb923c',
+                pie4: '#f97316',
+                pie5: '#ea580c',
+                pie6: '#d97706',
+                pie7: '#c2410c',
+                pieTitleTextSize: '25px',
+                pieTitleTextColor: '#1a1a1a',
+                pieSectionTextSize: '17px',
+                pieSectionTextColor: '#1a1a1a',
+                pieOuterStrokeWidth: '2px',
+                pieOuterStrokeColor: '#d97706',
+                pieInnerStrokeColor: '#d97706',
+                pieInnerStrokeWidth: '2px',
+                pieOpacity: '0.7'
+            },
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20
+            },
+            sequence: {
+                useMaxWidth: false,
+                wrap: true,
+                width: 150,
+                height: 65,
+                boxMargin: 10,
+                boxTextMargin: 5,
+                noteMargin: 10,
+                messageMargin: 35
+            },
+            gantt: {
+                useMaxWidth: false,
+                leftPadding: 75,
+                gridLineStartPadding: 35,
+                fontSize: 11,
+                sectionFontSize: 24,
+                numberSectionStyles: 4
+            },
+            journey: {
+                useMaxWidth: false
+            },
+            timeline: {
+                useMaxWidth: false
+            },
+            pie: {
+                useMaxWidth: false
+            },
+            requirement: {
+                useMaxWidth: false
+            },
+            gitgraph: {
+                useMaxWidth: false
+            },
+            c4: {
+                useMaxWidth: false
+            },
+            sankey: {
+                useMaxWidth: false
+            },
+            xyChart: {
+                useMaxWidth: false
+            },
+            quadrantChart: {
+                useMaxWidth: false
+            },
+            class: {
+                useMaxWidth: false
+            },
+            state: {
+                useMaxWidth: false
+            },
+            er: {
+                useMaxWidth: false
+            }
+        });
+
+        // Initialize Mermaid Controls for zoom and pan
+        function initializeMermaidControls() {
+            const containers = document.querySelectorAll('.mermaid-container');
+
+            containers.forEach(container => {
+            const mermaidElement = container.querySelector('.mermaid');
+            let scale = 1;
+            let isDragging = false;
+            let startX, startY, translateX = 0, translateY = 0;
+
+            // 触摸相关状态
+            let isTouch = false;
+            let touchStartTime = 0;
+            let initialDistance = 0;
+            let initialScale = 1;
+            let isPinching = false;
+
+            // Zoom controls
+            const zoomInBtn = container.querySelector('.zoom-in');
+            const zoomOutBtn = container.querySelector('.zoom-out');
+            const resetBtn = container.querySelector('.reset-zoom');
+            const fullscreenBtn = container.querySelector('.fullscreen');
+
+            function updateTransform() {
+                mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+                if (scale > 1) {
+                container.classList.add('zoomed');
+                } else {
+                container.classList.remove('zoomed');
+                }
+
+                mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+            }
+
+            if (zoomInBtn) {
+                zoomInBtn.addEventListener('click', () => {
+                scale = Math.min(scale * 1.25, 4);
+                updateTransform();
+                });
+            }
+
+            if (zoomOutBtn) {
+                zoomOutBtn.addEventListener('click', () => {
+                scale = Math.max(scale / 1.25, 0.3);
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+                updateTransform();
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+                });
+            }
+
+            if (fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', () => {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
+                }
+                });
+            }
+
+            // Mouse Events
+            mermaidElement.addEventListener('mousedown', (e) => {
+                if (isTouch) return; // 如果是触摸设备，忽略鼠标事件
+
+                isDragging = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+                mermaidElement.style.cursor = 'grabbing';
+                updateTransform();
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging && !isTouch) {
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseleave', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            // 获取两点之间的距离
+            function getTouchDistance(touch1, touch2) {
+                return Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+                );
+            }
+
+            // Touch Events - 触摸事件处理
+            mermaidElement.addEventListener('touchstart', (e) => {
+                isTouch = true;
+                touchStartTime = Date.now();
+
+                if (e.touches.length === 1) {
+                // 单指拖动
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+
+                } else if (e.touches.length === 2) {
+                // 双指缩放
+                isPinching = true;
+                isDragging = false;
+
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialDistance = getTouchDistance(touch1, touch2);
+                initialScale = scale;
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isDragging && !isPinching) {
+                // 单指拖动
+                const touch = e.touches[0];
+                translateX = touch.clientX - startX;
+                translateY = touch.clientY - startY;
+                updateTransform();
+
+                } else if (e.touches.length === 2 && isPinching) {
+                // 双指缩放
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = getTouchDistance(touch1, touch2);
+
+                if (initialDistance > 0) {
+                    const newScale = Math.min(Math.max(
+                    initialScale * (currentDistance / initialDistance),
+                    0.3
+                    ), 4);
+                    scale = newScale;
+                    updateTransform();
+                }
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchend', (e) => {
+                // 重置状态
+                if (e.touches.length === 0) {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                // 延迟重置isTouch，避免鼠标事件立即触发
+                setTimeout(() => {
+                    isTouch = false;
+                }, 100);
+                } else if (e.touches.length === 1 && isPinching) {
+                // 从双指变为单指，切换为拖动模式
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+                }
+
+                updateTransform();
+            });
+
+            mermaidElement.addEventListener('touchcancel', (e) => {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                setTimeout(() => {
+                isTouch = false;
+                }, 100);
+
+                updateTransform();
+            });
+
+            // Enhanced wheel zoom with better center point handling
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+                // Adjust translation to zoom towards center
+                if (newScale !== scale) {
+                const scaleDiff = newScale / scale;
+                translateX = translateX * scaleDiff;
+                translateY = translateY * scaleDiff;
+                scale = newScale;
+
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+
+                updateTransform();
+                }
+            });
+
+            // Initialize display
+            updateTransform();
+            });
+        }
+
+        // Call the function to initialize controls
+        initializeMermaidControls();
+
+        // Mobile TOC Toggle
+        function toggleTOC() {
+            const toc = document.querySelector('.toc-fixed');
+            const overlay = document.getElementById('toc-overlay');
+            toc.classList.toggle('open');
+            overlay.classList.toggle('hidden');
+        }
+
+        function closeTOC() {
+            const toc = document.querySelector('.toc-fixed');
+            const overlay = document.getElementById('toc-overlay');
+            toc.classList.remove('open');
+            overlay.classList.add('hidden');
+        }
+
+        // Close TOC when switching to large screen
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 1024) {
+                closeTOC();
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll-based animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.interactive-element').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+  
+
+</body></html>
