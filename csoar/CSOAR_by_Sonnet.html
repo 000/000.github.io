@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C-SOAR Framework: Cognitive Security Operations & Automated Response</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --slate-deep: #0a0e1a;
+            --slate-mid: #1a1f2e;
+            --slate-light: #2a3142;
+            --neon-blue: #00e5ff;
+            --neon-cyan: #00ffff;
+            --signal-amber: #ffab00;
+            --signal-red: #ff1744;
+            --signal-green: #00e676;
+            --text-primary: #e0e6f0;
+            --text-secondary: #9ca3af;
+            --grid-color: rgba(0, 229, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--slate-deep);
+            color: var(--text-primary);
+            font-family: 'Space Mono', monospace;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Cyberpunk Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* Animated scan line effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            animation: scan 8s linear infinite;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.5;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 2rem;
+        }
+
+        .hero-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue), var(--signal-amber));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.3)); }
+            to { filter: drop-shadow(0 0 40px rgba(0, 229, 255, 0.6)); }
+        }
+
+        .hero-subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .hero-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--signal-amber);
+            padding: 1rem 2rem;
+            border: 1px solid var(--signal-amber);
+            border-radius: 4px;
+            background: rgba(255, 171, 0, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: var(--neon-blue);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* Section Styling */
+        .section {
+            min-height: 100vh;
+            padding: 8rem 0;
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-number {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            color: var(--neon-blue);
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .section-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Visualization Containers */
+        .viz-container {
+            background: var(--slate-mid);
+            border: 1px solid var(--slate-light);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .viz-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-cyan), var(--neon-blue));
+            opacity: 0.5;
+        }
+
+        #triadic-graph, #algorithmic-race, #hardware-dashboard, #gantt-chart {
+            width: 100%;
+            height: 600px;
+            position: relative;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            background: rgba(0, 229, 255, 0.05);
+            border-left: 3px solid var(--neon-blue);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .info-box h4 {
+            color: var(--neon-blue);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .metric {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--slate-light);
+            border-radius: 4px;
+            margin: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .metric-value {
+            color: var(--signal-green);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .control-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        input[type="range"] {
+            width: 300px;
+            height: 4px;
+            background: var(--slate-light);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+            border: none;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            background: var(--slate-light);
+            border: 1px solid var(--neon-blue);
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+        }
+
+        button:hover {
+            background: var(--neon-blue);
+            color: var(--slate-deep);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+        }
+
+        button.active {
+            background: var(--neon-blue);
+            color: var(--slate-deep);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            padding: 1rem;
+            background: var(--slate-mid);
+            border: 1px solid var(--neon-blue);
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .tooltip h4 {
+            color: var(--neon-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--slate-mid);
+            border-top: 1px solid var(--slate-light);
+            padding: 4rem 0;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Syne', sans-serif;
+            color: var(--neon-blue);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p, .footer-section li {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li::before {
+            content: '→ ';
+            color: var(--neon-blue);
+        }
+
+        .viability-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: rgba(0, 230, 118, 0.1);
+            border: 1px solid var(--signal-green);
+            border-radius: 4px;
+            margin-top: 1rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(0, 230, 118, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(0, 230, 118, 0.6); }
+        }
+
+        .viability-badge::before {
+            content: '●';
+            color: var(--signal-green);
+            font-size: 1.5rem;
+        }
+
+        .math {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--signal-amber);
+            background: rgba(255, 171, 0, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 1rem;
+            }
+            
+            .section {
+                padding: 4rem 0;
+            }
+
+            #triadic-graph, #algorithmic-race, #hardware-dashboard, #gantt-chart {
+                height: 400px;
+            }
+
+            input[type="range"] {
+                width: 200px;
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 600px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--neon-blue);
+        }
+
+        .loading::after {
+            content: '█';
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-title">C-SOAR FRAMEWORK</div>
+            <div class="hero-subtitle">
+                Cognitive Security Operations & Automated Response<br>
+                Neuro-Symbolic Defense for Financial Critical Infrastructure
+            </div>
+            <div class="hero-meta">
+                D.Sc. Research Proposal | Capitol Technology University<br>
+                Cybersecurity & Information Assurance
+            </div>
+        </div>
+        <div class="scroll-indicator">↓ SCROLL TO EXPLORE ↓</div>
+    </section>
+
+    <!-- Section 1: Triadic Gap -->
+    <section class="section" id="section-1">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">01 — RESEARCH GAP</div>
+                <h2 class="section-title">The Neuro-Symbolic Triadic Gap</h2>
+                <p class="section-description">
+                    Current SOAR systems operate in isolation. No existing platform in Financial Critical Infrastructure, 
+                    Military Operations, or ICS/SCADA networks combines <strong>Symbolic Reasoning</strong> (Soar Cognitive Architecture), 
+                    <strong>Connectionist Learning</strong> (Vector Embeddings), and <strong>Formal Verification</strong> (Linear Temporal Logic).
+                </p>
+            </div>
+
+            <div class="info-box">
+                <h4>The Black Box Problem</h4>
+                <p>
+                    Generative AI models like GPT-4 and Claude lack mathematical guardrails for mission-critical decisions. 
+                    LTL acts as a formal constraint system, ensuring that autonomous responses never violate invariants like:
+                    <code class="math">□(AttackDetected → ◇Containment)</code>
+                </p>
+            </div>
+
+            <div class="viz-container">
+                <div id="triadic-graph"></div>
+            </div>
+
+            <div class="info-box">
+                <h4>What Makes C-SOAR Unique</h4>
+                <p>
+                    By fusing these three domains, C-SOAR creates a <strong>mathematically verifiable</strong> autonomous defense system 
+                    that learns from past incidents while maintaining formal correctness guarantees.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Algorithmic Race -->
+    <section class="section" id="section-2">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">02 — MATHEMATICAL CONTRIBUTION</div>
+                <h2 class="section-title">Multi-Billion-Fold Speedup</h2>
+                <p class="section-description">
+                    Traditional SOAR systems use <span class="math">O(n²)</span> pairwise playbook matching. 
+                    C-SOAR leverages HNSW (Hierarchical Navigable Small World) indexing for 
+                    <span class="math">O(log N)</span> similarity search, achieving up to 9 orders of magnitude improvement.
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; margin: 2rem 0;">
+                <div class="metric">
+                    <div class="metric-label">Traditional SOAR</div>
+                    <div class="metric-value" style="color: var(--signal-red);">47 min</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">C-SOAR Target</div>
+                    <div class="metric-value">< 5 min</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Complexity</div>
+                    <div class="metric-value" style="color: var(--signal-amber);">O(log N)</div>
+                </div>
+            </div>
+
+            <div class="viz-container">
+                <div class="controls">
+                    <div class="control-group">
+                        <label class="control-label">Dataset Size: <span id="dataset-size">1,000,000</span> incidents</label>
+                        <input type="range" id="size-slider" min="4" max="9" step="0.5" value="6">
+                    </div>
+                </div>
+                <div id="algorithmic-race"></div>
+                <div style="display: flex; gap: 2rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+                    <div class="metric">
+                        <div class="metric-label">Linear Search Time</div>
+                        <div class="metric-value" style="color: var(--signal-red);" id="linear-time">16.7 min</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">HNSW Search Time</div>
+                        <div class="metric-value" id="hnsw-time">30 ms</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Speedup Factor</div>
+                        <div class="metric-value" id="speedup">33,333×</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>Real-World Impact</h4>
+                <p>
+                    For Thailand's Student Loan Fund (กยศ.) managing <strong>7 million accounts</strong> and <strong>200+ billion baht</strong> in assets,
+                    reducing Mean Time To Respond (MTTR) from 47 minutes to under 5 minutes could prevent cascading financial system failures.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Hardware Dashboard -->
+    <section class="section" id="section-3">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">03 — HARDWARE FEASIBILITY</div>
+                <h2 class="section-title">Zero-Cloud Local Inference</h2>
+                <p class="section-description">
+                    The Mac Studio M3 Ultra with Unified Memory Architecture enables sovereign deployment of 70B parameter models 
+                    (DeepSeek R1 Distill) without external API dependencies—critical for financial institutions under strict data sovereignty regulations.
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; margin: 2rem 0;">
+                <div class="metric">
+                    <div class="metric-label">Unified Memory</div>
+                    <div class="metric-value">192-512 GB</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Memory Bandwidth</div>
+                    <div class="metric-value">800 GB/s</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Inference Speed</div>
+                    <div class="metric-value">16-19 tok/s</div>
+                </div>
+            </div>
+
+            <div class="viz-container">
+                <div class="controls">
+                    <div class="control-group">
+                        <label class="control-label">Quantization Mode</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="quant-btn active" data-quant="q4">Q4 (4-bit)</button>
+                            <button class="quant-btn" data-quant="q8">Q8 (8-bit)</button>
+                            <button class="quant-btn" data-quant="fp16">FP16 (Full)</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="hardware-dashboard"></div>
+                <div id="memory-status" style="text-align: center; margin-top: 1rem; font-family: 'JetBrains Mono', monospace;">
+                    <span style="color: var(--signal-green);">✓ VIABLE</span> — Memory budget within limits
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>Memory Budget Breakdown (Q4 Mode)</h4>
+                <p>
+                    <strong>LLM Weights:</strong> ~40GB (70B × 4 bits/param ÷ 8)<br>
+                    <strong>KV Cache:</strong> ~20GB (for extended context windows)<br>
+                    <strong>Vector Database:</strong> ~12GB (Qdrant with 1M embeddings @ ℝ¹⁰²⁴)<br>
+                    <strong>Orchestration:</strong> ~16GB (Airflow, system processes)<br>
+                    <strong>Total:</strong> ~88GB of 192GB available (46% utilization)
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Gantt Chart -->
+    <section class="section" id="section-4">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">04 — TIMELINE FEASIBILITY</div>
+                <h2 class="section-title">6-Semester Critical Path</h2>
+                <p class="section-description">
+                    A structured 3-year roadmap through Capitol Technology University's D.Sc. in Cybersecurity program, 
+                    with measurable milestones and statistical validation targets.
+                </p>
+            </div>
+
+            <div class="viz-container">
+                <div id="gantt-chart"></div>
+            </div>
+
+            <div class="info-box">
+                <h4>Success Metrics</h4>
+                <p>
+                    <strong>Statistical Significance:</strong> <span class="math">p < 0.01</span> via paired t-test comparing C-SOAR vs traditional SOAR<br>
+                    <strong>Effect Size:</strong> Cohen's <span class="math">d ≥ 0.5</span> (medium-to-large practical impact)<br>
+                    <strong>Ground Truth:</strong> 1,000+ validated attack scenarios from Burp Suite Professional, Exploit Pack, SAGA
+                </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem;">
+                <div class="metric">
+                    <div class="metric-label">Year 1</div>
+                    <div class="metric-value" style="color: var(--neon-cyan);">Theory</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Year 2</div>
+                    <div class="metric-value" style="color: var(--neon-cyan);">Implementation</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Year 3</div>
+                    <div class="metric-value" style="color: var(--signal-green);">Validation</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Research Context</h3>
+                    <p>
+                        This research addresses critical gaps in autonomous cybersecurity for Financial Critical Infrastructure (FCI). 
+                        Thailand's Student Loan Fund manages 7M+ accounts with 200B+ baht in assets, requiring sub-5-minute incident response.
+                    </p>
+                    <div class="viability-badge">
+                        Technically Feasible: Mac Studio M3 Ultra Confirmed for Local 70B Inference
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Key References</h3>
+                    <ul>
+                        <li>Malkov & Yashunin (2018): HNSW Algorithm</li>
+                        <li>Laird (2012): Soar Cognitive Architecture</li>
+                        <li>Pnueli (1977): Linear Temporal Logic</li>
+                        <li>DeepSeek AI (2025): R1 Distill 70B</li>
+                        <li>Qdrant (2024): Vector Similarity Search</li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Academic Program</h3>
+                    <p>
+                        <strong>Institution:</strong> Capitol Technology University<br>
+                        <strong>Degree:</strong> Doctor of Science (D.Sc.)<br>
+                        <strong>Specialization:</strong> Cybersecurity & Information Assurance<br>
+                        <strong>Duration:</strong> 3 Years (6 Semesters)<br>
+                        <strong>Research Focus:</strong> Neuro-Symbolic AI for Critical Infrastructure Defense
+                    </p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--slate-light); color: var(--text-secondary); font-size: 0.85rem;">
+                © 2025 C-SOAR Framework Research | Capitol Technology University<br>
+                Visualization MVP — Comprehensive Research Proposal
+            </div>
+        </div>
+    </footer>
+
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // Scroll-triggered animations
+        const sections = document.querySelectorAll('.section');
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+
+        // Tooltip helper
+        const tooltip = d3.select('#tooltip');
+        function showTooltip(content, event) {
+            tooltip.html(content)
+                .style('left', (event.pageX + 15) + 'px')
+                .style('top', (event.pageY - 28) + 'px')
+                .style('opacity', 1);
+        }
+        function hideTooltip() {
+            tooltip.style('opacity', 0);
+        }
+
+        // ============================================
+        // SECTION 1: Triadic Gap Network Graph
+        // ============================================
+        function createTriadicGraph() {
+            const container = d3.select('#triadic-graph');
+            const width = container.node().getBoundingClientRect().width;
+            const height = 600;
+
+            const svg = container.append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            const nodes = [
+                { id: 'soar', name: 'Soar Cognitive\nArchitecture', type: 'symbolic', x: width * 0.25, y: height * 0.5 },
+                { id: 'vector', name: 'Vector\nEmbeddings', type: 'connectionist', x: width * 0.75, y: height * 0.3 },
+                { id: 'ltl', name: 'Linear Temporal\nLogic', type: 'formal', x: width * 0.75, y: height * 0.7 },
+                { id: 'csoar', name: 'C-SOAR\nFRAMEWORK', type: 'fusion', x: width * 0.5, y: height * 0.5, r: 60 }
+            ];
+
+            const links = [
+                { source: 'soar', target: 'csoar' },
+                { source: 'vector', target: 'csoar' },
+                { source: 'ltl', target: 'csoar' }
+            ];
+
+            const colorMap = {
+                symbolic: '#00e5ff',
+                connectionist: '#00ffff',
+                formal: '#ffab00',
+                fusion: '#00e676'
+            };
+
+            // Initial positions (spread out)
+            nodes.forEach(node => {
+                if (node.id !== 'csoar') {
+                    const angle = node.id === 'soar' ? Math.PI : (node.id === 'vector' ? -Math.PI / 4 : Math.PI / 4);
+                    node.x = width / 2 + Math.cos(angle) * 250;
+                    node.y = height / 2 + Math.sin(angle) * 250;
+                }
+            });
+
+            // Central fusion node starts invisible
+            const centralNode = nodes.find(n => n.id === 'csoar');
+            centralNode.opacity = 0;
+
+            // Draw links
+            const link = svg.append('g')
+                .selectAll('line')
+                .data(links)
+                .join('line')
+                .attr('stroke', d => colorMap[nodes.find(n => n.id === d.source).type])
+                .attr('stroke-width', 2)
+                .attr('stroke-opacity', 0.3)
+                .attr('stroke-dasharray', '5,5');
+
+            // Draw nodes
+            const node = svg.append('g')
+                .selectAll('g')
+                .data(nodes)
+                .join('g')
+                .attr('transform', d => `translate(${d.x},${d.y})`);
+
+            node.append('circle')
+                .attr('r', d => d.r || 50)
+                .attr('fill', d => colorMap[d.type])
+                .attr('fill-opacity', d => d.id === 'csoar' ? 0 : 0.2)
+                .attr('stroke', d => colorMap[d.type])
+                .attr('stroke-width', 2);
+
+            node.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '0.35em')
+                .attr('fill', d => colorMap[d.type])
+                .style('font-size', d => d.id === 'csoar' ? '16px' : '14px')
+                .style('font-weight', d => d.id === 'csoar' ? '700' : '400')
+                .style('opacity', d => d.id === 'csoar' ? 0 : 1)
+                .selectAll('tspan')
+                .data(d => d.name.split('\n'))
+                .join('tspan')
+                .attr('x', 0)
+                .attr('dy', (d, i) => i === 0 ? '-0.6em' : '1.2em')
+                .text(d => d);
+
+            // Add hover tooltips
+            node.on('mouseover', function(event, d) {
+                const details = {
+                    soar: '<h4>Soar Cognitive Architecture</h4>Symbolic reasoning with production rules and working memory',
+                    vector: '<h4>Vector Embeddings</h4>Dimensionality: ℝ¹⁰²⁴ or ℝ¹⁵³⁶<br>Enables semantic similarity search',
+                    ltl: '<h4>Linear Temporal Logic</h4>Sample: □(AttackDetected → ◇Containment)<br>Formal verification constraints',
+                    csoar: '<h4>C-SOAR Framework</h4>The neuro-symbolic fusion of all three domains'
+                };
+                showTooltip(details[d.id], event);
+            }).on('mouseout', hideTooltip);
+
+            // Animation: converge on scroll
+            function updateConvergence(progress) {
+                nodes.forEach(node => {
+                    if (node.id !== 'csoar') {
+                        const targetX = width / 2 + (node.x - width / 2) * (1 - progress);
+                        const targetY = height / 2 + (node.y - height / 2) * (1 - progress);
+                        node.currentX = targetX;
+                        node.currentY = targetY;
+                    }
+                });
+
+                centralNode.opacity = progress;
+
+                node.attr('transform', d => `translate(${d.currentX || d.x},${d.currentY || d.y})`);
+
+                node.select('circle')
+                    .attr('fill-opacity', d => d.id === 'csoar' ? progress * 0.3 : 0.2);
+
+                node.select('text')
+                    .style('opacity', d => d.id === 'csoar' ? progress : 1);
+
+                link.attr('x1', d => nodes.find(n => n.id === d.source).currentX || nodes.find(n => n.id === d.source).x)
+                    .attr('y1', d => nodes.find(n => n.id === d.source).currentY || nodes.find(n => n.id === d.source).y)
+                    .attr('x2', d => nodes.find(n => n.id === d.target).currentX || nodes.find(n => n.id === d.target).x)
+                    .attr('y2', d => nodes.find(n => n.id === d.target).currentY || nodes.find(n => n.id === d.target).y)
+                    .attr('stroke-opacity', 0.3 + progress * 0.4);
+            }
+
+            // Scroll listener
+            let hasAnimated = false;
+            window.addEventListener('scroll', () => {
+                const rect = container.node().getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                if (rect.top < windowHeight && rect.bottom > 0 && !hasAnimated) {
+                    let progress = 0;
+                    const interval = setInterval(() => {
+                        progress += 0.02;
+                        updateConvergence(Math.min(progress, 1));
+                        if (progress >= 1) {
+                            clearInterval(interval);
+                            hasAnimated = true;
+                        }
+                    }, 30);
+                }
+            });
+        }
+
+        // ============================================
+        // SECTION 2: Algorithmic Race
+        // ============================================
+        function createAlgorithmicRace() {
+            const container = d3.select('#algorithmic-race');
+            const width = container.node().getBoundingClientRect().width;
+            const height = 500;
+            const margin = { top: 40, right: 60, bottom: 60, left: 80 };
+            const innerWidth = width - margin.left - margin.right;
+            const innerHeight = height - margin.top - margin.bottom;
+
+            const svg = container.append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            const g = svg.append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+
+            // Scales
+            const xScale = d3.scaleLog()
+                .domain([10000, 1e9])
+                .range([0, innerWidth]);
+
+            const yScale = d3.scaleLog()
+                .domain([0.001, 1e6])
+                .range([innerHeight, 0]);
+
+            // Axes
+            const xAxis = d3.axisBottom(xScale)
+                .ticks(5)
+                .tickFormat(d => {
+                    if (d >= 1e9) return '1B';
+                    if (d >= 1e6) return (d / 1e6) + 'M';
+                    if (d >= 1e3) return (d / 1e3) + 'K';
+                    return d;
+                });
+
+            const yAxis = d3.axisLeft(yScale)
+                .ticks(5)
+                .tickFormat(d => {
+                    if (d >= 1e3) return (d / 1000) + 's';
+                    return d + 'ms';
+                });
+
+            g.append('g')
+                .attr('transform', `translate(0,${innerHeight})`)
+                .call(xAxis)
+                .attr('color', '#9ca3af')
+                .selectAll('text')
+                .style('font-family', 'JetBrains Mono, monospace');
+
+            g.append('g')
+                .call(yAxis)
+                .attr('color', '#9ca3af')
+                .selectAll('text')
+                .style('font-family', 'JetBrains Mono, monospace');
+
+            // Labels
+            g.append('text')
+                .attr('x', innerWidth / 2)
+                .attr('y', innerHeight + 45)
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#9ca3af')
+                .style('font-family', 'JetBrains Mono, monospace')
+                .style('font-size', '12px')
+                .text('Dataset Size (N)');
+
+            g.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('x', -innerHeight / 2)
+                .attr('y', -60)
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#9ca3af')
+                .style('font-family', 'JetBrains Mono, monospace')
+                .style('font-size', '12px')
+                .text('Search Time (milliseconds)');
+
+            // Line generators
+            const linearLine = d3.line()
+                .x(d => xScale(d.n))
+                .y(d => yScale(d.linear))
+                .curve(d3.curveMonotoneX);
+
+            const hnswLine = d3.line()
+                .x(d => xScale(d.n))
+                .y(d => yScale(d.hnsw))
+                .curve(d3.curveMonotoneX);
+
+            // Generate data
+            function generateData(maxN) {
+                const data = [];
+                for (let exp = 4; exp <= Math.log10(maxN); exp += 0.5) {
+                    const n = Math.pow(10, exp);
+                    // Linear: O(n) - assume 1ms per 1000 ops
+                    const linear = n / 1000;
+                    // HNSW: O(log n) - base case 1ms for 1000, scales logarithmically
+                    const hnsw = Math.log10(n) * 3;
+                    data.push({ n, linear, hnsw });
+                }
+                return data;
+            }
+
+            let currentData = generateData(1e6);
+
+            // Draw lines
+            const linearPath = g.append('path')
+                .datum(currentData)
+                .attr('fill', 'none')
+                .attr('stroke', '#ff1744')
+                .attr('stroke-width', 3)
+                .attr('d', linearLine);
+
+            const hnswPath = g.append('path')
+                .datum(currentData)
+                .attr('fill', 'none')
+                .attr('stroke', '#00e676')
+                .attr('stroke-width', 3)
+                .attr('d', hnswLine);
+
+            // Legend
+            const legend = g.append('g')
+                .attr('transform', `translate(${innerWidth - 180}, 20)`);
+
+            legend.append('line')
+                .attr('x1', 0)
+                .attr('x2', 40)
+                .attr('y1', 0)
+                .attr('y2', 0)
+                .attr('stroke', '#ff1744')
+                .attr('stroke-width', 3);
+
+            legend.append('text')
+                .attr('x', 50)
+                .attr('y', 5)
+                .attr('fill', '#ff1744')
+                .style('font-family', 'JetBrains Mono, monospace')
+                .style('font-size', '12px')
+                .text('O(n²) Linear');
+
+            legend.append('line')
+                .attr('x1', 0)
+                .attr('x2', 40)
+                .attr('y1', 25)
+                .attr('y2', 25)
+                .attr('stroke', '#00e676')
+                .attr('stroke-width', 3);
+
+            legend.append('text')
+                .attr('x', 50)
+                .attr('y', 30)
+                .attr('fill', '#00e676')
+                .style('font-family', 'JetBrains Mono, monospace')
+                .style('font-size', '12px')
+                .text('O(log N) HNSW');
+
+            // Slider interaction
+            const slider = document.getElementById('size-slider');
+            const sizeDisplay = document.getElementById('dataset-size');
+            const linearTimeDisplay = document.getElementById('linear-time');
+            const hnswTimeDisplay = document.getElementById('hnsw-time');
+            const speedupDisplay = document.getElementById('speedup');
+
+            function updateRace() {
+                const exp = parseFloat(slider.value);
+                const n = Math.pow(10, exp);
+                
+                sizeDisplay.textContent = n.toLocaleString();
+                
+                // Calculate times
+                const linearMs = n / 1000;
+                const hnswMs = Math.log10(n) * 3;
+                
+                // Format display
+                if (linearMs > 60000) {
+                    linearTimeDisplay.textContent = (linearMs / 60000).toFixed(1) + ' min';
+                } else if (linearMs > 1000) {
+                    linearTimeDisplay.textContent = (linearMs / 1000).toFixed(1) + ' s';
+                } else {
+                    linearTimeDisplay.textContent = linearMs.toFixed(0) + ' ms';
+                }
+                
+                hnswTimeDisplay.textContent = hnswMs.toFixed(1) + ' ms';
+                
+                const speedup = linearMs / hnswMs;
+                if (speedup > 1e6) {
+                    speedupDisplay.textContent = (speedup / 1e6).toFixed(1) + 'M×';
+                } else if (speedup > 1e3) {
+                    speedupDisplay.textContent = (speedup / 1e3).toFixed(0) + 'K×';
+                } else {
+                    speedupDisplay.textContent = speedup.toFixed(0) + '×';
+                }
+                
+                // Update data and animate
+                currentData = generateData(n);
+                
+                linearPath
+                    .datum(currentData)
+                    .transition()
+                    .duration(500)
+                    .attr('d', linearLine);
+                
+                hnswPath
+                    .datum(currentData)
+                    .transition()
+                    .duration(500)
+                    .attr('d', hnswLine);
+            }
+
+            slider.addEventListener('input', updateRace);
+            updateRace();
+        }
+
+        // ============================================
+        // SECTION 3: Hardware Dashboard
+        // ============================================
+        function createHardwareDashboard() {
+            const container = d3.select('#hardware-dashboard');
+            const width = container.node().getBoundingClientRect().width;
+            const height = 600;
+
+            const svg = container.append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            const memoryConfigs = {
+                q4: {
+                    totalRAM: 192,
+                    components: [
+                        { name: 'LLM Weights\n(70B @ 4-bit)', size: 40, color: '#00e5ff' },
+                        { name: 'KV Cache\n(Context)', size: 20, color: '#00ffff' },
+                        { name: 'Vector DB\n(Qdrant)', size: 12, color: '#ffab00' },
+                        { name: 'Orchestration\n(Airflow)', size: 16, color: '#9ca3af' },
+                        { name: 'Available\nMemory', size: 104, color: '#1a1f2e' }
+                    ],
+                    status: 'viable'
+                },
+                q8: {
+                    totalRAM: 192,
+                    components: [
+                        { name: 'LLM Weights\n(70B @ 8-bit)', size: 80, color: '#00e5ff' },
+                        { name: 'KV Cache\n(Context)', size: 20, color: '#00ffff' },
+                        { name: 'Vector DB\n(Qdrant)', size: 12, color: '#ffab00' },
+                        { name: 'Orchestration\n(Airflow)', size: 16, color: '#9ca3af' },
+                        { name: 'Available\nMemory', size: 64, color: '#1a1f2e' }
+                    ],
+                    status: 'viable'
+                },
+                fp16: {
+                    totalRAM: 192,
+                    components: [
+                        { name: 'LLM Weights\n(70B @ FP16)', size: 140, color: '#ff1744' },
+                        { name: 'KV Cache\n(Context)', size: 20, color: '#00ffff' },
+                        { name: 'Vector DB\n(Qdrant)', size: 12, color: '#ffab00' },
+                        { name: 'Orchestration\n(Airflow)', size: 16, color: '#9ca3af' },
+                        { name: 'CRITICAL\nOVERFLOW', size: 4, color: '#ff1744' }
+                    ],
+                    status: 'critical'
+                }
+            };
+
+            let currentConfig = 'q4';
+
+            function drawTreemap(config) {
+                svg.selectAll('*').remove();
+
+                const data = {
+                    name: 'Mac Studio M3 Ultra',
+                    children: memoryConfigs[config].components.map(c => ({
+                        name: c.name,
+                        value: c.size,
+                        color: c.color
+                    }))
+                };
+
+                const root = d3.hierarchy(data)
+                    .sum(d => d.value)
+                    .sort((a, b) => b.value - a.value);
+
+                d3.treemap()
+                    .size([width, height])
+                    .padding(2)
+                    .round(true)
+                    (root);
+
+                const cells = svg.selectAll('g')
+                    .data(root.leaves())
+                    .join('g')
+                    .attr('transform', d => `translate(${d.x0},${d.y0})`);
+
+                cells.append('rect')
+                    .attr('width', d => d.x1 - d.x0)
+                    .attr('height', d => d.y1 - d.y0)
+                    .attr('fill', d => d.data.color)
+                    .attr('fill-opacity', d => d.data.color === '#1a1f2e' ? 0.3 : 0.8)
+                    .attr('stroke', d => d.data.color)
+                    .attr('stroke-width', 2)
+                    .style('transition', 'all 0.5s ease');
+
+                cells.append('text')
+                    .attr('x', d => (d.x1 - d.x0) / 2)
+                    .attr('y', d => (d.y1 - d.y0) / 2)
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', d => d.data.color === '#1a1f2e' ? '#9ca3af' : '#0a0e1a')
+                    .style('font-family', 'JetBrains Mono, monospace')
+                    .style('font-weight', '600')
+                    .style('font-size', '14px')
+                    .selectAll('tspan')
+                    .data(d => d.data.name.split('\n'))
+                    .join('tspan')
+                    .attr('x', function() { return d3.select(this.parentNode).attr('x'); })
+                    .attr('dy', (d, i) => i === 0 ? '-0.5em' : '1.2em')
+                    .text(d => d);
+
+                cells.append('text')
+                    .attr('x', d => (d.x1 - d.x0) / 2)
+                    .attr('y', d => (d.y1 - d.y0) / 2 + 30)
+                    .attr('text-anchor', 'middle')
+                    .attr('fill', d => d.data.color === '#1a1f2e' ? '#9ca3af' : '#0a0e1a')
+                    .style('font-family', 'JetBrains Mono, monospace')
+                    .style('font-weight', '700')
+                    .style('font-size', '18px')
+                    .text(d => d.data.value + ' GB');
+
+                // Update status
+                const statusEl = document.getElementById('memory-status');
+                if (memoryConfigs[config].status === 'critical') {
+                    statusEl.innerHTML = '<span style="color: var(--signal-red);">✗ CRITICAL</span> — Memory overflow detected';
+                } else {
+                    statusEl.innerHTML = '<span style="color: var(--signal-green);">✓ VIABLE</span> — Memory budget within limits';
+                }
+            }
+
+            // Initial draw
+            drawTreemap(currentConfig);
+
+            // Button controls
+            document.querySelectorAll('.quant-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.quant-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentConfig = this.dataset.quant;
+                    drawTreemap(currentConfig);
+                });
+            });
+        }
+
+        // ============================================
+        // SECTION 4: Gantt Chart
+        // ============================================
+        function createGanttChart() {
+            const container = d3.select('#gantt-chart');
+            const width = container.node().getBoundingClientRect().width;
+            const height = 600;
+            const margin = { top: 40, right: 40, bottom: 60, left: 200 };
+            const innerWidth = width - margin.left - margin.right;
+            const innerHeight = height - margin.top - margin.bottom;
+
+            const svg = container.append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            const g = svg.append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+
+            const tasks = [
+                { phase: 'Year 1 - Semester 1', course: 'RSC 802: Research Methods', start: 0, duration: 1, color: '#00e5ff' },
+                { phase: 'Year 1 - Semester 2', course: 'IAE 830: AI in Cyber', start: 1, duration: 1, color: '#00e5ff' },
+                { phase: 'Year 2 - Semester 3', course: 'Architecture Design', start: 2, duration: 1, color: '#00ffff' },
+                { phase: 'Year 2 - Semester 4', course: 'Implementation (Airflow/Qdrant)', start: 3, duration: 1, color: '#00ffff' },
+                { phase: 'Year 3 - Semester 5', course: 'Data Generation (Burp Suite)', start: 4, duration: 1, color: '#00e676' },
+                { phase: 'Year 3 - Semester 6', course: 'Statistical Validation & Defense', start: 5, duration: 1, color: '#00e676' }
+            ];
+
+            const xScale = d3.scaleLinear()
+                .domain([0, 6])
+                .range([0, innerWidth]);
+
+            const yScale = d3.scaleBand()
+                .domain(tasks.map(t => t.phase))
+                .range([0, innerHeight])
+                .padding(0.2);
+
+            // Y axis
+            g.append('g')
+                .call(d3.axisLeft(yScale))
+                .attr('color', '#9ca3af')
+                .selectAll('text')
+                .style('font-family', 'JetBrains Mono, monospace')
+                .style('font-size', '12px');
+
+            // X axis
+            const xAxis = g.append('g')
+                .attr('transform', `translate(0,${innerHeight})`)
+                .call(d3.axisBottom(xScale).ticks(6).tickFormat(d => 'Sem ' + (d + 1)))
+                .attr('color', '#9ca3af');
+
+            xAxis.selectAll('text')
+                .style('font-family', 'JetBrains Mono, monospace')
+                .style('font-size', '12px');
+
+            // Bars
+            const bars = g.selectAll('.task-bar')
+                .data(tasks)
+                .join('g')
+                .attr('class', 'task-bar');
+
+            bars.append('rect')
+                .attr('x', d => xScale(d.start))
+                .attr('y', d => yScale(d.phase))
+                .attr('width', 0) // Start at 0 for animation
+                .attr('height', yScale.bandwidth())
+                .attr('fill', d => d.color)
+                .attr('fill-opacity', 0.3)
+                .attr('stroke', d => d.color)
+                .attr('stroke-width', 2)
+                .attr('rx', 4);
+
+            bars.append('text')
+                .attr('x', d => xScale(d.start) + 10)
+                .attr('y', d => yScale(d.phase) + yScale.bandwidth() / 2)
+                .attr('dy', '0.35em')
+                .attr('fill', '#e0e6f0')
+                .style('font-family', 'JetBrains Mono, monospace')
+                .style('font-size', '11px')
+                .style('opacity', 0)
+                .text(d => d.course);
+
+            // Animate on scroll
+            let hasAnimated = false;
+            function animateGantt() {
+                if (hasAnimated) return;
+                hasAnimated = true;
+
+                bars.select('rect')
+                    .transition()
+                    .duration(1000)
+                    .delay((d, i) => i * 200)
+                    .attr('width', d => xScale(d.duration));
+
+                bars.select('text')
+                    .transition()
+                    .duration(500)
+                    .delay((d, i) => i * 200 + 500)
+                    .style('opacity', 1);
+            }
+
+            window.addEventListener('scroll', () => {
+                const rect = container.node().getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                if (rect.top < windowHeight * 0.8 && rect.bottom > 0) {
+                    animateGantt();
+                }
+            });
+        }
+
+        // Initialize all visualizations
+        createTriadicGraph();
+        createAlgorithmicRace();
+        createHardwareDashboard();
+        createGanttChart();
+    </script>
+</body>
+</html>
