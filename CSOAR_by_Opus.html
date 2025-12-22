@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C-SOAR: Cognitive Security Orchestration, Automation & Response | Doctoral Research Viability</title>
+    
+    <!-- CDN Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           CSS VARIABLES - CYBER-VOID THEME
+        ======================================== */
+        :root {
+            /* Dark Mode (Default) */
+            --bg-void: #0a0e17;
+            --bg-deep: #0d1321;
+            --bg-surface: #151d2e;
+            --glass-panel: rgba(21, 29, 46, 0.7);
+            --glass-border: rgba(59, 130, 246, 0.2);
+            --neon-core: #3b82f6;
+            --neon-accent: #06b6d4;
+            --neon-warning: #f59e0b;
+            --neon-success: #10b981;
+            --neon-danger: #ef4444;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --gradient-cyber: linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #10b981 100%);
+            --gradient-danger: linear-gradient(135deg, #ef4444 0%, #f59e0b 100%);
+            --particle-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .light-mode {
+            --bg-void: #f8fafc;
+            --bg-deep: #f1f5f9;
+            --bg-surface: #ffffff;
+            --glass-panel: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(59, 130, 246, 0.3);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --particle-color: rgba(59, 130, 246, 0.15);
+        }
+
+        /* ========================================
+           BASE STYLES
+        ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-void);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, .font-display {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        code, .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ========================================
+           CANVAS BACKGROUND
+        ======================================== */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ========================================
+           GLASSMORPHISM COMPONENTS
+        ======================================== */
+        .glass-panel {
+            background: var(--glass-panel);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+        }
+
+        .glass-card {
+            background: var(--glass-panel);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+            border-color: var(--neon-core);
+        }
+
+        /* ========================================
+           STICKY HEADER
+        ======================================== */
+        .sticky-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: var(--glass-panel);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .sticky-header.scrolled {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ========================================
+           NAVIGATION
+        ======================================== */
+        .nav-link {
+            position: relative;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-cyber);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--neon-core);
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 80%;
+        }
+
+        /* ========================================
+           HERO SECTION
+        ======================================== */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 6rem 2rem 4rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 800;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        /* ========================================
+           TYPEWRITER EFFECT
+        ======================================== */
+        .typewriter {
+            overflow: hidden;
+            border-right: 3px solid var(--neon-core);
+            white-space: nowrap;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--neon-core) }
+        }
+
+        /* ========================================
+           BENTO GRID
+        ======================================== */
+        .bento-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .bento-card {
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-cyber);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bento-card:hover::before {
+            opacity: 1;
+        }
+
+        /* ========================================
+           D3 VISUALIZATION CONTAINERS
+        ======================================== */
+        .viz-container {
+            position: relative;
+            width: 100%;
+            min-height: 400px;
+            background: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+        }
+
+        .viz-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+
+        .viz-btn {
+            background: var(--glass-panel);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+
+        .viz-btn:hover {
+            background: var(--neon-core);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .viz-btn.active {
+            background: var(--neon-core);
+            color: white;
+        }
+
+        /* ========================================
+           SLIDE-OVER PANEL
+        ======================================== */
+        .slide-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 480px;
+            height: 100vh;
+            background: var(--bg-deep);
+            border-left: 1px solid var(--glass-border);
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .slide-panel.open {
+            transform: translateX(0);
+        }
+
+        .slide-panel-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1999;
+        }
+
+        .slide-panel-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ========================================
+           METRICS & STATS
+        ======================================== */
+        .metric-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .metric-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ========================================
+           TIMELINE / GANTT
+        ======================================== */
+        .timeline-container {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-track {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--glass-border);
+            transform: translateX(-50%);
+        }
+
+        .timeline-node {
+            position: relative;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-node:nth-child(odd) {
+            margin-right: 50%;
+            padding-right: 3rem;
+            text-align: right;
+        }
+
+        .timeline-node:nth-child(even) {
+            margin-left: 50%;
+            padding-left: 3rem;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background: var(--bg-surface);
+            border: 3px solid var(--neon-core);
+            border-radius: 50%;
+            transform: translateY(-50%);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-node:nth-child(odd) .timeline-dot {
+            right: -10px;
+        }
+
+        .timeline-node:nth-child(even) .timeline-dot {
+            left: -10px;
+        }
+
+        .timeline-node:hover .timeline-dot {
+            background: var(--neon-core);
+            box-shadow: 0 0 20px var(--neon-core);
+        }
+
+        /* ========================================
+           SCROLL ANIMATIONS
+        ======================================== */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .fade-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ========================================
+           INTERACTIVE SLIDERS
+        ======================================== */
+        .range-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: var(--bg-surface);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--neon-core);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--neon-core);
+            transition: all 0.2s ease;
+        }
+
+        .range-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* ========================================
+           TOGGLE SWITCH
+        ======================================== */
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: var(--bg-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--neon-core);
+            border-color: var(--neon-core);
+        }
+
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(30px);
+            background: white;
+        }
+
+        /* ========================================
+           VIABILITY BADGE
+        ======================================== */
+        .viability-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(6, 182, 212, 0.2) 100%);
+            border: 1px solid var(--neon-success);
+            border-radius: 50px;
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); }
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN
+        ======================================== */
+        @media (max-width: 768px) {
+            .timeline-node:nth-child(odd),
+            .timeline-node:nth-child(even) {
+                margin: 0 0 2rem 2rem;
+                padding: 1rem;
+                text-align: left;
+            }
+
+            .timeline-track {
+                left: 0;
+            }
+
+            .timeline-node:nth-child(odd) .timeline-dot,
+            .timeline-node:nth-child(even) .timeline-dot {
+                left: -12px;
+            }
+
+            .slide-panel {
+                max-width: 100%;
+            }
+        }
+
+        /* ========================================
+           CHART CONTAINERS
+        ======================================== */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 350px;
+        }
+
+        /* ========================================
+           CODE BLOCKS
+        ======================================== */
+        .code-block {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+
+        .code-block .keyword { color: #c084fc; }
+        .code-block .string { color: #4ade80; }
+        .code-block .comment { color: #64748b; }
+        .code-block .operator { color: #f59e0b; }
+
+        /* ========================================
+           SECTION DIVIDERS
+        ======================================== */
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-core), transparent);
+            margin: 4rem 0;
+        }
+
+        /* ========================================
+           TOOLTIP
+        ======================================== */
+        .d3-tooltip {
+            position: absolute;
+            background: var(--bg-deep);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 1rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 1000;
+            max-width: 300px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .d3-tooltip.visible {
+            opacity: 1;
+        }
+
+        /* ========================================
+           LOADING STATES
+        ======================================== */
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg-surface) 25%, var(--glass-border) 50%, var(--bg-surface) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden">
+    <!-- Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- App Shell -->
+    <div id="app-shell">
+        <!-- Sticky Header -->
+        <header class="sticky-header" id="main-header">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <!-- Logo -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                            <i class="fas fa-shield-halved text-white"></i>
+                        </div>
+                        <span class="font-display font-bold text-lg hidden sm:block">C-SOAR</span>
+                    </div>
+
+                    <!-- Navigation -->
+                    <nav class="hidden md:flex items-center gap-2">
+                        <a href="#hero" class="nav-link active" data-section="hero">Overview</a>
+                        <a href="#triadic-gap" class="nav-link" data-section="triadic-gap">Triadic Gap</a>
+                        <a href="#algorithmic-race" class="nav-link" data-section="algorithmic-race">Algorithm</a>
+                        <a href="#hardware" class="nav-link" data-section="hardware">Hardware</a>
+                        <a href="#roadmap" class="nav-link" data-section="roadmap">Roadmap</a>
+                    </nav>
+
+                    <!-- Controls -->
+                    <div class="flex items-center gap-4">
+                        <!-- Theme Toggle -->
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="theme-toggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        
+                        <!-- Mobile Menu -->
+                        <button class="md:hidden p-2 rounded-lg hover:bg-white/10" id="mobile-menu-btn">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="hero" class="hero-section">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <!-- Left Content -->
+                    <div class="fade-up">
+                        <div class="viability-badge mb-6">
+                            <span class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></span>
+                            <span class="text-sm font-semibold text-green-400">Technically Feasible: Mac Studio M3 Ultra Confirmed</span>
+                        </div>
+                        
+                        <h1 class="hero-title mb-4">
+                            The Cognitive SOAR Framework
+                        </h1>
+                        
+                        <p class="hero-subtitle mb-6">
+                            Vectorized Case-Based Reasoning for Adaptive Threat Response in Financial Critical Infrastructure
+                        </p>
+
+                        <div class="code-block mb-8">
+                            <span class="comment">// LTL Safety Invariant</span><br>
+                            <span class="keyword">□</span>(AttackDetected <span class="operator">→</span> <span class="keyword">◇</span>Containment)<br>
+                            <span class="keyword">∧</span><br>
+                            <span class="keyword">□</span>(Action(System) <span class="operator">→</span> <span class="operator">¬</span>Critical_Failure(Database))
+                        </div>
+
+                        <div class="flex flex-wrap gap-4">
+                            <a href="#triadic-gap" class="viz-btn active">
+                                <i class="fas fa-play mr-2"></i>Begin Exploration
+                            </a>
+                            <a href="#roadmap" class="viz-btn">
+                                <i class="fas fa-calendar-alt mr-2"></i>View Roadmap
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Content - Executive Summary -->
+                    <div class="fade-right">
+                        <div class="glass-panel p-6">
+                            <h3 class="font-display text-xl font-bold mb-6 flex items-center gap-2">
+                                <i class="fas fa-file-alt text-blue-400"></i>
+                                Executive Summary
+                            </h3>
+
+                            <div class="space-y-6">
+                                <div class="bento-card glass-card p-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                                            <i class="fas fa-fingerprint text-blue-400"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold mb-1">Originality</h4>
+                                            <p class="text-sm text-gray-400">Unprecedented synthesis of neuro-symbolic AI with formal verification for FCI protection.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bento-card glass-card p-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
+                                            <i class="fas fa-microchip text-cyan-400"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold mb-1">Feasibility</h4>
+                                            <p class="text-sm text-gray-400">Viable within 6-semester timeline on Mac Studio M3 Ultra with 192GB+ unified memory.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bento-card glass-card p-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                                            <i class="fas fa-bolt text-green-400"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold mb-1">Impact</h4>
+                                            <p class="text-sm text-gray-400">Reduce MTTR from 47 minutes to <5 minutes with mathematical safety guarantees.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metrics Row -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 fade-up" style="transition-delay: 0.2s;">
+                    <div class="glass-card metric-card">
+                        <div class="metric-value">50M</div>
+                        <div class="metric-label">Daily Events</div>
+                    </div>
+                    <div class="glass-card metric-card">
+                        <div class="metric-value"><10ms</div>
+                        <div class="metric-label">Similarity Search</div>
+                    </div>
+                    <div class="glass-card metric-card">
+                        <div class="metric-value">70B</div>
+                        <div class="metric-label">LLM Parameters</div>
+                    </div>
+                    <div class="glass-card metric-card">
+                        <div class="metric-value"><5min</div>
+                        <div class="metric-label">Target MTTR</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Section 1: The Triadic Gap -->
+        <section id="triadic-gap" class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-12 fade-up">
+                    <span class="inline-block px-4 py-2 rounded-full bg-blue-500/20 text-blue-400 text-sm font-semibold mb-4">
+                        SECTION 01
+                    </span>
+                    <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">
+                        The "Triadic Gap" Interactive Network
+                    </h2>
+                    <p class="text-gray-400 max-w-3xl mx-auto">
+                        C-SOAR fills a specific "Neuro-Symbolic Gap" by fusing three distinct domains. 
+                        No current system in Financial Critical Infrastructure combines these elements.
+                    </p>
+                </div>
+
+                <!-- D3 Force Graph Container -->
+                <div class="viz-container fade-up" id="triadic-viz-container">
+                    <div class="viz-controls">
+                        <button class="viz-btn active" id="btn-force">Force Layout</button>
+                        <button class="viz-btn" id="btn-radial">Radial Layout</button>
+                        <button class="viz-btn" id="btn-reset">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                    <div id="triadic-graph" style="width: 100%; height: 500px;"></div>
+                </div>
+
+                <!-- Explanation Cards -->
+                <div class="grid md:grid-cols-3 gap-6 mt-8">
+                    <div class="glass-card bento-card fade-left cursor-pointer" data-node="soar" id="card-soar">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                                <i class="fas fa-brain text-purple-400 text-xl"></i>
+                            </div>
+                            <h3 class="font-display font-bold">Soar Architecture</h3>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-4">
+                            Symbolic reasoning engine for structured decision-making and goal-oriented behavior.
+                        </p>
+                        <div class="text-xs text-gray-500">
+                            <span class="text-purple-400">Click to explore →</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-card bento-card fade-up cursor-pointer" data-node="vector" id="card-vector" style="transition-delay: 0.1s;">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center">
+                                <i class="fas fa-vector-square text-cyan-400 text-xl"></i>
+                            </div>
+                            <h3 class="font-display font-bold">Vector Embeddings</h3>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-4">
+                            Connectionist learning through transformer-based embeddings in $$ \mathbb{R}^{1024} $$ or $$ \mathbb{R}^{1536} $$.
+                        </p>
+                        <div class="text-xs text-gray-500">
+                            <span class="text-cyan-400">Click to explore →</span>
+                        </div>
+                    </div>
+
+                    <div class="glass-card bento-card fade-right cursor-pointer" data-node="ltl" id="card-ltl" style="transition-delay: 0.2s;">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+                                <i class="fas fa-shield-alt text-green-400 text-xl"></i>
+                            </div>
+                            <h3 class="font-display font-bold">Formal Logic (LTL)</h3>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-4">
+                            Mathematical guardrails ensuring "do no harm" principles in autonomous actions.
+                        </p>
+                        <div class="text-xs text-gray-500">
+                            <span class="text-green-400">Click to explore →</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Section 2: Algorithmic Race -->
+        <section id="algorithmic-race" class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-12 fade-up">
+                    <span class="inline-block px-4 py-2 rounded-full bg-amber-500/20 text-amber-400 text-sm font-semibold mb-4">
+                        SECTION 02
+                    </span>
+                    <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">
+                        The "Multi-Billion-Fold Speedup"
+                    </h2>
+                    <p class="text-gray-400 max-w-3xl mx-auto">
+                        Replacing $$ O(n^2) $$ pairwise playbook matching with $$ O(\log N) $$ HNSW indexing.
+                        For 1 billion incidents, linear search requires ~1 billion operations while HNSW requires only ~30.
+                    </p>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Controls Panel -->
+                    <div class="glass-panel p-6 fade-left">
+                        <h3 class="font-display font-bold mb-6 flex items-center gap-2">
+                            <i class="fas fa-sliders-h text-amber-400"></i>
+                            Simulation Controls
+                        </h3>
+
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Dataset Size (N)</label>
+                                <input type="range" id="dataset-slider" class="range-slider" min="3" max="9" value="6" step="1">
+                                <div class="flex justify-between text-xs text-gray-500 mt-2">
+                                    <span>1K</span>
+                                    <span id="dataset-value" class="text-amber-400 font-bold">1M</span>
+                                    <span>1B</span>
+                                </div>
+                            </div>
+
+                            <div class="glass-card p-4">
+                                <div class="text-sm text-gray-400 mb-2">Traditional SOAR</div>
+                                <div class="font-mono text-2xl text-red-400" id="linear-ops">1,000,000 ops</div>
+                                <div class="text-xs text-gray-500" id="linear-time">~16.7 minutes</div>
+                            </div>
+
+                            <div class="glass-card p-4">
+                                <div class="text-sm text-gray-400 mb-2">C-SOAR (HNSW)</div>
+                                <div class="font-mono text-2xl text-green-400" id="hnsw-ops">~20 ops</div>
+                                <div class="text-xs text-gray-500" id="hnsw-time">~0.2 ms</div>
+                            </div>
+
+                            <div class="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4">
+                                <div class="text-sm text-amber-400 font-semibold mb-1">Speedup Factor</div>
+                                <div class="font-display text-3xl font-bold text-amber-400" id="speedup-factor">50,000x</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart Container -->
+                    <div class="lg:col-span-2 glass-panel p-6 fade-right">
+                        <h3 class="font-display font-bold mb-4">Complexity Scaling Visualization</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="complexity-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MTTR Comparison -->
+                <div class="grid md:grid-cols-2 gap-6 mt-8">
+                    <div class="glass-card p-6 fade-up">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-display font-bold">Industry Average MTTR</h4>
+                            <span class="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-sm">Baseline</span>
+                        </div>
+                        <div class="font-display text-5xl font-bold text-red-400 mb-2">47 min</div>
+                        <p class="text-sm text-gray-400">Mean Time To Respond for traditional SOAR platforms</p>
+                    </div>
+
+                    <div class="glass-card p-6 fade-up" style="transition-delay: 0.1s;">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-display font-bold">C-SOAR Target MTTR</h4>
+                            <span class="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-sm">Target</span>
+                        </div>
+                        <div class="font-display text-5xl font-bold text-green-400 mb-2"><5 min</div>
+                        <p class="text-sm text-gray-400">With vectorized retrieval and autonomous response</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Section 3: Hardware Dashboard -->
+        <section id="hardware" class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-12 fade-up">
+                    <span class="inline-block px-4 py-2 rounded-full bg-cyan-500/20 text-cyan-400 text-sm font-semibold mb-4">
+                        SECTION 03
+                    </span>
+                    <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">
+                        "Zero-Cloud" Mac Studio Hardware Dashboard
+                    </h2>
+                    <p class="text-gray-400 max-w-3xl mx-auto">
+                        Feasibility of running a 70B Parameter LLM locally with unified memory architecture.
+                        Toggle quantization modes to explore memory constraints.
+                    </p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Memory Treemap -->
+                    <div class="glass-panel p-6 fade-left">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="font-display font-bold">Unified Memory Stack</h3>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm text-gray-400">Quantization:</span>
+                                <select id="quant-select" class="bg-transparent border border-gray-600 rounded-lg px-3 py-1 text-sm">
+                                    <option value="q4">Q4 (4-bit)</option>
+                                    <option value="q8">Q8 (8-bit)</option>
+                                    <option value="fp16">FP16 (Full)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div id="memory-treemap" style="width: 100%; height: 350px;"></div>
+
+                        <div id="memory-warning" class="hidden mt-4 bg-red-500/20 border border-red-500/50 rounded-lg p-4">
+                            <div class="flex items-center gap-2 text-red-400">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span class="font-semibold">CRITICAL: Memory Overflow</span>
+                            </div>
+                            <p class="text-sm text-gray-400 mt-2">
+                                FP16 requires ~140GB for LLM weights alone, exceeding available memory. 4-bit quantization is necessary.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Hardware Specs -->
+                    <div class="space-y-6 fade-right">
+                        <div class="glass-panel p-6">
+                            <h3 class="font-display font-bold mb-4 flex items-center gap-2">
+                                <i class="fas fa-desktop text-cyan-400"></i>
+                                Mac Studio M3 Ultra Specifications
+                            </h3>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="glass-card p-4">
+                                    <div class="text-sm text-gray-400">CPU Cores</div>
+                                    <div class="font-display text-2xl font-bold">32</div>
+                                </div>
+                                <div class="glass-card p-4">
+                                    <div class="text-sm text-gray-400">GPU Cores</div>
+                                    <div class="font-display text-2xl font-bold">80</div>
+                                </div>
+                                <div class="glass-card p-4">
+                                    <div class="text-sm text-gray-400">Unified Memory</div>
+                                    <div class="font-display text-2xl font-bold" id="total-ram">192 GB</div>
+                                </div>
+                                <div class="glass-card p-4">
+                                    <div class="text-sm text-gray-400">Bandwidth</div>
+                                    <div class="font-display text-2xl font-bold">819 GB/s</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data Pipeline Flow -->
+                        <div class="glass-panel p-6">
+                            <h3 class="font-display font-bold mb-4">Data Pipeline Flow</h3>
+                            <div class="flex items-center justify-between flex-wrap gap-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
+                                        <i class="fas fa-bug text-orange-400"></i>
+                                    </div>
+                                    <span class="text-sm">Burp Suite</span>
+                                </div>
+                                <i class="fas fa-arrow-right text-gray-600"></i>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                        <i class="fas fa-wind text-blue-400"></i>
+                                    </div>
+                                    <span class="text-sm">Airflow</span>
+                                </div>
+                                <i class="fas fa-arrow-right text-gray-600"></i>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                                        <i class="fas fa-database text-purple-400"></i>
+                                    </div>
+                                    <span class="text-sm">Qdrant</span>
+                                </div>
+                                <i class="fas fa-arrow-right text-gray-600"></i>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+                                        <i class="fas fa-robot text-green-400"></i>
+                                    </div>
+                                    <span class="text-sm">DeepSeek R1</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Token Speed -->
+                        <div class="glass-panel p-6">
+                            <h3 class="font-display font-bold mb-4">Inference Performance</h3>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="text-sm text-gray-400">Token Generation Speed</div>
+                                    <div class="font-display text-3xl font-bold text-cyan-400">16-19 tok/sec</div>
+                                </div>
+                                <div class="w-16 h-16 rounded-full border-4 border-cyan-500 flex items-center justify-center">
+                                    <i class="fas fa-tachometer-alt text-cyan-400 text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Section 4: 6-Semester Roadmap -->
+        <section id="roadmap" class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-12 fade-up">
+                    <span class="inline-block px-4 py-2 rounded-full bg-purple-500/20 text-purple-400 text-sm font-semibold mb-4">
+                        SECTION 04
+                    </span>
+                    <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">
+                        6-Semester "Critical Path" Roadmap
+                    </h2>
+                    <p class="text-gray-400 max-w-3xl mx-auto">
+                        3-year D.Sc. roadmap at Capitol Technology University. Click on each semester to explore deliverables.
+                    </p>
+                </div>
+
+                <!-- Gantt Chart -->
+                <div class="glass-panel p-6 mb-8 fade-up">
+                    <div id="gantt-chart" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <!-- Year Cards -->
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Year 1 -->
+                    <div class="glass-card p-6 fade-left cursor-pointer" id="year-1-card">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center font-display font-bold text-blue-400">
+                                Y1
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold">Theory & Architecture</h3>
+                                <p class="text-sm text-gray-400">Semesters 1-2</p>
+                            </div>
+                        </div>
+                        <ul class="space-y-2 text-sm text-gray-400">
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-green-400"></i>
+                                RSC 802 - Doctoral Learning
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-green-400"></i>
+                                IAE 830 - Research Literature
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-green-400"></i>
+                                Literature Review & Gap Analysis
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Year 2 -->
+                    <div class="glass-card p-6 fade-up cursor-pointer" id="year-2-card" style="transition-delay: 0.1s;">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center font-display font-bold text-amber-400">
+                                Y2
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold">Implementation</h3>
+                                <p class="text-sm text-gray-400">Semesters 3-4</p>
+                            </div>
+                        </div>
+                        <ul class="space-y-2 text-sm text-gray-400">
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-cog text-amber-400"></i>
+                                Airflow/Qdrant Pipeline Build
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-cog text-amber-400"></i>
+                                Burp Suite Data Generation
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-cog text-amber-400"></i>
+                                DeepSeek R1 Integration
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Year 3 -->
+                    <div class="glass-card p-6 fade-right cursor-pointer" id="year-3-card" style="transition-delay: 0.2s;">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center font-display font-bold text-green-400">
+                                Y3
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold">Validation & Defense</h3>
+                                <p class="text-sm text-gray-400">Semesters 5-6</p>
+                            </div>
+                        </div>
+                        <ul class="space-y-2 text-sm text-gray-400">
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-chart-bar text-green-400"></i>
+                                Statistical Validation ($$ p < 0.01 $$)
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-chart-bar text-green-400"></i>
+                                Cohen's $$ d \geq 0.5 $$
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-graduation-cap text-green-400"></i>
+                                Dissertation Defense
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-800">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid md:grid-cols-3 gap-8 mb-8">
+                    <div>
+                        <h3 class="font-display font-bold mb-4">Research Conclusions</h3>
+                        <p class="text-sm text-gray-400">
+                            The Cognitive SOAR Framework represents a viable and original contribution to cybersecurity research,
+                            with demonstrated feasibility for completion within the Capitol Technology University D.Sc. program.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold mb-4">Key Contributions</h3>
+                        <ul class="text-sm text-gray-400 space-y-2">
+                            <li>• Neuro-symbolic AI integration</li>
+                            <li>• Mathematical safety guarantees</li>
+                            <li>• Real-world FCI application</li>
+                            <li>• Sub-5-minute threat response</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold mb-4">Citations</h3>
+                        <ul class="text-sm text-gray-400 space-y-2">
+                            <li>[1] Malkov & Yashunin, 2018 - HNSW Algorithm</li>
+                            <li>[2] Laird, 2012 - Soar Cognitive Architecture</li>
+                            <li>[3] Pnueli, 1977 - Linear Temporal Logic</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-gray-800">
+                    <div class="viability-badge mb-4 md:mb-0">
+                        <span class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></span>
+                        <span class="text-sm font-semibold text-green-400">Technically Feasible: Mac Studio M3 Ultra Confirmed for Local 70B Inference</span>
+                    </div>
+                    <p class="text-sm text-gray-500">
+                        Capitol Technology University • Doctor of Science in Cybersecurity
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Slide-Over Panel -->
+    <div class="slide-panel-overlay" id="panel-overlay"></div>
+    <aside class="slide-panel" id="detail-panel">
+        <button class="absolute top-4 right-4 w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors" id="close-panel">
+            <i class="fas fa-times"></i>
+        </button>
+        <div id="panel-content">
+            <!-- Dynamic content injected here -->
+        </div>
+    </aside>
+
+    <!-- D3 Tooltip -->
+    <div class="d3-tooltip" id="d3-tooltip"></div>
+
+    <!-- ========================================
+         JAVASCRIPT - LOGIC & VISUALIZATIONS
+    ======================================== -->
+    <script>
+        // ========================================
+        // 1. CONFIGURATION & DATA
+        // ========================================
+        const CONFIG = {
+            colors: {
+                soar: '#a855f7',
+                vector: '#06b6d4',
+                ltl: '#10b981',
+                csoar: '#3b82f6',
+                danger: '#ef4444',
+                warning: '#f59e0b'
+            },
+            triadicNodes: [
+                { id: 'soar', label: 'Soar Cognitive\nArchitecture', group: 'symbolic', description: 'Rule-based symbolic reasoning engine for structured decision-making.', details: 'The Soar cognitive architecture provides the symbolic reasoning backbone, enabling transparent, goal-oriented behavior that can be audited and explained.' },
+                { id: 'vector', label: 'Vector\nEmbeddings', group: 'connectionist', description: 'Transformer-based embeddings in ℝ¹⁰²⁴ or ℝ¹⁵³⁶ dimensional space.', details: 'Using models like text-embedding-3-large, incidents are mapped to high-dimensional vector spaces enabling semantic similarity search via HNSW indexing.' },
+                { id: 'ltl', label: 'Formal Logic\n(LTL)', group: 'verification', description: 'Linear Temporal Logic for mathematical safety guarantees.', details: 'LTL invariants like □(AttackDetected → ◇Containment) ensure that autonomous actions never violate safety constraints.' },
+                { id: 'csoar', label: 'C-SOAR\nFramework', group: 'fusion', description: 'The novel synthesis filling the neuro-symbolic gap.', details: 'C-SOAR uniquely combines all three paradigms to create an adaptive, explainable, and mathematically safe autonomous threat response system.' }
+            ],
+            triadicLinks: [
+                { source: 'soar', target: 'csoar', label: 'Decision Engine' },
+                { source: 'vector', target: 'csoar', label: 'Memory Retrieval' },
+                { source: 'ltl', target: 'csoar', label: 'Safety Guardrails' }
+            ],
+            memoryConfigs: {
+                q4: { llm: 40, vectordb: 12, kvcache: 20, orchestration: 16, free: 104 },
+                q8: { llm: 80, vectordb: 12, kvcache: 20, orchestration: 16, free: 64 },
+                fp16: { llm: 140, vectordb: 12, kvcache: 20, orchestration: 16, free: 4 }
+            },
+            ganttData: [
+                { task: 'Literature Review', start: 0, duration: 2, year: 1, color: '#3b82f6' },
+                { task: 'Theoretical Framework', start: 1, duration: 2, year: 1, color: '#3b82f6' },
+                { task: 'Hardware Setup', start: 2, duration: 1, year: 2, color: '#f59e0b' },
+                { task: 'Pipeline Development', start: 3, duration: 2, year: 2, color: '#f59e0b' },
+                { task: 'Data Generation', start: 4, duration: 2, year: 2, color: '#f59e0b' },
+                { task: 'Experiments', start: 5, duration: 1, year: 3, color: '#10b981' },
+                { task: 'Statistical Analysis', start: 5, duration: 1, year: 3, color: '#10b981' },
+                { task: 'Dissertation Writing', start: 5, duration: 1, year: 3, color: '#10b981' },
+                { task: 'Defense', start: 6, duration: 0.5, year: 3, color: '#a855f7' }
+            ]
+        };
+
+        // ========================================
+        // 2. STATE MANAGEMENT
+        // ========================================
+        let state = {
+            darkMode: true,
+            currentLayout: 'force',
+            datasetSize: 6,
+            quantization: 'q4',
+            panelOpen: false,
+            scrollProgress: 0
+        };
+
+        // ========================================
+        // 3. CANVAS BACKGROUND ANIMATION
+        // ========================================
+        function initCanvas() {
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let mouseX = 0, mouseY = 0;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            function createParticles() {
+                particles = [];
+                const count = Math.floor((canvas.width * canvas.height) / 15000);
+                for (let i = 0; i < count; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        radius: Math.random() * 2 + 1,
+                        opacity: Math.random() * 0.5 + 0.2
+                    });
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach((p, i) => {
+                    // Update position
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    // Wrap around edges
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+
+                    // Mouse interaction
+                    const dx = mouseX - p.x;
+                    const dy = mouseY - p.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        p.x -= dx * 0.02;
+                        p.y -= dy * 0.02;
+                    }
+
+                    // Draw particle
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = state.darkMode 
+                        ? `rgba(59, 130, 246, ${p.opacity})` 
+                        : `rgba(59, 130, 246, ${p.opacity * 0.5})`;
+                    ctx.fill();
+
+                    // Draw connections
+                    particles.slice(i + 1).forEach(p2 => {
+                        const dx2 = p.x - p2.x;
+                        const dy2 = p.y - p2.y;
+                        const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+                        if (dist2 < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = state.darkMode 
+                                ? `rgba(59, 130, 246, ${0.15 * (1 - dist2 / 120)})` 
+                                : `rgba(59, 130, 246, ${0.1 * (1 - dist2 / 120)})`;
+                            ctx.stroke();
+                        }
+                    });
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', () => {
+                resize();
+                createParticles();
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            resize();
+            createParticles();
+            animate();
+        }
+
+        // ========================================
+        // 4. D3 TRIADIC GAP VISUALIZATION
+        // ========================================
+        function initTriadicGraph() {
+            const container = document.getElementById('triadic-graph');
+            const width = container.clientWidth;
+            const height = container.clientHeight || 500;
+
+            // Clear previous
+            d3.select('#triadic-graph').selectAll('*').remove();
+
+            const svg = d3.select('#triadic-graph')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            // Define gradients
+            const defs = svg.append('defs');
+            
+            const gradient = defs.append('linearGradient')
+                .attr('id', 'link-gradient')
+                .attr('gradientUnits', 'userSpaceOnUse');
+            gradient.append('stop').attr('offset', '0%').attr('stop-color', CONFIG.colors.soar);
+            gradient.append('stop').attr('offset', '100%').attr('stop-color', CONFIG.colors.csoar);
+
+            // Create nodes and links data
+            const nodes = CONFIG.triadicNodes.map(d => ({...d}));
+            const links = CONFIG.triadicLinks.map(d => ({...d}));
+
+            // Force simulation
+            const simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id).distance(150))
+                .force('charge', d3.forceManyBody().strength(-400))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(60));
+
+            // Draw links
+            const link = svg.append('g')
+                .selectAll('line')
+                .data(links)
+                .enter()
+                .append('line')
+                .attr('stroke', '#3b82f6')
+                .attr('stroke-width', 3)
+                .attr('stroke-opacity', 0.6);
+
+            // Draw link labels
+            const linkLabel = svg.append('g')
+                .selectAll('text')
+                .data(links)
+                .enter()
+                .append('text')
+                .attr('text-anchor', 'middle')
+                .attr('fill', state.darkMode ? '#94a3b8' : '#64748b')
+                .attr('font-size', '11px')
+                .text(d => d.label);
+
+            // Draw nodes
+            const node = svg.append('g')
+                .selectAll('g')
+                .data(nodes)
+                .enter()
+                .append('g')
+                .attr('cursor', 'pointer')
+                .call(d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended));
+
+            // Node circles
+            node.append('circle')
+                .attr('r', d => d.id === 'csoar' ? 50 : 40)
+                .attr('fill', d => {
+                    if (d.id === 'soar') return CONFIG.colors.soar;
+                    if (d.id === 'vector') return CONFIG.colors.vector;
+                    if (d.id === 'ltl') return CONFIG.colors.ltl;
+                    return CONFIG.colors.csoar;
+                })
+                .attr('stroke', '#fff')
+                .attr('stroke-width', 2)
+                .attr('opacity', 0.9);
+
+            // Node labels
+            node.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '0.35em')
+                .attr('fill', '#fff')
+                .attr('font-size', '11px')
+                .attr('font-weight', '600')
+                .each(function(d) {
+                    const lines = d.label.split('\n');
+                    const text = d3.select(this);
+                    lines.forEach((line, i) => {
+                        text.append('tspan')
+                            .attr('x', 0)
+                            .attr('dy', i === 0 ? `-${(lines.length - 1) * 0.5}em` : '1.1em')
+                            .text(line);
+                    });
+                });
+
+            // Hover effects
+            node.on('mouseover', function(event, d) {
+                d3.select(this).select('circle')
+                    .transition()
+                    .duration(200)
+                    .attr('r', d.id === 'csoar' ? 55 : 45);
+
+                showTooltip(event, d);
+            })
+            .on('mouseout', function(event, d) {
+                d3.select(this).select('circle')
+                    .transition()
+                    .duration(200)
+                    .attr('r', d.id === 'csoar' ? 50 : 40);
+
+                hideTooltip();
+            })
+            .on('click', function(event, d) {
+                openPanel(d);
+            });
+
+            // Simulation tick
+            simulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+
+                linkLabel
+                    .attr('x', d => (d.source.x + d.target.x) / 2)
+                    .attr('y', d => (d.source.y + d.target.y) / 2);
+
+                node.attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+
+            // Drag functions
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+
+            // Store simulation for layout switching
+            window.triadicSimulation = simulation;
+            window.triadicNodes = nodes;
+
+            // Layout buttons
+            document.getElementById('btn-force').addEventListener('click', () => {
+                state.currentLayout = 'force';
+                document.getElementById('btn-force').classList.add('active');
+                document.getElementById('btn-radial').classList.remove('active');
+                simulation.force('center', d3.forceCenter(width / 2, height / 2));
+                simulation.alpha(1).restart();
+            });
+
+            document.getElementById('btn-radial').addEventListener('click', () => {
+                state.currentLayout = 'radial';
+                document.getElementById('btn-radial').classList.add('active');
+                document.getElementById('btn-force').classList.remove('active');
+                
+                // Position nodes in radial layout
+                const centerX = width / 2;
+                const centerY = height / 2;
+                const radius = 150;
+                
+                nodes.forEach((n, i) => {
+                    if (n.id === 'csoar') {
+                        n.fx = centerX;
+                        n.fy = centerY;
+                    } else {
+                        const angle = (i * 2 * Math.PI / 3) - Math.PI / 2;
+                        n.fx = centerX + radius * Math.cos(angle);
+                        n.fy = centerY + radius * Math.sin(angle);
+                    }
+                });
+                
+                simulation.alpha(1).restart();
+            });
+
+            document.getElementById('btn-reset').addEventListener('click', () => {
+                nodes.forEach(n => {
+                    n.fx = null;
+                    n.fy = null;
+                });
+                simulation.alpha(1).restart();
+            });
+        }
+
+        // ========================================
+        // 5. COMPLEXITY CHART (Chart.js)
+        // ========================================
+        let complexityChart;
+
+        function initComplexityChart() {
+            const ctx = document.getElementById('complexity-chart').getContext('2d');
+            
+            const labels = ['1K', '10K', '100K', '1M', '10M', '100M', '1B'];
+            const linearData = [1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000];
+            const hnswData = [10, 13, 17, 20, 23, 27, 30];
+
+            complexityChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Traditional SOAR O(n)',
+                            data: linearData,
+                            borderColor: CONFIG.colors.danger,
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'C-SOAR HNSW O(log n)',
+                            data: hnswData,
+                            borderColor: CONFIG.colors.ltl,
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            type: 'logarithmic',
+                            title: {
+                                display: true,
+                                text: 'Operations (Log Scale)',
+                                color: state.darkMode ? '#94a3b8' : '#64748b'
+                            },
+                            grid: {
+                                color: state.darkMode ? 'rgba(148, 163, 184, 0.1)' : 'rgba(100, 116, 139, 0.1)'
+                            },
+                            ticks: {
+                                color: state.darkMode ? '#94a3b8' : '#64748b'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Dataset Size (N)',
+                                color: state.darkMode ? '#94a3b8' : '#64748b'
+                            },
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: state.darkMode ? '#94a3b8' : '#64748b'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: state.darkMode ? '#f1f5f9' : '#0f172a',
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw.toLocaleString() + ' ops';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateComplexityDisplay() {
+            const sizes = ['1K', '10K', '100K', '1M', '10M', '100M', '1B'];
+            const linearOps = [1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000];
+            const hnswOps = [10, 13, 17, 20, 23, 27, 30];
+            
+            const idx = state.datasetSize - 3;
+            const linear = linearOps[idx];
+            const hnsw = hnswOps[idx];
+            const speedup = Math.round(linear / hnsw);
+
+            document.getElementById('dataset-value').textContent = sizes[idx];
+            document.getElementById('linear-ops').textContent = linear.toLocaleString() + ' ops';
+            document.getElementById('hnsw-ops').textContent = '~' + hnsw + ' ops';
+            document.getElementById('speedup-factor').textContent = speedup.toLocaleString() + 'x';
+
+            // Calculate time estimates (assuming 1μs per operation)
+            const linearTime = linear / 1000000; // seconds
+            const hnswTime = hnsw / 1000; // milliseconds
+
+            if (linearTime < 60) {
+                document.getElementById('linear-time').textContent = '~' + linearTime.toFixed(1) + ' seconds';
+            } else if (linearTime < 3600) {
+                document.getElementById('linear-time').textContent = '~' + (linearTime / 60).toFixed(1) + ' minutes';
+            } else if (linearTime < 86400) {
+                document.getElementById('linear-time').textContent = '~' + (linearTime / 3600).toFixed(1) + ' hours';
+            } else {
+                document.getElementById('linear-time').textContent = '~' + (linearTime / 86400).toFixed(1) + ' days';
+            }
+
+            document.getElementById('hnsw-time').textContent = '~' + hnswTime.toFixed(1) + ' ms';
+        }
+
+        // ========================================
+        // 6. MEMORY TREEMAP (D3)
+        // ========================================
+        function initMemoryTreemap() {
+            updateMemoryTreemap();
+        }
+
+        function updateMemoryTreemap() {
+            const container = document.getElementById('memory-treemap');
+            const width = container.clientWidth;
+            const height = container.clientHeight || 350;
+
+            // Clear previous
+            d3.select('#memory-treemap').selectAll('*').remove();
+
+            const config = CONFIG.memoryConfigs[state.quantization];
+            const totalRam = 192;
+
+            const data = {
+                name: 'Memory',
+                children: [
+                    { name: 'LLM Weights', value: config.llm, color: '#3b82f6' },
+                    { name: 'KV Cache', value: config.kvcache, color: '#06b6d4' },
+                    { name: 'Vector DB', value: config.vectordb, color: '#a855f7' },
+                    { name: 'Orchestration', value: config.orchestration, color: '#f59e0b' },
+                    { name: 'Free', value: Math.max(0, config.free), color: '#10b981' }
+                ]
+            };
+
+            // Check for overflow
+            const totalUsed = config.llm + config.kvcache + config.vectordb + config.orchestration;
+            const isOverflow = totalUsed > totalRam;
+
+            if (isOverflow) {
+                document.getElementById('memory-warning').classList.remove('hidden');
+            } else {
+                document.getElementById('memory-warning').classList.add('hidden');
+            }
+
+            const svg = d3.select('#memory-treemap')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            const root = d3.hierarchy(data)
+                .sum(d => d.value)
+                .sort((a, b) => b.value - a.value);
+
+            d3.treemap()
+                .size([width, height])
+                .padding(4)
+                .round(true)(root);
+
+            const cell = svg.selectAll('g')
+                .data(root.leaves())
+                .enter()
+                .append('g')
+                .attr('transform', d => `translate(${d.x0},${d.y0})`);
+
+            cell.append('rect')
+                .attr('width', d => d.x1 - d.x0)
+                .attr('height', d => d.y1 - d.y0)
+                .attr('fill', d => d.data.color)
+                .attr('opacity', d => isOverflow && d.data.name === 'LLM Weights' ? 1 : 0.8)
+                .attr('stroke', d => isOverflow && d.data.name === 'LLM Weights' ? CONFIG.colors.danger : 'none')
+                .attr('stroke-width', 3)
+                .attr('rx', 8);
+
+            cell.append('text')
+                .attr('x', 10)
+                .attr('y', 25)
+                .attr('fill', '#fff')
+                .attr('font-weight', '600')
+                .attr('font-size', '14px')
+                .text(d => d.data.name);
+
+            cell.append('text')
+                .attr('x', 10)
+                .attr('y', 45)
+                .attr('fill', 'rgba(255,255,255,0.8)')
+                .attr('font-size', '12px')
+                .text(d => d.data.value + ' GB');
+        }
+
+        // ========================================
+        // 7. GANTT CHART (D3)
+        // ========================================
+        function initGanttChart() {
+            const container = document.getElementById('gantt-chart');
+            const width = container.clientWidth;
+            const height = container.clientHeight || 400;
+            const margin = { top: 40, right: 30, bottom: 40, left: 150 };
+
+            // Clear previous
+            d3.select('#gantt-chart').selectAll('*').remove();
+
+            const svg = d3.select('#gantt-chart')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            const innerWidth = width - margin.left - margin.right;
+            const innerHeight = height - margin.top - margin.bottom;
+
+            const g = svg.append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+
+            // Scales
+            const xScale = d3.scaleLinear()
+                .domain([0, 6.5])
+                .range([0, innerWidth]);
+
+            const yScale = d3.scaleBand()
+                .domain(CONFIG.ganttData.map(d => d.task))
+                .range([0, innerHeight])
+                .padding(0.3);
+
+            // X Axis
+            const xAxis = d3.axisTop(xScale)
+                .ticks(7)
+                .tickFormat(d => 'S' + (d + 1));
+
+            g.append('g')
+                .attr('class', 'x-axis')
+                .call(xAxis)
+                .selectAll('text')
+                .attr('fill', state.darkMode ? '#94a3b8' : '#64748b');
+
+            g.selectAll('.x-axis path, .x-axis line')
+                .attr('stroke', state.darkMode ? '#334155' : '#e2e8f0');
+
+            // Y Axis
+            g.append('g')
+                .attr('class', 'y-axis')
+                .selectAll('text')
+                .data(CONFIG.ganttData)
+                .enter()
+                .append('text')
+                .attr('x', -10)
+                .attr('y', d => yScale(d.task) + yScale.bandwidth() / 2)
+                .attr('dy', '0.35em')
+                .attr('text-anchor', 'end')
+                .attr('fill', state.darkMode ? '#f1f5f9' : '#0f172a')
+                .attr('font-size', '12px')
+                .text(d => d.task);
+
+            // Bars
+            g.selectAll('.bar')
+                .data(CONFIG.ganttData)
+                .enter()
+                .append('rect')
+                .attr('class', 'bar')
+                .attr('x', d => xScale(d.start))
+                .attr('y', d => yScale(d.task))
+                .attr('width', d => xScale(d.duration) - xScale(0))
+                .attr('height', yScale.bandwidth())
+                .attr('fill', d => d.color)
+                .attr('rx', 6)
+                .attr('opacity', 0.9)
+                .attr('cursor', 'pointer')
+                .on('mouseover', function(event, d) {
+                    d3.select(this).attr('opacity', 1);
+                })
+                .on('mouseout', function(event, d) {
+                    d3.select(this).attr('opacity', 0.9);
+                })
+                .on('click', function(event, d) {
+                    openPanel({
+                        id: d.task.toLowerCase().replace(/\s/g, '-'),
+                        label: d.task,
+                        description: `Year ${d.year} activity spanning semesters ${d.start + 1} to ${d.start + d.duration}.`,
+                        details: `This task is part of the Year ${d.year} phase of the doctoral program.`
+                    });
+                });
+
+            // Year markers
+            const yearMarkers = [
+                { label: 'Year 1', x: 1 },
+                { label: 'Year 2', x: 3.5 },
+                { label: 'Year 3', x: 5.5 }
+            ];
+
+            yearMarkers.forEach(marker => {
+                g.append('line')
+                    .attr('x1', xScale(marker.x))
+                    .attr('x2', xScale(marker.x))
+                    .attr('y1', -20)
+                    .attr('y2', innerHeight)
+                    .attr('stroke', state.darkMode ? '#475569' : '#cbd5e1')
+                    .attr('stroke-dasharray', '4,4');
+            });
+        }
+
+        // ========================================
+        // 8. TOOLTIP FUNCTIONS
+        // ========================================
+        function showTooltip(event, d) {
+            const tooltip = document.getElementById('d3-tooltip');
+            tooltip.innerHTML = `
+                <h4 class="font-display font-bold mb-2">${d.label.replace('\n', ' ')}</h4>
+                <p class="text-sm text-gray-400">${d.description}</p>
+            `;
+            tooltip.style.left = (event.pageX + 15) + 'px';
+            tooltip.style.top = (event.pageY - 10) + 'px';
+            tooltip.classList.add('visible');
+        }
+
+        function hideTooltip() {
+            const tooltip = document.getElementById('d3-tooltip');
+            tooltip.classList.remove('visible');
+        }
+
+        // ========================================
+        // 9. SLIDE-OVER PANEL
+        // ========================================
+        function openPanel(data) {
+            const panel = document.getElementById('detail-panel');
+            const overlay = document.getElementById('panel-overlay');
+            const content = document.getElementById('panel-content');
+
+            content.innerHTML = `
+                <div class="pt-12">
+                    <h2 class="font-display text-2xl font-bold mb-4">${data.label.replace('\n', ' ')}</h2>
+                    <p class="text-gray-400 mb-6">${data.description}</p>
+                    <div class="glass-card p-4 mb-6">
+                        <h3 class="font-semibold mb-2">Details</h3>
+                        <p class="text-sm text-gray-400">${data.details}</p>
+                    </div>
+                    ${data.id === 'vector' ? `
+                        <div class="code-block">
+                            <span class="comment">// Vector Dimensionality</span><br>
+                            <span class="keyword">const</span> embedding = <span class="keyword">await</span> model.embed(incident);<br>
+                            <span class="comment">// embedding ∈ ℝ¹⁵³⁶</span>
+                        </div>
+                    ` : ''}
+                    ${data.id === 'ltl' ? `
+                        <div class="code-block">
+                            <span class="comment">// Sample LTL Invariants</span><br>
+                            <span class="keyword">□</span>(AttackDetected <span class="operator">→</span> <span class="keyword">◇</span>Containment)<br>
+                            <span class="keyword">□</span>(Response <span class="operator">→</span> <span class="operator">¬</span>DataLoss)<br>
+                            <span class="keyword">□</span>(Escalation <span class="operator">→</span> HumanReview)
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            panel.classList.add('open');
+            overlay.classList.add('open');
+            state.panelOpen = true;
+        }
+
+        function closePanel() {
+            const panel = document.getElementById('detail-panel');
+            const overlay = document.getElementById('panel-overlay');
+            panel.classList.remove('open');
+            overlay.classList.remove('open');
+            state.panelOpen = false;
+        }
+
+        // ========================================
+        // 10. SCROLL ANIMATIONS
+        // ========================================
+        function initScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('.fade-up, .fade-left, .fade-right').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // ========================================
+        // 11. NAVIGATION HIGHLIGHTING
+        // ========================================
+        function initNavHighlighting() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    if (window.scrollY >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-section') === current) {
+                        link.classList.add('active');
+                    }
+                });
+
+                // Header scroll effect
+                const header = document.getElementById('main-header');
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+        }
+
+        // ========================================
+        // 12. THEME TOGGLE
+        // ========================================
+        function initThemeToggle() {
+            const toggle = document.getElementById('theme-toggle');
+            toggle.addEventListener('change', () => {
+                state.darkMode = !toggle.checked;
+                document.body.classList.toggle('light-mode', toggle.checked);
+                
+                // Update charts
+                if (complexityChart) {
+                    complexityChart.options.scales.y.grid.color = state.darkMode ? 'rgba(148, 163, 184, 0.1)' : 'rgba(100, 116, 139, 0.1)';
+                    complexityChart.options.scales.y.ticks.color = state.darkMode ? '#94a3b8' : '#64748b';
+                    complexityChart.options.scales.x.ticks.color = state.darkMode ? '#94a3b8' : '#64748b';
+                    complexityChart.options.plugins.legend.labels.color = state.darkMode ? '#f1f5f9' : '#0f172a';
+                    complexityChart.update();
+                }
+            });
+        }
+
+        // ========================================
+        // 13. EVENT LISTENERS
+        // ========================================
+        function initEventListeners() {
+            // Dataset slider
+            document.getElementById('dataset-slider').addEventListener('input', (e) => {
+                state.datasetSize = parseInt(e.target.value);
+                updateComplexityDisplay();
+            });
+
+            // Quantization select
+            document.getElementById('quant-select').addEventListener('change', (e) => {
+                state.quantization = e.target.value;
+                updateMemoryTreemap();
+            });
+
+            // Panel close
+            document.getElementById('close-panel').addEventListener('click', closePanel);
+            document.getElementById('panel-overlay').addEventListener('click', closePanel);
+
+            // Card clicks
+            document.querySelectorAll('[data-node]').forEach(card => {
+                card.addEventListener('click', () => {
+                    const nodeId = card.getAttribute('data-node');
+                    const nodeData = CONFIG.triadicNodes.find(n => n.id === nodeId);
+                    if (nodeData) openPanel(nodeData);
+                });
+            });
+
+            // Year cards
+            ['year-1-card', 'year-2-card', 'year-3-card'].forEach((id, idx) => {
+                document.getElementById(id)?.addEventListener('click', () => {
+                    openPanel({
+                        id: `year-${idx + 1}`,
+                        label: `Year ${idx + 1}`,
+                        description: ['Theory & Architecture', 'Implementation', 'Validation & Defense'][idx],
+                        details: [
+                            'Focus on literature review, theoretical framework development, and mathematical formalization of the vector space mapping.',
+                            'Hardware setup, pipeline development with Airflow/Qdrant, and APT data generation using Burp Suite.',
+                            'Statistical validation targeting p < 0.01 and Cohen\'s d ≥ 0.5, dissertation writing, and final defense.'
+                        ][idx]
+                    });
+                });
+            });
+
+            // Smooth scroll for nav links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+
+            // Window resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    initTriadicGraph();
+                    updateMemoryTreemap();
+                    initGanttChart();
+                }, 250);
+            });
+        }
+
+        // ========================================
+        // 14. INITIALIZATION
+        // ========================================
+        function init() {
+            initCanvas();
+            initTriadicGraph();
+            initComplexityChart();
+            updateComplexityDisplay();
+            initMemoryTreemap();
+            initGanttChart();
+            initScrollAnimations();
+            initNavHighlighting();
+            initThemeToggle();
+            initEventListeners();
+
+            // Initial animation trigger
+            setTimeout(() => {
+                document.querySelectorAll('.fade-up, .fade-left, .fade-right').forEach(el => {
+                    if (el.getBoundingClientRect().top < window.innerHeight) {
+                        el.classList.add('visible');
+                    }
+                });
+            }, 100);
+        }
+
+        // Run on DOM ready
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
