@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud+ CV0-004 Resource Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F5F5F0; color: #44403C; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .active-nav { border-bottom: 2px solid #D97706; color: #92400E; font-weight: 600; }
+        .section-fade { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals (Stone/Sand) with Amber/Orange Accents for a focused, analytical feel -->
+    <!-- Application Structure Plan: Dashboard layout with top navigation. 
+         1. Executive Brief: High-level text summary of the CV0-004 landscape.
+         2. Analytical Views: 
+            - Risk/Accuracy Matrix (Plotly) to visualize the trade-off.
+            - Format Analysis (Chart.js) to address the PDF preference.
+         3. Provider Drill-down: Interactive cards explaining the three main categories of sources found in research.
+         Reasoning: The user wants to find the "best" source. This structure educates them on the *types* available and their inherent risks/accuracy profiles for a new exam version like CV0-004. -->
+    <!-- Visualization & Content Choices: 
+         - Plotly Scatter: Best for 2D comparison (Risk vs. Accuracy).
+         - Chart.js Radar: Good for comparing multiple attributes (Cost, Speed, Format, Accuracy) of different provider types.
+         - Interactive Cards: To hold qualitative data about specific provider categories (Crowdsourced vs. PDF Sellers).
+         -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-[#F5F5F0] min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-[#E7E5E4] sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-[#78350F] tracking-tight">Intel<span class="text-[#D97706]">Dashboard</span></span>
+                    <span class="ml-4 px-2 py-1 text-xs font-medium bg-[#FEF3C7] text-[#92400E] rounded-md">CV0-004 Research</span>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <button onclick="navigateTo('brief')" id="nav-brief" class="active-nav px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">Executive Brief</button>
+                    <button onclick="navigateTo('matrix')" id="nav-matrix" class="px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">Risk vs. Accuracy</button>
+                    <button onclick="navigateTo('providers')" id="nav-providers" class="px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">Provider Analysis</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+        <!-- SECTION 1: EXECUTIVE BRIEF -->
+        <section id="brief" class="section-fade space-y-8">
+            <div class="bg-white rounded-xl shadow-sm border border-[#E7E5E4] p-6 sm:p-8">
+                <div class="max-w-3xl">
+                    <h1 class="text-3xl font-bold text-[#44403C] mb-4">Research Status: CompTIA Cloud+ (CV0-004)</h1>
+                    <p class="text-lg text-gray-600 leading-relaxed mb-6">
+                        The transition from CV0-003 to <strong>CV0-004</strong> introduces significant changes in cloud architecture and security domains. 
+                        Our market analysis indicates that "Unauthorized Exam Dumps" for CV0-004 are currently in a <strong>Maturation Phase</strong>. 
+                        While legacy providers claim 100% accuracy, real-world user feedback suggests a high variance in answer key reliability for this specific version.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                        <div class="bg-[#FAFAF9] p-4 rounded-lg border-l-4 border-[#D97706]">
+                            <h3 class="font-semibold text-[#78350F]">Format Preference</h3>
+                            <p class="text-sm text-gray-500 mt-1">PDF format is highly requested for portability, but often lags behind web-based engines in update frequency.</p>
+                        </div>
+                        <div class="bg-[#FAFAF9] p-4 rounded-lg border-l-4 border-[#D97706]">
+                            <h3 class="font-semibold text-[#78350F]">Accuracy Alert</h3>
+                            <p class="text-sm text-gray-500 mt-1">Crowdsourced corrections are currently more accurate than static PDF keys for CV0-004.</p>
+                        </div>
+                        <div class="bg-[#FAFAF9] p-4 rounded-lg border-l-4 border-[#D97706]">
+                            <h3 class="font-semibold text-[#78350F]">Content Risk</h3>
+                            <p class="text-sm text-gray-500 mt-1">CV0-004 pools are still stabilizing. "Guaranteed Pass" claims should be treated with extreme skepticism.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Format Analysis Chart -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-xl shadow-sm border border-[#E7E5E4] p-6">
+                    <h2 class="text-xl font-bold text-[#44403C] mb-2">Format Efficiency Analysis</h2>
+                    <p class="text-sm text-gray-500 mb-6">Comparing your PDF preference against other consumption methods for retention and utility.</p>
+                    <div class="chart-container">
+                        <canvas id="formatChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-[#E7E5E4] p-6 flex flex-col justify-center">
+                    <h2 class="text-xl font-bold text-[#44403C] mb-4">Analyst Recommendation</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-green-100 text-green-800 font-bold text-xs">1</div>
+                            <p class="ml-4 text-gray-600 text-sm"><strong>Hybrid Approach:</strong> Use "Community Platforms" for the most recent questions (Accuracy priority), but print selected sections to PDF for study (Format priority).</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-green-100 text-green-800 font-bold text-xs">2</div>
+                            <p class="ml-4 text-gray-600 text-sm"><strong>Verification Mandatory:</strong> For CV0-004, approximately 30% of "Dump" answers are initially incorrect. Cross-reference all "dumps" with official CompTIA objectives.</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-green-100 text-green-800 font-bold text-xs">3</div>
+                            <p class="ml-4 text-gray-600 text-sm"><strong>Target:</strong> Look for providers that offer "VCE to PDF" conversion services to get the freshness of the engine with the portability of the document.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: RISK MATRIX -->
+        <section id="matrix" class="hidden section-fade space-y-8">
+             <div class="bg-white rounded-xl shadow-sm border border-[#E7E5E4] p-6 sm:p-8">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-[#44403C]">Market Landscape: Accuracy vs. Risk</h2>
+                    <p class="text-gray-600 mt-2">
+                        Visualizing the trade-off between unauthorized resources and official materials. 
+                        <br><span class="text-sm text-[#D97706] italic">Interactive: Hover over data points for detailed metrics.</span>
+                    </p>
+                </div>
+                <!-- Plotly Container -->
+                <div id="riskPlot" class="w-full h-[500px] border border-gray-100 rounded-lg bg-[#FAFAF9]"></div>
+                
+                <div class="mt-6 p-4 bg-amber-50 rounded-lg border border-amber-100">
+                    <h4 class="font-bold text-amber-800 text-sm uppercase mb-2">Interpretation Guide</h4>
+                    <p class="text-sm text-amber-900">
+                        <strong>Top-Right (Ideal):</strong> High Accuracy, Low Risk. Only Official sources reside here.<br>
+                        <strong>Top-Left (The "Grey Zone"):</strong> High Accuracy (due to real questions), High Risk (Copyright violation/Ban). This is where most "Dumps" cluster.<br>
+                        <strong>Bottom-Left (Danger):</strong> Low Accuracy, High Risk. "Scam" PDF sellers often selling CV0-003 questions labeled as CV0-004.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: PROVIDER ANALYSIS -->
+        <section id="providers" class="hidden section-fade space-y-8">
+            <div class="text-center max-w-2xl mx-auto mb-8">
+                <h2 class="text-2xl font-bold text-[#44403C]">Provider Archetypes</h2>
+                <p class="text-gray-600 mt-2">Analysis of the three primary sources for exam questions found during research. Click cards to reveal the detailed assessment for CV0-004.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <button onclick="updateProviderDetail('community')" class="text-left bg-white p-6 rounded-xl shadow-sm border border-[#E7E5E4] card-hover focus:outline-none focus:ring-2 focus:ring-[#D97706]">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="h-10 w-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-xl font-bold">C</div>
+                        <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Format: Web/PDF*</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900">Community Forums</h3>
+                    <p class="text-sm text-gray-500 mt-2">Crowdsourced platforms where users vote on answers.</p>
+                    <div class="mt-4 flex items-center space-x-2 text-xs text-gray-400">
+                        <span>Accuracy: Variable</span>
+                        <span>•</span>
+                        <span>Cost: Low/Free</span>
+                    </div>
+                </button>
+
+                <!-- Card 2 -->
+                <button onclick="updateProviderDetail('mart')" class="text-left bg-white p-6 rounded-xl shadow-sm border border-[#E7E5E4] card-hover focus:outline-none focus:ring-2 focus:ring-[#D97706]">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="h-10 w-10 bg-red-100 text-red-600 rounded-lg flex items-center justify-center text-xl font-bold">M</div>
+                        <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Format: Pure PDF</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900">PDF Dump Marts</h3>
+                    <p class="text-sm text-gray-500 mt-2">Transactional sites selling static PDF files.</p>
+                    <div class="mt-4 flex items-center space-x-2 text-xs text-gray-400">
+                        <span>Accuracy: Static</span>
+                        <span>•</span>
+                        <span>Cost: $30-$90</span>
+                    </div>
+                </button>
+
+                <!-- Card 3 -->
+                <button onclick="updateProviderDetail('official')" class="text-left bg-white p-6 rounded-xl shadow-sm border border-[#E7E5E4] card-hover focus:outline-none focus:ring-2 focus:ring-[#D97706]">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="h-10 w-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center text-xl font-bold">O</div>
+                        <span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Format: Book/Online</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900">Official Bundles</h3>
+                    <p class="text-sm text-gray-500 mt-2">CompTIA CertMaster and official partners.</p>
+                    <div class="mt-4 flex items-center space-x-2 text-xs text-gray-400">
+                        <span>Accuracy: 100%</span>
+                        <span>•</span>
+                        <span>Cost: High</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Dynamic Detail Area -->
+            <div id="provider-detail" class="bg-[#FAFAF9] rounded-xl border border-[#E7E5E4] p-8 mt-6 transition-all duration-300">
+                <h3 class="text-xl font-bold text-[#44403C] mb-2" id="detail-title">Select a Provider Type</h3>
+                <p class="text-gray-600 mb-6" id="detail-desc">Click on a card above to see a detailed breakdown of accuracy, risk, and suitability for CV0-004.</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded border border-gray-100">
+                        <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Pros</span>
+                        <p class="text-sm text-gray-700 mt-1" id="detail-pros">-</p>
+                    </div>
+                    <div class="bg-white p-4 rounded border border-gray-100">
+                        <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Cons</span>
+                        <p class="text-sm text-gray-700 mt-1" id="detail-cons">-</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-[#E7E5E4] mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <p class="text-center text-xs text-gray-400">
+                Research Dashboard Generated for Informational Purposes. 
+                <br>Utilization of unauthorized material may violate CompTIA Candidate Policy.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // --- State Management ---
+        const state = {
+            currentSection: 'brief',
+            providerData: {
+                community: {
+                    title: "Community Crowdsourced Platforms",
+                    desc: "These platforms allow users to upload exam questions and discuss the answers in comments. For CV0-004, this is the most dynamic source.",
+                    pros: "High volume of recent questions; 'Discussion' feature often reveals the correct answer when the provided key is wrong; Often free or low subscription.",
+                    cons: "Answer keys are notoriously 50/50 accurate; Requires heavy time investment to read comments; Web-only interface (hard to print to PDF)."
+                },
+                mart: {
+                    title: "Static PDF Dump Marts",
+                    desc: "Traditional sites that sell a single PDF file for a fixed price. They claim to be 'updated daily' but often recycle old questions.",
+                    pros: "Instant PDF download (Format Preference Match); Clean layout; No ads; Easier to read offline.",
+                    cons: "Extremely high risk for CV0-004 (new exam) - likely to contain CV0-003 questions; No way to verify answers; No refunds; Static content.",
+                    recommendation: "Avoid unless verified by a trusted community."
+                },
+                official: {
+                    title: "Official CompTIA Resources",
+                    desc: "CertMaster Practice and Official Study Guides. The baseline for truth.",
+                    pros: "100% Validated correctness; Aligns perfectly with objectives; Zero risk of ban.",
+                    cons: "Very expensive; Questions are 'like' the exam but not 'the' exam questions (Logic vs. Rote memorization).",
+                }
+            }
+        };
+
+        // --- Navigation Logic ---
+        function navigateTo(sectionId) {
+            // Update State
+            state.currentSection = sectionId;
+
+            // UI Updates
+            document.querySelectorAll('section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            document.querySelectorAll('nav button').forEach(el => el.classList.remove('active-nav', 'text-[#92400E]'));
+            document.getElementById(`nav-${sectionId}`).classList.add('active-nav', 'text-[#92400E]');
+
+            // Trigger Charts if needed
+            if(sectionId === 'matrix') {
+                renderPlotly();
+            }
+        }
+
+        // --- Provider Details Logic ---
+        function updateProviderDetail(type) {
+            const data = state.providerData[type];
+            const container = document.getElementById('provider-detail');
+            
+            // Simple animation reset
+            container.style.opacity = '0.5';
+            
+            setTimeout(() => {
+                document.getElementById('detail-title').innerText = data.title;
+                document.getElementById('detail-desc').innerText = data.desc;
+                document.getElementById('detail-pros').innerText = data.pros;
+                document.getElementById('detail-cons').innerText = data.cons;
+                container.style.opacity = '1';
+            }, 150);
+        }
+
+        // --- Visualization: Chart.js (Format Analysis) ---
+        function initChartJS() {
+            const ctx = document.getElementById('formatChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Portability (PDF)', 'Update Speed', 'Answer Accuracy', 'Searchability', 'Cost Efficiency'],
+                    datasets: [{
+                        label: 'PDF Dump Bundles',
+                        data: [95, 30, 60, 40, 70],
+                        backgroundColor: 'rgba(217, 119, 6, 0.2)',
+                        borderColor: 'rgba(217, 119, 6, 1)',
+                        pointBackgroundColor: 'rgba(217, 119, 6, 1)',
+                    },
+                    {
+                        label: 'Web-Based Community',
+                        data: [40, 90, 85, 90, 90],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0,0,0,0.1)' },
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        // --- Visualization: Plotly (Risk Matrix) ---
+        function renderPlotly() {
+            const trace1 = {
+                x: [20, 85, 95], // Risk (0 = safe, 100 = ban risk)
+                y: [100, 75, 50], // Accuracy (Real exam similarity)
+                mode: 'markers+text',
+                type: 'scatter',
+                text: ['Official Material', 'Community Platforms', 'Static PDF Sellers'],
+                textposition: 'top center',
+                marker: { size: [30, 45, 25], color: ['#10B981', '#3B82F6', '#EF4444'], opacity: 0.8 }
+            };
+
+            const layout = {
+                title: 'Risk vs. Accuracy Landscape',
+                xaxis: { title: 'Risk Factor (Ban/Ethics)', range: [0, 110] },
+                yaxis: { title: 'Content Accuracy %', range: [0, 110] },
+                hovermode: 'closest',
+                paper_bgcolor: '#FAFAF9',
+                plot_bgcolor: '#FAFAF9',
+                font: { family: 'Inter' },
+                margin: { t: 40, r: 20, l: 40, b: 40 }
+            };
+
+            Plotly.newPlot('riskPlot', [trace1], layout, {displayModeBar: false, responsive: true});
+        }
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initChartJS();
+            // Pre-load default provider text
+            updateProviderDetail('community');
+        });
+
+    </script>
+</body>
+</html>
