@@ -1,0 +1,3324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Tanat Tonguthaisri - Cognitive SOAR Architect, Cybersecurity Visionary, and Pioneer in Financial Critical Infrastructure Defense">
+    <meta name="keywords" content="Tanat Tonguthaisri, Cognitive SOAR, Cybersecurity, Case-Based Reasoning, AI/ML, Data Engineering, Financial Infrastructure, Thailand, กยศ, DSc Candidate">
+    <meta name="author" content="Tanat Tonguthaisri">
+    <meta property="og:title" content="Tanat Tonguthaisri | Cognitive SOAR Architect">
+    <meta property="og:description" content="Two decades of systematic mastery culminating in revolutionary adaptive security architecture.">
+    <meta property="og:image" content="http://defense.engineer/Tanat-FullBody.jpg">
+    <meta property="og:url" content="https://defense.engineer">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <title>Tanat Tonguthaisri | Think Different About Security</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=SF+Pro+Text:wght@300;400;500;600&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* ============================================
+           STEVE JOBS DESIGN PHILOSOPHY
+           "Design is not just what it looks like and 
+           feels like. Design is how it works."
+           ============================================ */
+        
+        :root {
+            /* The Apple Palette - Refined Minimalism */
+            --void: #000000;
+            --obsidian: #1d1d1f;
+            --graphite: #86868b;
+            --silver: #f5f5f7;
+            --snow: #fbfbfd;
+            --white: #ffffff;
+            
+            /* Accent - The Signature Blue */
+            --accent: #0071e3;
+            --accent-hover: #0077ed;
+            --accent-glow: rgba(0, 113, 227, 0.4);
+            
+            /* Semantic Colors */
+            --success: #34c759;
+            --warning: #ff9f0a;
+            --danger: #ff3b30;
+            --info: #5ac8fa;
+            
+            /* Gradients - Subtle Depth */
+            --gradient-hero: linear-gradient(180deg, #000000 0%, #1d1d1f 100%);
+            --gradient-card: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            --gradient-accent: linear-gradient(135deg, #0071e3 0%, #00c7be 100%);
+            --gradient-gold: linear-gradient(135deg, #b4a06c 0%, #d4c48a 50%, #b4a06c 100%);
+            
+            /* Glass Effect */
+            --glass-bg: rgba(29, 29, 31, 0.72);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(20px);
+            
+            /* Typography Scale - Apple's Golden Ratio */
+            --text-hero: clamp(48px, 8vw, 96px);
+            --text-headline: clamp(32px, 5vw, 64px);
+            --text-title: clamp(24px, 3vw, 40px);
+            --text-body-large: 21px;
+            --text-body: 17px;
+            --text-caption: 14px;
+            --text-micro: 12px;
+            
+            /* Spacing - 8px Grid System */
+            --space-xs: 8px;
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 48px;
+            --space-xl: 80px;
+            --space-2xl: 120px;
+            
+            /* Layout */
+            --max-width: 1120px;
+            --header-height: 48px;
+            --section-padding: clamp(60px, 10vw, 120px);
+            
+            /* Animation - Apple's Signature Easing */
+            --ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
+            --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --duration-fast: 0.2s;
+            --duration-normal: 0.4s;
+            --duration-slow: 0.8s;
+            
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+        }
+
+        /* Light Mode Overrides */
+        .light-mode {
+            --void: #ffffff;
+            --obsidian: #f5f5f7;
+            --graphite: #86868b;
+            --silver: #1d1d1f;
+            --snow: #000000;
+            --glass-bg: rgba(255, 255, 255, 0.72);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --gradient-hero: linear-gradient(180deg, #ffffff 0%, #f5f5f7 100%);
+            --gradient-card: linear-gradient(135deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.05) 100%);
+        }
+
+        /* ============================================
+           CSS RESET - Clean Slate
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+            font-size: var(--text-body);
+            line-height: 1.47059;
+            font-weight: 400;
+            letter-spacing: -0.022em;
+            color: var(--silver);
+            background: var(--void);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        body[data-lang="th"] {
+            font-family: 'IBM Plex Sans Thai', -apple-system, sans-serif;
+        }
+
+        ::selection {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color var(--duration-fast) var(--ease-apple);
+        }
+
+        a:hover {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        /* ============================================
+           LOADING EXPERIENCE
+           ============================================ */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--void);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.6s var(--ease-apple), visibility 0.6s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loading-logo {
+            width: 60px;
+            height: 60px;
+            position: relative;
+        }
+
+        .loading-logo::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 2px solid var(--glass-border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-logo::after {
+            content: '🛡️';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: var(--space-md);
+            font-size: var(--text-caption);
+            color: var(--graphite);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* ============================================
+           AMBIENT CANVAS - Subtle Depth
+           ============================================ */
+        #ambient-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        /* ============================================
+           NAVIGATION - Invisible Until Needed
+           ============================================ */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            transform: translateY(-100%);
+            transition: transform var(--duration-normal) var(--ease-apple);
+        }
+
+        .nav-bar.visible {
+            transform: translateY(0);
+        }
+
+        .nav-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            font-weight: 600;
+            font-size: var(--text-body);
+            color: var(--silver);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .nav-brand-icon {
+            font-size: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: var(--space-lg);
+            list-style: none;
+        }
+
+        .nav-link {
+            font-size: var(--text-micro);
+            font-weight: 400;
+            color: var(--silver);
+            opacity: 0.8;
+            transition: opacity var(--duration-fast) var(--ease-apple);
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+            text-decoration: none;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .nav-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--silver);
+            opacity: 0.8;
+            transition: all var(--duration-fast) var(--ease-apple);
+        }
+
+        .nav-btn:hover {
+            opacity: 1;
+            background: var(--glass-border);
+        }
+
+        .lang-toggle {
+            font-size: var(--text-micro);
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            background: var(--glass-border);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            padding: 8px;
+        }
+
+        .mobile-menu-btn span {
+            width: 18px;
+            height: 1.5px;
+            background: var(--silver);
+            transition: all var(--duration-fast) var(--ease-apple);
+        }
+
+        /* ============================================
+           HERO SECTION - The First Impression
+           "You've got to start with the customer 
+           experience and work back toward the technology"
+           ============================================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: var(--space-2xl) var(--space-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            z-index: 1;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: var(--text-caption);
+            font-weight: 500;
+            color: var(--accent);
+            margin-bottom: var(--space-md);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.8s var(--ease-apple) 0.2s forwards;
+        }
+
+        .hero-eyebrow-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .hero-headline {
+            font-size: var(--text-hero);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.045em;
+            color: var(--snow);
+            margin-bottom: var(--space-md);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s var(--ease-apple) 0.4s forwards;
+        }
+
+        .hero-headline .gradient-text {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subheadline {
+            font-size: var(--text-title);
+            font-weight: 600;
+            line-height: 1.1;
+            letter-spacing: -0.022em;
+            color: var(--graphite);
+            margin-bottom: var(--space-lg);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s var(--ease-apple) 0.6s forwards;
+        }
+
+        .hero-description {
+            font-size: var(--text-body-large);
+            line-height: 1.52381;
+            color: var(--graphite);
+            max-width: 680px;
+            margin: 0 auto var(--space-lg);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s var(--ease-apple) 0.8s forwards;
+        }
+
+        .hero-cta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--space-sm);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s var(--ease-apple) 1s forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Buttons - Apple Style */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+            padding: 12px 24px;
+            font-size: var(--text-body);
+            font-weight: 400;
+            border-radius: var(--radius-full);
+            transition: all var(--duration-fast) var(--ease-apple);
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            text-decoration: none;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent);
+        }
+
+        .btn-secondary:hover {
+            text-decoration: none;
+        }
+
+        .btn-icon {
+            font-size: 14px;
+            transition: transform var(--duration-fast) var(--ease-apple);
+        }
+
+        .btn:hover .btn-icon {
+            transform: translateX(3px);
+        }
+
+        /* Hero Stats */
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-xl);
+            margin-top: var(--space-xl);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--glass-border);
+            opacity: 0;
+            animation: fadeUp 1s var(--ease-apple) 1.2s forwards;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: var(--text-title);
+            font-weight: 700;
+            color: var(--snow);
+            font-feature-settings: 'tnum';
+            letter-spacing: -0.02em;
+        }
+
+        .stat-label {
+            font-size: var(--text-caption);
+            color: var(--graphite);
+            margin-top: 4px;
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: var(--space-lg);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-xs);
+            color: var(--graphite);
+            font-size: var(--text-micro);
+            opacity: 0;
+            animation: fadeUp 1s var(--ease-apple) 1.5s forwards;
+        }
+
+        .scroll-indicator-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--graphite), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { transform: scaleY(1); opacity: 1; }
+            50% { transform: scaleY(0.5); opacity: 0.5; }
+        }
+
+        /* ============================================
+           SECTION STYLES - Consistent Rhythm
+           ============================================ */
+        section {
+            padding: var(--section-padding) var(--space-md);
+        }
+
+        .section-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .section-eyebrow {
+            font-size: var(--text-caption);
+            font-weight: 500;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-sm);
+        }
+
+        .section-title {
+            font-size: var(--text-headline);
+            font-weight: 700;
+            line-height: 1.08;
+            letter-spacing: -0.04em;
+            color: var(--snow);
+            margin-bottom: var(--space-sm);
+        }
+
+        .section-subtitle {
+            font-size: var(--text-body-large);
+            line-height: 1.5;
+            color: var(--graphite);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ============================================
+           ABOUT SECTION - The Story
+           ============================================ */
+        #about {
+            background: var(--obsidian);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            align-items: center;
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .about-image img {
+            border-radius: var(--radius-xl);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .about-image::before {
+            content: '';
+            position: absolute;
+            inset: -20px;
+            background: var(--gradient-accent);
+            border-radius: var(--radius-xl);
+            z-index: -1;
+            opacity: 0.1;
+            filter: blur(40px);
+        }
+
+        .about-content {
+            padding-left: var(--space-lg);
+        }
+
+        .about-quote {
+            font-size: var(--text-title);
+            font-weight: 500;
+            line-height: 1.3;
+            color: var(--snow);
+            margin-bottom: var(--space-lg);
+            position: relative;
+            padding-left: var(--space-md);
+            border-left: 3px solid var(--accent);
+        }
+
+        .about-text {
+            font-size: var(--text-body);
+            line-height: 1.7;
+            color: var(--graphite);
+            margin-bottom: var(--space-md);
+        }
+
+        .about-credentials {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-xs);
+            margin-top: var(--space-lg);
+        }
+
+        .credential-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: var(--glass-border);
+            border-radius: var(--radius-full);
+            font-size: var(--text-micro);
+            font-weight: 500;
+            color: var(--silver);
+        }
+
+        .credential-badge-icon {
+            font-size: 14px;
+        }
+
+        /* ============================================
+           EXPERTISE SECTION - The Craft
+           ============================================ */
+        .expertise-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+        }
+
+        .expertise-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            transition: all var(--duration-normal) var(--ease-apple);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .expertise-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform var(--duration-normal) var(--ease-apple);
+        }
+
+        .expertise-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 113, 227, 0.1);
+        }
+
+        .expertise-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .expertise-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-accent);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: var(--space-md);
+        }
+
+        .expertise-title {
+            font-size: var(--text-body-large);
+            font-weight: 600;
+            color: var(--snow);
+            margin-bottom: var(--space-xs);
+        }
+
+        .expertise-description {
+            font-size: var(--text-caption);
+            line-height: 1.6;
+            color: var(--graphite);
+        }
+
+        /* ============================================
+           JOURNEY SECTION - The Timeline
+           ============================================ */
+        #journey {
+            background: var(--obsidian);
+        }
+
+        .journey-container {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: var(--space-lg);
+            min-height: 600px;
+        }
+
+        .journey-timeline {
+            background: var(--void);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            max-height: 700px;
+            overflow-y: auto;
+        }
+
+        .journey-timeline::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .journey-timeline::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .journey-timeline::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: var(--radius-full);
+        }
+
+        .timeline-list {
+            position: relative;
+            padding-left: var(--space-md);
+        }
+
+        .timeline-list::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent), var(--success), var(--warning));
+            border-radius: var(--radius-full);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: var(--space-sm);
+            margin-bottom: var(--space-xs);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--duration-fast) var(--ease-apple);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: calc(-1 * var(--space-md) - 5px);
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--void);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            transition: all var(--duration-fast) var(--ease-apple);
+        }
+
+        .timeline-item:hover,
+        .timeline-item.active {
+            background: var(--glass-border);
+        }
+
+        .timeline-item:hover::before,
+        .timeline-item.active::before {
+            background: var(--accent);
+            transform: translateY(-50%) scale(1.2);
+        }
+
+        .timeline-item.conflict::before {
+            border-color: var(--warning);
+            border-radius: 2px;
+            transform: translateY(-50%) rotate(45deg);
+        }
+
+        .timeline-item.conflict:hover::before,
+        .timeline-item.conflict.active::before {
+            background: var(--warning);
+        }
+
+        .timeline-year {
+            font-size: var(--text-micro);
+            font-weight: 600;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .timeline-title {
+            font-size: var(--text-caption);
+            font-weight: 600;
+            color: var(--snow);
+            margin-top: 2px;
+        }
+
+        .timeline-org {
+            font-size: var(--text-micro);
+            color: var(--graphite);
+        }
+
+        /* Journey Detail Panel */
+        .journey-detail {
+            background: var(--void);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            position: sticky;
+            top: calc(var(--header-height) + var(--space-md));
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-lg);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .detail-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--gradient-accent);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .detail-meta {
+            flex: 1;
+        }
+
+        .detail-title {
+            font-size: var(--text-body-large);
+            font-weight: 600;
+            color: var(--snow);
+            margin-bottom: 4px;
+        }
+
+        .detail-subtitle {
+            font-size: var(--text-caption);
+            color: var(--graphite);
+        }
+
+        .detail-content {
+            font-size: var(--text-body);
+            line-height: 1.7;
+            color: var(--graphite);
+        }
+
+        .detail-content p {
+            margin-bottom: var(--space-md);
+        }
+
+        .detail-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-xs);
+            margin-top: var(--space-lg);
+        }
+
+        .detail-tag {
+            padding: 6px 12px;
+            background: var(--glass-border);
+            border-radius: var(--radius-full);
+            font-size: var(--text-micro);
+            font-weight: 500;
+            color: var(--accent);
+        }
+
+        /* ============================================
+           VISUALIZATION SECTION
+           ============================================ */
+        .viz-container {
+            background: var(--void);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .viz-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-accent);
+        }
+
+        .viz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .viz-title {
+            font-size: var(--text-body-large);
+            font-weight: 600;
+            color: var(--snow);
+        }
+
+        .viz-controls {
+            display: flex;
+            gap: var(--space-xs);
+        }
+
+        .viz-btn {
+            padding: 8px 16px;
+            font-size: var(--text-micro);
+            font-weight: 500;
+            color: var(--graphite);
+            background: var(--glass-border);
+            border-radius: var(--radius-full);
+            transition: all var(--duration-fast) var(--ease-apple);
+        }
+
+        .viz-btn:hover {
+            color: var(--snow);
+        }
+
+        .viz-btn.active {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        .viz-canvas {
+            width: 100%;
+            min-height: 400px;
+        }
+
+        .viz-legend {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            margin-top: var(--space-md);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: var(--text-micro);
+            color: var(--graphite);
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .legend-diamond {
+            width: 8px;
+            height: 8px;
+            transform: rotate(45deg);
+            border-radius: 2px;
+        }
+
+        /* ============================================
+           RESEARCH SECTION - The Vision
+           ============================================ */
+        #research {
+            background: var(--obsidian);
+        }
+
+        .research-hero {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .research-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(0, 113, 227, 0.1) 0%, rgba(0, 199, 190, 0.1) 100%);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius-full);
+            font-size: var(--text-caption);
+            font-weight: 500;
+            color: var(--accent);
+            margin-bottom: var(--space-md);
+        }
+
+        .research-badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .research-title {
+            font-size: var(--text-headline);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.04em;
+            color: var(--snow);
+            margin-bottom: var(--space-sm);
+        }
+
+        .research-subtitle {
+            font-size: var(--text-body-large);
+            color: var(--graphite);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Problem Statement */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .problem-card {
+            background: linear-gradient(135deg, rgba(255, 59, 48, 0.05) 0%, rgba(255, 159, 10, 0.05) 100%);
+            border: 1px solid rgba(255, 59, 48, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+        }
+
+        .problem-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+
+        .problem-title {
+            font-size: var(--text-caption);
+            font-weight: 600;
+            color: var(--snow);
+        }
+
+        .severity-badge {
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: var(--text-micro);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .severity-critical {
+            background: rgba(255, 59, 48, 0.2);
+            color: var(--danger);
+        }
+
+        .severity-high {
+            background: rgba(255, 159, 10, 0.2);
+            color: var(--warning);
+        }
+
+        .problem-description {
+            font-size: var(--text-caption);
+            line-height: 1.6;
+            color: var(--graphite);
+        }
+
+        /* Solution Cards */
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+        }
+
+        .solution-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            position: relative;
+            overflow: hidden;
+            transition: all var(--duration-normal) var(--ease-apple);
+        }
+
+        .solution-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gradient-accent);
+        }
+
+        .solution-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .solution-number {
+            font-size: var(--text-headline);
+            font-weight: 700;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+            margin-bottom: var(--space-sm);
+        }
+
+        .solution-title {
+            font-size: var(--text-body);
+            font-weight: 600;
+            color: var(--snow);
+            margin-bottom: var(--space-xs);
+        }
+
+        .solution-description {
+            font-size: var(--text-caption);
+            line-height: 1.6;
+            color: var(--graphite);
+        }
+
+        /* ============================================
+           ACHIEVEMENTS SECTION
+           ============================================ */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+        }
+
+        .achievement-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            text-align: center;
+            transition: all var(--duration-normal) var(--ease-apple);
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .achievement-icon {
+            font-size: 48px;
+            margin-bottom: var(--space-md);
+        }
+
+        .achievement-title {
+            font-size: var(--text-body);
+            font-weight: 600;
+            color: var(--snow);
+            margin-bottom: var(--space-xs);
+        }
+
+        .achievement-description {
+            font-size: var(--text-caption);
+            line-height: 1.6;
+            color: var(--graphite);
+        }
+
+        /* ============================================
+           CONTACT SECTION
+           ============================================ */
+        #contact {
+            background: var(--obsidian);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+        }
+
+        .contact-card {
+            background: var(--void);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+        }
+
+        .contact-card-title {
+            font-size: var(--text-body-large);
+            font-weight: 600;
+            color: var(--snow);
+            margin-bottom: var(--space-lg);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .contact-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-accent);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .contact-label {
+            font-size: var(--text-caption);
+            font-weight: 600;
+            color: var(--snow);
+            margin-bottom: 2px;
+        }
+
+        .contact-value {
+            font-size: var(--text-caption);
+            color: var(--graphite);
+        }
+
+        .engagement-list {
+            list-style: none;
+        }
+
+        .engagement-item {
+            display: flex;
+            gap: var(--space-sm);
+            padding: var(--space-md) 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .engagement-item:last-child {
+            border-bottom: none;
+        }
+
+        .engagement-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .engagement-title {
+            font-size: var(--text-caption);
+            font-weight: 600;
+            color: var(--snow);
+        }
+
+        .engagement-description {
+            font-size: var(--text-micro);
+            color: var(--graphite);
+            margin-top: 2px;
+        }
+
+        /* ============================================
+           FOOTER - The Signature
+           ============================================ */
+        footer {
+            padding: var(--space-xl) var(--space-md);
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .footer-brand {
+            font-size: var(--text-title);
+            font-weight: 700;
+            color: var(--snow);
+            margin-bottom: var(--space-xs);
+        }
+
+        .footer-tagline {
+            font-size: var(--text-caption);
+            color: var(--graphite);
+            margin-bottom: var(--space-md);
+        }
+
+        .footer-credentials {
+            font-size: var(--text-micro);
+            color: var(--graphite);
+            margin-bottom: var(--space-lg);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            background: var(--glass-border);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--silver);
+            transition: all var(--duration-fast) var(--ease-apple);
+        }
+
+        .social-link:hover {
+            background: var(--accent);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .footer-copyright {
+            font-size: var(--text-micro);
+            color: var(--graphite);
+        }
+
+        /* ============================================
+           SLIDE-OVER PANEL
+           ============================================ */
+        .panel-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--duration-normal) var(--ease-apple);
+            z-index: 2000;
+        }
+
+        .panel-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 480px;
+            height: 100vh;
+            background: var(--void);
+            border-left: 1px solid var(--glass-border);
+            transform: translateX(100%);
+            transition: transform var(--duration-normal) var(--ease-apple);
+            z-index: 2001;
+            overflow-y: auto;
+        }
+
+        .slide-panel.open {
+            transform: translateX(0);
+        }
+
+        .panel-header {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--glass-border);
+            position: relative;
+        }
+
+        .panel-close {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            background: var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--graphite);
+            transition: all var(--duration-fast) var(--ease-apple);
+        }
+
+        .panel-close:hover {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .panel-content {
+            padding: var(--space-lg);
+        }
+
+        /* ============================================
+           TOOLTIP
+           ============================================ */
+        .tooltip {
+            position: absolute;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--void);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            font-size: var(--text-caption);
+            color: var(--silver);
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity var(--duration-fast) var(--ease-apple);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            max-width: 280px;
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            color: var(--snow);
+            margin-bottom: 4px;
+        }
+
+        .tooltip-value {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent);
+        }
+
+        /* ============================================
+           SCROLL REVEAL ANIMATIONS
+           ============================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s var(--ease-apple);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal.delay-1 { transition-delay: 0.1s; }
+        .reveal.delay-2 { transition-delay: 0.2s; }
+        .reveal.delay-3 { transition-delay: 0.3s; }
+
+        /* ============================================
+           LANGUAGE SUPPORT
+           ============================================ */
+        [lang="th"] { display: none; }
+        body[data-lang="th"] [lang="en"] { display: none; }
+        body[data-lang="th"] [lang="th"] { display: block; }
+        body[data-lang="th"] span[lang="th"] { display: inline; }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 1024px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-lg);
+            }
+
+            .about-content {
+                padding-left: 0;
+            }
+
+            .journey-container {
+                grid-template-columns: 1fr;
+            }
+
+            .journey-detail {
+                position: static;
+            }
+
+            .expertise-grid,
+            .solution-grid,
+            .achievements-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --section-padding: 60px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: var(--space-md);
+            }
+
+            .expertise-grid,
+            .problem-grid,
+            .solution-grid,
+            .achievements-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .slide-panel {
+                max-width: 100%;
+            }
+        }
+
+        /* ============================================
+           ACCESSIBILITY
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+</head>
+<body data-lang="en">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-logo"></div>
+        <div class="loading-text">
+            <span lang="en">Loading Experience</span>
+            <span lang="th">กำลังโหลด</span>
+        </div>
+    </div>
+
+    <!-- Ambient Canvas -->
+    <canvas id="ambient-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="nav-bar" id="nav-bar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">
+                <span class="nav-brand-icon">🛡️</span>
+                <span>Tanat</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="#about" class="nav-link">
+                    <span lang="en">About</span>
+                    <span lang="th">เกี่ยวกับ</span>
+                </a></li>
+                <li><a href="#expertise" class="nav-link">
+                    <span lang="en">Expertise</span>
+                    <span lang="th">ความเชี่ยวชาญ</span>
+                </a></li>
+                <li><a href="#journey" class="nav-link">
+                    <span lang="en">Journey</span>
+                    <span lang="th">เส้นทาง</span>
+                </a></li>
+                <li><a href="#research" class="nav-link">
+                    <span lang="en">Research</span>
+                    <span lang="th">งานวิจัย</span>
+                </a></li>
+                <li><a href="#contact" class="nav-link">
+                    <span lang="en">Contact</span>
+                    <span lang="th">ติดต่อ</span>
+                </a></li>
+            </ul>
+
+            <div class="nav-controls">
+                <button class="lang-toggle" id="lang-toggle" aria-label="Toggle language">
+                    <span id="lang-label">EN</span>
+                </button>
+                <button class="nav-btn" id="theme-toggle" aria-label="Toggle theme">
+                    <span id="theme-icon">☀️</span>
+                </button>
+                <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <div class="hero-content">
+                <div class="hero-eyebrow">
+                    <span class="hero-eyebrow-dot"></span>
+                    <span lang="en">Available for Doctoral Research</span>
+                    <span lang="th">พร้อมสำหรับงานวิจัยปริญญาเอก</span>
+                </div>
+
+                <h1 class="hero-headline">
+                    <span lang="en">Think Different<br>About <span class="gradient-text">Security</span></span>
+                    <span lang="th">คิดต่าง<br>เรื่อง<span class="gradient-text">ความปลอดภัย</span></span>
+                </h1>
+
+                <p class="hero-subheadline">
+                    <span lang="en">Tanat Tonguthaisri</span>
+                    <span lang="th">ธนัท ทองอุทัยศรี</span>
+                </p>
+
+                <p class="hero-description">
+                    <span lang="en">Two decades of systematic mastery culminating in the Cognitive SOAR framework—where Case-Based Reasoning meets Transformer Embeddings to defend Thailand's Financial Critical Infrastructure.</span>
+                    <span lang="th">สองทศวรรษแห่งการพัฒนาอย่างเป็นระบบ นำไปสู่ Cognitive SOAR framework ที่ผสาน Case-Based Reasoning กับ Transformer Embeddings เพื่อปกป้องโครงสร้างพื้นฐานทางการเงินสำคัญของไทย</span>
+                </p>
+
+                <div class="hero-cta">
+                    <a href="#research" class="btn btn-primary">
+                        <span lang="en">Explore the Vision</span>
+                        <span lang="th">สำรวจวิสัยทัศน์</span>
+                        <span class="btn-icon">→</span>
+                    </a>
+                    <a href="#contact" class="btn btn-secondary">
+                        <span lang="en">Get in Touch</span>
+                        <span lang="th">ติดต่อ</span>
+                    </a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-value" data-count="20">0</div>
+                        <div class="stat-label">
+                            <span lang="en">Years Experience</span>
+                            <span lang="th">ปีประสบการณ์</span>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" data-count="7" data-suffix="M+">0</div>
+                        <div class="stat-label">
+                            <span lang="en">Accounts Protected</span>
+                            <span lang="th">บัญชีที่ปกป้อง</span>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" data-count="200" data-prefix="฿" data-suffix="B+">0</div>
+                        <div class="stat-label">
+                            <span lang="en">Assets Secured</span>
+                            <span lang="th">สินทรัพย์ที่รักษา</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scroll-indicator">
+                <span lang="en">Scroll to explore</span>
+                <span lang="th">เลื่อนเพื่อสำรวจ</span>
+                <div class="scroll-indicator-line"></div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about">
+            <div class="section-container">
+                <div class="about-grid reveal">
+                    <div class="about-image">
+                        <img src="http://defense.engineer/Tanat-FullBody.jpg" alt="Tanat Tonguthaisri" loading="lazy">
+                    </div>
+                    <div class="about-content">
+                        <p class="about-quote">
+                            <span lang="en">"The C-SOAR framework isn't speculative—it's the crystallization of two decades systematically building toward this contribution."</span>
+                            <span lang="th">"กรอบงาน C-SOAR ไม่ใช่แค่ทฤษฎี แต่เป็นผลลัพธ์ของการสร้างความเชี่ยวชาญอย่างเป็นระบบเป็นเวลากว่า 20 ปี"</span>
+                        </p>
+
+                        <p class="about-text">
+                            <span lang="en">Currently managing cybersecurity for Thailand's Student Loan Fund (กยศ.)—Financial Critical Infrastructure processing 7+ million accounts and 200+ billion baht. Architecting production-grade vector pipelines and deploying sub-10ms similarity search across millions of records.</span>
+                            <span lang="th">ปัจจุบันบริหารความมั่นคงปลอดภัยไซเบอร์ให้กองทุน กยศ. ซึ่งเป็นโครงสร้างพื้นฐานทางการเงินสำคัญที่ประมวลผลบัญชีกว่า 7 ล้านบัญชีและมูลค่ากว่า 200,000 ล้านบาท</span>
+                        </p>
+
+                        <p class="about-text">
+                            <span lang="en">Pursuing Doctor of Science at Capitol Technology University to formalize the Cognitive SOAR framework—transcending static automation through Vectorized Case-Based Reasoning, LLM-powered synthesis, and Formal Verification.</span>
+                            <span lang="th">กำลังศึกษาปริญญาเอกวิทยาศาสตร์ที่ Capitol Technology University เพื่อพัฒนา Cognitive SOAR framework อย่างเป็นทางการ</span>
+                        </p>
+
+                        <div class="about-credentials">
+                            <span class="credential-badge">
+                                <span class="credential-badge-icon">🛡️</span>
+                                CISSP
+                            </span>
+                            <span class="credential-badge">
+                                <span class="credential-badge-icon">🔍</span>
+                                CEH v12
+                            </span>
+                            <span class="credential-badge">
+                                <span class="credential-badge-icon">🕵️</span>
+                                CHFI v11
+                            </span>
+                            <span class="credential-badge">
+                                <span class="credential-badge-icon">📋</span>
+                                Project+
+                            </span>
+                            <span class="credential-badge">
+                                <span class="credential-badge-icon">🎓</span>
+                                M.Eng (RMIT)
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expertise Section -->
+        <section id="expertise">
+            <div class="section-container">
+                <div class="section-header reveal">
+                    <p class="section-eyebrow">
+                        <span lang="en">Expertise</span>
+                        <span lang="th">ความเชี่ยวชาญ</span>
+                    </p>
+                    <h2 class="section-title">
+                        <span lang="en">The Convergent Domains</span>
+                        <span lang="th">ความเชี่ยวชาญที่บรรจบกัน</span>
+                    </h2>
+                    <p class="section-subtitle">
+                        <span lang="en">Each skill deliberately cultivated to enable the Cognitive SOAR vision</span>
+                        <span lang="th">แต่ละทักษะได้รับการพัฒนาอย่างมีเจตนาเพื่อเปิดใช้งานวิสัยทัศน์ Cognitive SOAR</span>
+                    </p>
+                </div>
+
+                <!-- Skills Radar Visualization -->
+                <div class="viz-container reveal">
+                    <div class="viz-header">
+                        <h3 class="viz-title">
+                            <span lang="en">Expertise Radar</span>
+                            <span lang="th">เรดาร์ความเชี่ยวชาญ</span>
+                        </h3>
+                    </div>
+                    <div class="viz-canvas" id="skills-radar"></div>
+                </div>
+
+                <div class="expertise-grid">
+                    <div class="expertise-card reveal delay-1">
+                        <div class="expertise-icon">🧠</div>
+                        <h3 class="expertise-title">
+                            <span lang="en">Case-Based Reasoning</span>
+                            <span lang="th">Case-Based Reasoning</span>
+                        </h3>
+                        <p class="expertise-description">
+                            <span lang="en">20 years from academic research (87% accuracy) to production systems (100K+ case libraries). The foundation of C-SOAR's adaptive intelligence.</span>
+                            <span lang="th">20 ปีจากงานวิจัยทางวิชาการ (ความแม่นยำ 87%) สู่ระบบการผลิต (case libraries กว่า 100,000 รายการ)</span>
+                        </p>
+                    </div>
+
+                    <div class="expertise-card reveal delay-2">
+                        <div class="expertise-icon">⚡</div>
+                        <h3 class="expertise-title">
+                            <span lang="en">Vector Embeddings</span>
+                            <span lang="th">Vector Embeddings</span>
+                        </h3>
+                        <p class="expertise-description">
+                            <span lang="en">Production-grade 768-dimensional embeddings achieving sub-10ms similarity search across 10M+ records. O(n²) → O(log n) breakthrough.</span>
+                            <span lang="th">Embeddings 768 มิติระดับการผลิตที่ค้นหาความคล้ายคลึงได้ต่ำกว่า 10ms ในบันทึกกว่า 10 ล้านรายการ</span>
+                        </p>
+                    </div>
+
+                    <div class="expertise-card reveal delay-3">
+                        <div class="expertise-icon">🤖</div>
+                        <h3 class="expertise-title">
+                            <span lang="en">AI/ML Integration</span>
+                            <span lang="th">การบูรณาการ AI/ML</span>
+                        </h3>
+                        <p class="expertise-description">
+                            <span lang="en">Transformer-based Thai NLP, local LLM deployment, and multi-modal fusion for national security applications.</span>
+                            <span lang="th">Thai NLP แบบ Transformer การติดตั้ง LLM ในเครื่อง และการผสานหลายโหมดสำหรับแอปพลิเคชันความมั่นคงแห่งชาติ</span>
+                        </p>
+                    </div>
+
+                    <div class="expertise-card reveal delay-1">
+                        <div class="expertise-icon">📊</div>
+                        <h3 class="expertise-title">
+                            <span lang="en">Data Engineering</span>
+                            <span lang="th">วิศวกรรมข้อมูล</span>
+                        </h3>
+                        <p class="expertise-description">
+                            <span lang="en">Apache Airflow orchestration (3hrs → 12min), dbt transformations, Cassandra/vector DB at 50M+ events/day.</span>
+                            <span lang="th">การจัดการ Apache Airflow (3 ชม. → 12 นาที) การแปลง dbt Cassandra/vector DB ที่ 50M+ events/day</span>
+                        </p>
+                    </div>
+
+                    <div class="expertise-card reveal delay-2">
+                        <div class="expertise-icon">🔐</div>
+                        <h3 class="expertise-title">
+                            <span lang="en">Cybersecurity Leadership</span>
+                            <span lang="th">ภาวะผู้นำด้านความมั่นคงปลอดภัย</span>
+                        </h3>
+                        <p class="expertise-description">
+                            <span lang="en">CISSP since 2015, managing FCI security, APT defense, and regulatory compliance (PDPA, BOT, State Audit).</span>
+                            <span lang="th">CISSP ตั้งแต่ 2558 บริหารความปลอดภัย FCI การป้องกัน APT และการปฏิบัติตามกฎระเบียบ</span>
+                        </p>
+                    </div>
+
+                    <div class="expertise-card reveal delay-3">
+                        <div class="expertise-icon">✅</div>
+                        <h3 class="expertise-title">
+                            <span lang="en">Formal Verification</span>
+                            <span lang="th">การตรวจสอบเชิงรูปนัย</span>
+                        </h3>
+                        <p class="expertise-description">
+                            <span lang="en">Mathematical proof of safety invariants ensuring "do no harm" guarantees for autonomous actions in critical infrastructure.</span>
+                            <span lang="th">การพิสูจน์ทางคณิตศาสตร์ของค่าคงที่ด้านความปลอดภัยที่รับประกัน "ไม่ทำอันตราย"</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Journey Section -->
+        <section id="journey">
+            <div class="section-container">
+                <div class="section-header reveal">
+                    <p class="section-eyebrow">
+                        <span lang="en">Journey</span>
+                        <span lang="th">เส้นทาง</span>
+                    </p>
+                    <h2 class="section-title">
+                        <span lang="en">20 Years of Systematic Mastery</span>
+                        <span lang="th">20 ปีแห่งการพัฒนาอย่างเป็นระบบ</span>
+                    </h2>
+                    <p class="section-subtitle">
+                        <span lang="en">Each role strategically selected to build convergent expertise</span>
+                        <span lang="th">แต่ละบทบาทได้รับการคัดเลือกอย่างมีกลยุทธ์</span>
+                    </p>
+                </div>
+
+                <!-- Timeline Visualization -->
+                <div class="viz-container reveal">
+                    <div class="viz-header">
+                        <h3 class="viz-title">
+                            <span lang="en">Career Trajectory</span>
+                            <span lang="th">เส้นทางอาชีพ</span>
+                        </h3>
+                        <div class="viz-controls">
+                            <button class="viz-btn active" data-view="horizontal">
+                                <span lang="en">Timeline</span>
+                                <span lang="th">ไทม์ไลน์</span>
+                            </button>
+                            <button class="viz-btn" data-view="radial">
+                                <span lang="en">Radial</span>
+                                <span lang="th">วงกลม</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="viz-canvas" id="timeline-viz"></div>
+                    <div class="viz-legend">
+                        <div class="legend-item">
+                            <span class="legend-dot" style="background: var(--accent);"></span>
+                            <span lang="en">Milestone</span>
+                            <span lang="th">เหตุการณ์สำคัญ</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot" style="background: var(--success);"></span>
+                            <span lang="en">Achievement</span>
+                            <span lang="th">ความสำเร็จ</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-diamond" style="background: var(--warning);"></span>
+                            <span lang="en">Challenge</span>
+                            <span lang="th">ความท้าทาย</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Split Panel: Timeline + Detail -->
+                <div class="journey-container reveal">
+                    <div class="journey-timeline">
+                        <div class="timeline-list" id="timeline-list">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="journey-detail" id="journey-detail">
+                        <div class="detail-header">
+                            <div class="detail-icon" id="detail-icon">📋</div>
+                            <div class="detail-meta">
+                                <h4 class="detail-title" id="detail-title">
+                                    <span lang="en">Select an Event</span>
+                                    <span lang="th">เลือกเหตุการณ์</span>
+                                </h4>
+                                <p class="detail-subtitle" id="detail-subtitle">
+                                    <span lang="en">Click on a timeline event to view details</span>
+                                    <span lang="th">คลิกที่เหตุการณ์เพื่อดูรายละเอียด</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="detail-content" id="detail-content">
+                            <p lang="en">Each position in my career has been strategically chosen to build the convergent expertise necessary for developing the Cognitive SOAR framework.</p>
+                            <p lang="th">แต่ละตำแหน่งในอาชีพของผมได้รับการเลือกอย่างมีกลยุทธ์เพื่อสร้างความเชี่ยวชาญที่จำเป็น</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Research Section -->
+        <section id="research">
+            <div class="section-container">
+                <div class="research-hero reveal">
+                    <div class="research-badge">
+                        <span class="research-badge-dot"></span>
+                        <span lang="en">Doctoral Research</span>
+                        <span lang="th">งานวิจัยปริญญาเอก</span>
+                    </div>
+                    <h2 class="research-title">
+                        <span lang="en">Cognitive SOAR Framework</span>
+                        <span lang="th">กรอบงาน Cognitive SOAR</span>
+                    </h2>
+                    <p class="research-subtitle">
+                        <span lang="en">Transcending static automation through cognitive architecture</span>
+                        <span lang="th">ก้าวข้ามระบบอัตโนมัติแบบคงที่ผ่านสถาปัตยกรรมปัญญาประดิษฐ์</span>
+                    </p>
+                </div>
+
+                <!-- Problem Statement -->
+                <div class="problem-grid reveal">
+                    <div class="problem-card">
+                        <div class="problem-header">
+                            <span class="problem-title">
+                                <span lang="en">Novel Threat Failure</span>
+                                <span lang="th">ความล้มเหลวต่อภัยคุกคามใหม่</span>
+                            </span>
+                            <span class="severity-badge severity-critical">Critical</span>
+                        </div>
+                        <p class="problem-description">
+                            <span lang="en">70% of traditional SOAR systems fail against novel threats (Gartner 2024)</span>
+                            <span lang="th">70% ของระบบ SOAR แบบดั้งเดิมล้มเหลวต่อภัยคุกคามรูปแบบใหม่</span>
+                        </p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-header">
+                            <span class="problem-title">
+                                <span lang="en">Manual Response Delay</span>
+                                <span lang="th">ความล่าช้าในการตอบสนอง</span>
+                            </span>
+                            <span class="severity-badge severity-critical">Critical</span>
+                        </div>
+                        <p class="problem-description">
+                            <span lang="en">47-minute manual response during March 2024 zero-day APT attack</span>
+                            <span lang="th">การตอบสนองด้วยตนเอง 47 นาทีระหว่างการโจมตี APT zero-day</span>
+                        </p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-header">
+                            <span class="problem-title">
+                                <span lang="en">Black-Box AI Rejection</span>
+                                <span lang="th">การปฏิเสธ AI แบบกล่องดำ</span>
+                            </span>
+                            <span class="severity-badge severity-high">High</span>
+                        </div>
+                        <p class="problem-description">
+                            <span lang="en">Regulatory requirements mandate explainable decisions</span>
+                            <span lang="th">ข้อกำหนดด้านกฎระเบียบกำหนดให้ต้องมีการตัดสินใจที่อธิบายได้</span>
+                        </p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-header">
+                            <span class="problem-title">
+                                <span lang="en">Alert Fatigue</span>
+                                <span lang="th">ความเหนื่อยล้าจากการแจ้งเตือน</span>
+                            </span>
+                            <span class="severity-badge severity-high">High</span>
+                        </div>
+                        <p class="problem-description">
+                            <span lang="en">50K+ daily alerts with 94% false positive rate</span>
+                            <span lang="th">การแจ้งเตือนกว่า 50,000 รายการต่อวันพร้อมอัตราผลบวกลวง 94%</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Solution Cards -->
+                <div class="solution-grid reveal">
+                    <div class="solution-card">
+                        <div class="solution-number">01</div>
+                        <h3 class="solution-title">
+                            <span lang="en">Vectorized CBR</span>
+                            <span lang="th">Vectorized CBR</span>
+                        </h3>
+                        <p class="solution-description">
+                            <span lang="en">768-dimensional embeddings achieving sub-10ms similarity search. O(n²) → O(log n) breakthrough.</span>
+                            <span lang="th">Embeddings 768 มิติที่ค้นหาความคล้ายคลึงได้ต่ำกว่า 10ms</span>
+                        </p>
+                    </div>
+                    <div class="solution-card">
+                        <div class="solution-number">02</div>
+                        <h3 class="solution-title">
+                            <span lang="en">LLM Synthesis</span>
+                            <span lang="th">การสังเคราะห์ LLM</span>
+                        </h3>
+                        <p class="solution-description">
+                            <span lang="en">Local transformers generating contextual response strategies. 30-second zero-day response.</span>
+                            <span lang="th">Transformers ในเครื่องสร้างกลยุทธ์การตอบสนองตามบริบท</span>
+                        </p>
+                    </div>
+                    <div class="solution-card">
+                        <div class="solution-number">03</div>
+                        <h3 class="solution-title">
+                            <span lang="en">Formal Verification</span>
+                            <span lang="th">การตรวจสอบเชิงรูปนัย</span>
+                        </h3>
+                        <p class="solution-description">
+                            <span lang="en">Mathematical proof of safety invariants. "Do no harm" guarantees for autonomous actions.</span>
+                            <span lang="th">การพิสูจน์ทางคณิตศาสตร์ของค่าคงที่ด้านความปลอดภัย</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Achievements Section -->
+        <section id="achievements">
+            <div class="section-container">
+                <div class="section-header reveal">
+                    <p class="section-eyebrow">
+                        <span lang="en">Recognition</span>
+                        <span lang="th">การยอมรับ</span>
+                    </p>
+                    <h2 class="section-title">
+                        <span lang="en">Validated Excellence</span>
+                        <span lang="th">ความเป็นเลิศที่ได้รับการรับรอง</span>
+                    </h2>
+                </div>
+
+                <div class="achievements-grid reveal">
+                    <div class="achievement-card">
+                        <div class="achievement-icon">🏆</div>
+                        <h3 class="achievement-title">
+                            <span lang="en">Siam RegTech Top 10</span>
+                            <span lang="th">Siam RegTech 10 อันดับแรก</span>
+                        </h3>
+                        <p class="achievement-description">
+                            <span lang="en">SEC/BOT/OIC finalist for Advanced ML Anti-Money Laundering</span>
+                            <span lang="th">ผู้เข้ารอบ ก.ล.ต./ธปท./คปภ. สำหรับ ML ต่อต้านการฟอกเงินขั้นสูง</span>
+                        </p>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">👔</div>
+                        <h3 class="achievement-title">
+                            <span lang="en">Strategic Advisor</span>
+                            <span lang="th">ที่ปรึกษาเชิงกลยุทธ์</span>
+                        </h3>
+                        <p class="achievement-description">
+                            <span lang="en">Graduate Scholarship Committees: BOT, OCSC, NESDB</span>
+                            <span lang="th">คณะกรรมการทุนการศึกษา: ธปท. ก.พ. สภาพัฒน์</span>
+                        </p>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">🌏</div>
+                        <h3 class="achievement-title">
+                            <span lang="en">ITPEC Representative</span>
+                            <span lang="th">ตัวแทน ITPEC</span>
+                        </h3>
+                        <p class="achievement-description">
+                            <span lang="en">5 consecutive years representing Thailand internationally</span>
+                            <span lang="th">5 ปีติดต่อกันเป็นตัวแทนประเทศไทยในระดับนานาชาติ</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="section-container">
+                <div class="section-header reveal">
+                    <p class="section-eyebrow">
+                        <span lang="en">Connect</span>
+                        <span lang="th">ติดต่อ</span>
+                    </p>
+                    <h2 class="section-title">
+                        <span lang="en">Let's Build the Future</span>
+                        <span lang="th">มาสร้างอนาคตด้วยกัน</span>
+                    </h2>
+                </div>
+
+                <div class="contact-grid reveal">
+                    <div class="contact-card">
+                        <h3 class="contact-card-title">
+                            <span lang="en">Contact Information</span>
+                            <span lang="th">ข้อมูลการติดต่อ</span>
+                        </h3>
+                        <div class="contact-item">
+                            <div class="contact-icon">📧</div>
+                            <div>
+                                <p class="contact-label">Email</p>
+                                <p class="contact-value">ii@ieee.org</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">📱</div>
+                            <div>
+                                <p class="contact-label">Phone</p>
+                                <p class="contact-value">+66 89-936-5955</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">🏢</div>
+                            <div>
+                                <p class="contact-label">
+                                    <span lang="en">Organization</span>
+                                    <span lang="th">องค์กร</span>
+                                </p>
+                                <p class="contact-value">
+                                    <span lang="en">Student Loan Fund (กยศ.)</span>
+                                    <span lang="th">กองทุนเงินให้กู้ยืมเพื่อการศึกษา</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">📍</div>
+                            <div>
+                                <p class="contact-label">
+                                    <span lang="en">Location</span>
+                                    <span lang="th">ที่ตั้ง</span>
+                                </p>
+                                <p class="contact-value">
+                                    <span lang="en">Bangkok, Thailand</span>
+                                    <span lang="th">กรุงเทพมหานคร</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <h3 class="contact-card-title">
+                            <span lang="en">Engagement Opportunities</span>
+                            <span lang="th">โอกาสในการมีส่วนร่วม</span>
+                        </h3>
+                        <ul class="engagement-list">
+                            <li class="engagement-item">
+                                <span class="engagement-icon">🎓</span>
+                                <div>
+                                    <p class="engagement-title">
+                                        <span lang="en">Doctoral Research</span>
+                                        <span lang="th">งานวิจัยปริญญาเอก</span>
+                                    </p>
+                                    <p class="engagement-description">
+                                        <span lang="en">C-SOAR framework development, empirical validation</span>
+                                        <span lang="th">การพัฒนา C-SOAR framework การตรวจสอบเชิงประจักษ์</span>
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="engagement-item">
+                                <span class="engagement-icon">💼</span>
+                                <div>
+                                    <p class="engagement-title">
+                                        <span lang="en">Strategic Advisory</span>
+                                        <span lang="th">ที่ปรึกษาเชิงกลยุทธ์</span>
+                                    </p>
+                                    <p class="engagement-description">
+                                        <span lang="en">FCI security, AI/ML implementation</span>
+                                        <span lang="th">ความปลอดภัย FCI การนำ AI/ML ไปใช้</span>
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="engagement-item">
+                                <span class="engagement-icon">🗣️</span>
+                                <div>
+                                    <p class="engagement-title">
+                                        <span lang="en">Keynote Speaking</span>
+                                        <span lang="th">การบรรยายพิเศษ</span>
+                                    </p>
+                                    <p class="engagement-description">
+                                        <span lang="en">Cognitive security automation, adaptive defense</span>
+                                        <span lang="th">ระบบอัตโนมัติด้านความปลอดภัยแบบปัญญาประดิษฐ์</span>
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="section-container">
+            <div class="footer-brand">Tanat Tonguthaisri</div>
+            <p class="footer-tagline">
+                <span lang="en">Think Different About Security</span>
+                <span lang="th">คิดต่างเรื่องความปลอดภัย</span>
+            </p>
+            <p class="footer-credentials">CISSP | CEH v12 | CHFI v11 | Project+ | M.Eng (RMIT) | DSc Candidate</p>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/epicure" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener">💼</a>
+                <a href="https://github.com/000" class="social-link" aria-label="GitHub" target="_blank" rel="noopener">💻</a>
+                <a href="mailto:ii@ieee.org" class="social-link" aria-label="Email">📧</a>
+            </div>
+            <p class="footer-copyright">
+                <span lang="en">© 2025 Tanat Tonguthaisri. All rights reserved.</span>
+                <span lang="th">© 2568 ธนัท ทองอุทัยศรี สงวนลิขสิทธิ์</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Slide-Over Panel -->
+    <div class="panel-overlay" id="panel-overlay"></div>
+    <aside class="slide-panel" id="slide-panel">
+        <div class="panel-header">
+            <button class="panel-close" id="panel-close">✕</button>
+            <div id="panel-header-content"></div>
+        </div>
+        <div class="panel-content" id="panel-content"></div>
+    </aside>
+
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION & DATA
+        // ============================================
+        const CONFIG = {
+            colors: {
+                accent: '#0071e3',
+                success: '#34c759',
+                warning: '#ff9f0a',
+                danger: '#ff3b30',
+                graphite: '#86868b'
+            },
+            animation: {
+                duration: 400,
+                easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)'
+            }
+        };
+
+        // Career Timeline Data
+        const timelineData = [
+            {
+                year: 2004,
+                yearThai: 2547,
+                role: "CBR Pioneer",
+                roleEn: "Master's Thesis - CBR Pioneer",
+                roleTh: "วิทยานิพนธ์ปริญญาโท - ผู้บุกเบิก CBR",
+                org: "RMIT University",
+                orgTh: "มหาวิทยาลัย RMIT",
+                impact: 95,
+                type: "research",
+                icon: "🎓",
+                description: "Enhancing Academic Advisement using Case-Based Reasoning (87% accuracy). Proved expertise-as-experiences, similarity-based retrieval, and precedent transparency.",
+                descriptionTh: "การปรับปรุงการให้คำปรึกษาทางวิชาการโดยใช้ Case-Based Reasoning (ความแม่นยำ 87%)",
+                tags: ["CBR", "AI", "Research"]
+            },
+            {
+                year: 2009,
+                yearThai: 2552,
+                role: "Production CBR",
+                roleEn: "E-Business Consultant",
+                roleTh: "ที่ปรึกษา E-Business",
+                org: "Melbourne IT Ltd.",
+                orgTh: "Melbourne IT Ltd.",
+                impact: 85,
+                type: "milestone",
+                icon: "💼",
+                description: "7 years deploying Case-Based Reasoning for IT service desk (73% first-call resolution). Scaled case libraries to 100,000+ incidents.",
+                descriptionTh: "7 ปีในการติดตั้ง Case-Based Reasoning สำหรับ IT service desk",
+                tags: ["CBR", "Production", "IT Service"]
+            },
+            {
+                year: 2010,
+                yearThai: 2553,
+                role: "AI Research",
+                roleEn: "Researcher",
+                roleTh: "นักวิจัย",
+                org: "NECTEC/NSTDA",
+                orgTh: "เนคเทค/สวทช.",
+                impact: 75,
+                type: "milestone",
+                icon: "🔬",
+                description: "8 Years Deep AI Research: Swarm Intelligence, evolutionary algorithms, reinforcement learning.",
+                descriptionTh: "8 ปีวิจัย AI เชิงลึก: Swarm Intelligence อัลกอริทึมวิวัฒนาการ",
+                tags: ["AI", "Research", "Swarm Intelligence"]
+            },
+            {
+                year: 2018,
+                yearThai: 2561,
+                role: "National Security AI",
+                roleEn: "Innovation Manager",
+                roleTh: "ผู้จัดการนวัตกรรม",
+                org: "NSTDA",
+                orgTh: "สวทช.",
+                impact: 90,
+                type: "achievement",
+                icon: "🛡️",
+                description: "Led R&D for autonomous systems, counter-terrorism financing, OSINT using transformer-based Thai NLP.",
+                descriptionTh: "นำ R&D สำหรับระบบอัตโนมัติ การต่อต้านการเงินก่อการร้าย",
+                tags: ["AI", "NLP", "National Security"]
+            },
+            {
+                year: 2020,
+                yearThai: 2563,
+                role: "Military Cyber",
+                roleEn: "Advisor",
+                roleTh: "ที่ปรึกษา",
+                org: "Royal Thai Army Cyber Center",
+                orgTh: "ศูนย์ไซเบอร์กองทัพบก",
+                impact: 92,
+                type: "conflict",
+                icon: "⚔️",
+                description: "The Epiphany: Advised AI-augmented defense against 50K+ daily alerts. Observed expert analysts defeating APTs through analogical reasoning.",
+                descriptionTh: "การตระหนักรู้: ให้คำปรึกษาการป้องกันด้วย AI ต่อการแจ้งเตือนกว่า 50,000 รายการต่อวัน",
+                tags: ["Military", "Cyber Defense", "APT"]
+            },
+            {
+                year: 2022,
+                yearThai: 2565,
+                role: "National PKI",
+                roleEn: "Project Manager",
+                roleTh: "ผู้จัดการโครงการ",
+                org: "ETDA",
+                orgTh: "สพธอ.",
+                impact: 87,
+                type: "milestone",
+                icon: "🔐",
+                description: "Led gap analysis for Thailand's CA infrastructure against WebTrust/Chrome Root Program.",
+                descriptionTh: "นำการวิเคราะห์ช่องว่างสำหรับโครงสร้างพื้นฐาน CA ของไทย",
+                tags: ["PKI", "Digital Identity", "WebTrust"]
+            },
+            {
+                year: 2023,
+                yearThai: 2566,
+                role: "FCI Defense",
+                roleEn: "IT Specialist",
+                roleTh: "ผู้เชี่ยวชาญ IT",
+                org: "Student Loan Fund (กยศ.)",
+                orgTh: "กองทุน กยศ.",
+                impact: 98,
+                type: "conflict",
+                icon: "🏦",
+                description: "The Crucible: Managing security for 200B+ baht infrastructure. March 2024 zero-day APT exposed complete SOAR failure.",
+                descriptionTh: "การทดสอบ: บริหารความปลอดภัยสำหรับโครงสร้างพื้นฐานมูลค่ากว่า 200,000 ล้านบาท",
+                tags: ["FCI", "Vector DB", "Production"]
+            },
+            {
+                year: 2025,
+                yearThai: 2568,
+                role: "DSc Candidate",
+                roleEn: "DSc Candidate",
+                roleTh: "ผู้สมัครปริญญาเอก",
+                org: "Capitol Technology University",
+                orgTh: "Capitol Technology University",
+                impact: 100,
+                type: "research",
+                icon: "🎯",
+                description: "Pursuing Doctor of Science to formalize the Cognitive SOAR framework.",
+                descriptionTh: "กำลังศึกษาปริญญาเอกวิทยาศาสตร์เพื่อพัฒนา Cognitive SOAR framework",
+                tags: ["DSc", "C-SOAR", "Research"]
+            }
+        ];
+
+        // Skills Data
+        const skillsData = [
+            { axis: 'Case-Based Reasoning', value: 95 },
+            { axis: 'AI/ML', value: 92 },
+            { axis: 'Data Engineering', value: 90 },
+            { axis: 'Cybersecurity', value: 93 },
+            { axis: 'Vector Embeddings', value: 88 },
+            { axis: 'Formal Verification', value: 85 },
+            { axis: 'Production Systems', value: 91 },
+            { axis: 'Research', value: 87 }
+        ];
+
+        // ============================================
+        // STATE MANAGEMENT
+        // ============================================
+        let state = {
+            darkMode: true,
+            lang: 'en',
+            currentView: 'horizontal',
+            selectedEvent: null
+        };
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        function isDarkMode() {
+            return !document.body.classList.contains('light-mode');
+        }
+
+        function getCurrentLang() {
+            return document.body.dataset.lang || 'en';
+        }
+
+        function getTypeColor(type) {
+            const colors = {
+                milestone: CONFIG.colors.accent,
+                achievement: CONFIG.colors.success,
+                conflict: CONFIG.colors.warning,
+                research: '#5ac8fa'
+            };
+            return colors[type] || CONFIG.colors.accent;
+        }
+
+        // ============================================
+        // LOADING OVERLAY
+        // ============================================
+        function hideLoadingOverlay() {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 800);
+            }
+        }
+
+        // ============================================
+        // AMBIENT CANVAS - Subtle Particle Effect
+        // ============================================
+        function initAmbientCanvas() {
+            const canvas = document.getElementById('ambient-canvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let mouseX = 0, mouseY = 0;
+            let animationId;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                initParticles();
+            }
+
+            function initParticles() {
+                particles = [];
+                const count = Math.floor((canvas.width * canvas.height) / 25000);
+                for (let i = 0; i < count; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 0.3,
+                        vy: (Math.random() - 0.5) * 0.3,
+                        radius: Math.random() * 1.5 + 0.5,
+                        opacity: Math.random() * 0.3 + 0.1
+                    });
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach((p, i) => {
+                    // Update position
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    // Wrap around edges
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+
+                    // Mouse interaction
+                    const dx = mouseX - p.x;
+                    const dy = mouseY - p.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        p.x -= dx * 0.01;
+                        p.y -= dy * 0.01;
+                    }
+
+                    // Draw particle
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = isDarkMode() 
+                        ? `rgba(0, 113, 227, ${p.opacity})` 
+                        : `rgba(0, 113, 227, ${p.opacity * 0.5})`;
+                    ctx.fill();
+
+                    // Draw connections
+                    particles.slice(i + 1).forEach(p2 => {
+                        const dx2 = p.x - p2.x;
+                        const dy2 = p.y - p2.y;
+                        const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+                        if (dist2 < 100) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = isDarkMode()
+                                ? `rgba(0, 113, 227, ${0.1 * (1 - dist2 / 100)})`
+                                : `rgba(0, 113, 227, ${0.05 * (1 - dist2 / 100)})`;
+                            ctx.stroke();
+                        }
+                    });
+                });
+
+                animationId = requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', debounce(resize, 150));
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            resize();
+            animate();
+        }
+
+        // ============================================
+        // NAVIGATION
+        // ============================================
+        function initNavigation() {
+            const navBar = document.getElementById('nav-bar');
+            let lastScroll = 0;
+
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll > 100) {
+                    navBar.classList.add('visible');
+                } else {
+                    navBar.classList.remove('visible');
+                }
+
+                lastScroll = currentScroll;
+            });
+
+            // Smooth scroll for nav links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        const headerOffset = 60;
+                        const elementPosition = target.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+
+        // ============================================
+        // THEME TOGGLE
+        // ============================================
+        function initThemeToggle() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'light' || (!savedTheme && !prefersDark)) {
+                document.body.classList.add('light-mode');
+                themeIcon.textContent = '🌙';
+            }
+
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-mode');
+                const isLight = document.body.classList.contains('light-mode');
+                themeIcon.textContent = isLight ? '🌙' : '☀️';
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                
+                // Redraw visualizations
+                setTimeout(() => {
+                    createSkillsRadar();
+                    createTimelineViz();
+                }, 100);
+            });
+        }
+
+        // ============================================
+        // LANGUAGE TOGGLE
+        // ============================================
+        function initLanguageToggle() {
+            const langToggle = document.getElementById('lang-toggle');
+            const langLabel = document.getElementById('lang-label');
+            
+            const savedLang = localStorage.getItem('language') || 'en';
+            document.body.dataset.lang = savedLang;
+            langLabel.textContent = savedLang.toUpperCase();
+
+            langToggle.addEventListener('click', () => {
+                const currentLang = document.body.dataset.lang;
+                const newLang = currentLang === 'en' ? 'th' : 'en';
+                document.body.dataset.lang = newLang;
+                langLabel.textContent = newLang.toUpperCase();
+                localStorage.setItem('language', newLang);
+                
+                // Update timeline
+                populateTimeline();
+            });
+        }
+
+        // ============================================
+        // SCROLL REVEAL
+        // ============================================
+        function initScrollReveal() {
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            revealElements.forEach(el => observer.observe(el));
+        }
+
+        // ============================================
+        // COUNTER ANIMATION
+        // ============================================
+        function initCounterAnimation() {
+            const counters = document.querySelectorAll('.stat-value[data-count]');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const target = parseInt(counter.dataset.count);
+                        const prefix = counter.dataset.prefix || '';
+                        const suffix = counter.dataset.suffix || '+';
+                        const duration = 2000;
+                        let current = 0;
+                        
+                        const updateCounter = () => {
+                            current += target / (duration / 16);
+                            if (current < target) {
+                                counter.textContent = prefix + Math.floor(current) + suffix;
+                                requestAnimationFrame(updateCounter);
+                            } else {
+                                counter.textContent = prefix + target + suffix;
+                            }
+                        };
+                        
+                        updateCounter();
+                        observer.unobserve(counter);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            counters.forEach(counter => observer.observe(counter));
+        }
+
+        // ============================================
+        // TIMELINE POPULATION
+        // ============================================
+        function populateTimeline() {
+            const container = document.getElementById('timeline-list');
+            if (!container) return;
+
+            const lang = getCurrentLang();
+            container.innerHTML = '';
+
+            timelineData.forEach((event, index) => {
+                const item = document.createElement('div');
+                item.className = `timeline-item ${event.type === 'conflict' ? 'conflict' : ''}`;
+                item.dataset.index = index;
+
+                const year = lang === 'th' ? `พ.ศ. ${event.yearThai}` : event.year;
+                const role = lang === 'th' ? event.roleTh : event.roleEn;
+                const org = lang === 'th' ? event.orgTh : event.org;
+
+                item.innerHTML = `
+                    <div class="timeline-year">${year}</div>
+                    <div class="timeline-title">${role}</div>
+                    <div class="timeline-org">${org}</div>
+                `;
+
+                item.addEventListener('click', () => {
+                    container.querySelectorAll('.timeline-item').forEach(el => el.classList.remove('active'));
+                    item.classList.add('active');
+                    updateDetailPanel(event);
+                });
+
+                container.appendChild(item);
+            });
+        }
+
+        function updateDetailPanel(event) {
+            const lang = getCurrentLang();
+            const iconEl = document.getElementById('detail-icon');
+            const titleEl = document.getElementById('detail-title');
+            const subtitleEl = document.getElementById('detail-subtitle');
+            const contentEl = document.getElementById('detail-content');
+
+            const year = lang === 'th' ? `พ.ศ. ${event.yearThai}` : event.year;
+            const role = lang === 'th' ? event.roleTh : event.roleEn;
+            const org = lang === 'th' ? event.orgTh : event.org;
+            const description = lang === 'th' ? event.descriptionTh : event.description;
+
+            iconEl.textContent = event.icon;
+            titleEl.innerHTML = `<span>${role}</span>`;
+            subtitleEl.innerHTML = `<span>${org} | ${year}</span>`;
+            contentEl.innerHTML = `
+                <p>${description}</p>
+                <div class="detail-tags">
+                    ${event.tags.map(tag => `<span class="detail-tag">${tag}</span>`).join('')}
+                </div>
+            `;
+        }
+
+        // ============================================
+        // D3.js SKILLS RADAR
+        // ============================================
+        function createSkillsRadar() {
+            const container = d3.select('#skills-radar');
+            container.selectAll('*').remove();
+
+            const containerWidth = container.node().getBoundingClientRect().width;
+            const size = Math.min(450, containerWidth - 40);
+            const margin = 70;
+            const radius = size / 2 - margin;
+
+            const isDark = isDarkMode();
+            const textColor = isDark ? '#f5f5f7' : '#1d1d1f';
+            const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+
+            const svg = container.append('svg')
+                .attr('width', size)
+                .attr('height', size)
+                .style('display', 'block')
+                .style('margin', '0 auto');
+
+            const g = svg.append('g')
+                .attr('transform', `translate(${size/2},${size/2})`);
+
+            const angleSlice = Math.PI * 2 / skillsData.length;
+
+            // Circular grid
+            const levels = 5;
+            for (let i = 1; i <= levels; i++) {
+                const levelFactor = radius * i / levels;
+                g.append('circle')
+                    .attr('r', levelFactor)
+                    .attr('fill', 'none')
+                    .attr('stroke', gridColor)
+                    .attr('stroke-width', 1);
+            }
+
+            // Axis lines
+            skillsData.forEach((d, i) => {
+                const angle = angleSlice * i - Math.PI / 2;
+                g.append('line')
+                    .attr('x1', 0)
+                    .attr('y1', 0)
+                    .attr('x2', radius * Math.cos(angle))
+                    .attr('y2', radius * Math.sin(angle))
+                    .attr('stroke', gridColor)
+                    .attr('stroke-width', 1);
+            });
+
+            // Labels
+            skillsData.forEach((d, i) => {
+                const angle = angleSlice * i - Math.PI / 2;
+                const labelRadius = radius + 25;
+                const x = labelRadius * Math.cos(angle);
+                const y = labelRadius * Math.sin(angle);
+
+                g.append('text')
+                    .attr('x', x)
+                    .attr('y', y)
+                    .attr('text-anchor', 'middle')
+                    .attr('dominant-baseline', 'middle')
+                    .attr('font-size', '11px')
+                    .attr('font-weight', '500')
+                    .attr('fill', textColor)
+                    .text(d.axis);
+            });
+
+            // Gradient
+            const gradient = g.append('defs')
+                .append('radialGradient')
+                .attr('id', 'radar-gradient')
+                .attr('cx', '50%')
+                .attr('cy', '50%')
+                .attr('r', '50%');
+
+            gradient.append('stop')
+                .attr('offset', '0%')
+                .attr('stop-color', '#0071e3')
+                .attr('stop-opacity', 0.8);
+
+            gradient.append('stop')
+                .attr('offset', '100%')
+                .attr('stop-color', '#00c7be')
+                .attr('stop-opacity', 0.3);
+
+            // Data area
+            const radarLine = d3.lineRadial()
+                .radius(d => radius * d.value / 100)
+                .angle((d, i) => angleSlice * i)
+                .curve(d3.curveCardinalClosed);
+
+            const radarPath = g.append('path')
+                .datum(skillsData)
+                .attr('d', radarLine)
+                .attr('fill', 'url(#radar-gradient)')
+                .attr('fill-opacity', 0)
+                .attr('stroke', '#0071e3')
+                .attr('stroke-width', 2)
+                .attr('stroke-opacity', 0);
+
+            radarPath.transition()
+                .duration(1000)
+                .ease(d3.easeElasticOut.amplitude(1).period(0.5))
+                .attr('fill-opacity', 0.3)
+                .attr('stroke-opacity', 1);
+
+            // Data points
+            const points = g.selectAll('.radar-point')
+                .data(skillsData)
+                .enter()
+                .append('circle')
+                .attr('class', 'radar-point')
+                .attr('cx', (d, i) => {
+                    const angle = angleSlice * i - Math.PI / 2;
+                    return radius * d.value / 100 * Math.cos(angle);
+                })
+                .attr('cy', (d, i) => {
+                    const angle = angleSlice * i - Math.PI / 2;
+                    return radius * d.value / 100 * Math.sin(angle);
+                })
+                .attr('r', 0)
+                .attr('fill', '#0071e3')
+                .attr('stroke', '#fff')
+                .attr('stroke-width', 2);
+
+            points.transition()
+                .delay((d, i) => 500 + i * 80)
+                .duration(400)
+                .attr('r', 5);
+
+            // Tooltip
+            const tooltip = d3.select('#tooltip');
+
+            points
+                .on('mouseover', function(event, d) {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr('r', 8);
+
+                    tooltip.classed('visible', true)
+                        .html(`
+                            <div class="tooltip-title">${d.axis}</div>
+                            <div class="tooltip-value">${d.value}%</div>
+                        `)
+                        .style('left', (event.pageX + 15) + 'px')
+                        .style('top', (event.pageY - 30) + 'px');
+                })
+                .on('mouseout', function() {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr('r', 5);
+
+                    tooltip.classed('visible', false);
+                });
+        }
+
+        // ============================================
+        // D3.js TIMELINE VISUALIZATION
+        // ============================================
+        let currentTimelineView = 'horizontal';
+
+        function createTimelineViz() {
+            const container = d3.select('#timeline-viz');
+            container.selectAll('*').remove();
+
+            const containerWidth = container.node().getBoundingClientRect().width;
+            const margin = { top: 40, right: 40, bottom: 60, left: 60 };
+            const width = containerWidth - margin.left - margin.right;
+            const height = currentTimelineView === 'radial' ? 450 : 300;
+
+            const svg = container.append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom);
+
+            const g = svg.append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+
+            if (currentTimelineView === 'horizontal') {
+                createHorizontalTimeline(g, width, height);
+            } else {
+                createRadialTimeline(svg, width + margin.left + margin.right, height + margin.top + margin.bottom);
+            }
+        }
+
+        function createHorizontalTimeline(g, width, height) {
+            const isDark = isDarkMode();
+            const textColor = isDark ? '#f5f5f7' : '#1d1d1f';
+            const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+
+            const xScale = d3.scaleLinear()
+                .domain([d3.min(timelineData, d => d.year) - 1, d3.max(timelineData, d => d.year) + 1])
+                .range([0, width]);
+
+            const yScale = d3.scaleLinear()
+                .domain([0, 100])
+                .range([height, 0]);
+
+            // Gradient
+            const gradient = g.append('defs')
+                .append('linearGradient')
+                .attr('id', 'timeline-gradient')
+                .attr('gradientUnits', 'userSpaceOnUse')
+                .attr('x1', 0).attr('y1', 0)
+                .attr('x2', width).attr('y2', 0);
+
+            gradient.append('stop').attr('offset', '0%').attr('stop-color', '#0071e3');
+            gradient.append('stop').attr('offset', '100%').attr('stop-color', '#00c7be');
+
+            // Grid
+            g.append('g')
+                .attr('opacity', 0.3)
+                .call(d3.axisLeft(yScale).tickSize(-width).tickFormat(''))
+                .selectAll('line')
+                .attr('stroke', gridColor);
+
+            // Line
+            const line = d3.line()
+                .x(d => xScale(d.year))
+                .y(d => yScale(d.impact))
+                .curve(d3.curveMonotoneX);
+
+            const path = g.append('path')
+                .datum(timelineData)
+                .attr('fill', 'none')
+                .attr('stroke', 'url(#timeline-gradient)')
+                .attr('stroke-width', 3)
+                .attr('stroke-linecap', 'round')
+                .attr('d', line);
+
+            const totalLength = path.node().getTotalLength();
+            path
+                .attr('stroke-dasharray', totalLength + ' ' + totalLength)
+                .attr('stroke-dashoffset', totalLength)
+                .transition()
+                .duration(2000)
+                .ease(d3.easeQuadOut)
+                .attr('stroke-dashoffset', 0);
+
+            // Tooltip
+            const tooltip = d3.select('#tooltip');
+
+            // Points
+            const points = g.selectAll('.point')
+                .data(timelineData)
+                .enter()
+                .append('g')
+                .attr('class', 'point')
+                .attr('transform', d => `translate(${xScale(d.year)},${yScale(d.impact)})`)
+                .style('opacity', 0)
+                .style('cursor', 'pointer');
+
+            points.each(function(d) {
+                const point = d3.select(this);
+                const color = getTypeColor(d.type);
+
+                if (d.type === 'conflict') {
+                    point.append('rect')
+                        .attr('width', 12)
+                        .attr('height', 12)
+                        .attr('x', -6)
+                        .attr('y', -6)
+                        .attr('transform', 'rotate(45)')
+                        .attr('fill', color)
+                        .attr('stroke', '#fff')
+                        .attr('stroke-width', 2);
+                } else {
+                    point.append('circle')
+                        .attr('r', 8)
+                        .attr('fill', color)
+                        .attr('stroke', '#fff')
+                        .attr('stroke-width', 2);
+                }
+            });
+
+            points.transition()
+                .delay((d, i) => 500 + i * 150)
+                .duration(400)
+                .style('opacity', 1);
+
+            points
+                .on('mouseover', function(event, d) {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr('transform', `translate(${xScale(d.year)},${yScale(d.impact)}) scale(1.3)`);
+
+                    const lang = getCurrentLang();
+                    const year = lang === 'th' ? `พ.ศ. ${d.yearThai}` : d.year;
+                    const role = lang === 'th' ? d.roleTh : d.roleEn;
+
+                    tooltip.classed('visible', true)
+                        .html(`
+                            <div class="tooltip-title">${year}: ${role}</div>
+                            <div>${lang === 'th' ? d.orgTh : d.org}</div>
+                            <div class="tooltip-value">Impact: ${d.impact}/100</div>
+                        `)
+                        .style('left', (event.pageX + 15) + 'px')
+                        .style('top', (event.pageY - 30) + 'px');
+                })
+                .on('mouseout', function(event, d) {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr('transform', `translate(${xScale(d.year)},${yScale(d.impact)}) scale(1)`);
+
+                    tooltip.classed('visible', false);
+                })
+                .on('click', function(event, d) {
+                    updateDetailPanel(d);
+                    
+                    const timelineItems = document.querySelectorAll('.timeline-item');
+                    timelineItems.forEach(el => el.classList.remove('active'));
+                    const index = timelineData.findIndex(item => item.year === d.year);
+                    if (timelineItems[index]) {
+                        timelineItems[index].classList.add('active');
+                        timelineItems[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+
+            // X Axis
+            g.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(xScale).tickFormat(d3.format('d')).ticks(timelineData.length))
+                .selectAll('text')
+                .attr('fill', textColor)
+                .attr('font-weight', '500');
+
+            // Y Axis
+            g.append('g')
+                .call(d3.axisLeft(yScale).ticks(5))
+                .selectAll('text')
+                .attr('fill', textColor)
+                .attr('font-weight', '500');
+        }
+
+        function createRadialTimeline(svg, width, height) {
+            const isDark = isDarkMode();
+            const textColor = isDark ? '#f5f5f7' : '#1d1d1f';
+
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = Math.min(width, height) / 2 - 80;
+
+            const g = svg.append('g')
+                .attr('transform', `translate(${centerX},${centerY})`);
+
+            const angleScale = d3.scaleLinear()
+                .domain([d3.min(timelineData, d => d.year), d3.max(timelineData, d => d.year)])
+                .range([0, 2 * Math.PI - 0.5]);
+
+            const radiusScale = d3.scaleLinear()
+                .domain([0, 100])
+                .range([radius * 0.3, radius]);
+
+            // Grid circles
+            [0.25, 0.5, 0.75, 1].forEach(factor => {
+                g.append('circle')
+                    .attr('r', radius * factor)
+                    .attr('fill', 'none')
+                    .attr('stroke', isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)')
+                    .attr('stroke-width', 1);
+            });
+
+            // Tooltip
+            const tooltip = d3.select('#tooltip');
+
+            // Points
+            const points = g.selectAll('.radial-point')
+                .data(timelineData)
+                .enter()
+                .append('g')
+                .attr('class', 'radial-point')
+                .attr('transform', d => {
+                    const angle = angleScale(d.year) - Math.PI / 2;
+                    const r = radiusScale(d.impact);
+                    return `translate(${r * Math.cos(angle)},${r * Math.sin(angle)})`;
+                })
+                .style('opacity', 0)
+                .style('cursor', 'pointer');
+
+            points.each(function(d) {
+                const point = d3.select(this);
+                const color = getTypeColor(d.type);
+
+                if (d.type === 'conflict') {
+                    point.append('rect')
+                        .attr('width', 14)
+                        .attr('height', 14)
+                        .attr('x', -7)
+                        .attr('y', -7)
+                        .attr('transform', 'rotate(45)')
+                        .attr('fill', color)
+                        .attr('stroke', '#fff')
+                        .attr('stroke-width', 2);
+                } else {
+                    point.append('circle')
+                        .attr('r', 10)
+                        .attr('fill', color)
+                        .attr('stroke', '#fff')
+                        .attr('stroke-width', 2);
+                }
+
+                point.append('text')
+                    .attr('text-anchor', 'middle')
+                    .attr('dy', '0.35em')
+                    .attr('font-size', '10px')
+                    .text(d.icon);
+            });
+
+            points.transition()
+                .delay((d, i) => i * 120)
+                .duration(500)
+                .style('opacity', 1);
+
+            // Labels
+            g.selectAll('.radial-label')
+                .data(timelineData)
+                .enter()
+                .append('text')
+                .attr('class', 'radial-label')
+                .attr('transform', d => {
+                    const angle = angleScale(d.year) - Math.PI / 2;
+                    const r = radius + 25;
+                    return `translate(${r * Math.cos(angle)},${r * Math.sin(angle)})`;
+                })
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '10px')
+                .attr('font-weight', '500')
+                .attr('fill', textColor)
+                .text(d => d.year)
+                .style('opacity', 0)
+                .transition()
+                .delay((d, i) => 300 + i * 80)
+                .duration(400)
+                .style('opacity', 1);
+
+            points
+                .on('mouseover', function(event, d) {
+                    d3.select(this).transition().duration(200).attr('transform', function() {
+                        const angle = angleScale(d.year) - Math.PI / 2;
+                        const r = radiusScale(d.impact);
+                        return `translate(${r * Math.cos(angle)},${r * Math.sin(angle)}) scale(1.3)`;
+                    });
+
+                    const lang = getCurrentLang();
+                    tooltip.classed('visible', true)
+                        .html(`
+                            <div class="tooltip-title">${lang === 'th' ? `พ.ศ. ${d.yearThai}` : d.year}: ${lang === 'th' ? d.roleTh : d.roleEn}</div>
+                            <div>${lang === 'th' ? d.orgTh : d.org}</div>
+                            <div class="tooltip-value">Impact: ${d.impact}/100</div>
+                        `)
+                        .style('left', (event.pageX + 15) + 'px')
+                        .style('top', (event.pageY - 30) + 'px');
+                })
+                .on('mouseout', function(event, d) {
+                    d3.select(this).transition().duration(200).attr('transform', function() {
+                        const angle = angleScale(d.year) - Math.PI / 2;
+                        const r = radiusScale(d.impact);
+                        return `translate(${r * Math.cos(angle)},${r * Math.sin(angle)}) scale(1)`;
+                    });
+                    tooltip.classed('visible', false);
+                })
+                .on('click', function(event, d) {
+                    updateDetailPanel(d);
+                });
+
+            // Center label
+            g.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '0.35em')
+                .attr('font-size', '12px')
+                .attr('font-weight', '600')
+                .attr('fill', textColor)
+                .text(getCurrentLang() === 'th' ? 'เส้นทาง' : 'Journey');
+        }
+
+        function initTimelineControls() {
+            const vizBtns = document.querySelectorAll('#journey .viz-btn');
+            vizBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    vizBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentTimelineView = btn.dataset.view;
+                    createTimelineViz();
+                });
+            });
+        }
+
+        // ============================================
+        // RESIZE HANDLER
+        // ============================================
+        function initResizeHandler() {
+            const debouncedResize = debounce(() => {
+                createSkillsRadar();
+                createTimelineViz();
+            }, 150);
+
+            window.addEventListener('resize', debouncedResize);
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        function init() {
+            initAmbientCanvas();
+            initNavigation();
+            initThemeToggle();
+            initLanguageToggle();
+            initScrollReveal();
+            initCounterAnimation();
+            
+            populateTimeline();
+            createSkillsRadar();
+            createTimelineViz();
+            
+            initTimelineControls();
+            initResizeHandler();
+            
+            hideLoadingOverlay();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                createSkillsRadar();
+                createTimelineViz();
+            }, 100);
+        });
+    </script>
+</body>
+</html>
