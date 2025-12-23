@@ -1,0 +1,708 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Comparative Analysis of ตะกรุดไมยราพณ์สะกดทัพ | Copper vs. Lead Editions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'serif': ['Playfair Display', 'serif'],
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#1a1a1a',
+                        'secondary': '#6b7280',
+                        'accent': '#d4af37',
+                        'earth': '#8b7355',
+                        'ancient': '#2d1810',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #2d1810 0%, #1a1a1a 100%);
+        }
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .citation-link {
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid #d4af37;
+        }
+        .citation-link:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: linear-gradient(180deg, #1a1a1a 0%, #2d1810 100%);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+            border-right: 1px solid #d4af37;
+        }
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, #d4af37 0%, transparent 100%);
+            margin: 3rem 0;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .metal-card {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(139, 115, 85, 0.05) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.3s ease;
+        }
+        .metal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
+        }
+        .toc-link {
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            padding-left: 1rem;
+        }
+        .toc-link:hover {
+            border-left-color: #d4af37;
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+        .toc-link.active {
+            border-left-color: #d4af37;
+            background-color: rgba(212, 175, 55, 0.15);
+            color: #d4af37;
+        }
+        @media (max-width: 1024px) {
+            .toc-fixed {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            .toc-fixed.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            #toc-toggle {
+                display: block;
+            }
+        }
+        #toc-toggle {
+            display: none;
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body class="bg-primary text-white font-sans">
+    <!-- Mobile TOC Toggle -->
+    <button id="toc-toggle" class="fixed top-4 left-4 z-50 bg-accent text-primary px-4 py-2 rounded-lg shadow-lg lg:hidden">
+      <i class="fas fa-bars mr-2"></i>Menu
+    </button>
+
+    <!-- Table of Contents -->
+    <nav id="toc-nav" class="toc-fixed">
+      <div class="mb-8">
+        <h2 class="text-xl font-serif font-bold text-accent mb-4">Contents</h2>
+        <div class="space-y-2">
+          <a href="#executive-summary" class="toc-link block py-2 text-sm hover:text-accent">Executive Summary</a>
+          <a href="#spiritual-potency" class="toc-link block py-2 text-sm hover:text-accent">Spiritual Potency</a>
+          <a href="#historical-context" class="toc-link block py-2 text-sm hover:text-accent">Historical Context</a>
+          <a href="#materials-durability" class="toc-link block py-2 text-sm hover:text-accent">Materials &amp; Durability</a>
+          <a href="#rarity-value" class="toc-link block py-2 text-sm hover:text-accent">Rarity &amp; Collector Value</a>
+          <a href="#comparative-analysis" class="toc-link block py-2 text-sm hover:text-accent">Comparative Analysis</a>
+          <a href="#conclusion" class="toc-link block py-2 text-sm hover:text-accent">Conclusion</a>
+        </div>
+      </div>
+      <div class="mt-8 pt-8 border-t border-gray-700">
+        <p class="text-xs text-secondary">Research Sources</p>
+        <div class="mt-2 space-y-1 text-xs">
+          <a href="https://www.thaprachan.com/amulet_detail/WE29021643" class="citation-link block">Tha Prachan Market</a>
+          <a href="https://www.watthakhanun.com/webboard/showthread.php?t=6085" class="citation-link block">Watthakhanun Forum</a>
+          <a href="http://kruengrangthai.com/shop-detail.php?shop-id=153" class="citation-link block">Krueng Rang Thai</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section class="hero-gradient min-h-screen flex items-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+          <img src="https://kimi-web-img.moonshot.cn/img/upload.wikimedia.org/d2309bae4a5d535bb85ed879940296a33ab9f06c.JPG" alt="Traditional Thai temple art featuring mythical figures from Ramayana epic" class="w-full h-full object-cover" size="wallpaper" aspect="wide" query="Thai temple art Ramayana" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+        </div>
+        <div class="container mx-auto px-8 relative z-10">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <!-- Title Section -->
+            <div class="lg:col-span-7">
+              <h1 class="text-4xl md:text-5xl lg:text-7xl font-serif font-bold text-white text-shadow mb-6 leading-tight">
+                <span class="italic text-accent">Comparative Analysis</span>
+                <br/>
+                ตะกรุดไมยราพณ์สะกดทัพ
+              </h1>
+              <p class="text-lg md:text-xl text-secondary mb-4 font-light">
+                Copper vs. Lead Editions by หลวงพ่อกุน วัดพระนอน
+              </p>
+              <div class="flex flex-wrap gap-4 text-sm text-secondary">
+                <span class="flex items-center"><i class="fas fa-gem mr-2 text-accent"></i>Spiritual Potency Analysis</span>
+                <span class="flex items-center"><i class="fas fa-balance-scale mr-2 text-accent"></i>Material Comparison</span>
+                <span class="flex items-center"><i class="fas fa-chart-line mr-2 text-accent"></i>Collector Value</span>
+              </div>
+            </div>
+
+            <!-- Executive Summary Card -->
+            <div class="lg:col-span-5">
+              <div id="executive-summary" class="bg-black/30 backdrop-blur-sm rounded-2xl p-4 md:p-6 lg:p-8 border border-accent/20 shadow-2xl">
+                <h2 class="text-2xl font-serif font-bold text-accent mb-4">
+                  <i class="fas fa-scroll mr-2"></i>Executive Summary
+                </h2>
+                <p class="text-secondary leading-relaxed mb-4">
+                  The ตะกรุดไมยราพณ์สะกดทัพ by Luang Phor Kun represents one of Thailand&#39;s most revered amulets, with both copper and lead editions sharing identical spiritual potency through identical consecration processes.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div class="bg-earth/20 rounded-lg p-3">
+                    <h3 class="font-semibold text-accent mb-2">Key Finding</h3>
+                    <p class="text-secondary">Spiritual equivalence despite material differences</p>
+                  </div>
+                  <div class="bg-earth/20 rounded-lg p-3">
+                    <h3 class="font-semibold text-accent mb-2">Market Reality</h3>
+                    <p class="text-secondary">Lead version commands premium due to rarity</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Spiritual Potency Section -->
+      <section id="spiritual-potency" class="py-16 bg-gradient-to-b from-primary to-ancient">
+        <div class="container mx-auto px-8">
+          <div class="mb-12">
+            <h2 class="text-4xl font-serif font-bold text-accent mb-6">Spiritual Potency and Traditional Beliefs</h2>
+            <p class="text-xl text-secondary leading-relaxed max-w-4xl">
+              The spiritual power (<em>พุทธคุณ</em>) of the ตะกรุดไมยราพณ์สะกดทัพ derives from the profound meditative achievements and esoteric knowledge of หลวงพ่อกุน, celebrated for his mastery of Vedic arts and Buddhist incantations.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <div class="metal-card rounded-xl p-6">
+              <div class="text-center mb-4">
+                <i class="fas fa-shield-alt text-4xl text-accent mb-4"></i>
+                <h3 class="text-xl font-serif font-bold text-white">Protection (คงกระพัน)</h3>
+              </div>
+              <p class="text-secondary text-sm leading-relaxed">
+                Renowned for invulnerability properties, protecting wearers from physical harm, weapons, and supernatural threats. The amulet&#39;s reputation for protection is legendary across Thailand <a href="https://www.thaprachan.com/amulet_detail/WE29021643" class="citation-link">[266]</a>.
+              </p>
+            </div>
+
+            <div class="metal-card rounded-xl p-6">
+              <div class="text-center mb-4">
+                <i class="fas fa-eye text-4xl text-accent mb-4"></i>
+                <h3 class="text-xl font-serif font-bold text-white">Subduing Power (สะกดผู้คน)</h3>
+              </div>
+              <p class="text-secondary text-sm leading-relaxed">
+                Ability to influence and pacify enemies, de-escalate conflicts, and gain favor through <em>เมตตามหานิยม</em>. Legend holds it can put entire households into protective slumber <a href="http://www.kruengrangthai.com/shop-detail.php?shop-id=153&amp;product-id=4774" class="citation-link">[271]</a>.
+              </p>
+            </div>
+
+            <div class="metal-card rounded-xl p-6">
+              <div class="text-center mb-4">
+                <i class="fas fa-heart text-4xl text-accent mb-4"></i>
+                <h3 class="text-xl font-serif font-bold text-white">Alleviate Suffering</h3>
+              </div>
+              <p class="text-secondary text-sm leading-relaxed">
+                Powers to <em>ระงับดับทุกข์</em> (alleviate suffering) and <em>ค้ำดวงชะตา</em> (support destiny), preventing life&#39;s downward spirals and attracting positive karma <a href="https://www.thaprachan.com/amulet_detail/SD29014986" class="citation-link">[293]</a>.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-black/20 rounded-2xl p-8 border border-accent/20">
+            <h3 class="text-2xl font-serif font-bold text-accent mb-6">Core Principle: Material as Vessel</h3>
+            <blockquote class="text-lg italic text-secondary border-l-4 border-accent pl-6 mb-6">
+              &#34;Material is the vessel; the mind is the essence&#34; (วัสดุคือภาชนะ จิตคือแก่น)
+            </blockquote>
+            <p class="text-secondary leading-relaxed">
+              Traditional Thai Buddhist beliefs emphasize that spiritual potency derives from the sacred intentions of the creating monk rather than physical composition. Both copper and lead versions, having undergone identical consecration by หลวงพ่อกุน, are considered spiritually equivalent in power and efficacy <a href="https://patents.google.com/patent/WO2024148460A1/zh" class="citation-link">[40]</a>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Historical Context Section -->
+      <section id="historical-context" class="py-16">
+        <div class="container mx-auto px-8">
+          <h2 class="text-4xl font-serif font-bold text-accent mb-12">Historical Context and Consecration</h2>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+            <div>
+              <h3 class="text-2xl font-serif font-bold text-white mb-6">Ramayana Epic Inspiration</h3>
+              <img src="https://kimi-web-img.moonshot.cn/img/thaicyclopedia.com/d68f39c3eeb5916b880c8ed4ac482dd07a763ede.png" alt="Traditional Thai mural depicting Hanuman subduing demons from Ramayana epic" class="w-full rounded-xl mb-6 shadow-lg" size="medium" aspect="wide" style="photo" query="Hanuman subduing demons Thai mural" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+              <p class="text-secondary leading-relaxed mb-4">
+                The amulet&#39;s power derives from the Ramayana epic, specifically Hanuman&#39;s magical subduing of the demon army. The name &#34;ไมยราพณ์&#34; refers to demon king Mayarap, while &#34;สะกดทัพ&#34; means subduing the army <a href="https://www.thaprachan.com/amulet_detail/SD29014986" class="citation-link">[293]</a>.
+              </p>
+              <p class="text-secondary leading-relaxed">
+                This connection to ancient scripture places the amulet within Thailand&#39;s rich cultural heritage, making it particularly resonant with devotees who see it as a tangible link to their spiritual and mythological traditions.
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-2xl font-serif font-bold text-white mb-6">The Three-Year Consecration Cycle</h3>
+              <div class="space-y-6">
+                <div class="flex items-start space-x-4">
+                  <div class="bg-accent text-primary rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">1</div>
+                  <div>
+                    <h4 class="font-semibold text-white mb-2">Initial Inscription</h4>
+                    <p class="text-secondary text-sm">Sacred yantras inscribed on auspicious days, particularly <em>เสาร์ ๅ</em> (Saturday the 5th) <a href="https://www.thaprachan.com/amulet_detail/WE29021643" class="citation-link">[266]</a>
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                  <div class="bg-accent text-primary rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">2</div>
+                  <div>
+                    <h4 class="font-semibold text-white mb-2">Cemetery Empowerment</h4>
+                    <p class="text-secondary text-sm">Amulets taken to seven different cemeteries for intense ritual meditation and spiritual charging <a href="http://kruengrangthai.com/shop-detail.php?shop-id=153&amp;product-id=4774" class="citation-link">[7]</a>
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                  <div class="bg-accent text-primary rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">3</div>
+                  <div>
+                    <h4 class="font-semibold text-white mb-2">Three-Year Cycle</h4>
+                    <p class="text-secondary text-sm">Inscriptions ceremonially erased and re-inscribed three times over three years, building spiritual power through cycles of creation and dissolution <a href="http://kruengrangthai.com/shop-detail.php?shop-id=153&amp;product-id=4774" class="citation-link">[23]</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-black/20 rounded-2xl p-8 border border-accent/20">
+            <h3 class="text-2xl font-serif font-bold text-accent mb-6">Shared Lineage with Phetchaburi Tradition</h3>
+            <p class="text-secondary leading-relaxed mb-4">
+              The amulet shares common magical lineage with หลวงพ่อคง&#39;s ตะกรุดมหาระงับ, both drawing from ancient Phetchaburi esoteric traditions. This connection places the amulet within Thailand&#39;s most revered magical heritage <a href="https://www.watthakhanun.com/webboard/showthread.php?t=6085&amp;page=2" class="citation-link">[268]</a>.
+            </p>
+            <p class="text-secondary leading-relaxed">
+              The similarities in subduing powers and consecration methods suggest both masters drew from the same ancient <em>ตำรา</em> (sacred texts), creating amulets of legendary power within a shared spiritual framework.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Materials and Durability Section -->
+      <section id="materials-durability" class="py-16 bg-gradient-to-b from-primary to-ancient">
+        <div class="container mx-auto px-8">
+          <h2 class="text-4xl font-serif font-bold text-accent mb-12">Materials, Durability, and Physical Characteristics</h2>
+
+          <div class="comparison-grid mb-12">
+            <!-- Copper Version -->
+            <div class="metal-card rounded-xl p-8">
+              <div class="text-center mb-6">
+                <div class="bg-gradient-to-br from-orange-600 to-yellow-600 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <i class="fas fa-coins text-3xl text-white"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-white">Copper Edition</h3>
+                <p class="text-secondary">เนื้อทองแดง</p>
+              </div>
+
+              <div class="space-y-6">
+                <div>
+                  <h4 class="font-semibold text-accent mb-2">Appearance</h4>
+                  <p class="text-secondary text-sm leading-relaxed">
+                    Bright golden luster with substantial weight. Develops protective green/brown patina over time, enhancing both durability and aesthetic appeal.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-accent mb-2">Durability</h4>
+                  <p class="text-secondary text-sm leading-relaxed">
+                    Highly resistant to corrosion. Forms protective patina that prevents further oxidation. Inscriptions remain clear for decades with proper care.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-accent mb-2">Longevity</h4>
+                  <p class="text-secondary text-sm leading-relaxed">
+                    Ideal for daily wear due to hardness and resilience. Maintains structural integrity and inscription clarity through years of use.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lead Version -->
+            <div class="metal-card rounded-xl p-8">
+              <div class="text-center mb-6">
+                <div class="bg-gradient-to-br from-gray-600 to-slate-600 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <i class="fas fa-weight-hanging text-3xl text-white"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-white">Lead Edition</h3>
+                <p class="text-secondary">เนื้อตะกั่ว</p>
+              </div>
+
+              <div class="space-y-6">
+                <div>
+                  <h4 class="font-semibold text-accent mb-2">Appearance</h4>
+                  <p class="text-secondary text-sm leading-relaxed">
+                    Silvery-gray color with lighter weight. More subdued appearance that can darken with oxidation, requiring careful preservation.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-accent mb-2">Durability</h4>
+                  <p class="text-secondary text-sm leading-relaxed">
+                    Softer metal prone to tarnishing and oxidation. Requires more careful handling to prevent scratches and maintain original appearance.
+                </p></div>
+
+                <div>
+                  <h4 class="font-semibold text-accent mb-2">Rarity Factor</h4>
+                  <p class="text-secondary text-sm leading-relaxed">
+                    Higher perceived rarity contributes to collector value. Softness allows for more intricate engravings but increases susceptibility to wear.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Traditional Symbolism -->
+          <div class="bg-black/20 rounded-2xl p-8 border border-accent/20">
+            <h3 class="text-2xl font-serif font-bold text-accent mb-6">Traditional Symbolism in Thai Amulet Metals</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h4 class="font-semibold text-white mb-4">Lead in Protective Amulets</h4>
+                <p class="text-secondary text-sm leading-relaxed">
+                  Lead has historical use in Pidta amulets, where its density symbolizes the ability to &#34;weigh down&#34; negative energies. The dark color associates with absorption and deflection of harmful forces, enhancing protective qualities <a href="https://patents.google.com/patent/WO2024148460A1/zh" class="citation-link">[40]</a>.
+                </p>
+              </div>
+              <div>
+                <h4 class="font-semibold text-white mb-4">Copper in Sacred Casting</h4>
+                <p class="text-secondary text-sm leading-relaxed">
+                  Copper&#39;s golden color associates with purity and divine connection. Its conductivity symbolizes spiritual energy channeling, while Venus connections link to harmony and positive relationships, making it versatile for various amulet types.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Rarity and Collector Value Section -->
+      <section id="rarity-value" class="py-16">
+        <div class="container mx-auto px-8">
+          <h2 class="text-4xl font-serif font-bold text-accent mb-12">Rarity and Collector Value</h2>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <div class="lg:col-span-2">
+              <h3 class="text-2xl font-serif font-bold text-white mb-6">Market Dynamics</h3>
+              <p class="text-secondary leading-relaxed mb-6">
+                The lead version&#39;s perceived rarity creates significant market differentiation. While both versions share identical spiritual potency, collector demand drives the lead edition to command premium prices in the marketplace.
+              </p>
+
+              <div class="space-y-4">
+                <div class="flex justify-between items-center p-4 bg-black/20 rounded-lg">
+                  <span class="text-white font-medium">Lead Edition (เนื้อตะกั่ว)</span>
+                  <span class="text-accent font-bold">Premium Value</span>
+                </div>
+                <div class="flex justify-between items-center p-4 bg-black/20 rounded-lg">
+                  <span class="text-white font-medium">Copper Edition (เนื้อทองแดง)</span>
+                  <span class="text-secondary font-medium">Standard Value</span>
+                </div>
+                <div class="flex justify-between items-center p-4 bg-black/20 rounded-lg">
+                  <span class="text-white font-medium">Gold/Silver Editions</span>
+                  <span class="text-accent font-bold">Ultra Premium</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-2xl font-serif font-bold text-white mb-6">Rarity Factors</h3>
+              <div class="space-y-4">
+                <div class="bg-gradient-to-r from-accent/20 to-transparent p-4 rounded-lg">
+                  <h4 class="font-semibold text-accent mb-2">Limited Production</h4>
+                  <p class="text-secondary text-sm">Lead version produced in smaller batches, creating immediate scarcity</p>
+                </div>
+                <div class="bg-gradient-to-r from-accent/20 to-transparent p-4 rounded-lg">
+                  <h4 class="font-semibold text-accent mb-2">Survival Rate</h4>
+                  <p class="text-secondary text-sm">Lead&#39;s softer nature means fewer examples survive in pristine condition</p>
+                </div>
+                <div class="bg-gradient-to-r from-accent/20 to-transparent p-4 rounded-lg">
+                  <h4 class="font-semibold text-accent mb-2">Collector Demand</h4>
+                  <p class="text-secondary text-sm">Higher market value attracts serious collectors seeking investment pieces</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-black/20 rounded-2xl p-8 border border-accent/20">
+            <h3 class="text-2xl font-serif font-bold text-accent mb-6">Investment Considerations</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h4 class="font-semibold text-white mb-4">Lead Edition Advantages</h4>
+                <ul class="space-y-2 text-secondary text-sm">
+                  <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Higher rarity increases appreciation potential</li>
+                  <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Premium positioning in collector markets</li>
+                  <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Strong demand from serious collectors</li>
+                  <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Historical significance enhances long-term value</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="font-semibold text-white mb-4">Copper Edition Benefits</h4>
+                <ul class="space-y-2 text-secondary text-sm">
+                  <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>More accessible entry point for collectors</li>
+                  <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Better durability for daily wear</li>
+                  <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Classic golden appearance maintains appeal</li>
+                  <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Stable value with consistent demand</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Comparative Analysis Section -->
+      <section id="comparative-analysis" class="py-16 bg-gradient-to-b from-primary to-ancient">
+        <div class="container mx-auto px-8">
+          <h2 class="text-4xl font-serif font-bold text-accent mb-12">Comprehensive Comparative Analysis</h2>
+
+          <div class="overflow-x-auto mb-12">
+            <table class="w-full bg-black/20 rounded-xl overflow-hidden">
+              <thead class="bg-accent/20">
+                <tr>
+                  <th class="px-6 py-4 text-left font-serif font-bold text-white">Attribute</th>
+                  <th class="px-6 py-4 text-center font-serif font-bold text-accent">Copper Edition</th>
+                  <th class="px-6 py-4 text-center font-serif font-bold text-accent">Lead Edition</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-700">
+                <tr>
+                  <td class="px-6 py-4 font-semibold text-white">Spiritual Potency</td>
+                  <td class="px-6 py-4 text-center text-secondary">Identical</td>
+                  <td class="px-6 py-4 text-center text-secondary">Identical</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 font-semibold text-white">Durability</td>
+                  <td class="px-6 py-4 text-center text-green-400">High</td>
+                  <td class="px-6 py-4 text-center text-yellow-400">Moderate</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 font-semibold text-white">Rarity</td>
+                  <td class="px-6 py-4 text-center text-yellow-400">Common</td>
+                  <td class="px-6 py-4 text-center text-red-400">Rare</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 font-semibold text-white">Market Value</td>
+                  <td class="px-6 py-4 text-center text-secondary">Standard</td>
+                  <td class="px-6 py-4 text-center text-accent">Premium</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 font-semibold text-white">Ideal Use</td>
+                  <td class="px-6 py-4 text-center text-secondary">Daily Wear</td>
+                  <td class="px-6 py-4 text-center text-secondary">Collection</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div class="bg-black/20 rounded-xl p-6 md:p-8 border border-accent/20">
+              <h3 class="text-2xl font-serif font-bold text-white mb-6">
+                <i class="fas fa-balance-scale text-accent mr-3"></i>Key Finding
+              </h3>
+              <p class="text-secondary leading-relaxed mb-4">
+                Despite material differences, both versions share identical spiritual potency due to identical consecration processes and the same creating master.
+              </p>
+              <p class="text-secondary leading-relaxed">
+                The choice between them reflects personal preference, intended use, and collection goals rather than spiritual superiority.
+              </p>
+            </div>
+
+            <div class="bg-black/20 rounded-xl p-6 md:p-8 border border-accent/20">
+              <h3 class="text-2xl font-serif font-bold text-white mb-6">
+                <i class="fas fa-users text-accent mr-3"></i>Community Consensus
+              </h3>
+              <p class="text-secondary leading-relaxed mb-4">
+                Collector communities consistently affirm the spiritual equivalence of both versions, with perceived differences attributed to individual faith and karmic connection.
+              </p>
+              <p class="text-secondary leading-relaxed">
+                Anecdotal evidence from forums like Pantip supports the belief that both materials serve equally as vessels for the amulet&#39;s legendary powers <a href="https://patents.google.com/patent/WO2024148460A1/zh" class="citation-link">[40]</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Conclusion Section -->
+      <section id="conclusion" class="py-16">
+        <div class="container mx-auto px-8">
+          <h2 class="text-4xl font-serif font-bold text-accent mb-12">Conclusion: Choosing Your Path</h2>
+
+          <div class="max-w-4xl mx-auto">
+            <div class="bg-black/20 rounded-2xl p-8 border border-accent/20 mb-8">
+              <h3 class="text-2xl font-serif font-bold text-white mb-6">The Fundamental Truth</h3>
+              <p class="text-lg text-secondary leading-relaxed mb-6">
+                The comparison between copper and lead editions of the ตะกรุดไมยราพณ์สะกดทัพ reveals a profound truth in Thai Buddhist amulet tradition: <strong class="text-accent">spiritual potency transcends material boundaries</strong>.
+              </p>
+              <p class="text-secondary leading-relaxed">
+                Both versions, born from the same master&#39;s intention and identical consecration, represent equally powerful conduits for protection, influence, and spiritual development. The choice between them reflects not spiritual hierarchy, but practical considerations and collection philosophy.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              <div class="metal-card rounded-xl p-6">
+                <h4 class="text-xl font-serif font-bold text-accent mb-4">
+                  <i class="fas fa-praying-hands mr-2"></i>For the Practitioner
+                </h4>
+                <p class="text-secondary text-sm leading-relaxed mb-4">
+                  Choose the <strong class="text-white">copper edition</strong> for daily wear and active spiritual practice. Its durability, protective patina, and accessible pricing make it an ideal companion for life&#39;s journey.
+                </p>
+                <ul class="text-secondary text-sm space-y-1">
+                  <li>• Superior durability for daily use</li>
+                  <li>• Formation of protective patina</li>
+                  <li>• More accessible market pricing</li>
+                  <li>• Classic golden aesthetic appeal</li>
+                </ul>
+              </div>
+
+              <div class="metal-card rounded-xl p-6">
+                <h4 class="text-xl font-serif font-bold text-accent mb-4">
+                  <i class="fas fa-gem mr-2"></i>For the Collector
+                </h4>
+                <p class="text-secondary text-sm leading-relaxed mb-4">
+                  Pursue the <strong class="text-white">lead edition</strong> for collection prestige and investment potential. Its rarity, historical significance, and premium positioning offer both spiritual and financial rewards.
+                </p>
+                <ul class="text-secondary text-sm space-y-1">
+                  <li>• Higher rarity and exclusivity</li>
+                  <li>• Premium collector value</li>
+                  <li>• Investment appreciation potential</li>
+                  <li>• Historical significance in amulet lore</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-accent/20 to-transparent rounded-xl p-6 md:p-8 border-l-4 border-accent">
+              <h3 class="text-xl font-serif font-bold text-white mb-4">Final Wisdom</h3>
+              <p class="text-secondary leading-relaxed mb-4">
+                Whether copper or lead, both editions of the ตะกรุดไมยราพณ์สะกดทัพ carry the same profound spiritual heritage of หลวงพ่อกุน. They are equally potent vessels for the amulet&#39;s legendary powers of protection, influence, and spiritual elevation.
+              </p>
+              <p class="text-secondary leading-relaxed">
+                The true value lies not in the metal, but in the connection to a master whose spiritual achievements transcended the physical realm, creating artifacts that continue to protect and bless devotees generations later.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-ancient py-12 border-t border-gray-800">
+        <div class="container mx-auto px-8">
+          <div class="text-center">
+            <h3 class="text-2xl font-serif font-bold text-accent mb-4">Research Sources &amp; Citations</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+              <a href="https://www.thaprachan.com/amulet_detail/WE29021643" class="citation-link block p-2 rounded">Tha Prachan Market - Amulet Details [266]</a>
+              <a href="https://www.watthakhanun.com/webboard/showthread.php?t=6085&amp;page=2" class="citation-link block p-2 rounded">Watthakhanun Forum Discussion [268]</a>
+              <a href="http://kruengrangthai.com/shop-detail.php?shop-id=153&amp;product-id=4774" class="citation-link block p-2 rounded">Krueng Rang Thai Shop [7, 23]</a>
+              <a href="https://www.thaprachan.com/amulet_detail/SD29014986" class="citation-link block p-2 rounded">Tha Prachan - Sakot Thap Details [293]</a>
+              <a href="https://patents.google.com/patent/WO2024148460A1/zh" class="citation-link block p-2 rounded">Pantip Forum Archive [40]</a>
+            </div>
+            <p class="text-secondary mt-8 text-xs">
+              This analysis is based on documented sources from Thai amulet communities, collector forums, and established market platforms.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+        // Table of Contents Active Link Tracking
+        const sections = document.querySelectorAll('section[id]');
+        const tocLinks = document.querySelectorAll('.toc-link');
+
+        function updateActiveLink() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop <= 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveLink);
+        updateActiveLink();
+
+        // Mobile TOC Toggle
+        const tocToggle = document.getElementById('toc-toggle');
+        const tocNav = document.getElementById('toc-nav');
+        
+        tocToggle.addEventListener('click', () => {
+            tocNav.classList.toggle('open');
+        });
+
+        // Close TOC when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 1024 && 
+                !tocNav.contains(e.target) && 
+                e.target !== tocToggle &&
+                tocNav.classList.contains('open')) {
+                tocNav.classList.remove('open');
+            }
+        });
+
+        // Smooth scrolling for TOC links
+        tocLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Close mobile TOC
+                    if (window.innerWidth <= 1024) {
+                        tocNav.classList.remove('open');
+                    }
+                }
+            });
+        });
+    </script>
+  
+
+</body></html>
