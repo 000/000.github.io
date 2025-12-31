@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CompTIA Cloud+ Practice Quiz | Nexus Academy</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* ============================================
+           CSS RESET & VARIABLES
+        ============================================ */
         :root {
             --space-void: #0a0a1a;
             --space-deep: #0d1025;
@@ -16,6 +16,17 @@
             --neon-accent: #06b6d4;
             --gradient-cyber: linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #10b981 100%);
             --animation-fast: 0.3s;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-600: #4b5563;
+            --green-400: #4ade80;
+            --cyan-400: #22d3ee;
+            --purple-300: #d8b4fe;
+            --purple-500: #a855f7;
+            --orange-300: #fdba74;
+            --orange-500: #f97316;
+            --blue-300: #93c5fd;
+            --blue-500: #3b82f6;
         }
 
         * {
@@ -24,13 +35,134 @@
             box-sizing: border-box;
         }
 
+        /* ============================================
+           BASE STYLES
+        ============================================ */
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--space-void);
             color: #e0e7ff;
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
+        /* ============================================
+           UTILITY CLASSES (Tailwind Replacements)
+        ============================================ */
+        .text-white { color: white; }
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-2xl { font-size: 1.5rem; }
+        .text-3xl { font-size: 1.875rem; }
+        .text-4xl { font-size: 2.25rem; }
+        .text-5xl { font-size: 3rem; }
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+        
+        .leading-relaxed { line-height: 1.625; }
+        .whitespace-pre-line { white-space: pre-line; }
+        
+        .flex { display: flex; }
+        .inline-block { display: inline-block; }
+        .grid { display: grid; }
+        .hidden { display: none; }
+        
+        .items-center { align-items: center; }
+        .items-start { align-items: start; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .flex-wrap { flex-wrap: wrap; }
+        .flex-1 { flex: 1; }
+        
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        
+        .p-4 { padding: 1rem; }
+        .p-6 { padding: 1.5rem; }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .pb-12 { padding-bottom: 3rem; }
+        
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mr-1 { margin-right: 0.25rem; }
+        .mr-2 { margin-right: 0.5rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        
+        .w-full { width: 100%; }
+        .min-h-screen { min-height: 100vh; }
+        .max-w-7xl { max-width: 80rem; }
+        
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-full { border-radius: 9999px; }
+        
+        .border { border-width: 1px; }
+        
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .fixed { position: fixed; }
+        .sticky { position: sticky; }
+        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+        .top-0 { top: 0; }
+        .left-0 { left: 0; }
+        .z-0 { z-index: 0; }
+        .z-10 { z-index: 10; }
+        .z-50 { z-index: 50; }
+        
+        .overflow-x-hidden { overflow-x: hidden; }
+        .overflow-x-auto { overflow-x: auto; }
+        .pointer-events-none { pointer-events: none; }
+        
+        .cursor-pointer { cursor: pointer; }
+        
+        /* Color utilities */
+        .text-gray-300 { color: var(--gray-300); }
+        .text-gray-400 { color: var(--gray-400); }
+        .text-green-400 { color: var(--green-400); }
+        .text-cyan-400 { color: var(--cyan-400); }
+        .text-purple-300 { color: var(--purple-300); }
+        .text-orange-300 { color: var(--orange-300); }
+        .text-blue-300 { color: var(--blue-300); }
+        
+        .border-gray-600 { border-color: var(--gray-600); }
+        
+        .bg-purple-opacity { background: rgba(168, 85, 247, 0.2); }
+        .bg-orange-opacity { background: rgba(249, 115, 22, 0.2); }
+        .bg-blue-opacity { background: rgba(59, 130, 246, 0.2); }
+        .bg-green-opacity { background: rgba(16, 185, 129, 0.1); }
+        
+        .border-purple-opacity { border-color: rgba(168, 85, 247, 0.3); }
+        .border-orange-opacity { border-color: rgba(249, 115, 22, 0.3); }
+        .border-blue-opacity { border-color: rgba(59, 130, 246, 0.3); }
+        .border-green-opacity { border-color: rgba(16, 185, 129, 0.3); }
+
+        /* ============================================
+           GRID RESPONSIVE UTILITIES
+        ============================================ */
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        
+        @media (min-width: 768px) {
+            .md-grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        }
+
+        /* ============================================
+           COMPONENT STYLES
+        ============================================ */
         .glass-panel {
             background: var(--glass-panel);
             backdrop-filter: blur(16px);
@@ -40,7 +172,9 @@
         }
 
         .cyber-header {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Trebuchet MS', 'Lucida Sans', sans-serif;
+            font-weight: 900;
+            letter-spacing: 0.05em;
             background: var(--gradient-cyber);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -48,7 +182,7 @@
         }
 
         .code-block {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 8px;
@@ -81,6 +215,8 @@
             cursor: pointer;
             transition: all var(--animation-fast);
             color: white;
+            display: inline-flex;
+            align-items: center;
         }
 
         .btn-cyber:hover {
@@ -151,6 +287,9 @@
             cursor: pointer;
             transition: all 0.2s;
             font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
         }
 
         .copy-btn:hover {
@@ -177,6 +316,9 @@
             font-weight: 600;
             z-index: 9999;
             animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         @keyframes slideIn {
@@ -250,9 +392,60 @@
             color: #10b981;
             font-weight: 600;
         }
+
+        /* SVG Icon Styles */
+        .icon {
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            vertical-align: -0.125em;
+            fill: currentColor;
+        }
+
+        .icon-lg {
+            width: 1.25em;
+            height: 1.25em;
+        }
+
+        /* Type Badge Styles */
+        .type-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid;
+        }
+
+        .type-badge-multi-select {
+            background: rgba(168, 85, 247, 0.2);
+            color: var(--purple-300);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        .type-badge-simulation {
+            background: rgba(249, 115, 22, 0.2);
+            color: var(--orange-300);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+
+        .type-badge-drag-drop {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--blue-300);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        /* Answer Box */
+        .answer-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
     </style>
 </head>
-<body class="bg-[var(--space-void)] text-white overflow-x-hidden">
+<body>
     
     <!-- Loading Overlay -->
     <div id="loading-overlay" class="loading-overlay">
@@ -277,11 +470,17 @@
                 </div>
                 <div class="flex items-center gap-4">
                     <button onclick="toggleAnswers()" class="btn-cyber text-sm">
-                        <i class="fas fa-eye mr-2"></i>
+                        <svg class="icon mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
                         <span id="toggle-text">Show Answers</span>
                     </button>
                     <button onclick="copyAllQuestions()" class="btn-cyber text-sm">
-                        <i class="fas fa-copy mr-2"></i>
+                        <svg class="icon mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
                         Copy All
                     </button>
                 </div>
@@ -291,7 +490,7 @@
         <div class="max-w-7xl mx-auto px-4 pb-12">
             
             <!-- Stats Dashboard -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 fade-in">
+            <div class="grid grid-cols-1 md-grid-cols-4 gap-4 mb-8 fade-in">
                 <div class="stats-card">
                     <div class="text-4xl font-bold cyber-header mb-2">90</div>
                     <div class="text-sm text-gray-400">Total Questions</div>
@@ -313,7 +512,10 @@
             <!-- Quick Navigation -->
             <div class="glass-panel p-6 mb-8 fade-in">
                 <h3 class="text-lg font-semibold mb-4 flex items-center">
-                    <i class="fas fa-compass mr-2 text-cyan-400"></i>
+                    <svg class="icon mr-2 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                    </svg>
                     Quick Navigation
                 </h3>
                 <div class="question-nav" id="questionNav"></div>
@@ -325,7 +527,78 @@
         </div>
     </div>
 
+    <!-- SVG Icon Templates (hidden) -->
+    <div style="display: none;">
+        <svg id="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <svg id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <svg id="icon-diagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="3" y1="9" x2="21" y2="9"></line>
+            <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+        <svg id="icon-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        <svg id="icon-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="3" y1="9" x2="21" y2="9"></line>
+            <line x1="3" y1="15" x2="21" y2="15"></line>
+            <line x1="9" y1="3" x2="9" y2="21"></line>
+            <line x1="15" y1="3" x2="15" y2="21"></line>
+        </svg>
+        <svg id="icon-file-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="10" y1="12" x2="10" y2="18"></line>
+            <line x1="14" y1="12" x2="14" y2="18"></line>
+        </svg>
+    </div>
+
     <script>
+        // SVG Icon Helper Functions
+        const icons = {
+            copy: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>`,
+            check: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>`,
+            checkCircle: `<svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>`,
+            diagram: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+            </svg>`,
+            code: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>`,
+            table: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="3" y1="15" x2="21" y2="15"></line>
+                <line x1="9" y1="3" x2="9" y2="21"></line>
+                <line x1="15" y1="3" x2="15" y2="21"></line>
+            </svg>`,
+            fileCode: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="10" y1="12" x2="10" y2="18"></line>
+                <line x1="14" y1="12" x2="14" y2="18"></line>
+            </svg>`
+        };
+
         // Quiz Data
         const quizData = [
             {
@@ -1229,7 +1502,7 @@
                                 <div class="flex items-start gap-3">
                                     <span class="font-bold text-cyan-400">${letter}.</span>
                                     <span class="flex-1">${opt}</span>
-                                    ${state.showAnswers && isCorrect ? '<i class="fas fa-check-circle text-green-400"></i>' : ''}
+                                    ${state.showAnswers && isCorrect ? icons.checkCircle : ''}
                                 </div>
                             </div>
                         `;
@@ -1238,16 +1511,16 @@
 
                 let typeBadge = '';
                 if (q.type === 'multi-select') {
-                    typeB adge = '<span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">Multi-Select</span>';
+                    typeBadge = '<span class="type-badge type-badge-multi-select">Multi-Select</span>';
                 } else if (q.type === 'simulation') {
-                    typeBadge = '<span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-orange-500/20 text-orange-300 border border-orange-500/30">Simulation</span>';
+                    typeBadge = '<span class="type-badge type-badge-simulation">Simulation</span>';
                 } else if (q.type === 'drag-drop') {
-                    typeBadge = '<span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-300 border border-blue-500/30">Drag & Drop</span>';
+                    typeBadge = '<span class="type-badge type-badge-drag-drop">Drag & Drop</span>';
                 }
 
                 questionCard.innerHTML = `
                     <button class="copy-btn" onclick="copyQuestion(${q.id})">
-                        <i class="fas fa-copy mr-1"></i> Copy
+                        ${icons.copy} Copy
                     </button>
                     
                     <div class="flex items-start gap-4 mb-4">
@@ -1258,10 +1531,10 @@
                         </div>
                     </div>
 
-                    ${q.diagram ? `<div class="diagram-container"><p class="text-sm text-gray-400"><i class="fas fa-diagram-project mr-2"></i>${q.diagram}</p></div>` : ''}
-                    ${q.hasCode ? '<div class="code-block text-sm"><i class="fas fa-code mr-2 text-cyan-400"></i>Code snippet present - see original document for details</div>' : ''}
-                    ${q.hasTable ? '<div class="diagram-container"><i class="fas fa-table mr-2 text-cyan-400"></i>Configuration table present - see original document for details</div>' : ''}
-                    ${q.hasYaml ? '<div class="code-block text-sm"><i class="fas fa-file-code mr-2 text-cyan-400"></i>YAML configurations present - see original document for details</div>' : ''}
+                    ${q.diagram ? `<div class="diagram-container"><p class="text-sm text-gray-400">${icons.diagram} ${q.diagram}</p></div>` : ''}
+                    ${q.hasCode ? `<div class="code-block text-sm">${icons.code} <span class="text-cyan-400">Code snippet present</span> - see original document for details</div>` : ''}
+                    ${q.hasTable ? `<div class="diagram-container">${icons.table} <span class="text-cyan-400">Configuration table present</span> - see original document for details</div>` : ''}
+                    ${q.hasYaml ? `<div class="code-block text-sm">${icons.fileCode} <span class="text-cyan-400">YAML configurations present</span> - see original document for details</div>` : ''}
 
                     <div class="mt-6">
                         ${optionsHTML}
@@ -1269,9 +1542,9 @@
                     </div>
 
                     ${state.showAnswers ? `
-                        <div class="mt-6 p-4 rounded-lg bg-green-500/10 border border-green-500/30">
+                        <div class="answer-box">
                             <div class="flex items-center gap-2 mb-2">
-                                <i class="fas fa-check-circle text-green-400"></i>
+                                ${icons.checkCircle}
                                 <strong class="text-green-400">Correct Answer: <span class="highlight">${q.correctAnswer}</span></strong>
                             </div>
                             ${q.explanation ? `<p class="text-sm text-gray-300 mt-2"><strong>Explanation:</strong> ${q.explanation}</p>` : ''}
@@ -1352,7 +1625,7 @@
         function showToast(message) {
             const toast = document.createElement('div');
             toast.className = 'toast';
-            toast.innerHTML = `<i class="fas fa-check mr-2"></i>${message}`;
+            toast.innerHTML = `${icons.check} ${message}`;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
