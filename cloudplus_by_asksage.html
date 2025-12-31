@@ -1,0 +1,3341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CompTIA Cloud+ Practice Quiz | Nexus Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           CSS VARIABLES - CYBER-VOID THEME
+        ============================================ */
+        :root {
+            --space-void: #0a0a1a;
+            --space-deep: #0d1025;
+            --space-mid: #151d2e;
+            --glass-panel: rgba(21, 29, 46, 0.85);
+            --glass-light: rgba(31, 41, 59, 0.6);
+            --neon-core: #3b82f6;
+            --neon-accent: #06b6d4;
+            --neon-success: #10b981;
+            --neon-warning: #f59e0b;
+            --neon-danger: #ef4444;
+            --neon-purple: #a855f7;
+            --neon-pink: #ec4899;
+            --gradient-cyber: linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #10b981 100%);
+            --gradient-fire: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+            --gradient-purple: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+            --animation-fast: 0.3s;
+            --animation-medium: 0.5s;
+            --animation-slow: 0.8s;
+            --font-display: 'Orbitron', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --border-glow: 0 0 20px rgba(59, 130, 246, 0.3);
+            --border-glow-success: 0 0 20px rgba(16, 185, 129, 0.4);
+            --border-glow-danger: 0 0 20px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Light mode overrides */
+        [data-theme="light"] {
+            --space-void: #f8fafc;
+            --space-deep: #f1f5f9;
+            --space-mid: #e2e8f0;
+            --glass-panel: rgba(255, 255, 255, 0.9);
+            --glass-light: rgba(241, 245, 249, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--space-void);
+            color: #e0e7ff;
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ============================================
+           GLASSMORPHISM COMPONENTS
+        ============================================ */
+        .glass-panel {
+            background: var(--glass-panel);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            box-shadow: var(--border-glow);
+        }
+
+        .glass-panel-light {
+            background: var(--glass-light);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+        }
+
+        .glass-panel-success {
+            background: rgba(16, 185, 129, 0.1);
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(16, 185, 129, 0.4);
+            box-shadow: var(--border-glow-success);
+        }
+
+        .glass-panel-danger {
+            background: rgba(239, 68, 68, 0.1);
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            box-shadow: var(--border-glow-danger);
+        }
+
+        /* ============================================
+           TYPOGRAPHY
+        ============================================ */
+        .cyber-header {
+            font-family: var(--font-display);
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
+        }
+
+        .cyber-header-fire {
+            background: var(--gradient-fire);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cyber-header-purple {
+            background: var(--gradient-purple);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .mono-text {
+            font-family: var(--font-mono);
+        }
+
+        /* ============================================
+           LOADING OVERLAY
+        ============================================ */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--space-void);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease-out, visibility 0.8s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-ring {
+            width: 120px;
+            height: 120px;
+            position: relative;
+        }
+
+        .loader-ring::before,
+        .loader-ring::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 4px solid transparent;
+        }
+
+        .loader-ring::before {
+            border-top-color: var(--neon-core);
+            border-right-color: var(--neon-accent);
+            animation: spin 1.5s linear infinite;
+        }
+
+        .loader-ring::after {
+            border-bottom-color: var(--neon-success);
+            border-left-color: var(--neon-purple);
+            animation: spin 2s linear infinite reverse;
+            inset: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            margin-top: 2rem;
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ============================================
+           CANVAS BACKGROUND
+        ============================================ */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           BUTTONS
+        ============================================ */
+        .btn-cyber {
+            background: var(--gradient-cyber);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-family: var(--font-body);
+            cursor: pointer;
+            transition: all var(--animation-fast) ease;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-cyber::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s;
+        }
+
+        .btn-cyber:hover::before {
+            transform: translateX(100%);
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-cyber:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(59, 130, 246, 0.5);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--animation-fast);
+            color: var(--neon-core);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-outline:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--neon-core);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--gradient-success);
+        }
+
+        .btn-danger {
+            background: var(--gradient-fire);
+        }
+
+        /* ============================================
+           SIMULATION CONTAINER
+        ============================================ */
+        .simulation-container {
+            position: relative;
+            background: linear-gradient(180deg, rgba(13, 16, 37, 0.95) 0%, rgba(10, 10, 26, 0.98) 100%);
+            border: 2px solid rgba(249, 115, 22, 0.3);
+            border-radius: 24px;
+            overflow: hidden;
+            min-height: 700px;
+        }
+
+        .simulation-header {
+            background: linear-gradient(90deg, rgba(249, 115, 22, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%);
+            border-bottom: 1px solid rgba(249, 115, 22, 0.3);
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .simulation-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(249, 115, 22, 0.2);
+            border: 1px solid rgba(249, 115, 22, 0.4);
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #fdba74;
+        }
+
+        .simulation-timer {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            font-family: var(--font-mono);
+        }
+
+        .timer-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neon-accent);
+        }
+
+        /* ============================================
+           NETWORK TOPOLOGY VISUALIZATION
+        ============================================ */
+        .topology-canvas {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+        }
+
+        .topology-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .device-node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .device-node:hover {
+            filter: drop-shadow(0 0 20px rgba(6, 182, 212, 0.6));
+        }
+
+        .device-node.selected {
+            filter: drop-shadow(0 0 30px rgba(59, 130, 246, 0.8));
+        }
+
+        .device-node.configured {
+            filter: drop-shadow(0 0 25px rgba(16, 185, 129, 0.7));
+        }
+
+        .device-node.error {
+            filter: drop-shadow(0 0 25px rgba(239, 68, 68, 0.7));
+            animation: errorPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes errorPulse {
+            0%, 100% { filter: drop-shadow(0 0 25px rgba(239, 68, 68, 0.7)); }
+            50% { filter: drop-shadow(0 0 35px rgba(239, 68, 68, 0.9)); }
+        }
+
+        .connection-line {
+            stroke: rgba(59, 130, 246, 0.4);
+            stroke-width: 3;
+            fill: none;
+            stroke-dasharray: 8 4;
+            animation: flowAnimation 2s linear infinite;
+        }
+
+        .connection-line.active {
+            stroke: var(--neon-success);
+            stroke-width: 4;
+            stroke-dasharray: none;
+            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6));
+        }
+
+        @keyframes flowAnimation {
+            to { stroke-dashoffset: -24; }
+        }
+
+        .data-packet {
+            fill: var(--neon-accent);
+            filter: drop-shadow(0 0 6px rgba(6, 182, 212, 0.8));
+        }
+
+        /* ============================================
+           DEVICE CONFIGURATION PANEL
+        ============================================ */
+        .config-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 480px;
+            background: rgba(13, 16, 37, 0.98);
+            border-left: 2px solid rgba(59, 130, 246, 0.3);
+            backdrop-filter: blur(24px);
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .config-panel.open {
+            transform: translateX(0);
+        }
+
+        .config-panel-header {
+            padding: 1.5rem;
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, transparent 100%);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .config-panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .config-section {
+            margin-bottom: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .config-section-title {
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            color: var(--neon-accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .config-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .config-row:last-child {
+            border-bottom: none;
+        }
+
+        .config-label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .config-select {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            padding: 0.625rem 1rem;
+            color: white;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 140px;
+        }
+
+        .config-select:hover {
+            border-color: var(--neon-accent);
+        }
+
+        .config-select:focus {
+            outline: none;
+            border-color: var(--neon-core);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .config-select.correct {
+            border-color: var(--neon-success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .config-select.incorrect {
+            border-color: var(--neon-danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .config-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .config-status.online {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--neon-success);
+        }
+
+        .config-status.offline {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--neon-danger);
+        }
+
+        .config-status.warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--neon-warning);
+        }
+
+        /* ============================================
+           SLA REQUIREMENTS PANEL
+        ============================================ */
+        .sla-panel {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 16px;
+            padding: 1.25rem;
+            margin: 1rem 1.5rem;
+        }
+
+        .sla-title {
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            color: var(--neon-purple);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sla-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.625rem 0;
+            font-size: 0.875rem;
+            color: #cbd5e1;
+        }
+
+        .sla-check {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .sla-check.pending {
+            background: rgba(100, 116, 139, 0.3);
+            border: 2px solid rgba(100, 116, 139, 0.5);
+        }
+
+        .sla-check.complete {
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid var(--neon-success);
+            color: var(--neon-success);
+        }
+
+        .sla-check.failed {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid var(--neon-danger);
+            color: var(--neon-danger);
+        }
+
+        /* ============================================
+           IOPS METER
+        ============================================ */
+        .iops-meter {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem 1.5rem;
+        }
+
+        .iops-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .iops-label {
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .iops-value {
+            font-family: var(--font-mono);
+            font-size: 2rem;
+            font-weight: 700;
+            transition: color 0.5s;
+        }
+
+        .iops-value.low {
+            color: var(--neon-danger);
+        }
+
+        .iops-value.medium {
+            color: var(--neon-warning);
+        }
+
+        .iops-value.high {
+            color: var(--neon-success);
+        }
+
+        .iops-bar-container {
+            height: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .iops-bar {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.8s ease, background 0.5s;
+            position: relative;
+        }
+
+        .iops-bar::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .iops-threshold {
+            position: absolute;
+            top: -8px;
+            bottom: -8px;
+            width: 3px;
+            background: var(--neon-warning);
+            border-radius: 2px;
+        }
+
+        .iops-threshold-label {
+            position: absolute;
+            top: -28px;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--neon-warning);
+            white-space: nowrap;
+        }
+
+        /* ============================================
+           DRAG AND DROP CONTAINER
+        ============================================ */
+        .dragdrop-container {
+            position: relative;
+            background: linear-gradient(180deg, rgba(13, 16, 37, 0.95) 0%, rgba(10, 10, 26, 0.98) 100%);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 24px;
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .dragdrop-header {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.2) 0%, rgba(6, 182, 212, 0.1) 100%);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dragdrop-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #93c5fd;
+        }
+
+        .dragdrop-workspace {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            min-height: 500px;
+        }
+
+        /* Draggable Tiles */
+        .tiles-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tiles-title {
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            color: var(--neon-accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .draggable-tile {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
+            border: 2px solid rgba(59, 130, 246, 0.4);
+            border-radius: 14px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            cursor: grab;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            user-select: none;
+        }
+
+        .draggable-tile:hover {
+            transform: translateY(-3px) scale(1.02);
+            border-color: var(--neon-accent);
+            box-shadow: 0 8px 25px rgba(6, 182, 212, 0.3);
+        }
+
+        .draggable-tile:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+            z-index: 100;
+        }
+
+        .draggable-tile.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .draggable-tile.placed {
+            opacity: 0.4;
+            pointer-events: none;
+            border-style: dashed;
+        }
+
+        .tile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .tile-icon.sso {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(6, 182, 212, 0.2));
+            color: var(--neon-success);
+        }
+
+        .tile-icon.siem {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(236, 72, 153, 0.2));
+            color: var(--neon-purple);
+        }
+
+        .tile-icon.mfa {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.3), rgba(239, 68, 68, 0.2));
+            color: var(--neon-warning);
+        }
+
+        .tile-content {
+            flex: 1;
+        }
+
+        .tile-name {
+            font-weight: 600;
+            font-size: 0.9375rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .tile-desc {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        /* Network Diagram */
+        .network-diagram {
+            position: relative;
+            background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            min-height: 400px;
+        }
+
+        .network-svg {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+        }
+
+        /* Drop Zones */
+        .drop-zone {
+            fill: rgba(59, 130, 246, 0.1);
+            stroke: rgba(59, 130, 246, 0.4);
+            stroke-width: 2;
+            stroke-dasharray: 8 4;
+            rx: 12;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .drop-zone:hover {
+            fill: rgba(59, 130, 246, 0.2);
+            stroke: var(--neon-accent);
+        }
+
+        .drop-zone.drag-over {
+            fill: rgba(6, 182, 212, 0.25);
+            stroke: var(--neon-accent);
+            stroke-width: 3;
+            stroke-dasharray: none;
+            filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.5));
+        }
+
+        .drop-zone.filled {
+            fill: rgba(16, 185, 129, 0.15);
+            stroke: var(--neon-success);
+            stroke-dasharray: none;
+        }
+
+        .drop-zone.correct {
+            fill: rgba(16, 185, 129, 0.2);
+            stroke: var(--neon-success);
+            stroke-width: 3;
+            filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.5));
+        }
+
+        .drop-zone.incorrect {
+            fill: rgba(239, 68, 68, 0.2);
+            stroke: var(--neon-danger);
+            stroke-width: 3;
+            filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.5));
+        }
+
+        .drop-zone-label {
+            fill: #94a3b8;
+            font-size: 12px;
+            font-family: var(--font-display);
+            text-anchor: middle;
+            pointer-events: none;
+        }
+
+        .dropped-tile {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dropped-tile:hover {
+            filter: brightness(1.2);
+        }
+
+        /* Network Elements */
+        .network-element {
+            transition: all 0.3s;
+        }
+
+        .network-element:hover {
+            filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.5));
+        }
+
+        .network-label {
+            fill: #e0e7ff;
+            font-size: 11px;
+            font-family: var(--font-body);
+            text-anchor: middle;
+            pointer-events: none;
+        }
+
+        .network-connection {
+            stroke: rgba(59, 130, 246, 0.3);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .network-connection.active {
+            stroke: var(--neon-success);
+            stroke-width: 3;
+            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5));
+        }
+
+        /* ============================================
+           QUESTION CARDS
+        ============================================ */
+        .question-card {
+            position: relative;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .question-number {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .question-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid;
+        }
+
+        .badge-simulation {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fdba74;
+            border-color: rgba(249, 115, 22, 0.4);
+        }
+
+        .badge-dragdrop {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .badge-multiselect {
+            background: rgba(168, 85, 247, 0.2);
+            color: #d8b4fe;
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+
+        /* ============================================
+           OPTION CARDS
+        ============================================ */
+        .option-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(100, 116, 139, 0.3);
+            border-radius: 14px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .option-card:hover {
+            transform: translateX(8px);
+            border-color: var(--neon-accent);
+            background: rgba(6, 182, 212, 0.05);
+        }
+
+        .option-card.selected {
+            border-color: var(--neon-core);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .option-card.correct {
+            border-color: var(--neon-success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .option-card.incorrect {
+            border-color: var(--neon-danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .option-letter {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(59, 130, 246, 0.2);
+            border: 2px solid rgba(59, 130, 246, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-family: var(--font-display);
+            color: var(--neon-core);
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .option-card.correct .option-letter {
+            background: rgba(16, 185, 129, 0.3);
+            border-color: var(--neon-success);
+            color: var(--neon-success);
+        }
+
+        .option-card.incorrect .option-letter {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: var(--neon-danger);
+            color: var(--neon-danger);
+        }
+
+        /* ============================================
+           ANSWER BOX
+        ============================================ */
+        .answer-box {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            border-radius: 16px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .answer-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .answer-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: rgba(16, 185, 129, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neon-success);
+        }
+
+        .answer-label {
+            font-weight: 600;
+            color: var(--neon-success);
+        }
+
+        .answer-value {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            color: var(--neon-success);
+        }
+
+        .explanation-text {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(16, 185, 129, 0.2);
+            font-size: 0.9375rem;
+            color: #cbd5e1;
+            line-height: 1.7;
+        }
+
+        /* ============================================
+           NAVIGATION
+        ============================================ */
+        .question-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            background: rgba(21, 29, 46, 0.5);
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--neon-accent);
+            background: rgba(6, 182, 212, 0.15);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: var(--gradient-cyber);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .nav-btn.simulation {
+            border-color: rgba(249, 115, 22, 0.4);
+        }
+
+        .nav-btn.simulation.active {
+            background: var(--gradient-fire);
+        }
+
+        .nav-btn.dragdrop {
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        /* ============================================
+           STATS CARDS
+        ============================================ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.05));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--neon-accent);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .stats-value {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        /* ============================================
+           TOAST NOTIFICATIONS
+        ============================================ */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 14px;
+            color: white;
+            font-weight: 600;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: toastSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast.success {
+            background: var(--gradient-success);
+        }
+
+        .toast.error {
+            background: var(--gradient-fire);
+        }
+
+        .toast.info {
+            background: var(--gradient-cyber);
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ============================================
+           COPY BUTTON
+        ============================================ */
+        .copy-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            color: #60a5fa;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .copy-btn:hover {
+            background: rgba(59, 130, 246, 0.25);
+            border-color: var(--neon-core);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* ============================================
+           RESULT MODAL
+        ============================================ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--glass-panel);
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.open .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .result-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .result-icon.success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 3px solid var(--neon-success);
+            color: var(--neon-success);
+        }
+
+        .result-icon.partial {
+            background: rgba(245, 158, 11, 0.2);
+            border: 3px solid var(--neon-warning);
+            color: var(--neon-warning);
+        }
+
+        .result-icon.fail {
+            background: rgba(239, 68, 68, 0.2);
+            border: 3px solid var(--neon-danger);
+            color: var(--neon-danger);
+        }
+
+        /* ============================================
+           RESPONSIVE
+        ============================================ */
+        @media (max-width: 1024px) {
+            .dragdrop-workspace {
+                grid-template-columns: 1fr;
+            }
+
+            .config-panel {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .simulation-header,
+            .dragdrop-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .question-number {
+                font-size: 2.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ============================================
+           ANIMATIONS
+        ============================================ */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-children > * {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+        .stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+        .stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+        .stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+        .stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.4);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(59, 130, 246, 0.6);
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loader-ring"></div>
+        <div class="loader-text">Initializing Nexus Academy...</div>
+    </div>
+
+    <!-- Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Main Container -->
+    <div class="relative z-10 min-h-screen">
+        
+        <!-- Sticky Header -->
+        <header class="sticky top-0 z-50 glass-panel mb-8 py-4 px-6 mx-4 mt-4" style="border-radius: 16px;">
+            <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-4">
+                <div>
+                    <h1 class="text-3xl font-bold cyber-header" style="font-family: var(--font-display);">CompTIA Cloud+ Quiz</h1>
+                    <p class="text-sm text-gray-400 mt-1">90 Practice Questions | CV0-004 | Interactive Simulations</p>
+                </div>
+                <div class="flex items-center gap-3 flex-wrap">
+                    <button onclick="toggleAnswers()" class="btn-outline text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        <span id="toggle-text">Show Answers</span>
+                    </button>
+                    <button onclick="copyAllQuestions()" class="btn-cyber text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                        Copy All
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="max-w-7xl mx-auto px-4 pb-12">
+            
+            <!-- Stats Dashboard -->
+            <div class="stats-grid mb-8 fade-in">
+                <div class="stats-card">
+                    <div class="stats-value cyber-header">90</div>
+                    <div class="stats-label">Total Questions</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-value cyber-header">75</div>
+                    <div class="stats-label">Multiple Choice</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-value cyber-header-purple">13</div>
+                    <div class="stats-label">Multi-Select</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-value cyber-header-fire">2</div>
+                    <div class="stats-label">Simulations</div>
+                </div>
+            </div>
+
+            <!-- Quick Navigation -->
+            <div class="glass-panel p-6 mb-8 fade-in">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2" style="font-family: var(--font-display);">
+                    <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+                    </svg>
+                    Quick Navigation
+                </h3>
+                <div class="question-nav" id="questionNav"></div>
+            </div>
+
+            <!-- Questions Container -->
+            <div id="questionsContainer"></div>
+
+        </div>
+    </div>
+
+    <!-- Configuration Panel (Slide-over) -->
+    <aside id="configPanel" class="config-panel">
+        <div class="config-panel-header">
+            <div>
+                <h3 class="text-lg font-bold" style="font-family: var(--font-display);" id="configPanelTitle">Device Configuration</h3>
+                <p class="text-sm text-gray-400" id="configPanelSubtitle">Configure device settings</p>
+            </div>
+            <button onclick="closeConfigPanel()" class="p-2 hover:bg-white/10 rounded-lg transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="config-panel-body" id="configPanelBody">
+            <!-- Dynamic content -->
+        </div>
+        <div class="p-4 border-t border-white/10">
+            <button onclick="applyConfiguration()" class="btn-cyber w-full justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Apply Configuration
+            </button>
+        </div>
+    </aside>
+
+    <!-- Result Modal -->
+    <div id="resultModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="result-icon" id="resultIcon">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold mb-2" style="font-family: var(--font-display);" id="resultTitle">Configuration Complete!</h2>
+            <p class="text-gray-400 mb-6" id="resultMessage">All SLA requirements have been met.</p>
+            <div class="flex gap-3 justify-center">
+                <button onclick="closeResultModal()" class="btn-outline">Close</button>
+                <button onclick="resetSimulation()" class="btn-cyber">Try Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION & STATE
+        // ============================================
+        const CONFIG = {
+            particleCount: 80,
+            particleMaxDistance: 120,
+            animationSpeed: 0.5
+        };
+
+        let state = {
+            currentQuestion: 1,
+            showAnswers: false,
+            darkMode: true,
+            // Simulation 1 State
+            sim1: {
+                hypervisorSlotA: { port1: null, port2: null },
+                hypervisorSlotB: { port1: null, port2: null },
+                fabricSwitchA: { initiator: null },
+                fabricSwitchB: { initiator: null },
+                selectedDevice: null,
+                iops: 8500,
+                configured: false
+            },
+            // Drag & Drop State
+            dd2: {
+                endpoints: null,
+                internet: null,
+                server: null,
+                draggedTile: null
+            }
+        };
+
+        // ============================================
+        // QUIZ DATA
+        // ============================================
+        const quizData = [
+            {
+                id: 1,
+                type: "simulation",
+                question: `You are a cloud engineer working for a cloud service provider that is responsible for an IaaS offering. Your customer, who creates VMs and manages virtual storage, has noticed I/O bandwidth issues and low IOPS (under 9000). Your manager wants you to verify the proper storage configuration as dictated by your service level agreement (SLA).
+
+The SLA specifies:
+• Each SFP on the hypervisor host must be set to the maximum link speed allowed by SAN.
+• All SAN disk groups must be configured in a RAID 5.
+• The SAN array must be fully configured for redundant fabric paths.
+• IOPS should not fall below 14000.
+
+Task: Click each highlighted device to review the displayed information. Change the settings of each device as necessary to conform to the SLA requirements.`,
+                diagram: "Network topology showing Hypervisor connected to Fabric Switch A and Fabric Switch B, which connect to SAN storage array",
+                solution: `• Set all Hypervisor FC ports (Slot A & B, Ports 1 & 2) to 8 Gbps
+• Fabric Switch A: Select initiator 50:00:00:25:B5:A0:23:02
+• Fabric Switch B: Select initiator 50:00:00:25:B5:B0:23:04
+• Verify RAID 5 is configured on both disk groups`,
+                correctAnswer: "Configuration complete with all ports at 8Gbps and proper initiator mappings",
+                slaRequirements: [
+                    { id: 'sfp', text: 'All SFP ports set to 8 Gbps (max speed)', complete: false },
+                    { id: 'raid', text: 'All disk groups configured in RAID 5', complete: true },
+                    { id: 'fabric', text: 'Redundant fabric paths configured', complete: false },
+                    { id: 'iops', text: 'IOPS at or above 14000', complete: false }
+                ]
+            },
+            {
+                id: 2,
+                type: "drag-drop",
+                question: `A highly regulated business is required to work remotely, and the risk tolerance is very low. You are tasked with providing an identity solution to the company cloud that includes the following:
+
+• Secure connectivity that minimizes user login
+• Tracks user activity and monitors for anomalous activity
+• Requires secondary authentication
+
+Instructions: Drag and drop the security controls to the appropriate control points in the network diagram.`,
+                tiles: [
+                    { id: 'sso', name: 'SSO', desc: 'Single Sign-On', icon: '🔐' },
+                    { id: 'siem', name: 'SIEM', desc: 'Security Monitoring', icon: '📊' },
+                    { id: 'mfa', name: 'MFA', desc: 'Multi-Factor Auth', icon: '🔑' }
+                ],
+                dropZones: [
+                    { id: 'endpoints', label: 'Endpoints', x: 100, y: 200, correctTile: 'mfa' },
+                    { id: 'internet', label: 'Internet/Connectivity', x: 350, y: 200, correctTile: 'sso' },
+                    { id: 'server', label: 'Cloud Server', x: 600, y: 200, correctTile: 'siem' }
+                ],
+                correctAnswer: "Endpoints: MFA | Internet/Connectivity: SSO | Cloud Service Provider/Server: SIEM",
+                explanation: "MFA provides secondary authentication at endpoints, SSO minimizes user login for connectivity, SIEM tracks and monitors activity at the server level"
+            },
+            {
+                id: 3,
+                question: "Which of the following package managers would most likely be used with Ubuntu Linux?",
+                options: ["YUM", "DNF", "Pacman", "APT"],
+                correctAnswer: "D",
+                explanation: "APT (Advanced Package Tool) is the default package manager for Ubuntu and Debian-based distributions"
+            },
+            {
+                id: 4,
+                question: "Which of the following types of releases best describes the update made to a code repository production release when it changes from version 1.0 to version 1.1?",
+                options: ["Alpha", "Beta", "Minor", "Major"],
+                correctAnswer: "C",
+                explanation: "Version numbering follows semantic versioning: Major.Minor.Patch. A change from 1.0 to 1.1 is a minor release"
+            },
+            {
+                id: 5,
+                question: "A company's primary site experiences an outage and must recover as quickly as possible. Which of the following backup or recovery methods should the company use?",
+                options: ["In-place", "Incremental", "Full", "Parallel"],
+                correctAnswer: "D",
+                explanation: "Parallel recovery allows simultaneous operation of backup systems for fastest recovery"
+            },
+            {
+                id: 6,
+                question: "A high-usage cloud resource needs to be monitored in real time on specific events to guarantee its availability. Which of the following actions should be used to meet this requirement?",
+                options: [
+                    "Configure a ping command to identify when the cloud instance is out of service",
+                    "Create a dashboard with visualizations to filter the status of critical activities",
+                    "Collect all the daily activity from the cloud instance and create a dump file for analysis",
+                    "Schedule an hourly scan of the network to check for the availability of the resource"
+                ],
+                correctAnswer: "B",
+                explanation: "Real-time dashboards provide immediate visibility into resource status and critical events"
+            },
+            {
+                id: 7,
+                question: "A cloud administrator shortens the amount of time a backup runs. An executive in the company requires a guarantee that the backups can be restored with no data loss. Which of the following backup features should the administrator test for?",
+                options: ["Encryption", "Retention", "Schedule", "Integrity"],
+                correctAnswer: "D",
+                explanation: "Integrity checks ensure data can be restored without loss or corruption"
+            },
+            {
+                id: 8,
+                question: "A managed service provider's recent business growth includes customers on different continents. Which of the following should be considered to prevent issues with regulations?",
+                options: ["Data sovereignty", "Data ownership", "Classification of data", "Data locality"],
+                correctAnswer: "A",
+                explanation: "Data sovereignty addresses legal requirements for data storage across different jurisdictions"
+            },
+            {
+                id: 9,
+                question: "A company's content management system (CMS) service runs on an IaaS cluster on a public cloud. The CMS service is frequently targeted by a malicious threat actor using DDoS. Which of the following should a cloud engineer monitor to identify attacks?",
+                options: ["Network flow logs", "Endpoint detection and response logs", "Cloud provider event logs", "Instance syslog"],
+                correctAnswer: "A",
+                explanation: "Network flow logs capture traffic patterns essential for identifying DDoS attacks"
+            },
+            {
+                id: 10,
+                question: "A systems administrator needs to configure backups for the company's on-premises VM cluster. The storage used for backups will be constrained on free space until the company can implement cloud backups. Which of the following backup types will save the most space, assuming the frequency of backups is kept the same?",
+                options: ["Snapshot", "Full", "Differential", "Incremental"],
+                correctAnswer: "D",
+                explanation: "Incremental backups only save changes since the last backup, using minimal space"
+            },
+            {
+                id: 11,
+                question: "A cloud administrator deploys new VMs in a cluster and discovers they are getting IP addresses in the range of 169.254.0.0/16. Which of the following is the most likely cause?",
+                options: ["The scope has been exhausted", "The network is overlapping", "The VLAN is missing", "The NAT is improperly configured"],
+                correctAnswer: "A",
+                explanation: "169.254.0.0/16 is the APIPA range, indicating DHCP scope exhaustion"
+            },
+            {
+                id: 12,
+                question: "Which of the following migration types is best to use when migrating a highly available application, which is normally hosted on a local VM cluster, for usage with an external user population?",
+                options: ["Cloud to on-premises", "Cloud to cloud", "On-premises to cloud", "On-premises to on-premises"],
+                correctAnswer: "C",
+                explanation: "Moving from local (on-premises) to cloud provides external accessibility"
+            },
+            {
+                id: 13,
+                question: "A cloud engineer hardened the WAF for a company that operates exclusively in North America. The engineer did not make changes to any ports, and all protected applications have continued to function as expected. Which of the following configuration changes did the engineer most likely apply?",
+                options: [
+                    "The engineer implemented MFA to access the WAF configurations",
+                    "The engineer blocked all traffic originating outside the region",
+                    "The engineer installed the latest security patches on the WAF",
+                    "The engineer completed an upgrade from TLS version 1.1 to version 1.3"
+                ],
+                correctAnswer: "B",
+                explanation: "Geographic blocking is a common WAF hardening technique for region-specific operations"
+            },
+            {
+                id: 14,
+                question: "Users report that in-house developed software has performance issues and behaves in unexpected ways following a recent update. The developers investigate and find buffer overflows and broken authentications. Which of the following best describes what caused this issue?",
+                options: ["Leaked credentials", "Poor coding practices", "Cipher suite depreciation", "Incompatible hardware"],
+                correctAnswer: "B",
+                explanation: "Buffer overflows and broken authentication indicate poor coding practices"
+            },
+            {
+                id: 15,
+                question: "A developer at a small startup company deployed some code for a new feature to its public repository. A few days later, a data breach occurred. A security team investigated the incident and found that the database was hacked. Which of the following is the most likely cause of this breach?",
+                options: ["Database core dump", "Hard-coded credentials", "Compromised deployment agent", "Unpatched web servers"],
+                correctAnswer: "B",
+                explanation: "Hard-coded credentials in public repositories are a common cause of breaches"
+            },
+            {
+                id: 16,
+                question: "A public cloud environment customer wants to encrypt the data it puts in the cloud. However, the CSP prohibits customer encryption keys. Which of the following principles is the CSP violating?",
+                options: ["Data ownership", "Data sovereignty", "Data classification", "Data retention"],
+                correctAnswer: "A",
+                explanation: "Preventing customer-managed encryption keys violates data ownership principles"
+            },
+            {
+                id: 17,
+                type: "multi-select",
+                question: "Which of the following will best reduce the cost of running workloads while maintaining the same performance? (Select TWO)",
+                options: ["Instance size", "Tagging", "Reserved resources model", "Spot instance model", "Pay-as-you-go model", "Dedicated host model"],
+                correctAnswer: ["C", "D"],
+                explanation: "Reserved instances and spot instances offer significant cost savings while maintaining performance"
+            },
+            {
+                id: 18,
+                question: "A group of cloud administrators frequently uses the same deployment template to recreate a cloud-based development environment. The administrators are unable to go back and review the history of changes they have made to the template. Which of the following cloud resource deployment concepts should the administrator start using?",
+                options: ["Drift detection", "Repeatability", "Documentation", "Versioning"],
+                correctAnswer: "D",
+                explanation: "Versioning tracks changes and allows reviewing history of template modifications"
+            },
+            {
+                id: 19,
+                question: "An IT security team wants to ensure that the correct parties are informed when a specific user account is signed in. Which of the following would most likely allow an administrator to address this concern?",
+                options: [
+                    "Creating an alert based on user sign-in criteria",
+                    "Aggregating user sign-in logs from all systems",
+                    "Enabling the collection of user sign-in logs",
+                    "Configuring the retention of all sign-in logs"
+                ],
+                correctAnswer: "A",
+                explanation: "Alerts based on specific criteria provide real-time notifications for sign-in events"
+            },
+            {
+                id: 20,
+                question: "An IT manager is migrating the production environment to the cloud but needs to keep control of the operating systems, patches, and settings of all resources. Which of the following deployment models will best meet the requirements?",
+                options: ["FaaS", "PaaS", "IaaS", "SaaS"],
+                correctAnswer: "C",
+                explanation: "IaaS provides control over OS, patches, and configurations"
+            },
+            // Continue with remaining questions...
+            {
+                id: 21,
+                question: "Which of the following is used to quickly deploy applications across different cloud providers?",
+                options: ["Snapshot", "Container image", "Serverless function", "VM template"],
+                correctAnswer: "B",
+                explanation: "Container images provide portability across different cloud platforms"
+            },
+            {
+                id: 22,
+                question: `A cloud engineer tries to deploy five new cloud instances using code. An error occurs, and the instances are not created. The configuration fails to run. The engineer then receives the following error message:
+
+ERROR: Parse error on json line x in config
+
+JSON:
+{
+  "instance_count": 5,
+  "ssd_options": ["100GB", "200GB", "300GB",
+  "instance_region": apac,
+  "instance_code": 255,
+  "start_instance": true
+}
+
+Which of the following oversights created the error in the configuration file?`,
+                options: ["Incorrect instance count", "Incorrect ssd_options", "Missing quotations on instance_region", "Missing trailing comma on start_instance"],
+                correctAnswer: "B",
+                explanation: "The ssd_options array is missing a closing bracket and has a trailing comma before the next property"
+            },
+            {
+                id: 23,
+                question: "A company wants to use cloud resources to store historical data and guarantee fast searching and information-retrieval capabilities. Which of the following types of storage should the company provision?",
+                options: ["Hot", "Warm", "Cold", "Offline"],
+                correctAnswer: "A",
+                explanation: "Hot storage provides fastest access for frequently accessed data and searches"
+            },
+            {
+                id: 24,
+                question: "A company receives files daily from a bank. The company requires that the files must be copied from the cloud storage resource to another cloud storage resource for further processing. Which of the following methods requires the least amount of effort to achieve the task?",
+                options: ["Remote procedure call", "SOAP", "Event-driven architecture", "REST"],
+                correctAnswer: "C",
+                explanation: "Event-driven architecture automatically triggers actions when files arrive, requiring minimal manual effort"
+            },
+            {
+                id: 25,
+                question: "A technician receives an email from a vendor who is requesting payment of an invoice for human resources services. The email contains a request for bank account numbers. Which of the following types of attacks does this behavior most likely indicate?",
+                options: ["Malware", "Cryptojacking", "Ransomware", "Phishing"],
+                correctAnswer: "D",
+                explanation: "Requesting sensitive financial information via email is a classic phishing attack"
+            },
+            {
+                id: 26,
+                question: "Which of the following cloud deployment models is the best way to replicate a workload non-disruptively between on-premises servers and a public cloud?",
+                options: ["Public", "Community", "Private", "Hybrid"],
+                correctAnswer: "D",
+                explanation: "Hybrid cloud enables seamless integration between on-premises and public cloud resources"
+            },
+            {
+                id: 27,
+                question: "Which of the following protocols is often used in IoT to reduce the amount of data exchanged?",
+                options: ["MQTT", "SMB", "NFS", "HTTPS"],
+                correctAnswer: "A",
+                explanation: "MQTT (Message Queuing Telemetry Transport) is a lightweight protocol designed for IoT with minimal overhead"
+            },
+            {
+                id: 28,
+                question: "A customer relationship management application, which is hosted in a public cloud IaaS network, is vulnerable to a remote command execution vulnerability. Which of the following is the best solution for the security engineer to implement to prevent the application from being exploited by basic attacks?",
+                options: ["IPS", "ACL", "DLP", "WAF"],
+                correctAnswer: "D",
+                explanation: "Web Application Firewall (WAF) protects against application-layer attacks including remote command execution"
+            },
+            {
+                id: 29,
+                question: `A network administrator is building a site-to-site VPN tunnel from the company's headquarters office to the company's public cloud development network. The network administrator confirms the following:
+
+• The VPN tunnel is established on the headquarter office firewall
+• While inside the office, developers report that they cannot connect to the development network resources
+• While outside the office on a client VPN, developers report that they can connect to the development network resources
+• The office and the client VPN have different IP subnet ranges
+• The firewall flow logs show VPN traffic is reaching the development network from the office
+
+Which of the following is the next step the network administrator should take to troubleshoot the VPN tunnel?`,
+                options: [
+                    "Review the development network routing table",
+                    "Change the ciphers on the site-to-site VPN",
+                    "Restart the site-to-site VPN tunnel",
+                    "Check the ACLs on the development workloads"
+                ],
+                correctAnswer: "A",
+                explanation: "Traffic reaches the network but developers can't connect from office - indicates routing issue preventing return traffic"
+            },
+            {
+                id: 30,
+                question: "A company is required to save historical data for seven years. A cloud administrator implements a script that automatically deletes data older than seven years. Which of the following concepts best describes why the historical data is being deleted?",
+                options: ["End of life", "Data loss prevention", "Cost implications", "Tiered storage for archiving"],
+                correctAnswer: "A",
+                explanation: "End of life policies define when data should be deleted based on retention requirements"
+            },
+            // Adding remaining questions (31-90) with abbreviated format for space
+            { id: 31, question: "A cloud engineer is troubleshooting a connectivity issue between application server (192.168.1.10) and MySQL database server (192.168.2.20). Which should be addressed?", options: ["Application Server Stateful Firewall", "Application Server Subnet Routing Table", "MySQL Server Stateful Firewall", "MySQL Server Subnet Routing Table"], correctAnswer: "D", explanation: "MySQL Server Subnet Routing Table has incorrect gateway configuration" },
+            { id: 32, question: "Which cloud-native architecture design is most easily maintained, decentralized, and decoupled?", options: ["Monolithic", "Hybrid cloud", "Mainframe", "Microservices"], correctAnswer: "D", explanation: "Microservices architecture is inherently decentralized, decoupled, and easier to maintain" },
+            { id: 33, question: "A production VM was deleted by a compromised logging service account. What should be done next?", options: ["Enable 2FA on console", "Reset password", "Disable RDP", "Create scoped administrative role"], correctAnswer: "D", explanation: "Principle of least privilege - service accounts should have minimal necessary permissions" },
+            { id: 34, question: "Which is the most cost-effective way to store infrequently accessed data?", options: ["Cold site", "Hot site", "Off-site", "Warm site"], correctAnswer: "C", explanation: "Off-site/Cold storage offers lowest cost for infrequently accessed data" },
+            { id: 35, question: "Which YAML template is most appropriate for a cost-effective, highly available, self-healing, secure website?", options: ["Config A", "Config B", "Config C", "Config D with Spot, Autoscaling, restricted SSH"], correctAnswer: "D", explanation: "Combines Spot instances (cost), Autoscaling (self-healing/HA), and restricted SSH (security)" },
+            { id: 36, question: "After clicking a phishing link, what should prevent future attacks?", options: ["Rotate credentials", "Disable text messaging", "Enforce security policy regarding external links", "Deploy WAF"], correctAnswer: "C", explanation: "Security policies and training prevent users from clicking malicious links" },
+            { id: 37, question: "How to collect process-level memory tracking for autoscaling VMs?", options: ["Configure page file metrics", "Deploy cloud-monitoring agent", "Schedule script", "Enable memory monitoring in VM config"], correctAnswer: "B", explanation: "Cloud monitoring agents provide detailed process-level metrics" },
+            { id: 38, question: "Which scaling approach for periodic traffic bursts when new videos launch?", options: ["Scheduled", "Manual", "Event", "Load"], correctAnswer: "A", explanation: "Scheduled scaling allows proactive scaling based on known patterns" },
+            { id: 39, question: "What does a Terraform resource definition script perform?", options: ["Upload VM image", "Create new cloud resource", "Build local server", "Import cloud module"], correctAnswer: "B", explanation: "Terraform resource definitions create new cloud resources" },
+            { id: 40, question: "What to do with storage on decommissioned banking server after POC?", options: ["Keep temporarily", "Archive it", "Delete it", "Retain permanently"], correctAnswer: "B", explanation: "Banking data should be archived for compliance and audit purposes" },
+            { id: 41, question: "How to make public cloud resources accessible only via corporate VPN?", options: ["WAF", "ACL", "PC (Private Connectivity)", "SSH"], correctAnswer: "C", explanation: "Private Connectivity restricts access to VPN-only" },
+            { id: 42, question: "Which model for database on company SAN but workload hosted by third-party?", options: ["Community", "Hybrid", "Public", "Private"], correctAnswer: "B", explanation: "Hybrid cloud combines on-premises database with third-party hosted workload" },
+            { id: 43, question: "VM fails to run updates despite internet access, DNS timeout error. What to check?", options: ["DNS configurations", "Routing protocols", "IP address configuration", "Trace to router"], correctAnswer: "A", explanation: "DNS timeout error indicates DNS configuration issues" },
+            { id: 44, type: "multi-select", question: "PowerShell executed encoded command, Kali Linux connecting to external IP on port 4444. Which steps? (Select TWO)", options: ["Uninstall Kali Linux", "Block port 4444 and IP 201.101.25.121", "Unplug Ethernet cable", "Check running processes for backdoor", "Upgrade Windows", "Block outbound from 10.150.71.151"], correctAnswer: ["B", "D"], explanation: "Port 4444 is commonly used for backdoors. Block connection and verify compromise status" },
+            { id: 45, question: "Critical security patch needed but CEO doesn't want interruptions during demo. What to do?", options: ["Delay conference", "Patch after event", "Get emergency patch window approval", "Patch immediately before conference"], correctAnswer: "C", explanation: "Critical patches require immediate action - get management approval" },
+            { id: 46, question: "Container writes files owned by root. How to ensure no output files owned by root?", options: ["Mount volume with --user myapp", "Add USER myapp to Dockerfile", "Run chown with cron", "Execute sudo -u myapp"], correctAnswer: "B", explanation: "Setting USER in Dockerfile ensures all processes run as non-root" },
+            { id: 47, question: "Manager wants info about VM sign-ins during past month. What to use?", options: ["Retention", "Alerting", "Aggregation", "Collection"], correctAnswer: "A", explanation: "Log retention policies ensure historical login data is available" },
+            { id: 48, question: "Building company-standard VM image from public image. What to implement?", options: ["Generic security", "Least privilege", "Hardening", "Vulnerability scanning"], correctAnswer: "C", explanation: "Hardening involves securing and configuring an image to reduce attack surface" },
+            { id: 49, question: "Month-long scalability test requiring 100+ servers. Which model?", options: ["PaaS", "SaaS", "DBaaS", "IaaS"], correctAnswer: "D", explanation: "IaaS provides flexibility and control for large-scale server clusters" },
+            { id: 50, question: "VMs in 2 data centers, max 1 second latency, immediate failover. Which replication?", options: ["Snapshot", "Transactional", "Live", "Point-in-time"], correctAnswer: "C", explanation: "Live replication provides continuous synchronization with minimal latency" },
+            { id: 51, question: "Which migration strategy requires developing new code?", options: ["Refactor", "Rearchitect", "Rehost", "Replatform"], correctAnswer: "A", explanation: "Refactoring involves rewriting code to optimize for cloud" },
+            { id: 52, question: "Move new feature to production, minimize cost, target subset of users. Which deployment?", options: ["Canary", "Blue-green", "Rolling", "In-place"], correctAnswer: "A", explanation: "Canary deployment releases to small subset first" },
+            { id: 53, question: "Backup solution via untrusted network. Most important feature?", options: ["Deduplication", "Replication", "Compression", "Encryption", "Labeling"], correctAnswer: "D", explanation: "Encryption protects data over untrusted networks" },
+            { id: 54, question: "Reduce management overhead of servers and network. Which model?", options: ["SaaS", "XaaS", "PaaS", "IaaS"], correctAnswer: "C", explanation: "PaaS reduces management overhead by handling infrastructure" },
+            { id: 55, question: "Web server logs piling up causing storage issues. Which mechanism?", options: ["Splicing", "Rotation", "Sampling", "Inspection"], correctAnswer: "B", explanation: "Log rotation archives old logs and creates new files" },
+            { id: 56, question: "Technology for visually impaired to access cloud data?", options: ["OCR", "Text-to-voice", "Sentiment analysis", "Visual recognition"], correctAnswer: "B", explanation: "Text-to-voice enables visually impaired users to access content" },
+            { id: 57, question: "Microservices with manual IP updates. Which solution automates this?", options: ["Service discovery", "Fan-out", "Managed container services", "DNS"], correctAnswer: "A", explanation: "Service discovery automatically tracks and updates service endpoints" },
+            { id: 58, question: "Multiple interns need same access level. Which control with least overhead?", options: ["Missing option", "Discretionary access", "Local user access", "Group-based access control"], correctAnswer: "D", explanation: "Group-based access control manages permissions for multiple users efficiently" },
+            { id: 59, question: "Best way to authenticate application to public cloud resources?", options: ["Access key", "API", "MFA token", "Username and Password"], correctAnswer: "A", explanation: "Access keys provide programmatic authentication for applications" },
+            { id: 60, question: "Containers need latest base image version but require Python 3.10. Which action?", options: ["Docker pull before docker run", "Docker update with cron", "Use python:latest", "Pin source image version"], correctAnswer: "A", explanation: "Docker pull ensures latest version of specified image" },
+            { id: 61, question: "CVE discovered in open-source package. First step in incident response?", options: ["Block package download", "Shut down applications", "Deploy update", "Scan to discover affected applications"], correctAnswer: "D", explanation: "First identify scope by finding which applications use the vulnerable package" },
+            { id: 62, question: "VM sluggish after intensive read/write. Least work to fix?", options: ["Create new VM with more RAM/CPU", "Stop VM, change disk tier, start VM", "Create new VM with high-performance disk", "Stop VM, detach disk, create new disk, attach, start"], correctAnswer: "B", explanation: "Changing disk tier in place is simplest solution" },
+            { id: 63, question: "Simple, fast deployment on two identical platforms?", options: ["Blue-green", "Canary", "Rolling", "In-place"], correctAnswer: "A", explanation: "Blue-green uses two identical environments for fast switching" },
+            { id: 64, question: "Field enabling computers to identify objects and people in images/videos?", options: ["Image reconstruction", "Facial recognition", "NLP", "Computer vision"], correctAnswer: "D", explanation: "Computer vision is the broad field for visual recognition" },
+            { id: 65, question: "Two CVEs with network attack vector and CVSS 9.0. Best mitigation?", options: ["Patching OS", "Upgrade to beta", "Encrypt disks", "Disable open ports"], correctAnswer: "A", explanation: "Patching directly addresses CVEs" },
+            { id: 66, question: "Which cost increases significantly for multiregion vs single-region?", options: ["Storage", "Power and cooling", "Network", "Compliance"], correctAnswer: "C", explanation: "Network costs increase with inter-region data transfer" },
+            { id: 67, type: "multi-select", question: "Zero-day exploited, data breached, ransomware installed. Which steps? (Select TWO)", options: ["Contact customers", "Negotiate with hackers", "Send global communication", "Inform management and legal", "Delete confidential data", "Modify firewall rules"], correctAnswer: ["D", "F"], explanation: "Inform management/legal and modify firewall to prevent further access" },
+            { id: 68, question: "System at 75-80% resource consumption. Which scaling approach?", options: ["Trending", "Manual", "Load", "Scheduled"], correctAnswer: "C", explanation: "Load-based scaling responds to resource utilization thresholds" },
+            { id: 69, question: "Interface commonly used for SSDs but not HDDs?", options: ["NVMe", "Serial-attached SCSI", "SATA", "iSCSI"], correctAnswer: "A", explanation: "NVMe is designed for SSDs and not used with traditional HDDs" },
+            { id: 70, type: "multi-select", question: "IT and Ops can't resolve IPs, IT can't connect to other subnets. Each employee needs max 3 hosts. Which meet requirements? (Select TWO)", options: ["Modify subnet mask to 255.255.254.0", "Configure static routing to 10.1.40.1", "Modify BYOD policy", "Configure static routing from 10.1.30.1 to each subnet", "Combine subnets", "Modify subnet mask to 255.255.255.128"], correctAnswer: ["D", "A"], explanation: "IT subnet needs routes to all subnets, /23 mask provides sufficient hosts" },
+            { id: 71, question: "Web app not accessible via internet but accessible locally by IP. What was misconfigured?", options: ["IP", "DHCP", "NAT", "DNS"], correctAnswer: "D", explanation: "Accessible by IP but not by name indicates DNS misconfiguration" },
+            { id: 72, question: "Users can't access web app after hardening. ERR_SSL_VERSION_OR_CIPHER_MISMATCH. What to do?", options: ["Restart web server", "Configure TLS 1.2 or newer", "Update web server", "Review WAF logs"], correctAnswer: "B", explanation: "Error indicates SSL/TLS version incompatibility" },
+            { id: 73, question: "Cloud resource increases capacity based on seasonal activity. Which describes this?", options: ["Fixed; triggered by load", "Permanent; triggered manually", "Elastic; triggered by trend", "Ephemeral; triggered by event"], correctAnswer: "C", explanation: "Elastic resources with trend-based scaling adapt to seasonal patterns" },
+            { id: 74, question: "Healthcare organization must ensure PII is not leaked. What to enable?", options: ["IPS", "DLP", "ACL", "WAF"], correctAnswer: "B", explanation: "DLP prevents unauthorized disclosure of sensitive information" },
+            { id: 75, question: "10 instances normal, 16 peak. Low cost, IaaS, no disruption tolerance. Which option?", options: ["Reserve 16, turn off unused", "10 pay-as-you-go, 6 spot", "Reserved for normal, pay-as-you-go for peak", "Use spot instances"], correctAnswer: "C", explanation: "Reserved for baseline + pay-as-you-go for peaks balances cost and reliability" },
+            { id: 76, question: "Cost-effective, flexible way to meet local computing demand?", options: ["Increase bandwidth", "Autoscaling", "Cloud bursting", "Additional hardware"], correctAnswer: "C", explanation: "Cloud bursting extends on-premises capacity to cloud when needed" },
+            { id: 77, question: "Preparing for seasonal sales. Minimal cost approach?", options: ["Load balancer with least-connections", "Scaling configuration for identified timeline", "Reconfigure app for more resources", "Deploy additional compute in advance"], correctAnswer: "B", explanation: "Scheduled scaling for known timeframe minimizes cost" },
+            { id: 78, question: "HPC cluster requiring low latency and high throughput. Greatest impact factor?", options: ["Node placement", "Node size", "Node NIC", "Node OS"], correctAnswer: "A", explanation: "Node placement has greatest impact on HPC cluster latency" },
+            { id: 79, question: "Database sluggish 11am-1pm, hypervisors at capacity. 70% users at other times no issues. Cause?", options: ["Oversubscription", "Resource allocation", "Sizing issues", "Service quotas"], correctAnswer: "A", explanation: "Oversubscription causes issues when multiple workloads peak simultaneously" },
+            { id: 80, type: "multi-select", question: "Report on cloud resource utilization and budget. Most important steps? (Select TWO)", options: ["Set log retention", "Configure application tracing", "Integrate email alerts", "Enable resource tagging", "Configure performance/utilization log collection", "Configure metric threshold alerts"], correctAnswer: ["D", "E"], explanation: "Resource tagging enables cost tracking, performance logs provide utilization data" },
+            { id: 81, question: "CMS targeted by DDoS. What to monitor to identify attacks?", options: ["Network flow logs", "Endpoint detection logs", "Cloud provider event logs", "Instance syslog"], correctAnswer: "A", explanation: "Network flow logs capture traffic patterns for DDoS detection" },
+            { id: 82, type: "multi-select", question: "Core considerations for migrating small business apps to cloud? (Select TWO)", options: ["Availability", "Hybrid", "Testing", "Networking", "Compute", "Logs"], correctAnswer: ["A", "D"], explanation: "Availability ensures uptime, networking ensures connectivity" },
+            { id: 83, question: "Database migrated to cloud, not accessible to some users but subset from another department can connect. What to do?", options: ["Increase subscription quota", "Update permissions", "Disable API throttling", "Increase VM size"], correctAnswer: "B", explanation: "Partial access indicates permission/authorization issue" },
+            { id: 84, question: "What is CRUD typically used for?", options: ["Relational databases", "Time series databases", "Graph databases", "NoSQL databases"], correctAnswer: "A", explanation: "CRUD operations are fundamental to relational databases" },
+            { id: 85, question: "Which storage provides greatest performance for traditional relational database?", options: ["File", "Object", "Block", "Ephemeral"], correctAnswer: "C", explanation: "Block storage provides low-latency, high-performance access for databases" },
+            { id: 86, question: "Log-parsing app needs processing power. Minimize instance failure impact, keep costs low?", options: ["Four 4vCPU, 8GB RAM, 80GB SSD", "Four 4vCPU, 8GB RAM, 80GB HDD", "Two 8vCPU, 16GB RAM, 80GB SSD", "Two 8vCPU, 16GB RAM, 80GB HDD"], correctAnswer: "A", explanation: "More smaller instances provide better fault tolerance, SSD provides better performance" },
+            { id: 87, question: "What has most influence on maximum data loss in disaster?", options: ["RPO", "BCDR", "MTTR", "RTO"], correctAnswer: "A", explanation: "RPO defines maximum acceptable data loss period" },
+            { id: 88, question: "Data resiliency for natural disasters, data localization, high availability. Which resource?", options: ["Storage in separate data center, same region", "On-premises private cloud", "Storage in AZ outside region", "Storage in same AZ"], correctAnswer: "A", explanation: "Same region meets data localization, separate datacenter provides disaster resilience" },
+            { id: 89, question: "Remotely hosted app not accessible after migration. Admin can access from same site. What to update?", options: ["Cipher suite", "Network ACL", "Routing table", "Permissions"], correctAnswer: "D", explanation: "Admin can access but users cannot - indicates permissions issue" },
+            { id: 90, question: "Storage with 99.99% durability, resilient to instance failures and deletions. Best option?", options: ["Ephemeral", "Cache", "Persistent", "Local"], correctAnswer: "C", explanation: "Persistent storage provides durability and survives instance lifecycle events" }
+        ];
+
+        // ============================================
+        // CANVAS BACKGROUND
+        // ============================================
+        function initCanvas() {
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const particles = [];
+            for (let i = 0; i < CONFIG.particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * CONFIG.animationSpeed,
+                    vy: (Math.random() - 0.5) * CONFIG.animationSpeed,
+                    radius: Math.random() * 2 + 1,
+                    opacity: Math.random() * 0.5 + 0.2
+                });
+            }
+
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach((p, i) => {
+                    // Mouse avoidance
+                    const dx = mouseX - p.x;
+                    const dy = mouseY - p.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) {
+                        p.x -= dx * 0.02;
+                        p.y -= dy * 0.02;
+                    }
+
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(59, 130, 246, ${p.opacity})`;
+                    ctx.fill();
+
+                    // Connect nearby particles
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dx2 = p2.x - p.x;
+                        const dy2 = p2.y - p.y;
+                        const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+
+                        if (dist2 < CONFIG.particleMaxDistance) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = `rgba(59, 130, 246, ${0.15 * (1 - dist2 / CONFIG.particleMaxDistance)})`;
+                            ctx.stroke();
+                        }
+                    }
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        // ============================================
+        // SIMULATION 1: SAN CONFIGURATION
+        // ============================================
+        function renderSimulation1() {
+            const q = quizData[0];
+            return `
+                <div class="question-card glass-panel p-0 overflow-hidden fade-in" id="question-1">
+                    <div class="simulation-container">
+                        <div class="simulation-header">
+                            <div class="flex items-center gap-4">
+                                <span class="simulation-badge">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    </svg>
+                                    SIMULATION LAB
+                                </span>
+                                <span class="text-2xl font-bold cyber-header-fire" style="font-family: var(--font-display);">Question 1</span>
+                            </div>
+                            <div class="simulation-timer">
+                                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span class="text-sm text-gray-400">Estimated:</span>
+                                <span class="timer-value">15:00</span>
+                            </div>
+                        </div>
+
+                        <div class="p-6">
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold mb-3" style="font-family: var(--font-display);">Scenario</h3>
+                                <p class="text-gray-300 leading-relaxed whitespace-pre-line">${q.question}</p>
+                            </div>
+                        </div>
+
+                        <!-- SLA Requirements Panel -->
+                        <div class="sla-panel">
+                            <div class="sla-title">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                SLA REQUIREMENTS CHECKLIST
+                            </div>
+                            <div id="slaChecklist">
+                                ${q.slaRequirements.map(req => `
+                                    <div class="sla-item" id="sla-${req.id}">
+                                        <div class="sla-check ${req.complete ? 'complete' : 'pending'}">
+                                            ${req.complete ? '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' : ''}
+                                        </div>
+                                        <span>${req.text}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <!-- IOPS Meter -->
+                        <div class="iops-meter">
+                            <div class="iops-header">
+                                <span class="iops-label">CURRENT IOPS</span>
+                                <span class="iops-value ${state.sim1.iops < 9000 ? 'low' : state.sim1.iops < 14000 ? 'medium' : 'high'}" id="iopsValue">${state.sim1.iops.toLocaleString()}</span>
+                            </div>
+                            <div class="iops-bar-container">
+                                <div class="iops-bar" id="iopsBar" style="width: ${(state.sim1.iops / 20000) * 100}%; background: ${state.sim1.iops < 9000 ? 'var(--gradient-fire)' : state.sim1.iops < 14000 ? 'linear-gradient(90deg, #f59e0b, #eab308)' : 'var(--gradient-success)'}"></div>
+                                <div class="iops-threshold" style="left: 70%;">
+                                    <span class="iops-threshold-label">14000 (SLA Min)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Network Topology -->
+                        <div class="topology-canvas p-6">
+                            <svg class="topology-svg" id="sim1Topology" viewBox="0 0 800 400">
+                                <!-- Definitions for gradients and filters -->
+                                <defs>
+                                    <linearGradient id="deviceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#1e3a5f"/>
+                                        <stop offset="100%" style="stop-color:#0d1b2a"/>
+                                    </linearGradient>
+                                    <linearGradient id="activeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#065f46"/>
+                                        <stop offset="100%" style="stop-color:#064e3b"/>
+                                    </linearGradient>
+                                    <filter id="glow">
+                                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                        <feMerge>
+                                            <feMergeNode in="coloredBlur"/>
+                                            <feMergeNode in="SourceGraphic"/>
+                                        </feMerge>
+                                    </filter>
+                                    <filter id="glowStrong">
+                                        <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+                                        <feMerge>
+                                            <feMergeNode in="coloredBlur"/>
+                                            <feMergeNode in="SourceGraphic"/>
+                                        </feMerge>
+                                    </filter>
+                                </defs>
+
+                                <!-- Connection Lines -->
+                                <path class="connection-line" id="conn-hyp-fsa" d="M 200 120 Q 300 80 400 150"/>
+                                <path class="connection-line" id="conn-hyp-fsb" d="M 200 180 Q 300 220 400 250"/>
+                                <path class="connection-line" id="conn-fsa-san" d="M 500 150 Q 600 120 700 200"/>
+                                <path class="connection-line" id="conn-fsb-san" d="M 500 250 Q 600 280 700 200"/>
+
+                                <!-- Data Packets (animated) -->
+                                <g id="dataPackets" style="display: none;">
+                                    <circle class="data-packet" r="4">
+                                        <animateMotion dur="2s" repeatCount="indefinite" path="M 200 120 Q 300 80 400 150"/>
+                                    </circle>
+                                    <circle class="data-packet" r="4">
+                                        <animateMotion dur="2s" repeatCount="indefinite" path="M 200 180 Q 300 220 400 250" begin="0.5s"/>
+                                    </circle>
+                                    <circle class="data-packet" r="4">
+                                        <animateMotion dur="2s" repeatCount="indefinite" path="M 500 150 Q 600 120 700 200" begin="1s"/>
+                                    </circle>
+                                    <circle class="data-packet" r="4">
+                                        <animateMotion dur="2s" repeatCount="indefinite" path="M 500 250 Q 600 280 700 200" begin="1.5s"/>
+                                    </circle>
+                                </g>
+
+                                <!-- Hypervisor -->
+                                <g class="device-node" id="device-hypervisor" onclick="openDeviceConfig('hypervisor')" transform="translate(50, 100)">
+                                    <rect x="0" y="0" width="150" height="100" rx="12" fill="url(#deviceGradient)" stroke="#3b82f6" stroke-width="2"/>
+                                    <rect x="10" y="10" width="130" height="25" rx="4" fill="rgba(59, 130, 246, 0.2)"/>
+                                    <text x="75" y="28" text-anchor="middle" fill="#60a5fa" font-size="11" font-weight="600">HYPERVISOR</text>
+                                    
+                                    <!-- Server Icon -->
+                                    <rect x="55" y="45" width="40" height="8" rx="2" fill="#475569"/>
+                                    <rect x="55" y="56" width="40" height="8" rx="2" fill="#475569"/>
+                                    <rect x="55" y="67" width="40" height="8" rx="2" fill="#475569"/>
+                                    <circle cx="62" cy="49" r="2" fill="#22d3ee"/>
+                                    <circle cx="62" cy="60" r="2" fill="#22d3ee"/>
+                                    <circle cx="62" cy="71" r="2" fill="#22d3ee"/>
+                                    
+                                    <!-- Status Indicator -->
+                                    <circle cx="135" cy="85" r="6" fill="#f59e0b" id="hyp-status"/>
+                                    <text x="75" y="95" text-anchor="middle" fill="#94a3b8" font-size="9">Click to configure</text>
+                                </g>
+
+                                <!-- Fabric Switch A -->
+                                <g class="device-node" id="device-fabric-a" onclick="openDeviceConfig('fabric-a')" transform="translate(350, 100)">
+                                    <rect x="0" y="0" width="150" height="80" rx="12" fill="url(#deviceGradient)" stroke="#3b82f6" stroke-width="2"/>
+                                    <rect x="10" y="10" width="130" height="20" rx="4" fill="rgba(59, 130, 246, 0.2)"/>
+                                    <text x="75" y="25" text-anchor="middle" fill="#60a5fa" font-size="10" font-weight="600">FABRIC SWITCH A</text>
+                                    
+                                    <!-- Switch Icon -->
+                                    <rect x="30" y="40" width="90" height="25" rx="4" fill="#1e293b"/>
+                                    <circle cx="45" cy="52" r="4" fill="#475569" id="fsa-port1"/>
+                                    <circle cx="60" cy="52" r="4" fill="#475569" id="fsa-port2"/>
+                                    <circle cx="75" cy="52" r="4" fill="#475569" id="fsa-port3"/>
+                                    <circle cx="90" cy="52" r="4" fill="#475569" id="fsa-port4"/>
+                                    <circle cx="105" cy="52" r="4" fill="#475569" id="fsa-port5"/>
+                                    
+                                    <circle cx="135" cy="65" r="6" fill="#f59e0b" id="fsa-status"/>
+                                </g>
+
+                                <!-- Fabric Switch B -->
+                                <g class="device-node" id="device-fabric-b" onclick="openDeviceConfig('fabric-b')" transform="translate(350, 220)">
+                                    <rect x="0" y="0" width="150" height="80" rx="12" fill="url(#deviceGradient)" stroke="#3b82f6" stroke-width="2"/>
+                                    <rect x="10" y="10" width="130" height="20" rx="4" fill="rgba(59, 130, 246, 0.2)"/>
+                                    <text x="75" y="25" text-anchor="middle" fill="#60a5fa" font-size="10" font-weight="600">FABRIC SWITCH B</text>
+                                    
+                                    <!-- Switch Icon -->
+                                    <rect x="30" y="40" width="90" height="25" rx="4" fill="#1e293b"/>
+                                    <circle cx="45" cy="52" r="4" fill="#475569" id="fsb-port1"/>
+                                    <circle cx="60" cy="52" r="4" fill="#475569" id="fsb-port2"/>
+                                    <circle cx="75" cy="52" r="4" fill="#475569" id="fsb-port3"/>
+                                    <circle cx="90" cy="52" r="4" fill="#475569" id="fsb-port4"/>
+                                    <circle cx="105" cy="52" r="4" fill="#475569" id="fsb-port5"/>
+                                    
+                                    <circle cx="135" cy="65" r="6" fill="#f59e0b" id="fsb-status"/>
+                                </g>
+
+                                <!-- SAN Storage Array -->
+                                <g class="device-node" id="device-san" onclick="openDeviceConfig('san')" transform="translate(600, 130)">
+                                    <rect x="0" y="0" width="180" height="140" rx="12" fill="url(#deviceGradient)" stroke="#3b82f6" stroke-width="2"/>
+                                    <rect x="10" y="10" width="160" height="25" rx="4" fill="rgba(59, 130, 246, 0.2)"/>
+                                    <text x="90" y="28" text-anchor="middle" fill="#60a5fa" font-size="11" font-weight="600">SAN STORAGE ARRAY</text>
+                                    
+                                    <!-- Disk Groups -->
+                                    <g transform="translate(15, 45)">
+                                        <rect x="0" y="0" width="70" height="40" rx="4" fill="#1e293b" stroke="#475569"/>
+                                        <text x="35" y="15" text-anchor="middle" fill="#94a3b8" font-size="8">Disk Group 1</text>
+                                        <text x="35" y="30" text-anchor="middle" fill="#10b981" font-size="9" font-weight="600">RAID 5</text>
+                                    </g>
+                                    <g transform="translate(95, 45)">
+                                        <rect x="0" y="0" width="70" height="40" rx="4" fill="#1e293b" stroke="#475569"/>
+                                        <text x="35" y="15" text-anchor="middle" fill="#94a3b8" font-size="8">Disk Group 2</text>
+                                        <text x="35" y="30" text-anchor="middle" fill="#10b981" font-size="9" font-weight="600">RAID 5</text>
+                                    </g>
+                                    
+                                    <!-- Service Processors -->
+                                    <g transform="translate(15, 95)">
+                                        <rect x="0" y="0" width="70" height="30" rx="4" fill="#0f172a" stroke="#475569"/>
+                                        <text x="35" y="12" text-anchor="middle" fill="#94a3b8" font-size="7">SP-A</text>
+                                        <circle cx="20" cy="22" r="3" fill="#10b981"/>
+                                        <circle cx="35" cy="22" r="3" fill="#10b981"/>
+                                        <text x="35" y="28" text-anchor="middle" fill="#64748b" font-size="6">8Gbps</text>
+                                    </g>
+                                    <g transform="translate(95, 95)">
+                                        <rect x="0" y="0" width="70" height="30" rx="4" fill="#0f172a" stroke="#475569"/>
+                                        <text x="35" y="12" text-anchor="middle" fill="#94a3b8" font-size="7">SP-B</text>
+                                        <circle cx="20" cy="22" r="3" fill="#10b981"/>
+                                        <circle cx="35" cy="22" r="3" fill="#10b981"/>
+                                        <text x="35" y="28" text-anchor="middle" fill="#64748b" font-size="6">8Gbps</text>
+                                    </g>
+                                </g>
+
+                                <!-- Labels -->
+                                <text x="125" y="220" text-anchor="middle" fill="#64748b" font-size="10">FC Ports</text>
+                                <text x="425" y="195" text-anchor="middle" fill="#64748b" font-size="10">Fabric A</text>
+                                <text x="425" y="315" text-anchor="middle" fill="#64748b" font-size="10">Fabric B</text>
+                                <text x="690" y="290" text-anchor="middle" fill="#64748b" font-size="10">Storage</text>
+                            </svg>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="p-6 border-t border-white/10 flex justify-between items-center">
+                            <button onclick="resetSimulation1()" class="btn-outline">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                Reset Configuration
+                            </button>
+                            <button onclick="validateSimulation1()" class="btn-cyber btn-success">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Validate Configuration
+                            </button>
+                        </div>
+
+                        ${state.showAnswers ? `
+                            <div class="answer-box m-6 mt-0">
+                                <div class="answer-header">
+                                    <div class="answer-icon">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                    </div>
+                                    <span class="answer-label">Correct Configuration:</span>
+                                </div>
+                                <div class="text-sm text-gray-300 whitespace-pre-line mt-2">${q.solution}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================
+        // SIMULATION 2: DRAG AND DROP
+        // ============================================
+        function renderDragDrop2() {
+            const q = quizData[1];
+            return `
+                <div class="question-card glass-panel p-0 overflow-hidden fade-in" id="question-2">
+                    <div class="dragdrop-container">
+                        <div class="dragdrop-header">
+                            <div class="flex items-center gap-4">
+                                <span class="dragdrop-badge">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                    </svg>
+                                    DRAG & DROP
+                                </span>
+                                <span class="text-2xl font-bold cyber-header" style="font-family: var(--font-display);">Question 2</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <button onclick="resetDragDrop2()" class="btn-outline text-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                    </svg>
+                                    Reset
+                                </button>
+                                <button onclick="validateDragDrop2()" class="btn-cyber text-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                    Check Answer
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="p-6">
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold mb-3" style="font-family: var(--font-display);">Scenario</h3>
+                                <p class="text-gray-300 leading-relaxed whitespace-pre-line">${q.question}</p>
+                            </div>
+                        </div>
+
+                        <div class="dragdrop-workspace">
+                            <!-- Draggable Tiles -->
+                            <div class="tiles-container">
+                                <div class="tiles-title">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                                    </svg>
+                                    SECURITY CONTROLS
+                                </div>
+                                <p class="text-xs text-gray-500 mb-4">Drag each control to the appropriate location</p>
+                                
+                                <div id="tilesPool">
+                                    ${q.tiles.map(tile => `
+                                        <div class="draggable-tile" 
+                                             id="tile-${tile.id}" 
+                                             draggable="true"
+                                             ondragstart="handleDragStart(event, '${tile.id}')"
+                                             ondragend="handleDragEnd(event)">
+                                            <div class="tile-icon ${tile.id}">
+                                                ${tile.icon}
+                                            </div>
+                                            <div class="tile-content">
+                                                <div class="tile-name">${tile.name}</div>
+                                                <div class="tile-desc">${tile.desc}</div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <!-- Network Diagram with Drop Zones -->
+                            <div class="network-diagram">
+                                <svg class="network-svg" id="dd2Diagram" viewBox="0 0 700 400">
+                                    <defs>
+                                        <linearGradient id="zoneGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:rgba(59, 130, 246, 0.1)"/>
+                                            <stop offset="100%" style="stop-color:rgba(6, 182, 212, 0.05)"/>
+                                        </linearGradient>
+                                        <filter id="dropShadow">
+                                            <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.3"/>
+                                        </filter>
+                                    </defs>
+
+                                    <!-- Background Grid -->
+                                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(59, 130, 246, 0.05)" stroke-width="1"/>
+                                    </pattern>
+                                    <rect width="100%" height="100%" fill="url(#grid)"/>
+
+                                    <!-- Connection Lines -->
+                                    <path class="network-connection" d="M 150 200 L 350 200" id="conn1"/>
+                                    <path class="network-connection" d="M 450 200 L 600 200" id="conn2"/>
+
+                                    <!-- Endpoints Section -->
+                                    <g transform="translate(50, 120)">
+                                        <rect x="0" y="0" width="100" height="160" rx="12" fill="rgba(0,0,0,0.3)" stroke="rgba(255,255,255,0.1)"/>
+                                        <text x="50" y="25" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="600">ENDPOINTS</text>
+                                        
+                                        <!-- Laptop Icon -->
+                                        <g transform="translate(25, 40)">
+                                            <rect x="0" y="0" width="50" height="30" rx="4" fill="#1e293b" stroke="#475569"/>
+                                            <rect x="5" y="5" width="40" height="20" rx="2" fill="#0f172a"/>
+                                            <rect x="-5" y="30" width="60" height="5" rx="2" fill="#475569"/>
+                                        </g>
+                                        
+                                        <!-- Phone Icon -->
+                                        <g transform="translate(35, 85)">
+                                            <rect x="0" y="0" width="30" height="50" rx="4" fill="#1e293b" stroke="#475569"/>
+                                            <rect x="3" y="5" width="24" height="35" rx="2" fill="#0f172a"/>
+                                            <circle cx="15" cy="45" r="3" fill="#475569"/>
+                                        </g>
+                                    </g>
+
+                                    <!-- Drop Zone: Endpoints -->
+                                    <g transform="translate(50, 290)">
+                                        <rect class="drop-zone" id="dropzone-endpoints" 
+                                              x="0" y="0" width="100" height="60"
+                                              ondragover="handleDragOver(event)"
+                                              ondragleave="handleDragLeave(event)"
+                                              ondrop="handleDrop(event, 'endpoints')"/>
+                                        <text class="drop-zone-label" x="50" y="35">Drop Here</text>
+                                    </g>
+
+                                    <!-- Internet/Cloud Section -->
+                                    <g transform="translate(300, 100)">
+                                        <rect x="0" y="0" width="150" height="200" rx="12" fill="rgba(0,0,0,0.3)" stroke="rgba(255,255,255,0.1)"/>
+                                        <text x="75" y="25" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="600">INTERNET</text>
+                                        
+                                        <!-- Cloud Icon -->
+                                        <g transform="translate(35, 40)">
+                                            <ellipse cx="40" cy="30" rx="35" ry="20" fill="#1e293b" stroke="#475569"/>
+                                            <ellipse cx="25" cy="35" rx="20" ry="15" fill="#1e293b" stroke="#475569"/>
+                                            <ellipse cx="55" cy="35" rx="20" ry="15" fill="#1e293b" stroke="#475569"/>
+                                            <ellipse cx="40" cy="40" rx="30" ry="18" fill="#0f172a"/>
+                                        </g>
+                                        
+                                        <!-- Firewall Icon -->
+                                        <g transform="translate(45, 100)">
+                                            <rect x="0" y="0" width="60" height="40" rx="4" fill="#7c2d12" stroke="#ea580c"/>
+                                            <text x="30" y="25" text-anchor="middle" fill="#fdba74" font-size="9" font-weight="600">FIREWALL</text>
+                                        </g>
+                                    </g>
+
+                                    <!-- Drop Zone: Internet -->
+                                    <g transform="translate(300, 310)">
+                                        <rect class="drop-zone" id="dropzone-internet" 
+                                              x="0" y="0" width="150" height="60"
+                                              ondragover="handleDragOver(event)"
+                                              ondragleave="handleDragLeave(event)"
+                                              ondrop="handleDrop(event, 'internet')"/>
+                                        <text class="drop-zone-label" x="75" y="35">Drop Here</text>
+                                    </g>
+
+                                    <!-- Cloud Server Section -->
+                                    <g transform="translate(550, 100)">
+                                        <rect x="0" y="0" width="130" height="200" rx="12" fill="rgba(0,0,0,0.3)" stroke="rgba(255,255,255,0.1)"/>
+                                        <text x="65" y="25" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="600">CLOUD SERVER</text>
+                                        
+                                        <!-- Server Rack Icon -->
+                                        <g transform="translate(30, 45)">
+                                            <rect x="0" y="0" width="70" height="100" rx="4" fill="#1e293b" stroke="#475569"/>
+                                            <rect x="5" y="10" width="60" height="15" rx="2" fill="#0f172a"/>
+                                            <rect x="5" y="30" width="60" height="15" rx="2" fill="#0f172a"/>
+                                            <rect x="5" y="50" width="60" height="15" rx="2" fill="#0f172a"/>
+                                            <rect x="5" y="70" width="60" height="15" rx="2" fill="#0f172a"/>
+                                            <circle cx="15" cy="17" r="3" fill="#22d3ee"/>
+                                            <circle cx="15" cy="37" r="3" fill="#22d3ee"/>
+                                            <circle cx="15" cy="57" r="3" fill="#10b981"/>
+                                            <circle cx="15" cy="77" r="3" fill="#10b981"/>
+                                        </g>
+                                    </g>
+
+                                    <!-- Drop Zone: Server -->
+                                    <g transform="translate(550, 310)">
+                                        <rect class="drop-zone" id="dropzone-server" 
+                                              x="0" y="0" width="130" height="60"
+                                              ondragover="handleDragOver(event)"
+                                              ondragleave="handleDragLeave(event)"
+                                              ondrop="handleDrop(event, 'server')"/>
+                                        <text class="drop-zone-label" x="65" y="35">Drop Here</text>
+                                    </g>
+
+                                    <!-- Flow Arrows -->
+                                    <g fill="none" stroke="#3b82f6" stroke-width="2">
+                                        <path d="M 160 200 L 290 200" marker-end="url(#arrowhead)"/>
+                                        <path d="M 460 200 L 540 200" marker-end="url(#arrowhead)"/>
+                                    </g>
+                                    <defs>
+                                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                            <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6"/>
+                                        </marker>
+                                    </defs>
+
+                                    <!-- Labels -->
+                                    <text x="225" y="185" text-anchor="middle" fill="#64748b" font-size="9">User Traffic</text>
+                                    <text x="500" y="185" text-anchor="middle" fill="#64748b" font-size="9">Secure Access</text>
+                                </svg>
+                            </div>
+                        </div>
+
+                        ${state.showAnswers ? `
+                            <div class="answer-box m-6 mt-0">
+                                <div class="answer-header">
+                                    <div class="answer-icon">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                    </div>
+                                    <span class="answer-label">Correct Answer:</span>
+                                    <span class="answer-value">${q.correctAnswer}</span>
+                                </div>
+                                <p class="explanation-text"><strong>Explanation:</strong> ${q.explanation}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================
+        // STANDARD QUESTION RENDERER
+        // ============================================
+        function renderStandardQuestion(q) {
+            const isMultiSelect = q.type === 'multi-select';
+            
+            let optionsHTML = '';
+            if (q.options) {
+                optionsHTML = q.options.map((opt, idx) => {
+                    const letter = String.fromCharCode(65 + idx);
+                    const isCorrect = isMultiSelect 
+                        ? q.correctAnswer.includes(letter)
+                        : q.correctAnswer === letter;
+                    
+                    return `
+                        <div class="option-card ${state.showAnswers && isCorrect ? 'correct' : ''}">
+                            <div class="option-letter">${letter}</div>
+                            <div class="flex-1">
+                                <span>${opt}</span>
+                            </div>
+                            ${state.showAnswers && isCorrect ? `
+                                <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            let typeBadge = '';
+            if (isMultiSelect) {
+                typeBadge = '<span class="question-type-badge badge-multiselect">Multi-Select</span>';
+            }
+
+            return `
+                <div class="question-card glass-panel p-6 fade-in" id="question-${q.id}">
+                    <button class="copy-btn" onclick="copyQuestion(${q.id})">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                        Copy
+                    </button>
+                    
+                    <div class="flex items-start gap-6 mb-6">
+                        <div class="question-number cyber-header">${q.id}</div>
+                        <div class="flex-1 pt-2">
+                            <div class="mb-3">${typeBadge}</div>
+                            <p class="text-lg leading-relaxed whitespace-pre-line">${q.question}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pl-0 md:pl-20">
+                        ${optionsHTML}
+                    </div>
+
+                    ${state.showAnswers ? `
+                        <div class="answer-box mt-6 ml-0 md:ml-20">
+                            <div class="answer-header">
+                                <div class="answer-icon">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                </div>
+                                <span class="answer-label">Correct Answer:</span>
+                                <span class="answer-value">${Array.isArray(q.correctAnswer) ? q.correctAnswer.join(', ') : q.correctAnswer}</span>
+                            </div>
+                            ${q.explanation ? `<p class="explanation-text"><strong>Explanation:</strong> ${q.explanation}</p>` : ''}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // ============================================
+        // RENDER ALL QUESTIONS
+        // ============================================
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            quizData.forEach(q => {
+                let html = '';
+                if (q.id === 1) {
+                    html = renderSimulation1();
+                } else if (q.id === 2) {
+                    html = renderDragDrop2();
+                } else {
+                    html = renderStandardQuestion(q);
+                }
+                container.innerHTML += html;
+            });
+        }
+
+        // ============================================
+        // NAVIGATION
+        // ============================================
+        function renderNav() {
+            const nav = document.getElementById('questionNav');
+            nav.innerHTML = quizData.map(q => {
+                let extraClass = '';
+                if (q.type === 'simulation') extraClass = 'simulation';
+                else if (q.type === 'drag-drop') extraClass = 'dragdrop';
+                
+                return `
+                    <button class="nav-btn ${extraClass} ${state.currentQuestion === q.id ? 'active' : ''}" 
+                            onclick="scrollToQuestion(${q.id})">
+                        ${q.id}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function scrollToQuestion(id) {
+            state.currentQuestion = id;
+            const element = document.getElementById(`question-${id}`);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            renderNav();
+        }
+
+        // ============================================
+        // SIMULATION 1 FUNCTIONS
+        // ============================================
+        function openDeviceConfig(deviceId) {
+            state.sim1.selectedDevice = deviceId;
+            const panel = document.getElementById('configPanel');
+            const title = document.getElementById('configPanelTitle');
+            const subtitle = document.getElementById('configPanelSubtitle');
+            const body = document.getElementById('configPanelBody');
+
+            // Highlight selected device
+            document.querySelectorAll('.device-node').forEach(el => el.classList.remove('selected'));
+            document.getElementById(`device-${deviceId}`)?.classList.add('selected');
+
+            let content = '';
+
+            switch(deviceId) {
+                case 'hypervisor':
+                    title.textContent = 'Hypervisor Configuration';
+                    subtitle.textContent = 'Configure Fiber Channel port speeds';
+                    content = `
+                        <div class="config-section">
+                            <div class="config-section-title">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                                </svg>
+                                SLOT A - FIBER CHANNEL CARD
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Port 1 Link Speed</span>
+                                <select class="config-select" id="slotA-port1" onchange="updateHypervisorConfig()">
+                                    <option value="">Select...</option>
+                                    <option value="2">2 Gbps</option>
+                                    <option value="4">4 Gbps</option>
+                                    <option value="8">8 Gbps</option>
+                                </select>
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Port 2 Link Speed</span>
+                                <select class="config-select" id="slotA-port2" onchange="updateHypervisorConfig()">
+                                    <option value="">Select...</option>
+                                    <option value="2">2 Gbps</option>
+                                    <option value="4">4 Gbps</option>
+                                    <option value="8">8 Gbps</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="config-section">
+                            <div class="config-section-title">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                                </svg>
+                                SLOT B - FIBER CHANNEL CARD
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Port 1 Link Speed</span>
+                                <select class="config-select" id="slotB-port1" onchange="updateHypervisorConfig()">
+                                    <option value="">Select...</option>
+                                    <option value="2">2 Gbps</option>
+                                    <option value="4">4 Gbps</option>
+                                    <option value="8">8 Gbps</option>
+                                </select>
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Port 2 Link Speed</span>
+                                <select class="config-select" id="slotB-port2" onchange="updateHypervisorConfig()">
+                                    <option value="">Select...</option>
+                                    <option value="2">2 Gbps</option>
+                                    <option value="4">4 Gbps</option>
+                                    <option value="8">8 Gbps</option>
+                                </select>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'fabric-a':
+                    title.textContent = 'Fabric Switch A';
+                    subtitle.textContent = 'Configure initiator mapping';
+                    content = `
+                        <div class="config-section">
+                            <div class="config-section-title">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                                SWITCH STATUS
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Status</span>
+                                <div class="config-status online">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="8"/>
+                                    </svg>
+                                    Online
+                                </div>
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Active Ports</span>
+                                <span class="text-cyan-400 font-mono">5 / 8</span>
+                            </div>
+                        </div>
+                        <div class="config-section">
+                            <div class="config-section-title">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                                </svg>
+                                WWPN POOL
+                            </div>
+                            <div class="p-3 bg-black/30 rounded-lg font-mono text-sm text-gray-400">
+                                50:00:00:25:B5:A0:23:00 - 50:00:00:25:B5:A0:23:09
+                            </div>
+                        </div>
+                        <div class="config-section">
+                            <div class="config-section-title">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                INITIATOR MAPPING
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Select Initiator WWPN</span>
+                            </div>
+                            <select class="config-select w-full mt-2" id="fabricA-initiator" onchange="updateFabricConfig('a')">
+                                <option value="">Select Initiator...</option>
+                                <option value="50:00:00:25:B5:A0:23:00">50:00:00:25:B5:A0:23:00</option>
+                                <option value="50:00:00:25:B5:A0:23:01">50:00:00:25:B5:A0:23:01</option>
+                                <option value="50:00:00:25:B5:A0:23:02">50:00:00:25:B5:A0:23:02</option>
+                                <option value="50:00:00:25:B5:A0:23:03">50:00:00:25:B5:A0:23:03</option>
+                                <option value="50:00:00:25:B5:A0:23:04">50:00:00:25:B5:A0:23:04</option>
+                            </select>
+                        </div>
+                    `;
+                    break;
+
+                case 'fabric-b':
+                    title.textContent = 'Fabric Switch B';
+                    subtitle.textContent = 'Configure initiator mapping';
+                    content = `
+                        <div class="config-section">
+                            <div class="config-section-title">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                                SWITCH STATUS
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Status</span>
+                                <div class="config-status online">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="8"/>
+                                    </svg>
+                                    Online
+                                </div>
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Active Ports</span>
+                                <span class="text-cyan-400 font-mono">5 / 8</span>
+                            </div>
+                        </div>
+                        <div class="config-section">
+                            <div class="config-section-title">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                                </svg>
+                                WWPN POOL
+                            </div>
+                            <div class="p-3 bg-black/30 rounded-lg font-mono text-sm text-gray-400">
+                                50:00:00:25:B5:B0:23:00 - 50:00:00:25:B5:B0:23:09
+                            </div>
+                        </div>
+                        <div class="config-section">
+                            <div class="config-section-title">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                INITIATOR MAPPING
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Select Initiator WWPN</span>
+                            </div>
+                            <select class="config-select w-full mt-2" id="fabricB-initiator" onchange="updateFabricConfig('b')">
+                                <option value="">Select Initiator...</option>
+                                <option value="50:00:00:25:B5:B0:23:00">50:00:00:25:B5:B0:23:00</option>
+                                <option value="50:00:00:25:B5:B0:23:01">50:00:00:25:B5:B0:23:01</option>
+                                <option value="50:00:00:25:B5:B0:23:02">50:00:00:25:B5:B0:23:02</option>
+                                <option value="50:00:00:25:B5:B0:23:03">50:00:00:25:B5:B0:23:03</option>
+                                <option value="50:00:00:25:B5:B0:23:04">50:00:00:25:B5:B0:23:04</option>
+                            </select>
+                        </div>
+                    `;
+                    break;
+
+                case 'san':
+                    title.textContent = 'SAN Storage Array';
+                    subtitle.textContent = 'View storage configuration';
+                    content = `
+                        <div class="config-section">
+                            <div class="config-section-title">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                                </svg>
+                                DISK GROUPS
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Disk Group 1</span>
+                                <div class="config-status online">RAID 5</div>
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Disk Group 2</span>
+                                <div class="config-status online">RAID 5</div>
+                            </div>
+                        </div>
+                        <div class="config-section">
+                            <div class="config-section-title">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                                </svg>
+                                SERVICE PROCESSOR A
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Port 0</span>
+                                <span class="text-cyan-400 font-mono">8 Gbps</span>
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Port 1</span>
+                                <span class="text-cyan-400 font-mono">8 Gbps</span>
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Logged In Initiators</span>
+                                <span class="text-gray-500 text-sm">None</span>
+                            </div>
+                        </div>
+                        <div class="config-section">
+                            <div class="config-section-title">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                                </svg>
+                                SERVICE PROCESSOR B
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Port 0</span>
+                                <span class="text-cyan-400 font-mono">8 Gbps</span>
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Port 1</span>
+                                <span class="text-cyan-400 font-mono">8 Gbps</span>
+                            </div>
+                            <div class="config-row">
+                                <span class="config-label">Logged In Initiators</span>
+                                <div class="text-xs font-mono text-green-400">
+                                    50:00:00:25:B5:A0:23:02<br>
+                                    50:00:00:25:B5:B0:23:04
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+
+            body.innerHTML = content;
+            panel.classList.add('open');
+        }
+
+        function closeConfigPanel() {
+            document.getElementById('configPanel').classList.remove('open');
+            document.querySelectorAll('.device-node').forEach(el => el.classList.remove('selected'));
+            state.sim1.selectedDevice = null;
+        }
+
+        function updateHypervisorConfig() {
+            const slotAPort1 = document.getElementById('slotA-port1')?.value;
+            const slotAPort2 = document.getElementById('slotA-port2')?.value;
+            const slotBPort1 = document.getElementById('slotB-port1')?.value;
+            const slotBPort2 = document.getElementById('slotB-port2')?.value;
+
+            state.sim1.hypervisorSlotA.port1 = slotAPort1;
+            state.sim1.hypervisorSlotA.port2 = slotAPort2;
+            state.sim1.hypervisorSlotB.port1 = slotBPort1;
+            state.sim1.hypervisorSlotB.port2 = slotBPort2;
+
+            updateIOPS();
+            updateSLAChecklist();
+        }
+
+        function updateFabricConfig(fabric) {
+            if (fabric === 'a') {
+                state.sim1.fabricSwitchA.initiator = document.getElementById('fabricA-initiator')?.value;
+            } else {
+                state.sim1.fabricSwitchB.initiator = document.getElementById('fabricB-initiator')?.value;
+            }
+            updateIOPS();
+            updateSLAChecklist();
+        }
+
+        function applyConfiguration() {
+            showToast('Configuration applied successfully!', 'success');
+            updateIOPS();
+            updateSLAChecklist();
+            closeConfigPanel();
+        }
+
+        function updateIOPS() {
+            let iops = 8500; // Base IOPS
+
+            // Check hypervisor ports
+            const allPorts8Gbps = 
+                state.sim1.hypervisorSlotA.port1 === '8' &&
+                state.sim1.hypervisorSlotA.port2 === '8' &&
+                state.sim1.hypervisorSlotB.port1 === '8' &&
+                state.sim1.hypervisorSlotB.port2 === '8';
+
+            if (allPorts8Gbps) {
+                iops += 3000;
+            }
+
+            // Check fabric initiators
+            const correctInitiatorA = state.sim1.fabricSwitchA.initiator === '50:00:00:25:B5:A0:23:02';
+            const correctInitiatorB = state.sim1.fabricSwitchB.initiator === '50:00:00:25:B5:B0:23:04';
+
+            if (correctInitiatorA) iops += 1500;
+            if (correctInitiatorB) iops += 1500;
+
+            state.sim1.iops = iops;
+
+            // Update UI
+            const iopsValue = document.getElementById('iopsValue');
+            const iopsBar = document.getElementById('iopsBar');
+            
+            if (iopsValue) {
+                iopsValue.textContent = iops.toLocaleString();
+                iopsValue.className = `iops-value ${iops < 9000 ? 'low' : iops < 14000 ? 'medium' : 'high'}`;
+            }
+            
+            if (iopsBar) {
+                iopsBar.style.width = `${(iops / 20000) * 100}%`;
+                iopsBar.style.background = iops < 9000 ? 'var(--gradient-fire)' : iops < 14000 ? 'linear-gradient(90deg, #f59e0b, #eab308)' : 'var(--gradient-success)';
+            }
+
+            // Show data packets if configured correctly
+            if (allPorts8Gbps && correctInitiatorA && correctInitiatorB) {
+                document.getElementById('dataPackets').style.display = 'block';
+                document.querySelectorAll('.connection-line').forEach(el => el.classList.add('active'));
+            }
+        }
+
+        function updateSLAChecklist() {
+            const allPorts8Gbps = 
+                state.sim1.hypervisorSlotA.port1 === '8' &&
+                state.sim1.hypervisorSlotA.port2 === '8' &&
+                state.sim1.hypervisorSlotB.port1 === '8' &&
+                state.sim1.hypervisorSlotB.port2 === '8';
+
+            const correctInitiatorA = state.sim1.fabricSwitchA.initiator === '50:00:00:25:B5:A0:23:02';
+            const correctInitiatorB = state.sim1.fabricSwitchB.initiator === '50:00:00:25:B5:B0:23:04';
+            const fabricComplete = correctInitiatorA && correctInitiatorB;
+
+            const requirements = [
+                { id: 'sfp', complete: allPorts8Gbps },
+                { id: 'raid', complete: true },
+                { id: 'fabric', complete: fabricComplete },
+                { id: 'iops', complete: state.sim1.iops >= 14000 }
+            ];
+
+            requirements.forEach(req => {
+                const el = document.querySelector(`#sla-${req.id} .sla-check`);
+                if (el) {
+                    el.className = `sla-check ${req.complete ? 'complete' : 'pending'}`;
+                    el.innerHTML = req.complete ? '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' : '';
+                }
+            });
+
+            // Update device status indicators
+            if (allPorts8Gbps) {
+                document.getElementById('hyp-status')?.setAttribute('fill', '#10b981');
+                document.getElementById('device-hypervisor')?.classList.add('configured');
+            }
+            if (correctInitiatorA) {
+                document.getElementById('fsa-status')?.setAttribute('fill', '#10b981');
+                document.getElementById('device-fabric-a')?.classList.add('configured');
+            }
+            if (correctInitiatorB) {
+                document.getElementById('fsb-status')?.setAttribute('fill', '#10b981');
+                document.getElementById('device-fabric-b')?.classList.add('configured');
+            }
+        }
+
+        function validateSimulation1() {
+            const allPorts8Gbps = 
+                state.sim1.hypervisorSlotA.port1 === '8' &&
+                state.sim1.hypervisorSlotA.port2 === '8' &&
+                state.sim1.hypervisorSlotB.port1 === '8' &&
+                state.sim1.hypervisorSlotB.port2 === '8';
+
+            const correctInitiatorA = state.sim1.fabricSwitchA.initiator === '50:00:00:25:B5:A0:23:02';
+            const correctInitiatorB = state.sim1.fabricSwitchB.initiator === '50:00:00:25:B5:B0:23:04';
+
+            const allCorrect = allPorts8Gbps && correctInitiatorA && correctInitiatorB && state.sim1.iops >= 14000;
+
+            const modal = document.getElementById('resultModal');
+            const icon = document.getElementById('resultIcon');
+            const title = document.getElementById('resultTitle');
+            const message = document.getElementById('resultMessage');
+
+            if (allCorrect) {
+                icon.className = 'result-icon success';
+                icon.innerHTML = '<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+                title.textContent = 'Configuration Complete!';
+                message.textContent = 'All SLA requirements have been met. IOPS is now at ' + state.sim1.iops.toLocaleString();
+            } else {
+                let issues = [];
+                if (!allPorts8Gbps) issues.push('Not all FC ports are set to 8 Gbps');
+                if (!correctInitiatorA) issues.push('Fabric Switch A initiator not configured correctly');
+                if (!correctInitiatorB) issues.push('Fabric Switch B initiator not configured correctly');
+                if (state.sim1.iops < 14000) issues.push('IOPS is below 14000 threshold');
+
+                icon.className = 'result-icon partial';
+                icon.innerHTML = '<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
+                title.textContent = 'Configuration Incomplete';
+                message.textContent = issues.join('. ') + '.';
+            }
+
+            modal.classList.add('open');
+        }
+
+        function resetSimulation1() {
+            state.sim1 = {
+                hypervisorSlotA: { port1: null, port2: null },
+                hypervisorSlotB: { port1: null, port2: null },
+                fabricSwitchA: { initiator: null },
+                fabricSwitchB: { initiator: null },
+                selectedDevice: null,
+                iops: 8500,
+                configured: false
+            };
+            renderQuestions();
+            showToast('Simulation reset', 'info');
+        }
+
+        function closeResultModal() {
+            document.getElementById('resultModal').classList.remove('open');
+        }
+
+        function resetSimulation() {
+            closeResultModal();
+            resetSimulation1();
+        }
+
+        // ============================================
+        // DRAG AND DROP FUNCTIONS
+        // ============================================
+        function handleDragStart(event, tileId) {
+            state.dd2.draggedTile = tileId;
+            event.target.classList.add('dragging');
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', tileId);
+        }
+
+        function handleDragEnd(event) {
+            event.target.classList.remove('dragging');
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.classList.remove('drag-over');
+            });
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+            event.target.classList.add('drag-over');
+        }
+
+        function handleDragLeave(event) {
+            event.target.classList.remove('drag-over');
+        }
+
+        function handleDrop(event, zoneId) {
+            event.preventDefault();
+            const tileId = event.dataTransfer.getData('text/plain') || state.dd2.draggedTile;
+            
+            if (!tileId) return;
+
+            // Update state
+            state.dd2[zoneId] = tileId;
+
+            // Mark tile as placed
+            const tile = document.getElementById(`tile-${tileId}`);
+            if (tile) {
+                tile.classList.add('placed');
+            }
+
+            // Update drop zone visual
+            const dropZone = document.getElementById(`dropzone-${zoneId}`);
+            if (dropZone) {
+                dropZone.classList.remove('drag-over');
+                dropZone.classList.add('filled');
+            }
+
+            // Add visual representation in drop zone
+            const q = quizData[1];
+            const tileData = q.tiles.find(t => t.id === tileId);
+            
+            // Create dropped tile visual in SVG
+            const svg = document.getElementById('dd2Diagram');
+            const zoneRect = dropZone.getBoundingClientRect();
+            const svgRect = svg.getBoundingClientRect();
+            
+            // Remove existing dropped tile in this zone
+            const existingTile = document.getElementById(`dropped-${zoneId}`);
+            if (existingTile) existingTile.remove();
+
+            // Get zone position from transform
+            const zoneGroup = dropZone.parentElement;
+            const transform = zoneGroup.getAttribute('transform');
+            const match = transform.match(/translate\((\d+),\s*(\d+)\)/);
+            const zoneX = parseInt(match[1]);
+            const zoneY = parseInt(match[2]);
+
+            const droppedGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            droppedGroup.id = `dropped-${zoneId}`;
+            droppedGroup.classList.add('dropped-tile');
+            droppedGroup.setAttribute('transform', `translate(${zoneX + 5}, ${zoneY + 5})`);
+            droppedGroup.onclick = () => removeTileFromZone(zoneId, tileId);
+            
+            const width = zoneId === 'endpoints' ? 90 : zoneId === 'internet' ? 140 : 120;
+            
+            droppedGroup.innerHTML = `
+                <rect x="0" y="0" width="${width}" height="50" rx="8" 
+                      fill="rgba(16, 185, 129, 0.2)" stroke="#10b981" stroke-width="2"/>
+                <text x="${width/2}" y="20" text-anchor="middle" fill="#10b981" font-size="11" font-weight="600">${tileData.name}</text>
+                <text x="${width/2}" y="35" text-anchor="middle" fill="#94a3b8" font-size="9">${tileData.desc}</text>
+                <text x="${width/2}" y="48" text-anchor="middle" fill="#64748b" font-size="8">Click to remove</text>
+            `;
+            
+            svg.appendChild(droppedGroup);
+
+            showToast(`${tileData.name} placed at ${zoneId}`, 'success');
+        }
+
+        function removeTileFromZone(zoneId, tileId) {
+            state.dd2[zoneId] = null;
+            
+            // Remove visual
+            const droppedTile = document.getElementById(`dropped-${zoneId}`);
+            if (droppedTile) droppedTile.remove();
+
+            // Reset drop zone
+            const dropZone = document.getElementById(`dropzone-${zoneId}`);
+            if (dropZone) {
+                dropZone.classList.remove('filled', 'correct', 'incorrect');
+            }
+
+            // Reset tile
+            const tile = document.getElementById(`tile-${tileId}`);
+            if (tile) {
+                tile.classList.remove('placed');
+            }
+
+            showToast('Control removed', 'info');
+        }
+
+        function validateDragDrop2() {
+            const q = quizData[1];
+            let correct = 0;
+            let total = q.dropZones.length;
+
+            q.dropZones.forEach(zone => {
+                const dropZone = document.getElementById(`dropzone-${zone.id}`);
+                const droppedTile = document.getElementById(`dropped-${zone.id}`);
+                
+                if (state.dd2[zone.id] === zone.correctTile) {
+                    correct++;
+                    dropZone?.classList.add('correct');
+                    dropZone?.classList.remove('incorrect');
+                } else if (state.dd2[zone.id]) {
+                    dropZone?.classList.add('incorrect');
+                    dropZone?.classList.remove('correct');
+                }
+            });
+
+            const modal = document.getElementById('resultModal');
+            const icon = document.getElementById('resultIcon');
+            const title = document.getElementById('resultTitle');
+            const message = document.getElementById('resultMessage');
+
+            if (correct === total) {
+                icon.className = 'result-icon success';
+                icon.innerHTML = '<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+                title.textContent = 'Perfect!';
+                message.textContent = 'All security controls are correctly placed.';
+            } else if (correct > 0) {
+                icon.className = 'result-icon partial';
+                icon.innerHTML = '<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
+                title.textContent = 'Partially Correct';
+                message.textContent = `${correct} of ${total} controls are correctly placed.`;
+            } else {
+                icon.className = 'result-icon fail';
+                icon.innerHTML = '<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
+                title.textContent = 'Try Again';
+                message.textContent = 'None of the controls are correctly placed.';
+            }
+
+            modal.classList.add('open');
+        }
+
+        function resetDragDrop2() {
+            state.dd2 = {
+                endpoints: null,
+                internet: null,
+                server: null,
+                draggedTile: null
+            };
+
+            // Remove all dropped tiles
+            document.querySelectorAll('[id^="dropped-"]').forEach(el => el.remove());
+
+            // Reset drop zones
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.classList.remove('filled', 'correct', 'incorrect');
+            });
+
+            // Reset tiles
+            document.querySelectorAll('.draggable-tile').forEach(tile => {
+                tile.classList.remove('placed');
+            });
+
+            showToast('Drag & Drop reset', 'info');
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function toggleAnswers() {
+            state.showAnswers = !state.showAnswers;
+            document.getElementById('toggle-text').textContent = state.showAnswers ? 'Hide Answers' : 'Show Answers';
+            renderQuestions();
+        }
+
+        function copyQuestion(id) {
+            const question = quizData.find(q => q.id === id);
+            let text = `Question ${id}\n\n${question.question}\n\n`;
+            
+            if (question.options) {
+                question.options.forEach((opt, idx) => {
+                    text += `${String.fromCharCode(65 + idx)}. ${opt}\n`;
+                });
+            }
+            
+            text += `\nCorrect Answer: ${Array.isArray(question.correctAnswer) ? question.correctAnswer.join(', ') : question.correctAnswer}`;
+            if (question.explanation) {
+                text += `\n\nExplanation: ${question.explanation}`;
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Question copied to clipboard!', 'success');
+            });
+        }
+
+        function copyAllQuestions() {
+            let allText = 'CompTIA Cloud+ Practice Quiz - All Questions\n\n';
+            quizData.forEach(q => {
+                allText += `=== Question ${q.id} ===\n\n${q.question}\n\n`;
+                if (q.options) {
+                    q.options.forEach((opt, idx) => {
+                        allText += `${String.fromCharCode(65 + idx)}. ${opt}\n`;
+                    });
+                }
+                allText += `\nCorrect Answer: ${Array.isArray(q.correctAnswer) ? q.correctAnswer.join(', ') : q.correctAnswer}\n`;
+                if (q.explanation) {
+                    allText += `Explanation: ${q.explanation}\n`;
+                }
+                allText += '\n\n';
+            });
+
+            navigator.clipboard.writeText(allText).then(() => {
+                showToast('All questions copied to clipboard!', 'success');
+            });
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = '';
+            switch(type) {
+                case 'success':
+                    icon = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+                    break;
+                case 'error':
+                    icon = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
+                    break;
+                default:
+                    icon = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+            }
+            
+            toast.innerHTML = `${icon} ${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'toastSlideIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        function init() {
+            initCanvas();
+            renderQuestions();
+            renderNav();
+            
+            // Hide loader
+            setTimeout(() => {
+                document.getElementById('loading-overlay').classList.add('hidden');
+            }, 1500);
+
+            // Intersection Observer for scroll tracking
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = parseInt(entry.target.id.split('-')[1]);
+                        if (!isNaN(id)) {
+                            state.currentQuestion = id;
+                            renderNav();
+                        }
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            // Observe all questions after a short delay
+            setTimeout(() => {
+                quizData.forEach(q => {
+                    const el = document.getElementById(`question-${q.id}`);
+                    if (el) observer.observe(el);
+                });
+            }, 2000);
+
+            // Close config panel on escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeConfigPanel();
+                    closeResultModal();
+                }
+            });
+
+            // Close config panel on outside click
+            document.addEventListener('click', (e) => {
+                const panel = document.getElementById('configPanel');
+                if (panel.classList.contains('open') && !panel.contains(e.target) && !e.target.closest('.device-node')) {
+                    closeConfigPanel();
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
