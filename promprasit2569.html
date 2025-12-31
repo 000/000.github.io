@@ -4,40 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ฤกษ์พรหมประสิทธิ์ ๒๕๖๙ | Brahma Prasit Auspicious Calendar</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Sacred Color Palette */
             --space-void: #0a0612;
             --space-deep: #120a1f;
             --space-mid: #1a1029;
             --glass-panel: rgba(26, 16, 41, 0.75);
             --glass-lighter: rgba(45, 30, 70, 0.5);
+            
+            /* Pantone-inspired sacred colors */
             --neon-gold: #ffd700;
-            --neon-purple: #9f7aea;
-            --neon-blue: #63b3ed;
+            --neon-peach: #FFBE98;
+            --neon-magenta: #BB2649;
+            --neon-blue: #0F4C81;
+            --neon-teal: #4DB8C4;
             --neon-green: #68d391;
             --neon-orange: #f6ad55;
             --neon-red: #fc8181;
             --neon-pink: #f687b3;
-            --gradient-sacred: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #9f7aea 100%);
-            --gradient-cosmic: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --neon-purple: #9f7aea;
+            
+            /* Sacred Gradients */
+            --gradient-sacred: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #FFBE98 100%);
+            --gradient-cosmic: linear-gradient(135deg, #0F4C81 0%, #BB2649 50%, #FFBE98 100%);
+            --gradient-lotus: linear-gradient(135deg, #FFBE98 0%, #BB2649 100%);
+            
+            /* Text Colors */
             --text-primary: #f7fafc;
             --text-secondary: #cbd5e0;
             --text-muted: #718096;
-            --animation-fast: 0.2s;
-            --animation-medium: 0.4s;
-            --animation-slow: 0.8s;
         }
 
         [data-theme="light"] {
-            --space-void: #f8f5ff;
-            --space-deep: #ede7f6;
-            --space-mid: #e3d5f0;
+            --space-void: #faf8f5;
+            --space-deep: #f0ebe3;
+            --space-mid: #e8e0d5;
             --glass-panel: rgba(255, 255, 255, 0.85);
             --glass-lighter: rgba(255, 255, 255, 0.6);
             --text-primary: #1a1029;
@@ -51,16 +57,92 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+            font-family: 'Sarabun', 'Noto Sans Thai', 'Inter', sans-serif;
             background: var(--space-void);
             color: var(--text-primary);
             overflow-x: hidden;
             min-height: 100vh;
+            line-height: 1.6;
         }
 
+        /* Typography */
         .font-cinzel { font-family: 'Cinzel', serif; }
-        .font-thai { font-family: 'Noto Sans Thai', sans-serif; }
+        .font-thai { font-family: 'Sarabun', 'Noto Sans Thai', sans-serif; }
+
+        /* SVG Icon Styles */
+        .icon {
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            vertical-align: -0.125em;
+            fill: currentColor;
+        }
+
+        .icon-lg {
+            width: 1.25em;
+            height: 1.25em;
+        }
+
+        /* Utility Classes */
+        .relative { position: relative; }
+        .fixed { position: fixed; }
+        .sticky { position: sticky; }
+        .z-10 { z-index: 10; }
+        .z-100 { z-index: 100; }
+        .max-w-7xl { max-width: 80rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-8 { margin-top: 2rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mr-2 { margin-right: 0.5rem; }
+        .flex { display: flex; }
+        .inline-flex { display: inline-flex; }
+        .grid { display: grid; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .flex-wrap { flex-wrap: wrap; }
+        .flex-col { flex-direction: column; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .text-center { text-align: center; }
+        .text-xs { font-size: 0.75rem; }
+        .text-sm { font-size: 0.875rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-xl { font-size: 1.25rem; }
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+        .uppercase { text-transform: uppercase; }
+        .opacity-60 { opacity: 0.6; }
+        .w-full { width: 100%; }
+        .overflow-hidden { overflow: hidden; }
+        .overflow-x-auto { overflow-x: auto; }
+        .overflow-y-auto { overflow-y: auto; }
+        .cursor-pointer { cursor: pointer; }
+        .transition-all { transition: all 0.3s ease; }
+        .rounded-full { border-radius: 9999px; }
+        .list-disc { list-style-type: disc; }
+        .list-inside { list-style-position: inside; }
+        .space-y-1 > * + * { margin-top: 0.25rem; }
+
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+
+        @media (min-width: 1024px) {
+            .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .lg\:col-span-2 { grid-column: span 2 / span 2; }
+        }
 
         /* Loading Screen */
         #loading-overlay {
@@ -78,6 +160,7 @@
         #loading-overlay.hidden {
             opacity: 0;
             visibility: hidden;
+            pointer-events: none;
         }
 
         .loader-mandala {
@@ -97,13 +180,24 @@
 
         .loader-mandala::before {
             border-top-color: var(--neon-gold);
+            border-right-color: var(--neon-peach);
             animation: spin 1.5s linear infinite;
         }
 
         .loader-mandala::after {
-            border-bottom-color: var(--neon-purple);
+            border-bottom-color: var(--neon-magenta);
+            border-left-color: var(--neon-blue);
             animation: spin 1s linear infinite reverse;
-            inset: 10px;
+            inset: 15px;
+        }
+
+        .loader-inner {
+            position: absolute;
+            inset: 30px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: var(--neon-teal);
+            animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
@@ -113,15 +207,17 @@
         .loader-text {
             margin-top: 2rem;
             font-size: 1.25rem;
+            font-weight: 500;
             background: var(--gradient-sacred);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             animation: pulse 2s ease-in-out infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.5; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
         }
 
         /* Canvas Background */
@@ -137,16 +233,16 @@
             background: var(--glass-panel);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(159, 122, 234, 0.15);
+            border: 1px solid rgba(255, 190, 152, 0.15);
             border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         .glass-panel-light {
             background: var(--glass-lighter);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(159, 122, 234, 0.1);
+            border: 1px solid rgba(255, 190, 152, 0.1);
             border-radius: 16px;
         }
 
@@ -155,8 +251,16 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            padding: 1rem 2rem;
+            padding: 1rem 1.5rem;
             margin-bottom: 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .logo-container {
@@ -166,21 +270,32 @@
         }
 
         .logo-icon {
-            width: 50px;
-            height: 50px;
+            width: 54px;
+            height: 54px;
             background: var(--gradient-sacred);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), 0 0 60px rgba(255, 190, 152, 0.2);
             animation: glow 3s ease-in-out infinite;
         }
 
+        /* Lotus SVG Logo */
+        .lotus-logo {
+            width: 32px;
+            height: 32px;
+        }
+
         @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
-            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.7); }
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.4), 0 0 40px rgba(255, 190, 152, 0.2);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.6), 0 0 80px rgba(255, 190, 152, 0.3);
+                transform: scale(1.02);
+            }
         }
 
         .logo-text h1 {
@@ -189,47 +304,66 @@
             background: var(--gradient-sacred);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
         }
 
         .logo-text p {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
-            letter-spacing: 2px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 2px;
         }
 
         /* Navigation Tabs */
         .nav-tabs {
             display: flex;
             gap: 0.5rem;
-            padding: 0.25rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
+            padding: 0.35rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 190, 152, 0.1);
         }
 
         .nav-tab {
-            padding: 0.75rem 1.5rem;
+            padding: 0.65rem 1.25rem;
             border-radius: 10px;
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             color: var(--text-secondary);
             border: none;
             background: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .nav-tab:hover {
-            background: rgba(159, 122, 234, 0.2);
+            background: rgba(255, 190, 152, 0.15);
             color: var(--text-primary);
         }
 
         .nav-tab.active {
             background: var(--gradient-sacred);
             color: var(--space-void);
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.35);
+            font-weight: 600;
         }
 
-        /* Controls */
+        .nav-tab .icon {
+            font-size: 0.9rem;
+        }
+
+        /* Control Buttons */
+        .controls-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
         .control-btn {
             width: 44px;
             height: 44px;
@@ -239,29 +373,43 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: rgba(159, 122, 234, 0.1);
-            border: 1px solid rgba(159, 122, 234, 0.2);
+            background: rgba(255, 190, 152, 0.1);
+            border: 1px solid rgba(255, 190, 152, 0.2);
             color: var(--text-secondary);
+            font-size: 1rem;
         }
 
         .control-btn:hover {
-            background: rgba(159, 122, 234, 0.3);
+            background: rgba(255, 190, 152, 0.25);
             color: var(--neon-gold);
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 190, 152, 0.2);
+        }
+
+        .control-btn .lang-text {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         /* Stats Cards */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .stat-card {
-            padding: 1.5rem;
+            padding: 1.25rem;
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
         }
 
         .stat-card::before {
@@ -272,36 +420,81 @@
             width: 4px;
             height: 100%;
             background: var(--card-accent, var(--neon-gold));
+            border-radius: 4px 0 0 4px;
         }
 
         .stat-card-icon {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-card-icon .icon {
+            width: 20px;
+            height: 20px;
         }
 
         .stat-card-value {
-            font-size: 2.5rem;
+            font-size: 2.25rem;
             font-weight: 700;
             background: var(--gradient-sacred);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
         }
 
         .stat-card-label {
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
-            margin-top: 0.25rem;
+            margin-top: 0.35rem;
         }
 
-        /* Calendar Grid */
+        /* Filter Badges */
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            opacity: 0.6;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .filter-badge:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        .filter-badge.active {
+            opacity: 1;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+            transform: scale(1.02);
+        }
+
+        /* Calendar */
         .calendar-container {
             margin-bottom: 2rem;
+        }
+
+        .calendar-inner {
+            padding: 1.5rem;
         }
 
         .calendar-header {
@@ -318,30 +511,40 @@
         }
 
         .month-nav-btn {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: rgba(159, 122, 234, 0.1);
-            border: 1px solid rgba(159, 122, 234, 0.2);
+            background: rgba(255, 190, 152, 0.1);
+            border: 1px solid rgba(255, 190, 152, 0.2);
             color: var(--text-secondary);
         }
 
         .month-nav-btn:hover {
-            background: var(--neon-gold);
+            background: var(--gradient-sacred);
             color: var(--space-void);
             transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .month-nav-btn .icon {
+            width: 16px;
+            height: 16px;
         }
 
         .month-title {
-            font-size: 1.75rem;
+            font-size: 1.6rem;
             font-weight: 600;
-            min-width: 250px;
+            min-width: 240px;
             text-align: center;
+            background: var(--gradient-sacred);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .calendar-grid {
@@ -351,9 +554,9 @@
         }
 
         .calendar-weekday {
-            padding: 1rem;
+            padding: 0.75rem 0.5rem;
             text-align: center;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: var(--neon-gold);
             text-transform: uppercase;
@@ -363,20 +566,21 @@
         .calendar-day {
             aspect-ratio: 1;
             padding: 0.5rem;
-            border-radius: 16px;
+            border-radius: 14px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            min-height: 80px;
+            min-height: 75px;
         }
 
-        .calendar-day:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        .calendar-day:hover:not(.empty) {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+            z-index: 10;
         }
 
         .calendar-day.empty {
@@ -386,63 +590,85 @@
 
         .calendar-day.today {
             border: 2px solid var(--neon-gold);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(255, 215, 0, 0.05);
         }
 
         .calendar-day-number {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.15rem;
         }
 
         .calendar-day-type {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             text-align: center;
             line-height: 1.2;
             max-width: 100%;
             overflow: hidden;
+            opacity: 0.9;
         }
 
         .calendar-day-indicator {
             position: absolute;
-            bottom: 6px;
+            bottom: 5px;
             display: flex;
-            gap: 2px;
+            gap: 3px;
         }
 
         .calendar-day-indicator span {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
             border-radius: 50%;
         }
 
         /* Event Type Colors */
-        .type-amrit { --card-accent: #9f7aea; background: rgba(159, 122, 234, 0.15); }
-        .type-amrit .calendar-day-indicator span { background: #9f7aea; }
+        .type-amrit { 
+            --card-accent: #FFBE98; 
+            background: linear-gradient(135deg, rgba(255, 190, 152, 0.2) 0%, rgba(255, 190, 152, 0.1) 100%);
+        }
+        .type-amrit .calendar-day-indicator span { background: #FFBE98; }
         
-        .type-mahasitthi { --card-accent: #f6ad55; background: rgba(246, 173, 85, 0.15); }
+        .type-mahasitthi { 
+            --card-accent: #f6ad55; 
+            background: linear-gradient(135deg, rgba(246, 173, 85, 0.2) 0%, rgba(246, 173, 85, 0.1) 100%);
+        }
         .type-mahasitthi .calendar-day-indicator span { background: #f6ad55; }
         
-        .type-sitthi { --card-accent: #68d391; background: rgba(104, 211, 145, 0.15); }
+        .type-sitthi { 
+            --card-accent: #68d391; 
+            background: linear-gradient(135deg, rgba(104, 211, 145, 0.2) 0%, rgba(104, 211, 145, 0.1) 100%);
+        }
         .type-sitthi .calendar-day-indicator span { background: #68d391; }
         
-        .type-pikhat { --card-accent: #fc8181; background: rgba(252, 129, 129, 0.15); }
+        .type-pikhat { 
+            --card-accent: #fc8181; 
+            background: linear-gradient(135deg, rgba(252, 129, 129, 0.2) 0%, rgba(252, 129, 129, 0.1) 100%);
+        }
         .type-pikhat .calendar-day-indicator span { background: #fc8181; }
         
-        .type-sao5 { --card-accent: #63b3ed; background: rgba(99, 179, 237, 0.15); }
-        .type-sao5 .calendar-day-indicator span { background: #63b3ed; }
+        .type-sao5 { 
+            --card-accent: #4DB8C4; 
+            background: linear-gradient(135deg, rgba(15, 76, 129, 0.3) 0%, rgba(77, 184, 196, 0.15) 100%);
+        }
+        .type-sao5 .calendar-day-indicator span { background: #4DB8C4; }
 
         .type-wealth::after {
             content: '💰';
             position: absolute;
-            top: 6px;
-            right: 6px;
-            font-size: 0.75rem;
+            top: 5px;
+            right: 5px;
+            font-size: 0.7rem;
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
         }
 
         /* Visualization Container */
         .viz-container {
-            height: 600px;
+            height: 550px;
             position: relative;
             overflow: hidden;
             margin-bottom: 2rem;
@@ -458,25 +684,43 @@
         }
 
         .viz-btn {
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            padding: 0.6rem 1.1rem;
+            border-radius: 10px;
             font-size: 0.75rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(159, 122, 234, 0.3);
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 190, 152, 0.25);
             color: var(--text-secondary);
         }
 
         .viz-btn:hover, .viz-btn.active {
-            background: var(--neon-purple);
+            background: var(--gradient-lotus);
             color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(255, 190, 152, 0.3);
         }
 
         /* Timeline View */
         .timeline-container {
-            padding: 2rem 0;
+            padding: 1rem 0;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .timeline-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .timeline-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .timeline-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 190, 152, 0.3);
+            border-radius: 3px;
         }
 
         .timeline-month {
@@ -484,41 +728,47 @@
         }
 
         .timeline-month-header {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 1rem;
             padding-left: 1rem;
             border-left: 3px solid var(--neon-gold);
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.1) 0%, transparent 100%);
+            padding: 0.5rem 1rem;
+            border-radius: 0 8px 8px 0;
         }
 
         .timeline-events {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.75rem;
+            gap: 0.6rem;
+            padding-left: 1rem;
         }
 
         .timeline-event {
-            padding: 0.75rem 1.25rem;
+            padding: 0.65rem 1.1rem;
             border-radius: 12px;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.6rem;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .timeline-event:hover {
-            transform: translateX(8px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(6px);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
         }
 
         .timeline-event-date {
-            font-weight: 600;
-            min-width: 40px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            min-width: 32px;
         }
 
         .timeline-event-name {
-            font-size: 0.875rem;
+            font-size: 0.85rem;
+            opacity: 0.9;
         }
 
         /* Detail Panel */
@@ -527,11 +777,12 @@
             top: 0;
             right: 0;
             bottom: 0;
-            width: 400px;
-            max-width: 90vw;
+            width: 420px;
+            max-width: 92vw;
             background: rgba(18, 10, 31, 0.98);
-            border-left: 1px solid rgba(159, 122, 234, 0.2);
-            backdrop-filter: blur(24px);
+            border-left: 1px solid rgba(255, 190, 152, 0.15);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             z-index: 2000;
             transform: translateX(100%);
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -545,31 +796,39 @@
         .detail-panel-header {
             position: sticky;
             top: 0;
-            background: rgba(18, 10, 31, 0.95);
-            padding: 1.5rem;
-            border-bottom: 1px solid rgba(159, 122, 234, 0.2);
+            background: rgba(18, 10, 31, 0.97);
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 190, 152, 0.15);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .detail-panel-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
         }
 
         .detail-panel-close {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: rgba(159, 122, 234, 0.1);
+            background: rgba(255, 190, 152, 0.1);
             border: none;
             color: var(--text-secondary);
         }
 
         .detail-panel-close:hover {
-            background: rgba(252, 129, 129, 0.3);
+            background: rgba(252, 129, 129, 0.25);
             color: var(--neon-red);
+            transform: rotate(90deg);
         }
 
         .detail-panel-content {
@@ -578,19 +837,25 @@
 
         .detail-date-display {
             text-align: center;
-            padding: 2rem;
+            padding: 2rem 1.5rem;
             margin-bottom: 1.5rem;
             border-radius: 16px;
+            position: relative;
+            overflow: hidden;
         }
 
         .detail-date-day {
-            font-size: 4rem;
+            font-size: 4.5rem;
             font-weight: 700;
             line-height: 1;
+            background: var(--gradient-sacred);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .detail-date-month {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             margin-top: 0.5rem;
             color: var(--text-secondary);
         }
@@ -599,64 +864,41 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
+            padding: 0.7rem 1.4rem;
             border-radius: 30px;
             font-weight: 600;
             margin-top: 1rem;
+            font-size: 0.9rem;
         }
 
         .detail-section {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
         .detail-section-title {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             color: var(--text-muted);
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
         }
 
         .detail-section-content {
             padding: 1rem;
             border-radius: 12px;
-            background: rgba(159, 122, 234, 0.1);
-        }
-
-        /* Filter Badges */
-        .filter-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .filter-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-            opacity: 0.6;
-        }
-
-        .filter-badge.active {
-            opacity: 1;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-        }
-
-        .filter-badge:hover {
-            opacity: 1;
-            transform: translateY(-2px);
+            background: rgba(255, 190, 152, 0.08);
+            border: 1px solid rgba(255, 190, 152, 0.1);
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
 
         /* Overlay */
         .overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
             z-index: 1999;
             opacity: 0;
             visibility: hidden;
@@ -668,10 +910,45 @@
             visibility: visible;
         }
 
-        /* Scroll animations */
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            padding: 0.7rem 1rem;
+            background: rgba(18, 10, 31, 0.97);
+            border: 1px solid rgba(255, 190, 152, 0.25);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            max-width: 220px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+        }
+
+        /* View Sections */
+        .view-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Scroll Animations */
         .fade-up {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(25px);
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
@@ -680,18 +957,120 @@
             transform: translateY(0);
         }
 
+        /* Language Toggle */
+        [data-lang="en"] [lang="th"] { display: none; }
+        [data-lang="th"] [lang="en"] { display: none; }
+
+        /* D3 Styles */
+        .d3-node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .d3-node:hover {
+            filter: brightness(1.3) drop-shadow(0 0 8px rgba(255, 190, 152, 0.5));
+        }
+
+        .d3-link {
+            stroke: rgba(255, 190, 152, 0.15);
+            stroke-width: 1;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255, 190, 152, 0.1);
+        }
+
+        .footer p {
+            margin-bottom: 0.35rem;
+        }
+
+        .footer-heart {
+            color: var(--neon-magenta);
+            display: inline-block;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(18, 10, 31, 0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 190, 152, 0.15);
+            padding: 0.5rem;
+            z-index: 100;
+            justify-content: space-around;
+        }
+
+        .mobile-nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-btn .icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .mobile-nav-btn.active {
+            color: var(--neon-gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header-main {
-                padding: 1rem;
+                padding: 0.75rem 1rem;
+            }
+
+            .logo-icon {
+                width: 44px;
+                height: 44px;
+            }
+
+            .lotus-logo {
+                width: 26px;
+                height: 26px;
+            }
+
+            .logo-text h1 {
+                font-size: 1.2rem;
             }
 
             .nav-tabs {
                 display: none;
             }
 
-            .mobile-menu {
-                display: block;
+            .mobile-nav {
+                display: flex;
+            }
+
+            body {
+                padding-bottom: 70px;
             }
 
             .calendar-grid {
@@ -699,12 +1078,13 @@
             }
 
             .calendar-day {
-                min-height: 60px;
+                min-height: 55px;
                 padding: 0.25rem;
+                border-radius: 10px;
             }
 
             .calendar-day-number {
-                font-size: 1rem;
+                font-size: 0.95rem;
             }
 
             .calendar-day-type {
@@ -715,84 +1095,113 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-card-value {
+                font-size: 1.75rem;
+            }
+
             .viz-container {
                 height: 400px;
             }
-        }
 
-        /* SVG Styles */
-        .d3-node {
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+            .filter-container {
+                justify-content: center;
+            }
 
-        .d3-node:hover {
-            filter: brightness(1.3);
-        }
-
-        .d3-link {
-            stroke: rgba(159, 122, 234, 0.2);
-            stroke-width: 1;
-        }
-
-        .d3-label {
-            font-size: 10px;
-            fill: var(--text-secondary);
-            pointer-events: none;
-        }
-
-        /* Tooltip */
-        .tooltip {
-            position: absolute;
-            padding: 0.75rem 1rem;
-            background: rgba(18, 10, 31, 0.95);
-            border: 1px solid rgba(159, 122, 234, 0.3);
-            border-radius: 8px;
-            font-size: 0.875rem;
-            pointer-events: none;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-            max-width: 200px;
-        }
-
-        .tooltip.visible {
-            opacity: 1;
-        }
-
-        /* View Sections */
-        .view-section {
-            display: none;
-        }
-
-        .view-section.active {
-            display: block;
-        }
-
-        /* Language Toggle */
-        [data-lang="en"] [lang="th"] { display: none; }
-        [data-lang="th"] [lang="en"] { display: none; }
-
-        /* Particle trail effect for special days */
-        @keyframes sparkle {
-            0%, 100% { opacity: 0; transform: scale(0); }
-            50% { opacity: 1; transform: scale(1); }
-        }
-
-        .sparkle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--neon-gold);
-            border-radius: 50%;
-            animation: sparkle 2s ease-in-out infinite;
+            .filter-badge {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.8rem;
+            }
         }
     </style>
 </head>
 <body data-theme="dark" data-lang="th">
+    <!-- SVG Symbol Definitions -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <!-- Lotus Logo -->
+        <symbol id="icon-lotus" viewBox="0 0 64 64">
+            <path fill="#ffd700" d="M32 8c-2 8-8 16-16 20 8-2 14 2 16 8 2-6 8-10 16-8-8-4-14-12-16-20z"/>
+            <path fill="#ff8c00" d="M32 36c-2 6-6 12-12 16 6-1 10 1 12 6 2-5 6-7 12-6-6-4-10-10-12-16z"/>
+            <path fill="#FFBE98" d="M20 28c-4 1-8 4-10 8 4-2 7 0 8 4 1-4 4-6 8-4-3-2-5-5-6-8z"/>
+            <path fill="#FFBE98" d="M44 28c4 1 8 4 10 8-4-2-7 0-8 4-1-4-4-6-8-4 3-2 5-5 6-8z"/>
+            <circle fill="#ffd700" cx="32" cy="48" r="4"/>
+        </symbol>
+        
+        <!-- Calendar Icon -->
+        <symbol id="icon-calendar" viewBox="0 0 24 24">
+            <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/>
+        </symbol>
+        
+        <!-- Timeline/Stream Icon -->
+        <symbol id="icon-stream" viewBox="0 0 24 24">
+            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+        </symbol>
+        
+        <!-- Radial/Circle Icon -->
+        <symbol id="icon-radial" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+            <circle cx="12" cy="12" r="3"/>
+        </symbol>
+        
+        <!-- Stats/Pie Icon -->
+        <symbol id="icon-stats" viewBox="0 0 24 24">
+            <path d="M11 2v20c-5.07-.5-9-4.79-9-10s3.93-9.5 9-10zm2.03 0v8.99H22c-.47-4.74-4.24-8.52-8.97-8.99zm0 11.01V22c4.74-.47 8.5-4.25 8.97-8.99h-8.97z"/>
+        </symbol>
+        
+        <!-- Star Icon -->
+        <symbol id="icon-star" viewBox="0 0 24 24">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </symbol>
+        
+        <!-- Sun Icon -->
+        <symbol id="icon-sun" viewBox="0 0 24 24">
+            <path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/>
+        </symbol>
+        
+        <!-- Moon Icon -->
+        <symbol id="icon-moon" viewBox="0 0 24 24">
+            <path d="M9 2c-1.05 0-2.05.16-3 .46 4.06 1.27 7 5.06 7 9.54 0 4.48-2.94 8.27-7 9.54.95.3 1.95.46 3 .46 5.52 0 10-4.48 10-10S14.52 2 9 2z"/>
+        </symbol>
+        
+        <!-- Check Circle Icon -->
+        <symbol id="icon-check" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </symbol>
+        
+        <!-- Times Circle Icon -->
+        <symbol id="icon-times-circle" viewBox="0 0 24 24">
+            <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+        </symbol>
+        
+        <!-- Chevron Left -->
+        <symbol id="icon-chevron-left" viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+        </symbol>
+        
+        <!-- Chevron Right -->
+        <symbol id="icon-chevron-right" viewBox="0 0 24 24">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+        </symbol>
+        
+        <!-- Crosshairs/Target Icon -->
+        <symbol id="icon-target" viewBox="0 0 24 24">
+            <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+        </symbol>
+        
+        <!-- Close/Times Icon -->
+        <symbol id="icon-close" viewBox="0 0 24 24">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </symbol>
+    </svg>
+
     <!-- Loading Overlay -->
     <div id="loading-overlay">
-        <div class="loader-mandala"></div>
+        <div class="loader-mandala">
+            <div class="loader-inner"></div>
+        </div>
         <p class="loader-text font-thai">กำลังโหลดฤกษ์มงคล...</p>
     </div>
 
@@ -809,9 +1218,11 @@
     <div class="relative z-10 max-w-7xl mx-auto px-4 py-6">
         <!-- Header -->
         <header class="header-main glass-panel">
-            <div class="flex items-center justify-between flex-wrap gap-4">
+            <div class="header-content">
                 <div class="logo-container">
-                    <div class="logo-icon">🙏</div>
+                    <div class="logo-icon">
+                        <svg class="lotus-logo"><use href="#icon-lotus"/></svg>
+                    </div>
                     <div class="logo-text">
                         <h1 class="font-thai" lang="th">ฤกษ์พรหมประสิทธิ์</h1>
                         <h1 class="font-cinzel" lang="en">BRAHMA PRASIT</h1>
@@ -822,33 +1233,33 @@
 
                 <nav class="nav-tabs">
                     <button class="nav-tab active" data-view="calendar">
-                        <i class="fas fa-calendar-alt mr-2"></i>
+                        <svg class="icon"><use href="#icon-calendar"/></svg>
                         <span lang="th">ปฏิทิน</span>
                         <span lang="en">Calendar</span>
                     </button>
                     <button class="nav-tab" data-view="timeline">
-                        <i class="fas fa-stream mr-2"></i>
+                        <svg class="icon"><use href="#icon-stream"/></svg>
                         <span lang="th">ไทม์ไลน์</span>
                         <span lang="en">Timeline</span>
                     </button>
                     <button class="nav-tab" data-view="radial">
-                        <i class="fas fa-circle-notch mr-2"></i>
+                        <svg class="icon"><use href="#icon-radial"/></svg>
                         <span lang="th">จักรราศี</span>
                         <span lang="en">Radial</span>
                     </button>
                     <button class="nav-tab" data-view="stats">
-                        <i class="fas fa-chart-pie mr-2"></i>
+                        <svg class="icon"><use href="#icon-stats"/></svg>
                         <span lang="th">สถิติ</span>
                         <span lang="en">Stats</span>
                     </button>
                 </nav>
 
-                <div class="flex items-center gap-3">
+                <div class="controls-group">
                     <button id="lang-toggle" class="control-btn" title="Toggle Language">
-                        <span class="font-bold text-sm">EN/TH</span>
+                        <span class="lang-text">EN/TH</span>
                     </button>
                     <button id="theme-toggle" class="control-btn" title="Toggle Theme">
-                        <i class="fas fa-moon"></i>
+                        <svg class="icon" id="theme-icon"><use href="#icon-moon"/></svg>
                     </button>
                 </div>
             </div>
@@ -857,8 +1268,8 @@
         <!-- Stats Overview -->
         <section id="stats-overview" class="stats-grid fade-up">
             <div class="stat-card glass-panel type-amrit">
-                <div class="stat-card-icon" style="background: rgba(159, 122, 234, 0.2); color: var(--neon-purple);">
-                    <i class="fas fa-star"></i>
+                <div class="stat-card-icon" style="background: rgba(255, 190, 152, 0.2); color: #FFBE98;">
+                    <svg class="icon"><use href="#icon-star"/></svg>
                 </div>
                 <div class="stat-card-value" id="stat-amrit">0</div>
                 <div class="stat-card-label">
@@ -867,8 +1278,8 @@
                 </div>
             </div>
             <div class="stat-card glass-panel type-mahasitthi">
-                <div class="stat-card-icon" style="background: rgba(246, 173, 85, 0.2); color: var(--neon-orange);">
-                    <i class="fas fa-sun"></i>
+                <div class="stat-card-icon" style="background: rgba(246, 173, 85, 0.2); color: #f6ad55;">
+                    <svg class="icon"><use href="#icon-sun"/></svg>
                 </div>
                 <div class="stat-card-value" id="stat-mahasitthi">0</div>
                 <div class="stat-card-label">
@@ -877,8 +1288,8 @@
                 </div>
             </div>
             <div class="stat-card glass-panel type-sitthi">
-                <div class="stat-card-icon" style="background: rgba(104, 211, 145, 0.2); color: var(--neon-green);">
-                    <i class="fas fa-check-circle"></i>
+                <div class="stat-card-icon" style="background: rgba(104, 211, 145, 0.2); color: #68d391;">
+                    <svg class="icon"><use href="#icon-check"/></svg>
                 </div>
                 <div class="stat-card-value" id="stat-sitthi">0</div>
                 <div class="stat-card-label">
@@ -887,8 +1298,8 @@
                 </div>
             </div>
             <div class="stat-card glass-panel type-pikhat">
-                <div class="stat-card-icon" style="background: rgba(252, 129, 129, 0.2); color: var(--neon-red);">
-                    <i class="fas fa-times-circle"></i>
+                <div class="stat-card-icon" style="background: rgba(252, 129, 129, 0.2); color: #fc8181;">
+                    <svg class="icon"><use href="#icon-times-circle"/></svg>
                 </div>
                 <div class="stat-card-value" id="stat-pikhat">0</div>
                 <div class="stat-card-label">
@@ -900,31 +1311,31 @@
 
         <!-- Filter Badges -->
         <section class="filter-container fade-up">
-            <button class="filter-badge active type-amrit" data-filter="all" style="background: var(--gradient-sacred); color: var(--space-void);">
+            <button class="filter-badge active" data-filter="all" style="background: var(--gradient-sacred); color: var(--space-void);">
                 <span lang="th">ทั้งหมด</span>
                 <span lang="en">All</span>
             </button>
-            <button class="filter-badge type-amrit" data-filter="amrit" style="background: rgba(159, 122, 234, 0.3); border-color: var(--neon-purple);">
+            <button class="filter-badge" data-filter="amrit" style="background: rgba(255, 190, 152, 0.25); border-color: #FFBE98;">
                 <span lang="th">⭐⭐⭐ อมฤตโชค</span>
                 <span lang="en">⭐⭐⭐ Amrit</span>
             </button>
-            <button class="filter-badge type-mahasitthi" data-filter="mahasitthi" style="background: rgba(246, 173, 85, 0.3); border-color: var(--neon-orange);">
+            <button class="filter-badge" data-filter="mahasitthi" style="background: rgba(246, 173, 85, 0.25); border-color: #f6ad55;">
                 <span lang="th">⭐⭐ มหาสิทธิโชค</span>
                 <span lang="en">⭐⭐ Mahasitthi</span>
             </button>
-            <button class="filter-badge type-sitthi" data-filter="sitthi" style="background: rgba(104, 211, 145, 0.3); border-color: var(--neon-green);">
+            <button class="filter-badge" data-filter="sitthi" style="background: rgba(104, 211, 145, 0.25); border-color: #68d391;">
                 <span lang="th">⭐ สิทธิโชค</span>
                 <span lang="en">⭐ Sitthi</span>
             </button>
-            <button class="filter-badge type-sao5" data-filter="sao5" style="background: rgba(99, 179, 237, 0.3); border-color: var(--neon-blue);">
+            <button class="filter-badge" data-filter="sao5" style="background: rgba(15, 76, 129, 0.3); border-color: #0F4C81;">
                 <span lang="th">🙏 เสาร์ 5</span>
                 <span lang="en">🙏 Sat 5th</span>
             </button>
-            <button class="filter-badge type-pikhat" data-filter="pikhat" style="background: rgba(252, 129, 129, 0.3); border-color: var(--neon-red);">
+            <button class="filter-badge" data-filter="pikhat" style="background: rgba(252, 129, 129, 0.25); border-color: #fc8181;">
                 <span lang="th">❌ ดิถีพิฆาต</span>
                 <span lang="en">❌ Pikhat</span>
             </button>
-            <button class="filter-badge" data-filter="wealth" style="background: rgba(255, 215, 0, 0.3); border-color: var(--neon-gold);">
+            <button class="filter-badge" data-filter="wealth" style="background: rgba(255, 215, 0, 0.25); border-color: #ffd700;">
                 <span lang="th">💰 มหาเศรษฐี</span>
                 <span lang="en">💰 Wealth</span>
             </button>
@@ -932,30 +1343,31 @@
 
         <!-- Calendar View -->
         <section id="view-calendar" class="view-section active fade-up">
-            <div class="calendar-container glass-panel" style="padding: 1.5rem;">
-                <div class="calendar-header">
-                    <div class="month-nav">
-                        <button class="month-nav-btn" id="prev-month">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <h2 class="month-title" id="current-month-title"></h2>
-                        <button class="month-nav-btn" id="next-month">
-                            <i class="fas fa-chevron-right"></i>
+            <div class="calendar-container glass-panel">
+                <div class="calendar-inner">
+                    <div class="calendar-header">
+                        <div class="month-nav">
+                            <button class="month-nav-btn" id="prev-month">
+                                <svg class="icon"><use href="#icon-chevron-left"/></svg>
+                            </button>
+                            <h2 class="month-title" id="current-month-title"></h2>
+                            <button class="month-nav-btn" id="next-month">
+                                <svg class="icon"><use href="#icon-chevron-right"/></svg>
+                            </button>
+                        </div>
+                        <button class="control-btn" id="today-btn" title="Go to Today">
+                            <svg class="icon"><use href="#icon-target"/></svg>
                         </button>
                     </div>
-                    <button class="control-btn" id="today-btn" title="Go to Today">
-                        <i class="fas fa-crosshairs"></i>
-                    </button>
-                </div>
-                <div class="calendar-grid" id="calendar-grid">
-                    <!-- Weekday headers -->
-                    <div class="calendar-weekday"><span lang="th">อา</span><span lang="en">Sun</span></div>
-                    <div class="calendar-weekday"><span lang="th">จ</span><span lang="en">Mon</span></div>
-                    <div class="calendar-weekday"><span lang="th">อ</span><span lang="en">Tue</span></div>
-                    <div class="calendar-weekday"><span lang="th">พ</span><span lang="en">Wed</span></div>
-                    <div class="calendar-weekday"><span lang="th">พฤ</span><span lang="en">Thu</span></div>
-                    <div class="calendar-weekday"><span lang="th">ศ</span><span lang="en">Fri</span></div>
-                    <div class="calendar-weekday"><span lang="th">ส</span><span lang="en">Sat</span></div>
+                    <div class="calendar-grid" id="calendar-grid">
+                        <div class="calendar-weekday"><span lang="th">อา</span><span lang="en">Sun</span></div>
+                        <div class="calendar-weekday"><span lang="th">จ</span><span lang="en">Mon</span></div>
+                        <div class="calendar-weekday"><span lang="th">อ</span><span lang="en">Tue</span></div>
+                        <div class="calendar-weekday"><span lang="th">พ</span><span lang="en">Wed</span></div>
+                        <div class="calendar-weekday"><span lang="th">พฤ</span><span lang="en">Thu</span></div>
+                        <div class="calendar-weekday"><span lang="th">ศ</span><span lang="en">Fri</span></div>
+                        <div class="calendar-weekday"><span lang="th">ส</span><span lang="en">Sat</span></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -964,8 +1376,8 @@
         <section id="view-timeline" class="view-section fade-up">
             <div class="glass-panel" style="padding: 1.5rem;">
                 <h2 class="text-xl font-semibold mb-4">
-                    <span lang="th">ไทม์ไลน์ฤกษ์มงคล พ.ศ. ๒๕๖๙</span>
-                    <span lang="en">Auspicious Timeline 2026</span>
+                    <span lang="th">📜 ไทม์ไลน์ฤกษ์มงคล พ.ศ. ๒๕๖๙</span>
+                    <span lang="en">📜 Auspicious Timeline 2026</span>
                 </h2>
                 <div id="timeline-content" class="timeline-container"></div>
             </div>
@@ -997,22 +1409,22 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="glass-panel" style="padding: 1.5rem;">
                     <h3 class="text-lg font-semibold mb-4">
-                        <span lang="th">สัดส่วนฤกษ์แต่ละประเภท</span>
-                        <span lang="en">Distribution by Type</span>
+                        <span lang="th">📊 สัดส่วนฤกษ์แต่ละประเภท</span>
+                        <span lang="en">📊 Distribution by Type</span>
                     </h3>
                     <div id="pie-chart" style="height: 350px;"></div>
                 </div>
                 <div class="glass-panel" style="padding: 1.5rem;">
                     <h3 class="text-lg font-semibold mb-4">
-                        <span lang="th">จำนวนฤกษ์รายเดือน</span>
-                        <span lang="en">Monthly Distribution</span>
+                        <span lang="th">📈 จำนวนฤกษ์รายเดือน</span>
+                        <span lang="en">📈 Monthly Distribution</span>
                     </h3>
                     <div id="bar-chart" style="height: 350px;"></div>
                 </div>
                 <div class="glass-panel lg:col-span-2" style="padding: 1.5rem;">
                     <h3 class="text-lg font-semibold mb-4">
-                        <span lang="th">ฮีทแมปฤกษ์ตลอดปี</span>
-                        <span lang="en">Year Heatmap</span>
+                        <span lang="th">🗓️ ฮีทแมปฤกษ์ตลอดปี</span>
+                        <span lang="en">🗓️ Year Heatmap</span>
                     </h3>
                     <div id="heatmap" style="height: 200px; overflow-x: auto;"></div>
                 </div>
@@ -1020,30 +1432,52 @@
         </section>
 
         <!-- Footer -->
-        <footer class="text-center py-8 mt-8 text-sm text-gray-500">
-            <p lang="th">ปฏิทินฤกษ์พรหมประสิทธิ์ ประจำปี พ.ศ. ๒๕๖๙ • เวอร์ชัน ๑.๑</p>
-            <p lang="en">Brahma Prasit Auspicious Calendar 2026 CE • Version 1.1</p>
+        <footer class="footer">
+            <p lang="th">ปฏิทินฤกษ์พรหมประสิทธิ์ ประจำปี พ.ศ. ๒๕๖๙ • เวอร์ชัน ๑.๒</p>
+            <p lang="en">Brahma Prasit Auspicious Calendar 2026 CE • Version 1.2</p>
             <p class="mt-2 text-xs opacity-60">
-                <span lang="th">สร้างด้วย ❤️ เพื่อความเป็นสิริมงคล</span>
-                <span lang="en">Created with ❤️ for auspiciousness</span>
+                <span lang="th">สร้างด้วย <span class="footer-heart">❤️</span> เพื่อความเป็นสิริมงคล</span>
+                <span lang="en">Created with <span class="footer-heart">❤️</span> for auspiciousness</span>
             </p>
         </footer>
     </div>
 
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <button class="mobile-nav-btn active" data-view="calendar">
+            <svg class="icon"><use href="#icon-calendar"/></svg>
+            <span lang="th">ปฏิทิน</span>
+            <span lang="en">Calendar</span>
+        </button>
+        <button class="mobile-nav-btn" data-view="timeline">
+            <svg class="icon"><use href="#icon-stream"/></svg>
+            <span lang="th">ไทม์ไลน์</span>
+            <span lang="en">Timeline</span>
+        </button>
+        <button class="mobile-nav-btn" data-view="radial">
+            <svg class="icon"><use href="#icon-radial"/></svg>
+            <span lang="th">จักรราศี</span>
+            <span lang="en">Radial</span>
+        </button>
+        <button class="mobile-nav-btn" data-view="stats">
+            <svg class="icon"><use href="#icon-stats"/></svg>
+            <span lang="th">สถิติ</span>
+            <span lang="en">Stats</span>
+        </button>
+    </nav>
+
     <!-- Detail Panel -->
     <aside id="detail-panel" class="detail-panel">
         <div class="detail-panel-header">
-            <h3 class="font-semibold">
-                <span lang="th">รายละเอียดวันฤกษ์</span>
-                <span lang="en">Day Details</span>
+            <h3>
+                <span lang="th">🔮 รายละเอียดวันฤกษ์</span>
+                <span lang="en">🔮 Day Details</span>
             </h3>
             <button class="detail-panel-close" id="close-panel">
-                <i class="fas fa-times"></i>
+                <svg class="icon"><use href="#icon-close"/></svg>
             </button>
         </div>
-        <div class="detail-panel-content" id="detail-content">
-            <!-- Content injected dynamically -->
-        </div>
+        <div class="detail-panel-content" id="detail-content"></div>
     </aside>
 
     <script>
@@ -1052,117 +1486,117 @@
         // =============================================
         const EVENTS_DATA = [
             // January 2026
-            { date: '2026-01-03', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-01-07', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-01-11', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
-            { date: '2026-01-21', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-01-22', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
-            { date: '2026-01-27', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
-            { date: '2026-01-28', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-01-03', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-01-07', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-01-11', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: false },
+            { date: '2026-01-21', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-01-22', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: false },
+            { date: '2026-01-27', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: false },
+            { date: '2026-01-28', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
             // February 2026
-            { date: '2026-02-01', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-02-04', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
-            { date: '2026-02-07', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
-            { date: '2026-02-13', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
-            { date: '2026-02-18', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
-            { date: '2026-02-21', type: 'sao5', name: 'เสาร์ขึ้น 5 ค่ำ', stars: 3, wealth: true, special: 'วันไหว้ครู' },
-            { date: '2026-02-27', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            { date: '2026-02-01', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-02-04', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: true },
+            { date: '2026-02-07', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: true },
+            { date: '2026-02-13', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: true },
+            { date: '2026-02-18', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: true },
+            { date: '2026-02-21', type: 'sao5', name: 'เสาร์ขึ้น 5 ค่ำ', nameEN: 'Saturday 5th Moon', stars: 3, wealth: true, special: 'วันไหว้ครู' },
+            { date: '2026-02-27', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: true },
             // March 2026
-            { date: '2026-03-07', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
-            { date: '2026-03-10', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-03-12', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-03-13', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-03-15', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-03-17', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-03-23', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-03-27', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-03-29', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-03-30', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-03-31', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: true },
+            { date: '2026-03-07', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: true },
+            { date: '2026-03-10', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-03-12', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-03-13', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-03-15', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-03-17', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-03-23', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-03-27', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-03-29', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-03-30', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-03-31', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: true },
             // April 2026
-            { date: '2026-04-03', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
-            { date: '2026-04-09', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-04-13', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-04-17', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
-            { date: '2026-04-23', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-04-27', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-04-03', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: true },
+            { date: '2026-04-09', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-04-13', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-04-17', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: true },
+            { date: '2026-04-23', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-04-27', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
             // May 2026
-            { date: '2026-05-04', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
-            { date: '2026-05-07', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-05-09', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-05-16', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-05-20', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-05-24', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            { date: '2026-05-04', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: false },
+            { date: '2026-05-07', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-05-09', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-05-16', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-05-20', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-05-24', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: false },
             // June 2026
-            { date: '2026-06-03', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-06-04', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
-            { date: '2026-06-09', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
-            { date: '2026-06-10', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-06-14', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-06-17', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-06-18', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
-            { date: '2026-06-23', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
-            { date: '2026-06-24', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-06-28', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-06-03', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-06-04', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: false },
+            { date: '2026-06-09', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: false },
+            { date: '2026-06-10', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-06-14', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-06-17', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-06-18', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: false },
+            { date: '2026-06-23', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: false },
+            { date: '2026-06-24', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-06-28', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
             // July 2026
-            { date: '2026-07-01', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
-            { date: '2026-07-04', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
-            { date: '2026-07-10', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
-            { date: '2026-07-18', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-07-21', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-07-23', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-07-24', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-07-26', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-07-28', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-07-01', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: true },
+            { date: '2026-07-04', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: false },
+            { date: '2026-07-10', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: true },
+            { date: '2026-07-18', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-07-21', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-07-23', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-07-24', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-07-26', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-07-28', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
             // August 2026
-            { date: '2026-08-03', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-08-07', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-08-09', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-08-10', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-08-11', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: true },
-            { date: '2026-08-14', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
-            { date: '2026-08-15', type: 'sao5', name: 'เสาร์ขึ้น 5 ค่ำ', stars: 3, wealth: false, special: 'วันไหว้ครู' },
-            { date: '2026-08-20', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
-            { date: '2026-08-28', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            { date: '2026-08-03', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-08-07', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-08-09', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-08-10', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-08-11', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: true },
+            { date: '2026-08-14', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: true },
+            { date: '2026-08-15', type: 'sao5', name: 'เสาร์ขึ้น 5 ค่ำ', nameEN: 'Saturday 5th Moon', stars: 3, wealth: false, special: 'วันไหว้ครู' },
+            { date: '2026-08-20', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: true },
+            { date: '2026-08-28', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: true },
             // September 2026
-            { date: '2026-09-01', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-09-03', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-09-04', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-09-06', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-09-08', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-09-14', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-09-18', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-09-19', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: true },
-            { date: '2026-09-22', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
-            { date: '2026-09-28', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            { date: '2026-09-01', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-09-03', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-09-04', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-09-06', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-09-08', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-09-14', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-09-18', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-09-19', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: true },
+            { date: '2026-09-22', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: true },
+            { date: '2026-09-28', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: true },
             // October 2026
-            { date: '2026-10-06', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
-            { date: '2026-10-10', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
-            { date: '2026-10-14', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-10-16', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
-            { date: '2026-10-21', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-10-25', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-10-28', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
-            { date: '2026-10-31', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            { date: '2026-10-06', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: true },
+            { date: '2026-10-10', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: false },
+            { date: '2026-10-14', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-10-16', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: false },
+            { date: '2026-10-21', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-10-25', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-10-28', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: true },
+            { date: '2026-10-31', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: false },
             // November 2026
-            { date: '2026-11-06', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
-            { date: '2026-11-11', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
-            { date: '2026-11-14', type: 'sao5', name: 'เสาร์ขึ้น 5 ค่ำ', stars: 3, wealth: false, special: 'วันไหว้ครู อมฤตโชค' },
-            { date: '2026-11-20', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
-            { date: '2026-11-28', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            { date: '2026-11-06', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: true },
+            { date: '2026-11-11', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: true },
+            { date: '2026-11-14', type: 'sao5', name: 'เสาร์ขึ้น 5 ค่ำ', nameEN: 'Saturday 5th Moon', stars: 3, wealth: false, special: 'วันไหว้ครู อมฤตโชค' },
+            { date: '2026-11-20', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: true },
+            { date: '2026-11-28', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: true },
             // December 2026
-            { date: '2026-12-01', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-12-03', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-12-04', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-12-06', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-12-08', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-12-14', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-12-18', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
-            { date: '2026-12-20', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
-            { date: '2026-12-21', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
-            { date: '2026-12-22', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: true },
-            { date: '2026-12-25', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
-            { date: '2026-12-31', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-12-01', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-12-03', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-12-04', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-12-06', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-12-08', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-12-14', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-12-18', type: 'pikhat', name: 'ดิถีพิฆาต', nameEN: 'Inauspicious', stars: 0, wealth: false },
+            { date: '2026-12-20', type: 'sitthi', name: 'สิทธิโชค', nameEN: 'Good Fortune', stars: 1, wealth: false },
+            { date: '2026-12-21', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
+            { date: '2026-12-22', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: true },
+            { date: '2026-12-25', type: 'amrit', name: 'อมฤตโชค', nameEN: 'Amrit Fortune', stars: 3, wealth: true },
+            { date: '2026-12-31', type: 'mahasitthi', name: 'มหาสิทธิโชค', nameEN: 'Great Fortune', stars: 2, wealth: false },
         ];
 
         // =============================================
@@ -1170,11 +1604,11 @@
         // =============================================
         const CONFIG = {
             colors: {
-                amrit: '#9f7aea',
+                amrit: '#FFBE98',
                 mahasitthi: '#f6ad55',
                 sitthi: '#68d391',
                 pikhat: '#fc8181',
-                sao5: '#63b3ed',
+                sao5: '#4DB8C4',
                 wealth: '#ffd700'
             },
             monthsTH: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 
@@ -1186,7 +1620,7 @@
         };
 
         let state = {
-            currentMonth: 0, // January 2026
+            currentMonth: 0,
             currentYear: 2026,
             currentView: 'calendar',
             currentFilter: 'all',
@@ -1198,32 +1632,22 @@
         // =============================================
         // UTILITY FUNCTIONS
         // =============================================
-        function getEventsByDate(dateStr) {
-            return EVENTS_DATA.filter(e => e.date === dateStr);
-        }
-
-        function formatDate(dateStr, lang = state.lang) {
+        const getEventsByDate = (dateStr) => EVENTS_DATA.filter(e => e.date === dateStr);
+        const formatDate = (dateStr, lang = state.lang) => {
             const date = new Date(dateStr);
             const day = date.getDate();
             const month = lang === 'th' ? CONFIG.monthsTH[date.getMonth()] : CONFIG.monthsEN[date.getMonth()];
             const year = lang === 'th' ? date.getFullYear() + 543 : date.getFullYear();
             const dayName = lang === 'th' ? CONFIG.daysTH[date.getDay()] : CONFIG.daysEN[date.getDay()];
             return { day, month, year, dayName, full: `${dayName} ${day} ${month} ${year}` };
-        }
-
-        function getTypeClass(type) {
-            return `type-${type}`;
-        }
-
-        function getStarsDisplay(stars) {
-            return '⭐'.repeat(stars);
-        }
-
-        function filterEvents(events) {
+        };
+        const getTypeClass = (type) => `type-${type}`;
+        const getStarsDisplay = (stars) => '⭐'.repeat(stars);
+        const filterEvents = (events) => {
             if (state.currentFilter === 'all') return events;
             if (state.currentFilter === 'wealth') return events.filter(e => e.wealth);
             return events.filter(e => e.type === state.currentFilter);
-        }
+        };
 
         // =============================================
         // CANVAS PARTICLE BACKGROUND
@@ -1234,82 +1658,43 @@
             let particles = [];
             let mouseX = 0, mouseY = 0;
 
-            function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
+            const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
             resize();
             window.addEventListener('resize', resize);
 
-            // Create particles
-            const particleCount = Math.min(100, Math.floor(window.innerWidth / 15));
+            const particleCount = Math.min(80, Math.floor(window.innerWidth / 18));
+            const colors = ['#ffd700', '#FFBE98', '#4DB8C4', '#BB2649', '#f687b3'];
             for (let i = 0; i < particleCount; i++) {
                 particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    size: Math.random() * 2 + 0.5,
-                    speedX: (Math.random() - 0.5) * 0.3,
-                    speedY: (Math.random() - 0.5) * 0.3,
-                    opacity: Math.random() * 0.5 + 0.2,
-                    color: ['#ffd700', '#9f7aea', '#63b3ed', '#f687b3'][Math.floor(Math.random() * 4)]
+                    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                    size: Math.random() * 2.5 + 0.5, speedX: (Math.random() - 0.5) * 0.25,
+                    speedY: (Math.random() - 0.5) * 0.25, opacity: Math.random() * 0.4 + 0.15,
+                    color: colors[Math.floor(Math.random() * colors.length)]
                 });
             }
-
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            });
+            document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
 
             function animate() {
                 const isDark = state.theme === 'dark';
-                ctx.fillStyle = isDark ? 'rgba(10, 6, 18, 0.1)' : 'rgba(248, 245, 255, 0.1)';
+                ctx.fillStyle = isDark ? 'rgba(10, 6, 18, 0.08)' : 'rgba(250, 248, 245, 0.08)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-
                 particles.forEach((p, i) => {
-                    // Mouse avoidance
-                    const dx = mouseX - p.x;
-                    const dy = mouseY - p.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 150) {
-                        const angle = Math.atan2(dy, dx);
-                        p.x -= Math.cos(angle) * 1;
-                        p.y -= Math.sin(angle) * 1;
-                    }
-
-                    // Update position
-                    p.x += p.speedX;
-                    p.y += p.speedY;
-
-                    // Wrap around
-                    if (p.x < 0) p.x = canvas.width;
-                    if (p.x > canvas.width) p.x = 0;
-                    if (p.y < 0) p.y = canvas.height;
-                    if (p.y > canvas.height) p.y = 0;
-
-                    // Draw particle
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fillStyle = p.color;
-                    ctx.globalAlpha = p.opacity;
-                    ctx.fill();
-                    ctx.globalAlpha = 1;
-
-                    // Connect nearby particles
+                    const dx = mouseX - p.x, dy = mouseY - p.y, dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) { const angle = Math.atan2(dy, dx); p.x -= Math.cos(angle) * 0.8; p.y -= Math.sin(angle) * 0.8; }
+                    p.x += p.speedX; p.y += p.speedY;
+                    if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color; ctx.globalAlpha = p.opacity; ctx.fill(); ctx.globalAlpha = 1;
                     particles.slice(i + 1).forEach(p2 => {
-                        const dx = p.x - p2.x;
-                        const dy = p.y - p2.y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 120) {
-                            ctx.beginPath();
-                            ctx.moveTo(p.x, p.y);
-                            ctx.lineTo(p2.x, p2.y);
-                            ctx.strokeStyle = isDark ? 'rgba(159, 122, 234, 0.1)' : 'rgba(159, 122, 234, 0.15)';
-                            ctx.lineWidth = 0.5;
-                            ctx.stroke();
+                        const dx2 = p.x - p2.x, dy2 = p.y - p2.y, dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+                        if (dist2 < 100) {
+                            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = isDark ? 'rgba(255, 190, 152, 0.08)' : 'rgba(187, 38, 73, 0.08)';
+                            ctx.lineWidth = 0.5; ctx.stroke();
                         }
                     });
                 });
-
                 requestAnimationFrame(animate);
             }
             animate();
@@ -1321,30 +1706,21 @@
         function renderCalendar() {
             const grid = document.getElementById('calendar-grid');
             const title = document.getElementById('current-month-title');
-            
-            // Clear existing days (keep weekday headers)
-            const days = grid.querySelectorAll('.calendar-day');
-            days.forEach(d => d.remove());
-
-            // Update title
+            grid.querySelectorAll('.calendar-day').forEach(d => d.remove());
             const monthName = state.lang === 'th' ? CONFIG.monthsTH[state.currentMonth] : CONFIG.monthsEN[state.currentMonth];
             const yearDisplay = state.lang === 'th' ? (state.currentYear + 543) : state.currentYear;
             title.textContent = `${monthName} ${yearDisplay}`;
-
-            // Get first day of month and total days
             const firstDay = new Date(state.currentYear, state.currentMonth, 1).getDay();
             const totalDays = new Date(state.currentYear, state.currentMonth + 1, 0).getDate();
             const today = new Date();
             const isCurrentMonth = today.getFullYear() === state.currentYear && today.getMonth() === state.currentMonth;
 
-            // Add empty cells
             for (let i = 0; i < firstDay; i++) {
                 const empty = document.createElement('div');
                 empty.className = 'calendar-day empty';
                 grid.appendChild(empty);
             }
 
-            // Add days
             for (let day = 1; day <= totalDays; day++) {
                 const dateStr = `${state.currentYear}-${String(state.currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const events = getEventsByDate(dateStr);
@@ -1354,21 +1730,15 @@
 
                 const dayEl = document.createElement('div');
                 dayEl.className = `calendar-day glass-panel-light ${hasEvent ? getTypeClass(event.type) : ''} ${event?.wealth ? 'type-wealth' : ''}`;
-                
-                if (isCurrentMonth && day === today.getDate()) {
-                    dayEl.classList.add('today');
-                }
+                if (isCurrentMonth && day === today.getDate()) dayEl.classList.add('today');
+                const displayName = hasEvent ? (state.lang === 'th' ? event.name : event.nameEN) : '';
 
                 dayEl.innerHTML = `
                     <span class="calendar-day-number">${day}</span>
-                    ${hasEvent ? `<span class="calendar-day-type">${event.name}</span>` : ''}
+                    ${hasEvent ? `<span class="calendar-day-type">${displayName}</span>` : ''}
                     ${hasEvent ? `<div class="calendar-day-indicator"><span></span>${event.stars > 1 ? '<span></span>' : ''}${event.stars > 2 ? '<span></span>' : ''}</div>` : ''}
                 `;
-
-                if (hasEvent) {
-                    dayEl.addEventListener('click', () => openDetailPanel(event));
-                }
-
+                if (hasEvent) dayEl.addEventListener('click', () => openDetailPanel(event));
                 grid.appendChild(dayEl);
             }
         }
@@ -1379,10 +1749,8 @@
         function renderTimeline() {
             const container = document.getElementById('timeline-content');
             container.innerHTML = '';
-
             const filteredEvents = filterEvents(EVENTS_DATA);
             const eventsByMonth = {};
-
             filteredEvents.forEach(event => {
                 const month = parseInt(event.date.split('-')[1]) - 1;
                 if (!eventsByMonth[month]) eventsByMonth[month] = [];
@@ -1392,7 +1760,6 @@
             Object.keys(eventsByMonth).sort((a, b) => a - b).forEach(month => {
                 const monthName = state.lang === 'th' ? CONFIG.monthsTH[month] : CONFIG.monthsEN[month];
                 const yearDisplay = state.lang === 'th' ? '๒๕๖๙' : '2026';
-
                 const monthEl = document.createElement('div');
                 monthEl.className = 'timeline-month';
                 monthEl.innerHTML = `
@@ -1400,17 +1767,18 @@
                     <div class="timeline-events">
                         ${eventsByMonth[month].map(event => {
                             const date = formatDate(event.date);
-                            return `
-                                <div class="timeline-event glass-panel-light ${getTypeClass(event.type)} ${event.wealth ? 'type-wealth' : ''}" 
-                                     onclick='openDetailPanel(${JSON.stringify(event).replace(/'/g, "\\'")})'>
-                                    <span class="timeline-event-date">${date.day}</span>
-                                    <span class="timeline-event-name">${getStarsDisplay(event.stars)} ${event.name}</span>
-                                </div>
-                            `;
+                            const displayName = state.lang === 'th' ? event.name : event.nameEN;
+                            return `<div class="timeline-event glass-panel-light ${getTypeClass(event.type)} ${event.wealth ? 'type-wealth' : ''}" data-event='${JSON.stringify(event).replace(/'/g, "&#39;")}'>
+                                <span class="timeline-event-date">${date.day}</span>
+                                <span class="timeline-event-name">${getStarsDisplay(event.stars)} ${displayName}</span>
+                            </div>`;
                         }).join('')}
                     </div>
                 `;
                 container.appendChild(monthEl);
+            });
+            container.querySelectorAll('.timeline-event').forEach(el => {
+                el.addEventListener('click', () => openDetailPanel(JSON.parse(el.dataset.event)));
             });
         }
 
@@ -1420,128 +1788,52 @@
         function initRadialViz() {
             const svg = d3.select('#radial-viz');
             const container = document.querySelector('.viz-container');
-            const width = container.clientWidth;
-            const height = container.clientHeight;
-
+            const width = container.clientWidth, height = container.clientHeight;
             svg.attr('viewBox', `0 0 ${width} ${height}`);
-
             const filteredEvents = filterEvents(EVENTS_DATA);
-            
-            // Create nodes data
             const nodes = filteredEvents.map((event, i) => ({
-                id: i,
-                ...event,
-                radius: event.stars === 3 ? 12 : event.stars === 2 ? 10 : event.type === 'pikhat' ? 8 : 8
+                id: i, ...event,
+                radius: event.stars === 3 ? 11 : event.stars === 2 ? 9 : 7
             }));
-
-            // Create center node
-            nodes.unshift({
-                id: 'center',
-                name: state.lang === 'th' ? 'พ.ศ. ๒๕๖๙' : '2026 CE',
-                type: 'center',
-                radius: 40,
-                fx: width / 2,
-                fy: height / 2
-            });
-
-            // Create links to center
-            const links = nodes.slice(1).map(n => ({
-                source: 'center',
-                target: n.id
-            }));
-
-            // Clear previous
+            nodes.unshift({ id: 'center', name: state.lang === 'th' ? 'พ.ศ. ๒๕๖๙' : '2026 CE', type: 'center', radius: 38, fx: width / 2, fy: height / 2 });
+            const links = nodes.slice(1).map(n => ({ source: 'center', target: n.id }));
             svg.selectAll('*').remove();
-
             const g = svg.append('g');
-
-            // Create gradient definitions
             const defs = svg.append('defs');
-            
-            // Golden glow filter
-            const filter = defs.append('filter')
-                .attr('id', 'glow')
-                .attr('x', '-50%')
-                .attr('y', '-50%')
-                .attr('width', '200%')
-                .attr('height', '200%');
-            filter.append('feGaussianBlur')
-                .attr('stdDeviation', '3')
-                .attr('result', 'coloredBlur');
+            const filter = defs.append('filter').attr('id', 'glow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
+            filter.append('feGaussianBlur').attr('stdDeviation', '4').attr('result', 'coloredBlur');
             const feMerge = filter.append('feMerge');
             feMerge.append('feMergeNode').attr('in', 'coloredBlur');
             feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
-            // Links
-            const link = g.selectAll('.link')
-                .data(links)
-                .enter()
-                .append('line')
-                .attr('class', 'd3-link')
-                .attr('stroke-opacity', 0.3);
+            const link = g.selectAll('.link').data(links).enter().append('line').attr('class', 'd3-link').attr('stroke-opacity', 0.25);
+            const node = g.selectAll('.node').data(nodes).enter().append('g').attr('class', 'd3-node')
+                .on('click', (event, d) => { if (d.type !== 'center') openDetailPanel(d); });
 
-            // Nodes
-            const node = g.selectAll('.node')
-                .data(nodes)
-                .enter()
-                .append('g')
-                .attr('class', 'd3-node')
-                .on('click', (event, d) => {
-                    if (d.type !== 'center') {
-                        openDetailPanel(d);
-                    }
-                });
-
-            node.append('circle')
-                .attr('r', d => d.radius)
-                .attr('fill', d => {
-                    if (d.type === 'center') return 'url(#centerGradient)';
-                    return CONFIG.colors[d.type] || '#9f7aea';
-                })
+            node.append('circle').attr('r', d => d.radius)
+                .attr('fill', d => d.type === 'center' ? 'url(#centerGradient)' : CONFIG.colors[d.type] || '#FFBE98')
                 .attr('filter', d => d.type === 'center' || d.stars === 3 ? 'url(#glow)' : null)
-                .attr('stroke', d => d.wealth ? CONFIG.colors.wealth : 'none')
-                .attr('stroke-width', d => d.wealth ? 3 : 0);
+                .attr('stroke', d => d.wealth ? CONFIG.colors.wealth : 'none').attr('stroke-width', d => d.wealth ? 2.5 : 0);
 
-            // Center gradient
-            const centerGradient = defs.append('radialGradient')
-                .attr('id', 'centerGradient');
+            const centerGradient = defs.append('radialGradient').attr('id', 'centerGradient');
             centerGradient.append('stop').attr('offset', '0%').attr('stop-color', '#ffd700');
-            centerGradient.append('stop').attr('offset', '100%').attr('stop-color', '#ff8c00');
+            centerGradient.append('stop').attr('offset', '100%').attr('stop-color', '#FFBE98');
 
-            // Labels for center
-            node.filter(d => d.type === 'center')
-                .append('text')
-                .attr('text-anchor', 'middle')
-                .attr('dy', '0.35em')
-                .attr('fill', '#1a1029')
-                .attr('font-weight', 'bold')
-                .attr('font-size', '14px')
-                .text(d => d.name);
+            node.filter(d => d.type === 'center').append('text').attr('text-anchor', 'middle').attr('dy', '0.35em')
+                .attr('fill', '#1a1029').attr('font-weight', 'bold').attr('font-size', '12px').text(d => d.name);
 
-            // Force simulation
             const simulation = d3.forceSimulation(nodes)
-                .force('link', d3.forceLink(links).id(d => d.id).distance(150))
-                .force('charge', d3.forceManyBody().strength(-50))
+                .force('link', d3.forceLink(links).id(d => d.id).distance(140))
+                .force('charge', d3.forceManyBody().strength(-40))
                 .force('center', d3.forceCenter(width / 2, height / 2))
-                .force('collision', d3.forceCollide().radius(d => d.radius + 5))
+                .force('collision', d3.forceCollide().radius(d => d.radius + 4))
                 .on('tick', () => {
-                    link
-                        .attr('x1', d => d.source.x)
-                        .attr('y1', d => d.source.y)
-                        .attr('x2', d => d.target.x)
-                        .attr('y2', d => d.target.y);
-
+                    link.attr('x1', d => d.source.x).attr('y1', d => d.source.y).attr('x2', d => d.target.x).attr('y2', d => d.target.y);
                     node.attr('transform', d => `translate(${d.x},${d.y})`);
                 });
 
-            // Apply radial layout
-            applyRadialLayout(nodes, width, height);
-
-            function applyRadialLayout(nodes, width, height) {
-                const centerX = width / 2;
-                const centerY = height / 2;
-                const radius = Math.min(width, height) / 2 - 60;
-                
+            function applyRadialLayout() {
+                const centerX = width / 2, centerY = height / 2, radius = Math.min(width, height) / 2 - 55;
                 nodes.forEach((node, i) => {
                     if (node.type === 'center') return;
                     const angle = (i / (nodes.length - 1)) * 2 * Math.PI - Math.PI / 2;
@@ -1550,303 +1842,78 @@
                 });
                 simulation.alpha(0.3).restart();
             }
+            applyRadialLayout();
 
-            // Layout switchers
             window.setVizLayout = function(layout) {
-                nodes.forEach(node => {
-                    if (node.type !== 'center') {
-                        node.fx = null;
-                        node.fy = null;
-                    }
-                });
-
-                if (layout === 'radial') {
-                    applyRadialLayout(nodes, width, height);
-                } else if (layout === 'cluster') {
+                nodes.forEach(node => { if (node.type !== 'center') { node.fx = null; node.fy = null; } });
+                if (layout === 'radial') applyRadialLayout();
+                else if (layout === 'cluster') {
                     const typeGroups = {};
-                    nodes.forEach(node => {
-                        if (node.type !== 'center') {
-                            if (!typeGroups[node.type]) typeGroups[node.type] = [];
-                            typeGroups[node.type].push(node);
-                        }
-                    });
-
-                    const types = Object.keys(typeGroups);
-                    types.forEach((type, ti) => {
-                        const angle = (ti / types.length) * 2 * Math.PI;
-                        const clusterX = width/2 + 200 * Math.cos(angle);
-                        const clusterY = height/2 + 200 * Math.sin(angle);
-                        
-                        typeGroups[type].forEach(node => {
-                            node.fx = clusterX + (Math.random() - 0.5) * 80;
-                            node.fy = clusterY + (Math.random() - 0.5) * 80;
-                        });
+                    nodes.forEach(node => { if (node.type !== 'center') { if (!typeGroups[node.type]) typeGroups[node.type] = []; typeGroups[node.type].push(node); } });
+                    Object.keys(typeGroups).forEach((type, ti) => {
+                        const angle = (ti / Object.keys(typeGroups).length) * 2 * Math.PI;
+                        const clusterX = width/2 + 180 * Math.cos(angle), clusterY = height/2 + 180 * Math.sin(angle);
+                        typeGroups[type].forEach(node => { node.fx = clusterX + (Math.random() - 0.5) * 70; node.fy = clusterY + (Math.random() - 0.5) * 70; });
                     });
                     simulation.alpha(0.5).restart();
-                } else {
-                    simulation.force('center', d3.forceCenter(width / 2, height / 2));
-                    simulation.alpha(1).restart();
-                }
+                } else { simulation.force('center', d3.forceCenter(width / 2, height / 2)); simulation.alpha(1).restart(); }
             };
-
-            // Zoom
-            const zoom = d3.zoom()
-                .scaleExtent([0.5, 3])
-                .on('zoom', (event) => {
-                    g.attr('transform', event.transform);
-                });
-
-            svg.call(zoom);
+            svg.call(d3.zoom().scaleExtent([0.5, 3]).on('zoom', (event) => g.attr('transform', event.transform)));
         }
 
         // =============================================
         // STATISTICS CHARTS
         // =============================================
-        function renderStats() {
-            renderPieChart();
-            renderBarChart();
-            renderHeatmap();
-        }
+        function renderStats() { renderPieChart(); renderBarChart(); renderHeatmap(); }
 
         function renderPieChart() {
             const container = document.getElementById('pie-chart');
             container.innerHTML = '';
-            
-            const width = container.clientWidth;
-            const height = 350;
-            const radius = Math.min(width, height) / 2 - 40;
-
-            const svg = d3.select('#pie-chart')
-                .append('svg')
-                .attr('width', width)
-                .attr('height', height)
-                .append('g')
-                .attr('transform', `translate(${width/2},${height/2})`);
-
+            const width = container.clientWidth, height = 350, radius = Math.min(width, height) / 2 - 45;
+            const svg = d3.select('#pie-chart').append('svg').attr('width', width).attr('height', height).append('g').attr('transform', `translate(${width/2},${height/2})`);
             const typeCounts = {};
-            EVENTS_DATA.forEach(e => {
-                typeCounts[e.type] = (typeCounts[e.type] || 0) + 1;
-            });
-
-            const data = Object.entries(typeCounts).map(([type, count]) => ({
-                type,
-                count,
-                label: type === 'amrit' ? 'อมฤตโชค' : 
-                       type === 'mahasitthi' ? 'มหาสิทธิโชค' : 
-                       type === 'sitthi' ? 'สิทธิโชค' : 
-                       type === 'pikhat' ? 'ดิถีพิฆาต' : 'เสาร์ 5'
-            }));
-
+            EVENTS_DATA.forEach(e => { typeCounts[e.type] = (typeCounts[e.type] || 0) + 1; });
+            const labels = { amrit: { th: 'อมฤตโชค', en: 'Amrit' }, mahasitthi: { th: 'มหาสิทธิโชค', en: 'Mahasitthi' }, sitthi: { th: 'สิทธิโชค', en: 'Sitthi' }, pikhat: { th: 'ดิถีพิฆาต', en: 'Pikhat' }, sao5: { th: 'เสาร์ 5', en: 'Sat 5th' } };
+            const data = Object.entries(typeCounts).map(([type, count]) => ({ type, count, label: labels[type] ? labels[type][state.lang] : type }));
             const pie = d3.pie().value(d => d.count);
             const arc = d3.arc().innerRadius(radius * 0.5).outerRadius(radius);
             const labelArc = d3.arc().innerRadius(radius * 0.75).outerRadius(radius * 0.75);
-
-            const arcs = svg.selectAll('.arc')
-                .data(pie(data))
-                .enter()
-                .append('g')
-                .attr('class', 'arc');
-
-            arcs.append('path')
-                .attr('d', arc)
-                .attr('fill', d => CONFIG.colors[d.data.type])
-                .attr('stroke', 'rgba(0,0,0,0.2)')
-                .attr('stroke-width', 2)
-                .style('cursor', 'pointer')
-                .on('mouseover', function() {
-                    d3.select(this).attr('opacity', 0.8);
-                })
-                .on('mouseout', function() {
-                    d3.select(this).attr('opacity', 1);
-                });
-
-            arcs.append('text')
-                .attr('transform', d => `translate(${labelArc.centroid(d)})`)
-                .attr('text-anchor', 'middle')
-                .attr('fill', 'white')
-                .attr('font-size', '12px')
-                .text(d => `${d.data.count}`);
-
-            // Legend
-            const legend = svg.selectAll('.legend')
-                .data(data)
-                .enter()
-                .append('g')
-                .attr('transform', (d, i) => `translate(${radius + 20}, ${i * 25 - data.length * 12})`);
-
-            legend.append('rect')
-                .attr('width', 16)
-                .attr('height', 16)
-                .attr('rx', 4)
-                .attr('fill', d => CONFIG.colors[d.type]);
-
-            legend.append('text')
-                .attr('x', 24)
-                .attr('y', 12)
-                .attr('fill', 'var(--text-secondary)')
-                .attr('font-size', '12px')
-                .text(d => `${d.label} (${d.count})`);
+            const arcs = svg.selectAll('.arc').data(pie(data)).enter().append('g').attr('class', 'arc');
+            arcs.append('path').attr('d', arc).attr('fill', d => CONFIG.colors[d.data.type]).attr('stroke', 'rgba(0,0,0,0.2)').attr('stroke-width', 2).style('cursor', 'pointer').on('mouseover', function() { d3.select(this).attr('opacity', 0.8); }).on('mouseout', function() { d3.select(this).attr('opacity', 1); });
+            arcs.append('text').attr('transform', d => `translate(${labelArc.centroid(d)})`).attr('text-anchor', 'middle').attr('fill', 'white').attr('font-size', '11px').attr('font-weight', '600').text(d => `${d.data.count}`);
+            const legend = svg.selectAll('.legend').data(data).enter().append('g').attr('transform', (d, i) => `translate(${radius + 25}, ${i * 24 - data.length * 12})`);
+            legend.append('rect').attr('width', 14).attr('height', 14).attr('rx', 3).attr('fill', d => CONFIG.colors[d.type]);
+            legend.append('text').attr('x', 20).attr('y', 11).attr('fill', 'var(--text-secondary)').attr('font-size', '11px').text(d => `${d.label} (${d.count})`);
         }
 
         function renderBarChart() {
             const container = document.getElementById('bar-chart');
             container.innerHTML = '';
-
-            const margin = { top: 20, right: 20, bottom: 40, left: 40 };
-            const width = container.clientWidth - margin.left - margin.right;
-            const height = 350 - margin.top - margin.bottom;
-
-            const svg = d3.select('#bar-chart')
-                .append('svg')
-                .attr('width', width + margin.left + margin.right)
-                .attr('height', height + margin.top + margin.bottom)
-                .append('g')
-                .attr('transform', `translate(${margin.left},${margin.top})`);
-
-            // Count by month
-            const monthCounts = Array(12).fill(0).map((_, i) => ({
-                month: i,
-                label: state.lang === 'th' ? CONFIG.monthsTH[i].substring(0, 3) : CONFIG.monthsEN[i].substring(0, 3),
-                count: EVENTS_DATA.filter(e => parseInt(e.date.split('-')[1]) - 1 === i && e.type !== 'pikhat').length
-            }));
-
-            const x = d3.scaleBand()
-                .domain(monthCounts.map(d => d.label))
-                .range([0, width])
-                .padding(0.3);
-
-            const y = d3.scaleLinear()
-                .domain([0, d3.max(monthCounts, d => d.count)])
-                .range([height, 0]);
-
-            // X axis
-            svg.append('g')
-                .attr('transform', `translate(0,${height})`)
-                .call(d3.axisBottom(x))
-                .selectAll('text')
-                .attr('fill', 'var(--text-muted)')
-                .attr('font-size', '10px');
-
-            // Y axis
-            svg.append('g')
-                .call(d3.axisLeft(y).ticks(5))
-                .selectAll('text')
-                .attr('fill', 'var(--text-muted)');
-
-            // Bars
-            svg.selectAll('.bar')
-                .data(monthCounts)
-                .enter()
-                .append('rect')
-                .attr('x', d => x(d.label))
-                .attr('y', height)
-                .attr('width', x.bandwidth())
-                .attr('height', 0)
-                .attr('fill', 'url(#barGradient)')
-                .attr('rx', 4)
-                .transition()
-                .duration(800)
-                .delay((d, i) => i * 50)
-                .attr('y', d => y(d.count))
-                .attr('height', d => height - y(d.count));
-
-            // Gradient
-            const gradient = svg.append('defs')
-                .append('linearGradient')
-                .attr('id', 'barGradient')
-                .attr('x1', '0%')
-                .attr('y1', '0%')
-                .attr('x2', '0%')
-                .attr('y2', '100%');
-
+            const margin = { top: 20, right: 20, bottom: 45, left: 45 }, width = container.clientWidth - margin.left - margin.right, height = 350 - margin.top - margin.bottom;
+            const svg = d3.select('#bar-chart').append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+            const monthCounts = Array(12).fill(0).map((_, i) => ({ month: i, label: state.lang === 'th' ? CONFIG.monthsTH[i].substring(0, 3) : CONFIG.monthsEN[i].substring(0, 3), count: EVENTS_DATA.filter(e => parseInt(e.date.split('-')[1]) - 1 === i && e.type !== 'pikhat').length }));
+            const x = d3.scaleBand().domain(monthCounts.map(d => d.label)).range([0, width]).padding(0.3);
+            const y = d3.scaleLinear().domain([0, d3.max(monthCounts, d => d.count) + 1]).range([height, 0]);
+            svg.append('g').attr('transform', `translate(0,${height})`).call(d3.axisBottom(x)).selectAll('text').attr('fill', 'var(--text-muted)').attr('font-size', '10px');
+            svg.append('g').call(d3.axisLeft(y).ticks(5)).selectAll('text').attr('fill', 'var(--text-muted)');
+            const gradient = svg.append('defs').append('linearGradient').attr('id', 'barGradient').attr('x1', '0%').attr('y1', '0%').attr('x2', '0%').attr('y2', '100%');
             gradient.append('stop').attr('offset', '0%').attr('stop-color', '#ffd700');
-            gradient.append('stop').attr('offset', '100%').attr('stop-color', '#9f7aea');
+            gradient.append('stop').attr('offset', '100%').attr('stop-color', '#FFBE98');
+            svg.selectAll('.bar').data(monthCounts).enter().append('rect').attr('x', d => x(d.label)).attr('y', height).attr('width', x.bandwidth()).attr('height', 0).attr('fill', 'url(#barGradient)').attr('rx', 4).transition().duration(700).delay((d, i) => i * 40).attr('y', d => y(d.count)).attr('height', d => height - y(d.count));
         }
 
         function renderHeatmap() {
             const container = document.getElementById('heatmap');
             container.innerHTML = '';
-
-            const cellSize = 14;
-            const cellPadding = 2;
-            const margin = { top: 20, right: 20, bottom: 20, left: 40 };
-            const width = 53 * (cellSize + cellPadding) + margin.left + margin.right;
-            const height = 7 * (cellSize + cellPadding) + margin.top + margin.bottom;
-
-            const svg = d3.select('#heatmap')
-                .append('svg')
-                .attr('width', width)
-                .attr('height', height)
-                .append('g')
-                .attr('transform', `translate(${margin.left},${margin.top})`);
-
-            // Create date map
-            const dateMap = {};
-            EVENTS_DATA.forEach(e => {
-                dateMap[e.date] = e;
-            });
-
-            // Generate all days of 2026
-            const startDate = new Date(2026, 0, 1);
-            const endDate = new Date(2026, 11, 31);
-            const days = [];
-            
-            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-                const dateStr = d.toISOString().split('T')[0];
-                days.push({
-                    date: new Date(d),
-                    dateStr,
-                    event: dateMap[dateStr] || null
-                });
-            }
-
-            // Day labels
+            const cellSize = 13, cellPadding = 2, margin = { top: 20, right: 20, bottom: 20, left: 40 };
+            const width = 53 * (cellSize + cellPadding) + margin.left + margin.right, height = 7 * (cellSize + cellPadding) + margin.top + margin.bottom;
+            const svg = d3.select('#heatmap').append('svg').attr('width', width).attr('height', height).append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+            const dateMap = {}; EVENTS_DATA.forEach(e => { dateMap[e.date] = e; });
+            const startDate = new Date(2026, 0, 1), endDate = new Date(2026, 11, 31), days = [];
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) { const dateStr = d.toISOString().split('T')[0]; days.push({ date: new Date(d), dateStr, event: dateMap[dateStr] || null }); }
             const dayLabels = state.lang === 'th' ? ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'] : ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-            svg.selectAll('.day-label')
-                .data(dayLabels)
-                .enter()
-                .append('text')
-                .attr('x', -8)
-                .attr('y', (d, i) => i * (cellSize + cellPadding) + cellSize / 2)
-                .attr('text-anchor', 'end')
-                .attr('dominant-baseline', 'middle')
-                .attr('fill', 'var(--text-muted)')
-                .attr('font-size', '10px')
-                .text(d => d);
-
-            // Cells
-            svg.selectAll('.day')
-                .data(days)
-                .enter()
-                .append('rect')
-                .attr('class', 'day')
-                .attr('width', cellSize)
-                .attr('height', cellSize)
-                .attr('x', d => {
-                    const week = d3.timeWeek.count(d3.timeYear(d.date), d.date);
-                    return week * (cellSize + cellPadding);
-                })
-                .attr('y', d => d.date.getDay() * (cellSize + cellPadding))
-                .attr('rx', 2)
-                .attr('fill', d => {
-                    if (!d.event) return 'rgba(255,255,255,0.05)';
-                    return CONFIG.colors[d.event.type];
-                })
-                .attr('opacity', d => d.event ? 0.8 : 0.3)
-                .style('cursor', d => d.event ? 'pointer' : 'default')
-                .on('click', (event, d) => {
-                    if (d.event) openDetailPanel(d.event);
-                })
-                .on('mouseover', function(event, d) {
-                    if (d.event) {
-                        d3.select(this).attr('stroke', '#fff').attr('stroke-width', 2);
-                        showTooltip(event, d);
-                    }
-                })
-                .on('mouseout', function() {
-                    d3.select(this).attr('stroke', 'none');
-                    hideTooltip();
-                });
+            svg.selectAll('.day-label').data(dayLabels).enter().append('text').attr('x', -8).attr('y', (d, i) => i * (cellSize + cellPadding) + cellSize / 2).attr('text-anchor', 'end').attr('dominant-baseline', 'middle').attr('fill', 'var(--text-muted)').attr('font-size', '9px').text(d => d);
+            svg.selectAll('.day').data(days).enter().append('rect').attr('class', 'day').attr('width', cellSize).attr('height', cellSize).attr('x', d => d3.timeWeek.count(d3.timeYear(d.date), d.date) * (cellSize + cellPadding)).attr('y', d => d.date.getDay() * (cellSize + cellPadding)).attr('rx', 2).attr('fill', d => d.event ? CONFIG.colors[d.event.type] : 'rgba(255,255,255,0.04)').attr('opacity', d => d.event ? 0.85 : 0.3).style('cursor', d => d.event ? 'pointer' : 'default').on('click', (event, d) => { if (d.event) openDetailPanel(d.event); }).on('mouseover', function(event, d) { if (d.event) { d3.select(this).attr('stroke', '#fff').attr('stroke-width', 2); showTooltip(event, d); } }).on('mouseout', function() { d3.select(this).attr('stroke', 'none'); hideTooltip(); });
         }
 
         // =============================================
@@ -1854,138 +1921,28 @@
         // =============================================
         function openDetailPanel(event) {
             state.selectedEvent = event;
-            const panel = document.getElementById('detail-panel');
-            const overlay = document.getElementById('overlay');
-            const content = document.getElementById('detail-content');
-
+            const panel = document.getElementById('detail-panel'), overlay = document.getElementById('overlay'), content = document.getElementById('detail-content');
             const dateInfo = formatDate(event.date);
-            const typeLabels = {
-                amrit: { th: 'อมฤตโชค', en: 'Amrit Fortune' },
-                mahasitthi: { th: 'มหาสิทธิโชค', en: 'Great Fortune' },
-                sitthi: { th: 'สิทธิโชค', en: 'Good Fortune' },
-                pikhat: { th: 'ดิถีพิฆาต', en: 'Inauspicious' },
-                sao5: { th: 'เสาร์ขึ้น 5 ค่ำ', en: 'Saturday 5th Moon' }
-            };
-
-            const meanings = {
-                amrit: {
-                    th: 'วันอมฤตโชค เป็นฤกษ์มงคลสูงสุด เหมาะแก่การเริ่มต้นกิจการใหญ่ การแต่งงาน ขึ้นบ้านใหม่ และทำบุญมหากุศล',
-                    en: 'Amrit Fortune is the most auspicious day, ideal for starting major ventures, weddings, housewarming, and great merit-making.'
-                },
-                mahasitthi: {
-                    th: 'วันมหาสิทธิโชค เป็นฤกษ์ดีมาก เหมาะแก่การเจรจาธุรกิจ ลงนามสัญญา และเริ่มงานสำคัญ',
-                    en: 'Great Fortune Day is very auspicious, suitable for business negotiations, contract signing, and starting important work.'
-                },
-                sitthi: {
-                    th: 'วันสิทธิโชค เป็นฤกษ์ดี เหมาะแก่การทำงานทั่วไป การเดินทาง และเริ่มต้นสิ่งใหม่',
-                    en: 'Good Fortune Day is auspicious, suitable for general work, travel, and new beginnings.'
-                },
-                pikhat: {
-                    th: 'วันดิถีพิฆาต ไม่เหมาะแก่การเริ่มต้นกิจการใดๆ ควรหลีกเลี่ยงการทำงานสำคัญในวันนี้',
-                    en: 'Inauspicious Day - not suitable for starting any ventures. Avoid important activities on this day.'
-                },
-                sao5: {
-                    th: 'วันเสาร์ขึ้น 5 ค่ำ เป็นวันมงคลพิเศษ เหมาะแก่การไหว้ครู บูชาสิ่งศักดิ์สิทธิ์ และสร้างความเป็นสิริมงคล',
-                    en: 'Saturday 5th Moon is a special auspicious day, ideal for paying respect to teachers and sacred objects.'
-                }
-            };
-
+            const typeLabels = { amrit: { th: 'อมฤตโชค', en: 'Amrit Fortune' }, mahasitthi: { th: 'มหาสิทธิโชค', en: 'Great Fortune' }, sitthi: { th: 'สิทธิโชค', en: 'Good Fortune' }, pikhat: { th: 'ดิถีพิฆาต', en: 'Inauspicious' }, sao5: { th: 'เสาร์ขึ้น 5 ค่ำ', en: 'Saturday 5th Moon' } };
+            const meanings = { amrit: { th: 'วันอมฤตโชค เป็นฤกษ์มงคลสูงสุด เหมาะแก่การเริ่มต้นกิจการใหญ่ การแต่งงาน ขึ้นบ้านใหม่ และทำบุญมหากุศล', en: 'Amrit Fortune is the most auspicious day, ideal for starting major ventures, weddings, housewarming, and great merit-making.' }, mahasitthi: { th: 'วันมหาสิทธิโชค เป็นฤกษ์ดีมาก เหมาะแก่การเจรจาธุรกิจ ลงนามสัญญา และเริ่มงานสำคัญ', en: 'Great Fortune Day is very auspicious, suitable for business negotiations, contract signing, and starting important work.' }, sitthi: { th: 'วันสิทธิโชค เป็นฤกษ์ดี เหมาะแก่การทำงานทั่วไป การเดินทาง และเริ่มต้นสิ่งใหม่', en: 'Good Fortune Day is auspicious, suitable for general work, travel, and new beginnings.' }, pikhat: { th: 'วันดิถีพิฆาต ไม่เหมาะแก่การเริ่มต้นกิจการใดๆ ควรหลีกเลี่ยงการทำงานสำคัญในวันนี้', en: 'Inauspicious Day - not suitable for starting any ventures. Avoid important activities on this day.' }, sao5: { th: 'วันเสาร์ขึ้น 5 ค่ำ เป็นวันมงคลพิเศษ เหมาะแก่การไหว้ครู บูชาสิ่งศักดิ์สิทธิ์ และสร้างความเป็นสิริมงคล', en: 'Saturday 5th Moon is a special auspicious day, ideal for paying respect to teachers and sacred objects.' } };
             content.innerHTML = `
                 <div class="detail-date-display ${getTypeClass(event.type)}">
                     <div class="detail-date-day">${dateInfo.day}</div>
                     <div class="detail-date-month">${dateInfo.month} ${dateInfo.year}</div>
-                    <div class="detail-type-badge ${getTypeClass(event.type)}" style="background: ${CONFIG.colors[event.type]}30; border: 1px solid ${CONFIG.colors[event.type]};">
-                        ${getStarsDisplay(event.stars)} ${typeLabels[event.type][state.lang]}
-                        ${event.wealth ? ' 💰' : ''}
+                    <div class="detail-type-badge" style="background: ${CONFIG.colors[event.type]}25; border: 1px solid ${CONFIG.colors[event.type]};">
+                        ${getStarsDisplay(event.stars)} ${typeLabels[event.type][state.lang]} ${event.wealth ? ' 💰' : ''}
                     </div>
                 </div>
-
-                <div class="detail-section">
-                    <h4 class="detail-section-title">
-                        <span lang="th">วันในสัปดาห์</span>
-                        <span lang="en">Day of Week</span>
-                    </h4>
-                    <div class="detail-section-content">
-                        ${dateInfo.dayName}
-                    </div>
-                </div>
-
-                <div class="detail-section">
-                    <h4 class="detail-section-title">
-                        <span lang="th">ความหมาย</span>
-                        <span lang="en">Meaning</span>
-                    </h4>
-                    <div class="detail-section-content">
-                        <span lang="th">${meanings[event.type].th}</span>
-                        <span lang="en">${meanings[event.type].en}</span>
-                    </div>
-                </div>
-
-                ${event.wealth ? `
-                <div class="detail-section">
-                    <h4 class="detail-section-title">
-                        <span lang="th">💰 วันมหาเศรษฐี</span>
-                        <span lang="en">💰 Wealth Day</span>
-                    </h4>
-                    <div class="detail-section-content">
-                        <span lang="th">วันนี้เหมาะแก่เรื่องการเงิน การลงทุน และการทำธุรกิจเป็นพิเศษ</span>
-                        <span lang="en">This day is especially suitable for financial matters, investments, and business activities.</span>
-                    </div>
-                </div>
-                ` : ''}
-
-                ${event.special ? `
-                <div class="detail-section">
-                    <h4 class="detail-section-title">
-                        <span lang="th">🙏 วันพิเศษ</span>
-                        <span lang="en">🙏 Special Day</span>
-                    </h4>
-                    <div class="detail-section-content">
-                        ${event.special}
-                    </div>
-                </div>
-                ` : ''}
-
-                <div class="detail-section">
-                    <h4 class="detail-section-title">
-                        <span lang="th">คำแนะนำ</span>
-                        <span lang="en">Recommendations</span>
-                    </h4>
-                    <div class="detail-section-content">
-                        ${event.type === 'pikhat' ? `
-                            <ul class="list-disc list-inside space-y-1 text-sm">
-                                <li lang="th">หลีกเลี่ยงการเริ่มต้นสิ่งใหม่</li>
-                                <li lang="en">Avoid starting new ventures</li>
-                                <li lang="th">ไม่ควรลงนามสัญญาสำคัญ</li>
-                                <li lang="en">Don't sign important contracts</li>
-                                <li lang="th">เลื่อนการเดินทางสำคัญ</li>
-                                <li lang="en">Postpone important travels</li>
-                            </ul>
-                        ` : `
-                            <ul class="list-disc list-inside space-y-1 text-sm">
-                                <li lang="th">เหมาะแก่การทำบุญใส่บาตร</li>
-                                <li lang="en">Ideal for merit-making</li>
-                                <li lang="th">ดีสำหรับการเริ่มต้นสิ่งใหม่</li>
-                                <li lang="en">Good for new beginnings</li>
-                                <li lang="th">เหมาะแก่การเจรจาธุรกิจ</li>
-                                <li lang="en">Suitable for business talks</li>
-                            </ul>
-                        `}
-                    </div>
-                </div>
+                <div class="detail-section"><h4 class="detail-section-title"><span lang="th">วันในสัปดาห์</span><span lang="en">Day of Week</span></h4><div class="detail-section-content">${dateInfo.dayName}</div></div>
+                <div class="detail-section"><h4 class="detail-section-title"><span lang="th">ความหมาย</span><span lang="en">Meaning</span></h4><div class="detail-section-content"><span lang="th">${meanings[event.type].th}</span><span lang="en">${meanings[event.type].en}</span></div></div>
+                ${event.wealth ? `<div class="detail-section"><h4 class="detail-section-title"><span lang="th">💰 วันมหาเศรษฐี</span><span lang="en">💰 Wealth Day</span></h4><div class="detail-section-content"><span lang="th">วันนี้เหมาะแก่เรื่องการเงิน การลงทุน และการทำธุรกิจเป็นพิเศษ</span><span lang="en">This day is especially suitable for financial matters, investments, and business activities.</span></div></div>` : ''}
+                ${event.special ? `<div class="detail-section"><h4 class="detail-section-title"><span lang="th">🙏 วันพิเศษ</span><span lang="en">🙏 Special Day</span></h4><div class="detail-section-content">${event.special}</div></div>` : ''}
+                <div class="detail-section"><h4 class="detail-section-title"><span lang="th">คำแนะนำ</span><span lang="en">Recommendations</span></h4><div class="detail-section-content">${event.type === 'pikhat' ? `<ul class="list-disc list-inside space-y-1" style="font-size: 0.85rem;"><li><span lang="th">หลีกเลี่ยงการเริ่มต้นสิ่งใหม่</span><span lang="en">Avoid starting new ventures</span></li><li><span lang="th">ไม่ควรลงนามสัญญาสำคัญ</span><span lang="en">Don't sign important contracts</span></li><li><span lang="th">เลื่อนการเดินทางสำคัญ</span><span lang="en">Postpone important travels</span></li></ul>` : `<ul class="list-disc list-inside space-y-1" style="font-size: 0.85rem;"><li><span lang="th">เหมาะแก่การทำบุญใส่บาตร</span><span lang="en">Ideal for merit-making</span></li><li><span lang="th">ดีสำหรับการเริ่มต้นสิ่งใหม่</span><span lang="en">Good for new beginnings</span></li><li><span lang="th">เหมาะแก่การเจรจาธุรกิจ</span><span lang="en">Suitable for business talks</span></li></ul>`}</div></div>
             `;
-
-            panel.classList.add('open');
-            overlay.classList.add('active');
+            panel.classList.add('open'); overlay.classList.add('active');
         }
 
-        function closeDetailPanel() {
-            const panel = document.getElementById('detail-panel');
-            const overlay = document.getElementById('overlay');
-            panel.classList.remove('open');
-            overlay.classList.remove('active');
-            state.selectedEvent = null;
-        }
+        function closeDetailPanel() { document.getElementById('detail-panel').classList.remove('open'); document.getElementById('overlay').classList.remove('active'); state.selectedEvent = null; }
 
         // =============================================
         // TOOLTIP
@@ -1993,161 +1950,67 @@
         function showTooltip(event, data) {
             const tooltip = document.getElementById('tooltip');
             const dateInfo = formatDate(data.dateStr);
-            tooltip.innerHTML = `
-                <strong>${dateInfo.full}</strong><br>
-                ${data.event ? `${getStarsDisplay(data.event.stars)} ${data.event.name}` : ''}
-            `;
-            tooltip.style.left = `${event.pageX + 10}px`;
-            tooltip.style.top = `${event.pageY + 10}px`;
-            tooltip.classList.add('visible');
+            const displayName = data.event ? (state.lang === 'th' ? data.event.name : data.event.nameEN) : '';
+            tooltip.innerHTML = `<strong>${dateInfo.full}</strong><br>${data.event ? `${getStarsDisplay(data.event.stars)} ${displayName}` : ''}`;
+            tooltip.style.left = `${event.pageX + 12}px`; tooltip.style.top = `${event.pageY + 12}px`; tooltip.classList.add('visible');
         }
-
-        function hideTooltip() {
-            const tooltip = document.getElementById('tooltip');
-            tooltip.classList.remove('visible');
-        }
+        function hideTooltip() { document.getElementById('tooltip').classList.remove('visible'); }
 
         // =============================================
         // UPDATE STATS
         // =============================================
         function updateStats() {
-            const counts = {
-                amrit: EVENTS_DATA.filter(e => e.type === 'amrit').length,
-                mahasitthi: EVENTS_DATA.filter(e => e.type === 'mahasitthi').length,
-                sitthi: EVENTS_DATA.filter(e => e.type === 'sitthi').length,
-                pikhat: EVENTS_DATA.filter(e => e.type === 'pikhat').length
-            };
+            document.getElementById('stat-amrit').textContent = EVENTS_DATA.filter(e => e.type === 'amrit').length;
+            document.getElementById('stat-mahasitthi').textContent = EVENTS_DATA.filter(e => e.type === 'mahasitthi').length;
+            document.getElementById('stat-sitthi').textContent = EVENTS_DATA.filter(e => e.type === 'sitthi').length;
+            document.getElementById('stat-pikhat').textContent = EVENTS_DATA.filter(e => e.type === 'pikhat').length;
+        }
 
-            document.getElementById('stat-amrit').textContent = counts.amrit;
-            document.getElementById('stat-mahasitthi').textContent = counts.mahasitthi;
-            document.getElementById('stat-sitthi').textContent = counts.sitthi;
-            document.getElementById('stat-pikhat').textContent = counts.pikhat;
+        // =============================================
+        // VIEW SWITCHING
+        // =============================================
+        function switchView(view) {
+            state.currentView = view;
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.nav-tab[data-view="${view}"]`)?.classList.add('active');
+            document.querySelectorAll('.mobile-nav-btn').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.mobile-nav-btn[data-view="${view}"]`)?.classList.add('active');
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`view-${view}`).classList.add('active');
+            if (view === 'radial') setTimeout(initRadialViz, 100);
+            else if (view === 'stats') setTimeout(renderStats, 100);
+            else if (view === 'timeline') renderTimeline();
         }
 
         // =============================================
         // EVENT LISTENERS
         // =============================================
         function initListeners() {
-            // View tabs
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    
-                    state.currentView = tab.dataset.view;
-                    document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-                    document.getElementById(`view-${state.currentView}`).classList.add('active');
-
-                    if (state.currentView === 'radial') {
-                        setTimeout(initRadialViz, 100);
-                    } else if (state.currentView === 'stats') {
-                        setTimeout(renderStats, 100);
-                    } else if (state.currentView === 'timeline') {
-                        renderTimeline();
-                    }
-                });
-            });
-
-            // Month navigation
-            document.getElementById('prev-month').addEventListener('click', () => {
-                state.currentMonth--;
-                if (state.currentMonth < 0) {
-                    state.currentMonth = 11;
-                    state.currentYear--;
-                }
-                renderCalendar();
-            });
-
-            document.getElementById('next-month').addEventListener('click', () => {
-                state.currentMonth++;
-                if (state.currentMonth > 11) {
-                    state.currentMonth = 0;
-                    state.currentYear++;
-                }
-                renderCalendar();
-            });
-
-            document.getElementById('today-btn').addEventListener('click', () => {
-                const today = new Date();
-                state.currentMonth = today.getMonth();
-                state.currentYear = today.getFullYear();
-                renderCalendar();
-            });
-
-            // Filter badges
-            document.querySelectorAll('.filter-badge').forEach(badge => {
-                badge.addEventListener('click', () => {
-                    document.querySelectorAll('.filter-badge').forEach(b => b.classList.remove('active'));
-                    badge.classList.add('active');
-                    state.currentFilter = badge.dataset.filter;
-                    renderCalendar();
-                    renderTimeline();
-                    if (state.currentView === 'radial') initRadialViz();
-                });
-            });
-
-            // Language toggle
-            document.getElementById('lang-toggle').addEventListener('click', () => {
-                state.lang = state.lang === 'th' ? 'en' : 'th';
-                document.body.dataset.lang = state.lang;
-                renderCalendar();
-                renderTimeline();
-                if (state.currentView === 'stats') renderStats();
-            });
-
-            // Theme toggle
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.addEventListener('click', () => switchView(tab.dataset.view)));
+            document.querySelectorAll('.mobile-nav-btn').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.view)));
+            document.getElementById('prev-month').addEventListener('click', () => { state.currentMonth--; if (state.currentMonth < 0) { state.currentMonth = 11; state.currentYear--; } renderCalendar(); });
+            document.getElementById('next-month').addEventListener('click', () => { state.currentMonth++; if (state.currentMonth > 11) { state.currentMonth = 0; state.currentYear++; } renderCalendar(); });
+            document.getElementById('today-btn').addEventListener('click', () => { const today = new Date(); state.currentMonth = today.getMonth(); state.currentYear = today.getFullYear(); renderCalendar(); });
+            document.querySelectorAll('.filter-badge').forEach(badge => badge.addEventListener('click', () => { document.querySelectorAll('.filter-badge').forEach(b => b.classList.remove('active')); badge.classList.add('active'); state.currentFilter = badge.dataset.filter; renderCalendar(); if (state.currentView === 'timeline') renderTimeline(); if (state.currentView === 'radial') initRadialViz(); }));
+            document.getElementById('lang-toggle').addEventListener('click', () => { state.lang = state.lang === 'th' ? 'en' : 'th'; document.body.dataset.lang = state.lang; renderCalendar(); if (state.currentView === 'timeline') renderTimeline(); if (state.currentView === 'stats') renderStats(); if (state.currentView === 'radial') initRadialViz(); });
             document.getElementById('theme-toggle').addEventListener('click', () => {
                 state.theme = state.theme === 'dark' ? 'light' : 'dark';
                 document.body.dataset.theme = state.theme;
-                const icon = document.querySelector('#theme-toggle i');
-                icon.className = state.theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+                const icon = document.getElementById('theme-icon');
+                icon.innerHTML = state.theme === 'dark' ? '<use href="#icon-moon"/>' : '<use href="#icon-sun"/>';
             });
-
-            // Detail panel
             document.getElementById('close-panel').addEventListener('click', closeDetailPanel);
             document.getElementById('overlay').addEventListener('click', closeDetailPanel);
-
-            // Viz layout buttons
-            document.querySelectorAll('.viz-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.viz-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    if (window.setVizLayout) {
-                        window.setVizLayout(btn.dataset.layout);
-                    }
-                });
-            });
-
-            // Scroll animations
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, { threshold: 0.1 });
-
+            document.querySelectorAll('.viz-btn').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('.viz-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); if (window.setVizLayout) window.setVizLayout(btn.dataset.layout); }));
+            const observer = new IntersectionObserver((entries) => entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }), { threshold: 0.1 });
             document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
         }
 
         // =============================================
         // INITIALIZATION
         // =============================================
-        function init() {
-            initCanvas();
-            updateStats();
-            renderCalendar();
-            initListeners();
-
-            // Hide loader
-            setTimeout(() => {
-                document.getElementById('loading-overlay').classList.add('hidden');
-            }, 1500);
-        }
-
+        function init() { initCanvas(); updateStats(); renderCalendar(); initListeners(); setTimeout(() => document.getElementById('loading-overlay').classList.add('hidden'), 1200); }
         document.addEventListener('DOMContentLoaded', init);
-
-        // Make openDetailPanel accessible globally for inline onclick
         window.openDetailPanel = openDetailPanel;
     </script>
 </body>
