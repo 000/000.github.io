@@ -1,0 +1,2154 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ฤกษ์พรหมประสิทธิ์ ๒๕๖๙ | Brahma Prasit Auspicious Calendar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --space-void: #0a0612;
+            --space-deep: #120a1f;
+            --space-mid: #1a1029;
+            --glass-panel: rgba(26, 16, 41, 0.75);
+            --glass-lighter: rgba(45, 30, 70, 0.5);
+            --neon-gold: #ffd700;
+            --neon-purple: #9f7aea;
+            --neon-blue: #63b3ed;
+            --neon-green: #68d391;
+            --neon-orange: #f6ad55;
+            --neon-red: #fc8181;
+            --neon-pink: #f687b3;
+            --gradient-sacred: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #9f7aea 100%);
+            --gradient-cosmic: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --text-primary: #f7fafc;
+            --text-secondary: #cbd5e0;
+            --text-muted: #718096;
+            --animation-fast: 0.2s;
+            --animation-medium: 0.4s;
+            --animation-slow: 0.8s;
+        }
+
+        [data-theme="light"] {
+            --space-void: #f8f5ff;
+            --space-deep: #ede7f6;
+            --space-mid: #e3d5f0;
+            --glass-panel: rgba(255, 255, 255, 0.85);
+            --glass-lighter: rgba(255, 255, 255, 0.6);
+            --text-primary: #1a1029;
+            --text-secondary: #4a3860;
+            --text-muted: #6b5a80;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+            background: var(--space-void);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .font-thai { font-family: 'Noto Sans Thai', sans-serif; }
+
+        /* Loading Screen */
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--space-void);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-mandala {
+            width: 120px;
+            height: 120px;
+            position: relative;
+        }
+
+        .loader-mandala::before,
+        .loader-mandala::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 3px solid transparent;
+        }
+
+        .loader-mandala::before {
+            border-top-color: var(--neon-gold);
+            animation: spin 1.5s linear infinite;
+        }
+
+        .loader-mandala::after {
+            border-bottom-color: var(--neon-purple);
+            animation: spin 1s linear infinite reverse;
+            inset: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            margin-top: 2rem;
+            font-size: 1.25rem;
+            background: var(--gradient-sacred);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Canvas Background */
+        #bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Glass Panels */
+        .glass-panel {
+            background: var(--glass-panel);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(159, 122, 234, 0.15);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-panel-light {
+            background: var(--glass-lighter);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(159, 122, 234, 0.1);
+            border-radius: 16px;
+        }
+
+        /* Header */
+        .header-main {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-sacred);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.7); }
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-sacred);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.25rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+        }
+
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            border: none;
+            background: transparent;
+        }
+
+        .nav-tab:hover {
+            background: rgba(159, 122, 234, 0.2);
+            color: var(--text-primary);
+        }
+
+        .nav-tab.active {
+            background: var(--gradient-sacred);
+            color: var(--space-void);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Controls */
+        .control-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(159, 122, 234, 0.1);
+            border: 1px solid rgba(159, 122, 234, 0.2);
+            color: var(--text-secondary);
+        }
+
+        .control-btn:hover {
+            background: rgba(159, 122, 234, 0.3);
+            color: var(--neon-gold);
+            transform: translateY(-2px);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--card-accent, var(--neon-gold));
+        }
+
+        .stat-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-sacred);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Calendar Grid */
+        .calendar-container {
+            margin-bottom: 2rem;
+        }
+
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .month-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .month-nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(159, 122, 234, 0.1);
+            border: 1px solid rgba(159, 122, 234, 0.2);
+            color: var(--text-secondary);
+        }
+
+        .month-nav-btn:hover {
+            background: var(--neon-gold);
+            color: var(--space-void);
+            transform: scale(1.1);
+        }
+
+        .month-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            min-width: 250px;
+            text-align: center;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .calendar-weekday {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--neon-gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            padding: 0.5rem;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 80px;
+        }
+
+        .calendar-day:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .calendar-day.empty {
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .calendar-day.today {
+            border: 2px solid var(--neon-gold);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .calendar-day-number {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .calendar-day-type {
+            font-size: 0.65rem;
+            text-align: center;
+            line-height: 1.2;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .calendar-day-indicator {
+            position: absolute;
+            bottom: 6px;
+            display: flex;
+            gap: 2px;
+        }
+
+        .calendar-day-indicator span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        /* Event Type Colors */
+        .type-amrit { --card-accent: #9f7aea; background: rgba(159, 122, 234, 0.15); }
+        .type-amrit .calendar-day-indicator span { background: #9f7aea; }
+        
+        .type-mahasitthi { --card-accent: #f6ad55; background: rgba(246, 173, 85, 0.15); }
+        .type-mahasitthi .calendar-day-indicator span { background: #f6ad55; }
+        
+        .type-sitthi { --card-accent: #68d391; background: rgba(104, 211, 145, 0.15); }
+        .type-sitthi .calendar-day-indicator span { background: #68d391; }
+        
+        .type-pikhat { --card-accent: #fc8181; background: rgba(252, 129, 129, 0.15); }
+        .type-pikhat .calendar-day-indicator span { background: #fc8181; }
+        
+        .type-sao5 { --card-accent: #63b3ed; background: rgba(99, 179, 237, 0.15); }
+        .type-sao5 .calendar-day-indicator span { background: #63b3ed; }
+
+        .type-wealth::after {
+            content: '💰';
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            font-size: 0.75rem;
+        }
+
+        /* Visualization Container */
+        .viz-container {
+            height: 600px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .viz-controls {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+
+        .viz-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(159, 122, 234, 0.3);
+            color: var(--text-secondary);
+        }
+
+        .viz-btn:hover, .viz-btn.active {
+            background: var(--neon-purple);
+            color: white;
+        }
+
+        /* Timeline View */
+        .timeline-container {
+            padding: 2rem 0;
+        }
+
+        .timeline-month {
+            margin-bottom: 2rem;
+        }
+
+        .timeline-month-header {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-left: 1rem;
+            border-left: 3px solid var(--neon-gold);
+        }
+
+        .timeline-events {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .timeline-event {
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-event:hover {
+            transform: translateX(8px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .timeline-event-date {
+            font-weight: 600;
+            min-width: 40px;
+        }
+
+        .timeline-event-name {
+            font-size: 0.875rem;
+        }
+
+        /* Detail Panel */
+        .detail-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 400px;
+            max-width: 90vw;
+            background: rgba(18, 10, 31, 0.98);
+            border-left: 1px solid rgba(159, 122, 234, 0.2);
+            backdrop-filter: blur(24px);
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+        }
+
+        .detail-panel.open {
+            transform: translateX(0);
+        }
+
+        .detail-panel-header {
+            position: sticky;
+            top: 0;
+            background: rgba(18, 10, 31, 0.95);
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(159, 122, 234, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .detail-panel-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(159, 122, 234, 0.1);
+            border: none;
+            color: var(--text-secondary);
+        }
+
+        .detail-panel-close:hover {
+            background: rgba(252, 129, 129, 0.3);
+            color: var(--neon-red);
+        }
+
+        .detail-panel-content {
+            padding: 1.5rem;
+        }
+
+        .detail-date-display {
+            text-align: center;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border-radius: 16px;
+        }
+
+        .detail-date-day {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .detail-date-month {
+            font-size: 1.25rem;
+            margin-top: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .detail-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .detail-section-content {
+            padding: 1rem;
+            border-radius: 12px;
+            background: rgba(159, 122, 234, 0.1);
+        }
+
+        /* Filter Badges */
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            opacity: 0.6;
+        }
+
+        .filter-badge.active {
+            opacity: 1;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-badge:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Scroll animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-main {
+                padding: 1rem;
+            }
+
+            .nav-tabs {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .calendar-grid {
+                gap: 4px;
+            }
+
+            .calendar-day {
+                min-height: 60px;
+                padding: 0.25rem;
+            }
+
+            .calendar-day-number {
+                font-size: 1rem;
+            }
+
+            .calendar-day-type {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .viz-container {
+                height: 400px;
+            }
+        }
+
+        /* SVG Styles */
+        .d3-node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .d3-node:hover {
+            filter: brightness(1.3);
+        }
+
+        .d3-link {
+            stroke: rgba(159, 122, 234, 0.2);
+            stroke-width: 1;
+        }
+
+        .d3-label {
+            font-size: 10px;
+            fill: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            padding: 0.75rem 1rem;
+            background: rgba(18, 10, 31, 0.95);
+            border: 1px solid rgba(159, 122, 234, 0.3);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            max-width: 200px;
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+        }
+
+        /* View Sections */
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        /* Language Toggle */
+        [data-lang="en"] [lang="th"] { display: none; }
+        [data-lang="th"] [lang="en"] { display: none; }
+
+        /* Particle trail effect for special days */
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--neon-gold);
+            border-radius: 50%;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body data-theme="dark" data-lang="th">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="loader-mandala"></div>
+        <p class="loader-text font-thai">กำลังโหลดฤกษ์มงคล...</p>
+    </div>
+
+    <!-- Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Tooltip -->
+    <div id="tooltip" class="tooltip"></div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay"></div>
+
+    <!-- Main Content -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 py-6">
+        <!-- Header -->
+        <header class="header-main glass-panel">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <div class="logo-container">
+                    <div class="logo-icon">🙏</div>
+                    <div class="logo-text">
+                        <h1 class="font-thai" lang="th">ฤกษ์พรหมประสิทธิ์</h1>
+                        <h1 class="font-cinzel" lang="en">BRAHMA PRASIT</h1>
+                        <p lang="th">ปฏิทินฤกษ์มงคล พ.ศ. ๒๕๖๙</p>
+                        <p lang="en">AUSPICIOUS CALENDAR 2026 CE</p>
+                    </div>
+                </div>
+
+                <nav class="nav-tabs">
+                    <button class="nav-tab active" data-view="calendar">
+                        <i class="fas fa-calendar-alt mr-2"></i>
+                        <span lang="th">ปฏิทิน</span>
+                        <span lang="en">Calendar</span>
+                    </button>
+                    <button class="nav-tab" data-view="timeline">
+                        <i class="fas fa-stream mr-2"></i>
+                        <span lang="th">ไทม์ไลน์</span>
+                        <span lang="en">Timeline</span>
+                    </button>
+                    <button class="nav-tab" data-view="radial">
+                        <i class="fas fa-circle-notch mr-2"></i>
+                        <span lang="th">จักรราศี</span>
+                        <span lang="en">Radial</span>
+                    </button>
+                    <button class="nav-tab" data-view="stats">
+                        <i class="fas fa-chart-pie mr-2"></i>
+                        <span lang="th">สถิติ</span>
+                        <span lang="en">Stats</span>
+                    </button>
+                </nav>
+
+                <div class="flex items-center gap-3">
+                    <button id="lang-toggle" class="control-btn" title="Toggle Language">
+                        <span class="font-bold text-sm">EN/TH</span>
+                    </button>
+                    <button id="theme-toggle" class="control-btn" title="Toggle Theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <section id="stats-overview" class="stats-grid fade-up">
+            <div class="stat-card glass-panel type-amrit">
+                <div class="stat-card-icon" style="background: rgba(159, 122, 234, 0.2); color: var(--neon-purple);">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-card-value" id="stat-amrit">0</div>
+                <div class="stat-card-label">
+                    <span lang="th">วันอมฤตโชค ⭐⭐⭐</span>
+                    <span lang="en">Amrit Days ⭐⭐⭐</span>
+                </div>
+            </div>
+            <div class="stat-card glass-panel type-mahasitthi">
+                <div class="stat-card-icon" style="background: rgba(246, 173, 85, 0.2); color: var(--neon-orange);">
+                    <i class="fas fa-sun"></i>
+                </div>
+                <div class="stat-card-value" id="stat-mahasitthi">0</div>
+                <div class="stat-card-label">
+                    <span lang="th">วันมหาสิทธิโชค ⭐⭐</span>
+                    <span lang="en">Mahasitthi Days ⭐⭐</span>
+                </div>
+            </div>
+            <div class="stat-card glass-panel type-sitthi">
+                <div class="stat-card-icon" style="background: rgba(104, 211, 145, 0.2); color: var(--neon-green);">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-card-value" id="stat-sitthi">0</div>
+                <div class="stat-card-label">
+                    <span lang="th">วันสิทธิโชค ⭐</span>
+                    <span lang="en">Sitthi Days ⭐</span>
+                </div>
+            </div>
+            <div class="stat-card glass-panel type-pikhat">
+                <div class="stat-card-icon" style="background: rgba(252, 129, 129, 0.2); color: var(--neon-red);">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="stat-card-value" id="stat-pikhat">0</div>
+                <div class="stat-card-label">
+                    <span lang="th">วันดิถีพิฆาต ❌</span>
+                    <span lang="en">Pikhat Days ❌</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filter Badges -->
+        <section class="filter-container fade-up">
+            <button class="filter-badge active type-amrit" data-filter="all" style="background: var(--gradient-sacred); color: var(--space-void);">
+                <span lang="th">ทั้งหมด</span>
+                <span lang="en">All</span>
+            </button>
+            <button class="filter-badge type-amrit" data-filter="amrit" style="background: rgba(159, 122, 234, 0.3); border-color: var(--neon-purple);">
+                <span lang="th">⭐⭐⭐ อมฤตโชค</span>
+                <span lang="en">⭐⭐⭐ Amrit</span>
+            </button>
+            <button class="filter-badge type-mahasitthi" data-filter="mahasitthi" style="background: rgba(246, 173, 85, 0.3); border-color: var(--neon-orange);">
+                <span lang="th">⭐⭐ มหาสิทธิโชค</span>
+                <span lang="en">⭐⭐ Mahasitthi</span>
+            </button>
+            <button class="filter-badge type-sitthi" data-filter="sitthi" style="background: rgba(104, 211, 145, 0.3); border-color: var(--neon-green);">
+                <span lang="th">⭐ สิทธิโชค</span>
+                <span lang="en">⭐ Sitthi</span>
+            </button>
+            <button class="filter-badge type-sao5" data-filter="sao5" style="background: rgba(99, 179, 237, 0.3); border-color: var(--neon-blue);">
+                <span lang="th">🙏 เสาร์ 5</span>
+                <span lang="en">🙏 Sat 5th</span>
+            </button>
+            <button class="filter-badge type-pikhat" data-filter="pikhat" style="background: rgba(252, 129, 129, 0.3); border-color: var(--neon-red);">
+                <span lang="th">❌ ดิถีพิฆาต</span>
+                <span lang="en">❌ Pikhat</span>
+            </button>
+            <button class="filter-badge" data-filter="wealth" style="background: rgba(255, 215, 0, 0.3); border-color: var(--neon-gold);">
+                <span lang="th">💰 มหาเศรษฐี</span>
+                <span lang="en">💰 Wealth</span>
+            </button>
+        </section>
+
+        <!-- Calendar View -->
+        <section id="view-calendar" class="view-section active fade-up">
+            <div class="calendar-container glass-panel" style="padding: 1.5rem;">
+                <div class="calendar-header">
+                    <div class="month-nav">
+                        <button class="month-nav-btn" id="prev-month">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <h2 class="month-title" id="current-month-title"></h2>
+                        <button class="month-nav-btn" id="next-month">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <button class="control-btn" id="today-btn" title="Go to Today">
+                        <i class="fas fa-crosshairs"></i>
+                    </button>
+                </div>
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Weekday headers -->
+                    <div class="calendar-weekday"><span lang="th">อา</span><span lang="en">Sun</span></div>
+                    <div class="calendar-weekday"><span lang="th">จ</span><span lang="en">Mon</span></div>
+                    <div class="calendar-weekday"><span lang="th">อ</span><span lang="en">Tue</span></div>
+                    <div class="calendar-weekday"><span lang="th">พ</span><span lang="en">Wed</span></div>
+                    <div class="calendar-weekday"><span lang="th">พฤ</span><span lang="en">Thu</span></div>
+                    <div class="calendar-weekday"><span lang="th">ศ</span><span lang="en">Fri</span></div>
+                    <div class="calendar-weekday"><span lang="th">ส</span><span lang="en">Sat</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline View -->
+        <section id="view-timeline" class="view-section fade-up">
+            <div class="glass-panel" style="padding: 1.5rem;">
+                <h2 class="text-xl font-semibold mb-4">
+                    <span lang="th">ไทม์ไลน์ฤกษ์มงคล พ.ศ. ๒๕๖๙</span>
+                    <span lang="en">Auspicious Timeline 2026</span>
+                </h2>
+                <div id="timeline-content" class="timeline-container"></div>
+            </div>
+        </section>
+
+        <!-- Radial View -->
+        <section id="view-radial" class="view-section fade-up">
+            <div class="viz-container glass-panel">
+                <svg id="radial-viz" width="100%" height="100%"></svg>
+                <div class="viz-controls">
+                    <button class="viz-btn active" data-layout="radial">
+                        <span lang="th">วงกลม</span>
+                        <span lang="en">Radial</span>
+                    </button>
+                    <button class="viz-btn" data-layout="force">
+                        <span lang="th">กระจาย</span>
+                        <span lang="en">Force</span>
+                    </button>
+                    <button class="viz-btn" data-layout="cluster">
+                        <span lang="th">กลุ่ม</span>
+                        <span lang="en">Cluster</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats View -->
+        <section id="view-stats" class="view-section fade-up">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="glass-panel" style="padding: 1.5rem;">
+                    <h3 class="text-lg font-semibold mb-4">
+                        <span lang="th">สัดส่วนฤกษ์แต่ละประเภท</span>
+                        <span lang="en">Distribution by Type</span>
+                    </h3>
+                    <div id="pie-chart" style="height: 350px;"></div>
+                </div>
+                <div class="glass-panel" style="padding: 1.5rem;">
+                    <h3 class="text-lg font-semibold mb-4">
+                        <span lang="th">จำนวนฤกษ์รายเดือน</span>
+                        <span lang="en">Monthly Distribution</span>
+                    </h3>
+                    <div id="bar-chart" style="height: 350px;"></div>
+                </div>
+                <div class="glass-panel lg:col-span-2" style="padding: 1.5rem;">
+                    <h3 class="text-lg font-semibold mb-4">
+                        <span lang="th">ฮีทแมปฤกษ์ตลอดปี</span>
+                        <span lang="en">Year Heatmap</span>
+                    </h3>
+                    <div id="heatmap" style="height: 200px; overflow-x: auto;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center py-8 mt-8 text-sm text-gray-500">
+            <p lang="th">ปฏิทินฤกษ์พรหมประสิทธิ์ ประจำปี พ.ศ. ๒๕๖๙ • เวอร์ชัน ๑.๑</p>
+            <p lang="en">Brahma Prasit Auspicious Calendar 2026 CE • Version 1.1</p>
+            <p class="mt-2 text-xs opacity-60">
+                <span lang="th">สร้างด้วย ❤️ เพื่อความเป็นสิริมงคล</span>
+                <span lang="en">Created with ❤️ for auspiciousness</span>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Detail Panel -->
+    <aside id="detail-panel" class="detail-panel">
+        <div class="detail-panel-header">
+            <h3 class="font-semibold">
+                <span lang="th">รายละเอียดวันฤกษ์</span>
+                <span lang="en">Day Details</span>
+            </h3>
+            <button class="detail-panel-close" id="close-panel">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="detail-panel-content" id="detail-content">
+            <!-- Content injected dynamically -->
+        </div>
+    </aside>
+
+    <script>
+        // =============================================
+        // DATA: All events from ICS file
+        // =============================================
+        const EVENTS_DATA = [
+            // January 2026
+            { date: '2026-01-03', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-01-07', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-01-11', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            { date: '2026-01-21', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-01-22', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            { date: '2026-01-27', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            { date: '2026-01-28', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            // February 2026
+            { date: '2026-02-01', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-02-04', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
+            { date: '2026-02-07', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
+            { date: '2026-02-13', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            { date: '2026-02-18', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
+            { date: '2026-02-21', type: 'sao5', name: 'เสาร์ขึ้น 5 ค่ำ', stars: 3, wealth: true, special: 'วันไหว้ครู' },
+            { date: '2026-02-27', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            // March 2026
+            { date: '2026-03-07', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            { date: '2026-03-10', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-03-12', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-03-13', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-03-15', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-03-17', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-03-23', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-03-27', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-03-29', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-03-30', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-03-31', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: true },
+            // April 2026
+            { date: '2026-04-03', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
+            { date: '2026-04-09', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-04-13', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-04-17', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
+            { date: '2026-04-23', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-04-27', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            // May 2026
+            { date: '2026-05-04', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            { date: '2026-05-07', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-05-09', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-05-16', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-05-20', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-05-24', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            // June 2026
+            { date: '2026-06-03', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-06-04', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            { date: '2026-06-09', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            { date: '2026-06-10', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-06-14', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-06-17', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-06-18', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            { date: '2026-06-23', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            { date: '2026-06-24', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-06-28', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            // July 2026
+            { date: '2026-07-01', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
+            { date: '2026-07-04', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            { date: '2026-07-10', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            { date: '2026-07-18', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-07-21', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-07-23', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-07-24', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-07-26', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-07-28', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            // August 2026
+            { date: '2026-08-03', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-08-07', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-08-09', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-08-10', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-08-11', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: true },
+            { date: '2026-08-14', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
+            { date: '2026-08-15', type: 'sao5', name: 'เสาร์ขึ้น 5 ค่ำ', stars: 3, wealth: false, special: 'วันไหว้ครู' },
+            { date: '2026-08-20', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            { date: '2026-08-28', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            // September 2026
+            { date: '2026-09-01', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-09-03', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-09-04', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-09-06', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-09-08', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-09-14', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-09-18', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-09-19', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: true },
+            { date: '2026-09-22', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
+            { date: '2026-09-28', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            // October 2026
+            { date: '2026-10-06', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            { date: '2026-10-10', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            { date: '2026-10-14', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-10-16', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            { date: '2026-10-21', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-10-25', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-10-28', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
+            { date: '2026-10-31', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: false },
+            // November 2026
+            { date: '2026-11-06', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            { date: '2026-11-11', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
+            { date: '2026-11-14', type: 'sao5', name: 'เสาร์ขึ้น 5 ค่ำ', stars: 3, wealth: false, special: 'วันไหว้ครู อมฤตโชค' },
+            { date: '2026-11-20', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            { date: '2026-11-28', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: true },
+            // December 2026
+            { date: '2026-12-01', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-12-03', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-12-04', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-12-06', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-12-08', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-12-14', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-12-18', type: 'pikhat', name: 'ดิถีพิฆาต', stars: 0, wealth: false },
+            { date: '2026-12-20', type: 'sitthi', name: 'สิทธิโชค', stars: 1, wealth: false },
+            { date: '2026-12-21', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+            { date: '2026-12-22', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: true },
+            { date: '2026-12-25', type: 'amrit', name: 'อมฤตโชค', stars: 3, wealth: true },
+            { date: '2026-12-31', type: 'mahasitthi', name: 'มหาสิทธิโชค', stars: 2, wealth: false },
+        ];
+
+        // =============================================
+        // CONFIGURATION & STATE
+        // =============================================
+        const CONFIG = {
+            colors: {
+                amrit: '#9f7aea',
+                mahasitthi: '#f6ad55',
+                sitthi: '#68d391',
+                pikhat: '#fc8181',
+                sao5: '#63b3ed',
+                wealth: '#ffd700'
+            },
+            monthsTH: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 
+                       'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+            monthsEN: ['January', 'February', 'March', 'April', 'May', 'June',
+                       'July', 'August', 'September', 'October', 'November', 'December'],
+            daysTH: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+            daysEN: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        };
+
+        let state = {
+            currentMonth: 0, // January 2026
+            currentYear: 2026,
+            currentView: 'calendar',
+            currentFilter: 'all',
+            lang: 'th',
+            theme: 'dark',
+            selectedEvent: null
+        };
+
+        // =============================================
+        // UTILITY FUNCTIONS
+        // =============================================
+        function getEventsByDate(dateStr) {
+            return EVENTS_DATA.filter(e => e.date === dateStr);
+        }
+
+        function formatDate(dateStr, lang = state.lang) {
+            const date = new Date(dateStr);
+            const day = date.getDate();
+            const month = lang === 'th' ? CONFIG.monthsTH[date.getMonth()] : CONFIG.monthsEN[date.getMonth()];
+            const year = lang === 'th' ? date.getFullYear() + 543 : date.getFullYear();
+            const dayName = lang === 'th' ? CONFIG.daysTH[date.getDay()] : CONFIG.daysEN[date.getDay()];
+            return { day, month, year, dayName, full: `${dayName} ${day} ${month} ${year}` };
+        }
+
+        function getTypeClass(type) {
+            return `type-${type}`;
+        }
+
+        function getStarsDisplay(stars) {
+            return '⭐'.repeat(stars);
+        }
+
+        function filterEvents(events) {
+            if (state.currentFilter === 'all') return events;
+            if (state.currentFilter === 'wealth') return events.filter(e => e.wealth);
+            return events.filter(e => e.type === state.currentFilter);
+        }
+
+        // =============================================
+        // CANVAS PARTICLE BACKGROUND
+        // =============================================
+        function initCanvas() {
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let mouseX = 0, mouseY = 0;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            // Create particles
+            const particleCount = Math.min(100, Math.floor(window.innerWidth / 15));
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2 + 0.5,
+                    speedX: (Math.random() - 0.5) * 0.3,
+                    speedY: (Math.random() - 0.5) * 0.3,
+                    opacity: Math.random() * 0.5 + 0.2,
+                    color: ['#ffd700', '#9f7aea', '#63b3ed', '#f687b3'][Math.floor(Math.random() * 4)]
+                });
+            }
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            function animate() {
+                const isDark = state.theme === 'dark';
+                ctx.fillStyle = isDark ? 'rgba(10, 6, 18, 0.1)' : 'rgba(248, 245, 255, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach((p, i) => {
+                    // Mouse avoidance
+                    const dx = mouseX - p.x;
+                    const dy = mouseY - p.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        const angle = Math.atan2(dy, dx);
+                        p.x -= Math.cos(angle) * 1;
+                        p.y -= Math.sin(angle) * 1;
+                    }
+
+                    // Update position
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+
+                    // Wrap around
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+
+                    // Draw particle
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.globalAlpha = p.opacity;
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+
+                    // Connect nearby particles
+                    particles.slice(i + 1).forEach(p2 => {
+                        const dx = p.x - p2.x;
+                        const dy = p.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = isDark ? 'rgba(159, 122, 234, 0.1)' : 'rgba(159, 122, 234, 0.15)';
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    });
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // =============================================
+        // CALENDAR RENDERING
+        // =============================================
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            const title = document.getElementById('current-month-title');
+            
+            // Clear existing days (keep weekday headers)
+            const days = grid.querySelectorAll('.calendar-day');
+            days.forEach(d => d.remove());
+
+            // Update title
+            const monthName = state.lang === 'th' ? CONFIG.monthsTH[state.currentMonth] : CONFIG.monthsEN[state.currentMonth];
+            const yearDisplay = state.lang === 'th' ? (state.currentYear + 543) : state.currentYear;
+            title.textContent = `${monthName} ${yearDisplay}`;
+
+            // Get first day of month and total days
+            const firstDay = new Date(state.currentYear, state.currentMonth, 1).getDay();
+            const totalDays = new Date(state.currentYear, state.currentMonth + 1, 0).getDate();
+            const today = new Date();
+            const isCurrentMonth = today.getFullYear() === state.currentYear && today.getMonth() === state.currentMonth;
+
+            // Add empty cells
+            for (let i = 0; i < firstDay; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'calendar-day empty';
+                grid.appendChild(empty);
+            }
+
+            // Add days
+            for (let day = 1; day <= totalDays; day++) {
+                const dateStr = `${state.currentYear}-${String(state.currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const events = getEventsByDate(dateStr);
+                const filteredEvents = filterEvents(events);
+                const hasEvent = filteredEvents.length > 0;
+                const event = filteredEvents[0];
+
+                const dayEl = document.createElement('div');
+                dayEl.className = `calendar-day glass-panel-light ${hasEvent ? getTypeClass(event.type) : ''} ${event?.wealth ? 'type-wealth' : ''}`;
+                
+                if (isCurrentMonth && day === today.getDate()) {
+                    dayEl.classList.add('today');
+                }
+
+                dayEl.innerHTML = `
+                    <span class="calendar-day-number">${day}</span>
+                    ${hasEvent ? `<span class="calendar-day-type">${event.name}</span>` : ''}
+                    ${hasEvent ? `<div class="calendar-day-indicator"><span></span>${event.stars > 1 ? '<span></span>' : ''}${event.stars > 2 ? '<span></span>' : ''}</div>` : ''}
+                `;
+
+                if (hasEvent) {
+                    dayEl.addEventListener('click', () => openDetailPanel(event));
+                }
+
+                grid.appendChild(dayEl);
+            }
+        }
+
+        // =============================================
+        // TIMELINE RENDERING
+        // =============================================
+        function renderTimeline() {
+            const container = document.getElementById('timeline-content');
+            container.innerHTML = '';
+
+            const filteredEvents = filterEvents(EVENTS_DATA);
+            const eventsByMonth = {};
+
+            filteredEvents.forEach(event => {
+                const month = parseInt(event.date.split('-')[1]) - 1;
+                if (!eventsByMonth[month]) eventsByMonth[month] = [];
+                eventsByMonth[month].push(event);
+            });
+
+            Object.keys(eventsByMonth).sort((a, b) => a - b).forEach(month => {
+                const monthName = state.lang === 'th' ? CONFIG.monthsTH[month] : CONFIG.monthsEN[month];
+                const yearDisplay = state.lang === 'th' ? '๒๕๖๙' : '2026';
+
+                const monthEl = document.createElement('div');
+                monthEl.className = 'timeline-month';
+                monthEl.innerHTML = `
+                    <h3 class="timeline-month-header">${monthName} ${yearDisplay}</h3>
+                    <div class="timeline-events">
+                        ${eventsByMonth[month].map(event => {
+                            const date = formatDate(event.date);
+                            return `
+                                <div class="timeline-event glass-panel-light ${getTypeClass(event.type)} ${event.wealth ? 'type-wealth' : ''}" 
+                                     onclick='openDetailPanel(${JSON.stringify(event).replace(/'/g, "\\'")})'>
+                                    <span class="timeline-event-date">${date.day}</span>
+                                    <span class="timeline-event-name">${getStarsDisplay(event.stars)} ${event.name}</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                container.appendChild(monthEl);
+            });
+        }
+
+        // =============================================
+        // D3.JS RADIAL VISUALIZATION
+        // =============================================
+        function initRadialViz() {
+            const svg = d3.select('#radial-viz');
+            const container = document.querySelector('.viz-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            svg.attr('viewBox', `0 0 ${width} ${height}`);
+
+            const filteredEvents = filterEvents(EVENTS_DATA);
+            
+            // Create nodes data
+            const nodes = filteredEvents.map((event, i) => ({
+                id: i,
+                ...event,
+                radius: event.stars === 3 ? 12 : event.stars === 2 ? 10 : event.type === 'pikhat' ? 8 : 8
+            }));
+
+            // Create center node
+            nodes.unshift({
+                id: 'center',
+                name: state.lang === 'th' ? 'พ.ศ. ๒๕๖๙' : '2026 CE',
+                type: 'center',
+                radius: 40,
+                fx: width / 2,
+                fy: height / 2
+            });
+
+            // Create links to center
+            const links = nodes.slice(1).map(n => ({
+                source: 'center',
+                target: n.id
+            }));
+
+            // Clear previous
+            svg.selectAll('*').remove();
+
+            const g = svg.append('g');
+
+            // Create gradient definitions
+            const defs = svg.append('defs');
+            
+            // Golden glow filter
+            const filter = defs.append('filter')
+                .attr('id', 'glow')
+                .attr('x', '-50%')
+                .attr('y', '-50%')
+                .attr('width', '200%')
+                .attr('height', '200%');
+            filter.append('feGaussianBlur')
+                .attr('stdDeviation', '3')
+                .attr('result', 'coloredBlur');
+            const feMerge = filter.append('feMerge');
+            feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+            feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+
+            // Links
+            const link = g.selectAll('.link')
+                .data(links)
+                .enter()
+                .append('line')
+                .attr('class', 'd3-link')
+                .attr('stroke-opacity', 0.3);
+
+            // Nodes
+            const node = g.selectAll('.node')
+                .data(nodes)
+                .enter()
+                .append('g')
+                .attr('class', 'd3-node')
+                .on('click', (event, d) => {
+                    if (d.type !== 'center') {
+                        openDetailPanel(d);
+                    }
+                });
+
+            node.append('circle')
+                .attr('r', d => d.radius)
+                .attr('fill', d => {
+                    if (d.type === 'center') return 'url(#centerGradient)';
+                    return CONFIG.colors[d.type] || '#9f7aea';
+                })
+                .attr('filter', d => d.type === 'center' || d.stars === 3 ? 'url(#glow)' : null)
+                .attr('stroke', d => d.wealth ? CONFIG.colors.wealth : 'none')
+                .attr('stroke-width', d => d.wealth ? 3 : 0);
+
+            // Center gradient
+            const centerGradient = defs.append('radialGradient')
+                .attr('id', 'centerGradient');
+            centerGradient.append('stop').attr('offset', '0%').attr('stop-color', '#ffd700');
+            centerGradient.append('stop').attr('offset', '100%').attr('stop-color', '#ff8c00');
+
+            // Labels for center
+            node.filter(d => d.type === 'center')
+                .append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '0.35em')
+                .attr('fill', '#1a1029')
+                .attr('font-weight', 'bold')
+                .attr('font-size', '14px')
+                .text(d => d.name);
+
+            // Force simulation
+            const simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id).distance(150))
+                .force('charge', d3.forceManyBody().strength(-50))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(d => d.radius + 5))
+                .on('tick', () => {
+                    link
+                        .attr('x1', d => d.source.x)
+                        .attr('y1', d => d.source.y)
+                        .attr('x2', d => d.target.x)
+                        .attr('y2', d => d.target.y);
+
+                    node.attr('transform', d => `translate(${d.x},${d.y})`);
+                });
+
+            // Apply radial layout
+            applyRadialLayout(nodes, width, height);
+
+            function applyRadialLayout(nodes, width, height) {
+                const centerX = width / 2;
+                const centerY = height / 2;
+                const radius = Math.min(width, height) / 2 - 60;
+                
+                nodes.forEach((node, i) => {
+                    if (node.type === 'center') return;
+                    const angle = (i / (nodes.length - 1)) * 2 * Math.PI - Math.PI / 2;
+                    node.fx = centerX + radius * Math.cos(angle);
+                    node.fy = centerY + radius * Math.sin(angle);
+                });
+                simulation.alpha(0.3).restart();
+            }
+
+            // Layout switchers
+            window.setVizLayout = function(layout) {
+                nodes.forEach(node => {
+                    if (node.type !== 'center') {
+                        node.fx = null;
+                        node.fy = null;
+                    }
+                });
+
+                if (layout === 'radial') {
+                    applyRadialLayout(nodes, width, height);
+                } else if (layout === 'cluster') {
+                    const typeGroups = {};
+                    nodes.forEach(node => {
+                        if (node.type !== 'center') {
+                            if (!typeGroups[node.type]) typeGroups[node.type] = [];
+                            typeGroups[node.type].push(node);
+                        }
+                    });
+
+                    const types = Object.keys(typeGroups);
+                    types.forEach((type, ti) => {
+                        const angle = (ti / types.length) * 2 * Math.PI;
+                        const clusterX = width/2 + 200 * Math.cos(angle);
+                        const clusterY = height/2 + 200 * Math.sin(angle);
+                        
+                        typeGroups[type].forEach(node => {
+                            node.fx = clusterX + (Math.random() - 0.5) * 80;
+                            node.fy = clusterY + (Math.random() - 0.5) * 80;
+                        });
+                    });
+                    simulation.alpha(0.5).restart();
+                } else {
+                    simulation.force('center', d3.forceCenter(width / 2, height / 2));
+                    simulation.alpha(1).restart();
+                }
+            };
+
+            // Zoom
+            const zoom = d3.zoom()
+                .scaleExtent([0.5, 3])
+                .on('zoom', (event) => {
+                    g.attr('transform', event.transform);
+                });
+
+            svg.call(zoom);
+        }
+
+        // =============================================
+        // STATISTICS CHARTS
+        // =============================================
+        function renderStats() {
+            renderPieChart();
+            renderBarChart();
+            renderHeatmap();
+        }
+
+        function renderPieChart() {
+            const container = document.getElementById('pie-chart');
+            container.innerHTML = '';
+            
+            const width = container.clientWidth;
+            const height = 350;
+            const radius = Math.min(width, height) / 2 - 40;
+
+            const svg = d3.select('#pie-chart')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .append('g')
+                .attr('transform', `translate(${width/2},${height/2})`);
+
+            const typeCounts = {};
+            EVENTS_DATA.forEach(e => {
+                typeCounts[e.type] = (typeCounts[e.type] || 0) + 1;
+            });
+
+            const data = Object.entries(typeCounts).map(([type, count]) => ({
+                type,
+                count,
+                label: type === 'amrit' ? 'อมฤตโชค' : 
+                       type === 'mahasitthi' ? 'มหาสิทธิโชค' : 
+                       type === 'sitthi' ? 'สิทธิโชค' : 
+                       type === 'pikhat' ? 'ดิถีพิฆาต' : 'เสาร์ 5'
+            }));
+
+            const pie = d3.pie().value(d => d.count);
+            const arc = d3.arc().innerRadius(radius * 0.5).outerRadius(radius);
+            const labelArc = d3.arc().innerRadius(radius * 0.75).outerRadius(radius * 0.75);
+
+            const arcs = svg.selectAll('.arc')
+                .data(pie(data))
+                .enter()
+                .append('g')
+                .attr('class', 'arc');
+
+            arcs.append('path')
+                .attr('d', arc)
+                .attr('fill', d => CONFIG.colors[d.data.type])
+                .attr('stroke', 'rgba(0,0,0,0.2)')
+                .attr('stroke-width', 2)
+                .style('cursor', 'pointer')
+                .on('mouseover', function() {
+                    d3.select(this).attr('opacity', 0.8);
+                })
+                .on('mouseout', function() {
+                    d3.select(this).attr('opacity', 1);
+                });
+
+            arcs.append('text')
+                .attr('transform', d => `translate(${labelArc.centroid(d)})`)
+                .attr('text-anchor', 'middle')
+                .attr('fill', 'white')
+                .attr('font-size', '12px')
+                .text(d => `${d.data.count}`);
+
+            // Legend
+            const legend = svg.selectAll('.legend')
+                .data(data)
+                .enter()
+                .append('g')
+                .attr('transform', (d, i) => `translate(${radius + 20}, ${i * 25 - data.length * 12})`);
+
+            legend.append('rect')
+                .attr('width', 16)
+                .attr('height', 16)
+                .attr('rx', 4)
+                .attr('fill', d => CONFIG.colors[d.type]);
+
+            legend.append('text')
+                .attr('x', 24)
+                .attr('y', 12)
+                .attr('fill', 'var(--text-secondary)')
+                .attr('font-size', '12px')
+                .text(d => `${d.label} (${d.count})`);
+        }
+
+        function renderBarChart() {
+            const container = document.getElementById('bar-chart');
+            container.innerHTML = '';
+
+            const margin = { top: 20, right: 20, bottom: 40, left: 40 };
+            const width = container.clientWidth - margin.left - margin.right;
+            const height = 350 - margin.top - margin.bottom;
+
+            const svg = d3.select('#bar-chart')
+                .append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+
+            // Count by month
+            const monthCounts = Array(12).fill(0).map((_, i) => ({
+                month: i,
+                label: state.lang === 'th' ? CONFIG.monthsTH[i].substring(0, 3) : CONFIG.monthsEN[i].substring(0, 3),
+                count: EVENTS_DATA.filter(e => parseInt(e.date.split('-')[1]) - 1 === i && e.type !== 'pikhat').length
+            }));
+
+            const x = d3.scaleBand()
+                .domain(monthCounts.map(d => d.label))
+                .range([0, width])
+                .padding(0.3);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(monthCounts, d => d.count)])
+                .range([height, 0]);
+
+            // X axis
+            svg.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x))
+                .selectAll('text')
+                .attr('fill', 'var(--text-muted)')
+                .attr('font-size', '10px');
+
+            // Y axis
+            svg.append('g')
+                .call(d3.axisLeft(y).ticks(5))
+                .selectAll('text')
+                .attr('fill', 'var(--text-muted)');
+
+            // Bars
+            svg.selectAll('.bar')
+                .data(monthCounts)
+                .enter()
+                .append('rect')
+                .attr('x', d => x(d.label))
+                .attr('y', height)
+                .attr('width', x.bandwidth())
+                .attr('height', 0)
+                .attr('fill', 'url(#barGradient)')
+                .attr('rx', 4)
+                .transition()
+                .duration(800)
+                .delay((d, i) => i * 50)
+                .attr('y', d => y(d.count))
+                .attr('height', d => height - y(d.count));
+
+            // Gradient
+            const gradient = svg.append('defs')
+                .append('linearGradient')
+                .attr('id', 'barGradient')
+                .attr('x1', '0%')
+                .attr('y1', '0%')
+                .attr('x2', '0%')
+                .attr('y2', '100%');
+
+            gradient.append('stop').attr('offset', '0%').attr('stop-color', '#ffd700');
+            gradient.append('stop').attr('offset', '100%').attr('stop-color', '#9f7aea');
+        }
+
+        function renderHeatmap() {
+            const container = document.getElementById('heatmap');
+            container.innerHTML = '';
+
+            const cellSize = 14;
+            const cellPadding = 2;
+            const margin = { top: 20, right: 20, bottom: 20, left: 40 };
+            const width = 53 * (cellSize + cellPadding) + margin.left + margin.right;
+            const height = 7 * (cellSize + cellPadding) + margin.top + margin.bottom;
+
+            const svg = d3.select('#heatmap')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+
+            // Create date map
+            const dateMap = {};
+            EVENTS_DATA.forEach(e => {
+                dateMap[e.date] = e;
+            });
+
+            // Generate all days of 2026
+            const startDate = new Date(2026, 0, 1);
+            const endDate = new Date(2026, 11, 31);
+            const days = [];
+            
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                const dateStr = d.toISOString().split('T')[0];
+                days.push({
+                    date: new Date(d),
+                    dateStr,
+                    event: dateMap[dateStr] || null
+                });
+            }
+
+            // Day labels
+            const dayLabels = state.lang === 'th' ? ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'] : ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+            svg.selectAll('.day-label')
+                .data(dayLabels)
+                .enter()
+                .append('text')
+                .attr('x', -8)
+                .attr('y', (d, i) => i * (cellSize + cellPadding) + cellSize / 2)
+                .attr('text-anchor', 'end')
+                .attr('dominant-baseline', 'middle')
+                .attr('fill', 'var(--text-muted)')
+                .attr('font-size', '10px')
+                .text(d => d);
+
+            // Cells
+            svg.selectAll('.day')
+                .data(days)
+                .enter()
+                .append('rect')
+                .attr('class', 'day')
+                .attr('width', cellSize)
+                .attr('height', cellSize)
+                .attr('x', d => {
+                    const week = d3.timeWeek.count(d3.timeYear(d.date), d.date);
+                    return week * (cellSize + cellPadding);
+                })
+                .attr('y', d => d.date.getDay() * (cellSize + cellPadding))
+                .attr('rx', 2)
+                .attr('fill', d => {
+                    if (!d.event) return 'rgba(255,255,255,0.05)';
+                    return CONFIG.colors[d.event.type];
+                })
+                .attr('opacity', d => d.event ? 0.8 : 0.3)
+                .style('cursor', d => d.event ? 'pointer' : 'default')
+                .on('click', (event, d) => {
+                    if (d.event) openDetailPanel(d.event);
+                })
+                .on('mouseover', function(event, d) {
+                    if (d.event) {
+                        d3.select(this).attr('stroke', '#fff').attr('stroke-width', 2);
+                        showTooltip(event, d);
+                    }
+                })
+                .on('mouseout', function() {
+                    d3.select(this).attr('stroke', 'none');
+                    hideTooltip();
+                });
+        }
+
+        // =============================================
+        // DETAIL PANEL
+        // =============================================
+        function openDetailPanel(event) {
+            state.selectedEvent = event;
+            const panel = document.getElementById('detail-panel');
+            const overlay = document.getElementById('overlay');
+            const content = document.getElementById('detail-content');
+
+            const dateInfo = formatDate(event.date);
+            const typeLabels = {
+                amrit: { th: 'อมฤตโชค', en: 'Amrit Fortune' },
+                mahasitthi: { th: 'มหาสิทธิโชค', en: 'Great Fortune' },
+                sitthi: { th: 'สิทธิโชค', en: 'Good Fortune' },
+                pikhat: { th: 'ดิถีพิฆาต', en: 'Inauspicious' },
+                sao5: { th: 'เสาร์ขึ้น 5 ค่ำ', en: 'Saturday 5th Moon' }
+            };
+
+            const meanings = {
+                amrit: {
+                    th: 'วันอมฤตโชค เป็นฤกษ์มงคลสูงสุด เหมาะแก่การเริ่มต้นกิจการใหญ่ การแต่งงาน ขึ้นบ้านใหม่ และทำบุญมหากุศล',
+                    en: 'Amrit Fortune is the most auspicious day, ideal for starting major ventures, weddings, housewarming, and great merit-making.'
+                },
+                mahasitthi: {
+                    th: 'วันมหาสิทธิโชค เป็นฤกษ์ดีมาก เหมาะแก่การเจรจาธุรกิจ ลงนามสัญญา และเริ่มงานสำคัญ',
+                    en: 'Great Fortune Day is very auspicious, suitable for business negotiations, contract signing, and starting important work.'
+                },
+                sitthi: {
+                    th: 'วันสิทธิโชค เป็นฤกษ์ดี เหมาะแก่การทำงานทั่วไป การเดินทาง และเริ่มต้นสิ่งใหม่',
+                    en: 'Good Fortune Day is auspicious, suitable for general work, travel, and new beginnings.'
+                },
+                pikhat: {
+                    th: 'วันดิถีพิฆาต ไม่เหมาะแก่การเริ่มต้นกิจการใดๆ ควรหลีกเลี่ยงการทำงานสำคัญในวันนี้',
+                    en: 'Inauspicious Day - not suitable for starting any ventures. Avoid important activities on this day.'
+                },
+                sao5: {
+                    th: 'วันเสาร์ขึ้น 5 ค่ำ เป็นวันมงคลพิเศษ เหมาะแก่การไหว้ครู บูชาสิ่งศักดิ์สิทธิ์ และสร้างความเป็นสิริมงคล',
+                    en: 'Saturday 5th Moon is a special auspicious day, ideal for paying respect to teachers and sacred objects.'
+                }
+            };
+
+            content.innerHTML = `
+                <div class="detail-date-display ${getTypeClass(event.type)}">
+                    <div class="detail-date-day">${dateInfo.day}</div>
+                    <div class="detail-date-month">${dateInfo.month} ${dateInfo.year}</div>
+                    <div class="detail-type-badge ${getTypeClass(event.type)}" style="background: ${CONFIG.colors[event.type]}30; border: 1px solid ${CONFIG.colors[event.type]};">
+                        ${getStarsDisplay(event.stars)} ${typeLabels[event.type][state.lang]}
+                        ${event.wealth ? ' 💰' : ''}
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h4 class="detail-section-title">
+                        <span lang="th">วันในสัปดาห์</span>
+                        <span lang="en">Day of Week</span>
+                    </h4>
+                    <div class="detail-section-content">
+                        ${dateInfo.dayName}
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h4 class="detail-section-title">
+                        <span lang="th">ความหมาย</span>
+                        <span lang="en">Meaning</span>
+                    </h4>
+                    <div class="detail-section-content">
+                        <span lang="th">${meanings[event.type].th}</span>
+                        <span lang="en">${meanings[event.type].en}</span>
+                    </div>
+                </div>
+
+                ${event.wealth ? `
+                <div class="detail-section">
+                    <h4 class="detail-section-title">
+                        <span lang="th">💰 วันมหาเศรษฐี</span>
+                        <span lang="en">💰 Wealth Day</span>
+                    </h4>
+                    <div class="detail-section-content">
+                        <span lang="th">วันนี้เหมาะแก่เรื่องการเงิน การลงทุน และการทำธุรกิจเป็นพิเศษ</span>
+                        <span lang="en">This day is especially suitable for financial matters, investments, and business activities.</span>
+                    </div>
+                </div>
+                ` : ''}
+
+                ${event.special ? `
+                <div class="detail-section">
+                    <h4 class="detail-section-title">
+                        <span lang="th">🙏 วันพิเศษ</span>
+                        <span lang="en">🙏 Special Day</span>
+                    </h4>
+                    <div class="detail-section-content">
+                        ${event.special}
+                    </div>
+                </div>
+                ` : ''}
+
+                <div class="detail-section">
+                    <h4 class="detail-section-title">
+                        <span lang="th">คำแนะนำ</span>
+                        <span lang="en">Recommendations</span>
+                    </h4>
+                    <div class="detail-section-content">
+                        ${event.type === 'pikhat' ? `
+                            <ul class="list-disc list-inside space-y-1 text-sm">
+                                <li lang="th">หลีกเลี่ยงการเริ่มต้นสิ่งใหม่</li>
+                                <li lang="en">Avoid starting new ventures</li>
+                                <li lang="th">ไม่ควรลงนามสัญญาสำคัญ</li>
+                                <li lang="en">Don't sign important contracts</li>
+                                <li lang="th">เลื่อนการเดินทางสำคัญ</li>
+                                <li lang="en">Postpone important travels</li>
+                            </ul>
+                        ` : `
+                            <ul class="list-disc list-inside space-y-1 text-sm">
+                                <li lang="th">เหมาะแก่การทำบุญใส่บาตร</li>
+                                <li lang="en">Ideal for merit-making</li>
+                                <li lang="th">ดีสำหรับการเริ่มต้นสิ่งใหม่</li>
+                                <li lang="en">Good for new beginnings</li>
+                                <li lang="th">เหมาะแก่การเจรจาธุรกิจ</li>
+                                <li lang="en">Suitable for business talks</li>
+                            </ul>
+                        `}
+                    </div>
+                </div>
+            `;
+
+            panel.classList.add('open');
+            overlay.classList.add('active');
+        }
+
+        function closeDetailPanel() {
+            const panel = document.getElementById('detail-panel');
+            const overlay = document.getElementById('overlay');
+            panel.classList.remove('open');
+            overlay.classList.remove('active');
+            state.selectedEvent = null;
+        }
+
+        // =============================================
+        // TOOLTIP
+        // =============================================
+        function showTooltip(event, data) {
+            const tooltip = document.getElementById('tooltip');
+            const dateInfo = formatDate(data.dateStr);
+            tooltip.innerHTML = `
+                <strong>${dateInfo.full}</strong><br>
+                ${data.event ? `${getStarsDisplay(data.event.stars)} ${data.event.name}` : ''}
+            `;
+            tooltip.style.left = `${event.pageX + 10}px`;
+            tooltip.style.top = `${event.pageY + 10}px`;
+            tooltip.classList.add('visible');
+        }
+
+        function hideTooltip() {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.classList.remove('visible');
+        }
+
+        // =============================================
+        // UPDATE STATS
+        // =============================================
+        function updateStats() {
+            const counts = {
+                amrit: EVENTS_DATA.filter(e => e.type === 'amrit').length,
+                mahasitthi: EVENTS_DATA.filter(e => e.type === 'mahasitthi').length,
+                sitthi: EVENTS_DATA.filter(e => e.type === 'sitthi').length,
+                pikhat: EVENTS_DATA.filter(e => e.type === 'pikhat').length
+            };
+
+            document.getElementById('stat-amrit').textContent = counts.amrit;
+            document.getElementById('stat-mahasitthi').textContent = counts.mahasitthi;
+            document.getElementById('stat-sitthi').textContent = counts.sitthi;
+            document.getElementById('stat-pikhat').textContent = counts.pikhat;
+        }
+
+        // =============================================
+        // EVENT LISTENERS
+        // =============================================
+        function initListeners() {
+            // View tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    state.currentView = tab.dataset.view;
+                    document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+                    document.getElementById(`view-${state.currentView}`).classList.add('active');
+
+                    if (state.currentView === 'radial') {
+                        setTimeout(initRadialViz, 100);
+                    } else if (state.currentView === 'stats') {
+                        setTimeout(renderStats, 100);
+                    } else if (state.currentView === 'timeline') {
+                        renderTimeline();
+                    }
+                });
+            });
+
+            // Month navigation
+            document.getElementById('prev-month').addEventListener('click', () => {
+                state.currentMonth--;
+                if (state.currentMonth < 0) {
+                    state.currentMonth = 11;
+                    state.currentYear--;
+                }
+                renderCalendar();
+            });
+
+            document.getElementById('next-month').addEventListener('click', () => {
+                state.currentMonth++;
+                if (state.currentMonth > 11) {
+                    state.currentMonth = 0;
+                    state.currentYear++;
+                }
+                renderCalendar();
+            });
+
+            document.getElementById('today-btn').addEventListener('click', () => {
+                const today = new Date();
+                state.currentMonth = today.getMonth();
+                state.currentYear = today.getFullYear();
+                renderCalendar();
+            });
+
+            // Filter badges
+            document.querySelectorAll('.filter-badge').forEach(badge => {
+                badge.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-badge').forEach(b => b.classList.remove('active'));
+                    badge.classList.add('active');
+                    state.currentFilter = badge.dataset.filter;
+                    renderCalendar();
+                    renderTimeline();
+                    if (state.currentView === 'radial') initRadialViz();
+                });
+            });
+
+            // Language toggle
+            document.getElementById('lang-toggle').addEventListener('click', () => {
+                state.lang = state.lang === 'th' ? 'en' : 'th';
+                document.body.dataset.lang = state.lang;
+                renderCalendar();
+                renderTimeline();
+                if (state.currentView === 'stats') renderStats();
+            });
+
+            // Theme toggle
+            document.getElementById('theme-toggle').addEventListener('click', () => {
+                state.theme = state.theme === 'dark' ? 'light' : 'dark';
+                document.body.dataset.theme = state.theme;
+                const icon = document.querySelector('#theme-toggle i');
+                icon.className = state.theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+            });
+
+            // Detail panel
+            document.getElementById('close-panel').addEventListener('click', closeDetailPanel);
+            document.getElementById('overlay').addEventListener('click', closeDetailPanel);
+
+            // Viz layout buttons
+            document.querySelectorAll('.viz-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.viz-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    if (window.setVizLayout) {
+                        window.setVizLayout(btn.dataset.layout);
+                    }
+                });
+            });
+
+            // Scroll animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+        }
+
+        // =============================================
+        // INITIALIZATION
+        // =============================================
+        function init() {
+            initCanvas();
+            updateStats();
+            renderCalendar();
+            initListeners();
+
+            // Hide loader
+            setTimeout(() => {
+                document.getElementById('loading-overlay').classList.add('hidden');
+            }, 1500);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Make openDetailPanel accessible globally for inline onclick
+        window.openDetailPanel = openDetailPanel;
+    </script>
+</body>
+</html>
