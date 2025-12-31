@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CompTIA Cloud+ Practice Quiz | Nexus Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --space-void: #0a0a1a;
+            --space-deep: #0d1025;
+            --glass-panel: rgba(21, 29, 46, 0.7);
+            --neon-core: #3b82f6;
+            --neon-accent: #06b6d4;
+            --gradient-cyber: linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #10b981 100%);
+            --animation-fast: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--space-void);
+            color: #e0e7ff;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: var(--glass-panel);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 16px;
+        }
+
+        .cyber-header {
+            font-family: 'Orbitron', sans-serif;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .code-block {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        .option-card {
+            transition: all var(--animation-fast);
+            cursor: pointer;
+        }
+
+        .option-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--neon-accent);
+            box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
+        }
+
+        .option-card.correct {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .btn-cyber {
+            background: var(--gradient-cyber);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--animation-fast);
+            color: white;
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .question-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            background: rgba(21, 29, 46, 0.5);
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--neon-accent);
+            background: rgba(6, 182, 212, 0.2);
+        }
+
+        .nav-btn.active {
+            background: var(--gradient-cyber);
+            color: white;
+            border-color: transparent;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            color: #60a5fa;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .copy-btn:hover {
+            background: rgba(59, 130, 246, 0.4);
+            color: white;
+        }
+
+        .diagram-container {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--gradient-cyber);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 9999;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); }
+            to { transform: translateX(0); }
+        }
+
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--space-void);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(59, 130, 246, 0.2);
+            border-top-color: var(--neon-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        th, td {
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(59, 130, 246, 0.2);
+            font-weight: 600;
+        }
+
+        .highlight {
+            background: rgba(16, 185, 129, 0.2);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            color: #10b981;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-[var(--space-void)] text-white overflow-x-hidden">
+    
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="text-center">
+            <div class="spinner mx-auto mb-4"></div>
+            <h2 class="text-2xl font-bold cyber-header">Loading Quiz Data...</h2>
+        </div>
+    </div>
+
+    <!-- Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Main Container -->
+    <div class="relative z-10 min-h-screen">
+        
+        <!-- Sticky Header -->
+        <header class="sticky top-0 z-50 glass-panel mb-8 py-4 px-6">
+            <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-4">
+                <div>
+                    <h1 class="text-3xl font-bold cyber-header">CompTIA Cloud+ Quiz</h1>
+                    <p class="text-sm text-gray-400 mt-1">90 Practice Questions | CV0-004</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleAnswers()" class="btn-cyber text-sm">
+                        <i class="fas fa-eye mr-2"></i>
+                        <span id="toggle-text">Show Answers</span>
+                    </button>
+                    <button onclick="copyAllQuestions()" class="btn-cyber text-sm">
+                        <i class="fas fa-copy mr-2"></i>
+                        Copy All
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="max-w-7xl mx-auto px-4 pb-12">
+            
+            <!-- Stats Dashboard -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 fade-in">
+                <div class="stats-card">
+                    <div class="text-4xl font-bold cyber-header mb-2">90</div>
+                    <div class="text-sm text-gray-400">Total Questions</div>
+                </div>
+                <div class="stats-card">
+                    <div class="text-4xl font-bold cyber-header mb-2">75</div>
+                    <div class="text-sm text-gray-400">Multiple Choice</div>
+                </div>
+                <div class="stats-card">
+                    <div class="text-4xl font-bold cyber-header mb-2">13</div>
+                    <div class="text-sm text-gray-400">Multi-Select</div>
+                </div>
+                <div class="stats-card">
+                    <div class="text-4xl font-bold cyber-header mb-2">2</div>
+                    <div class="text-sm text-gray-400">Simulations</div>
+                </div>
+            </div>
+
+            <!-- Quick Navigation -->
+            <div class="glass-panel p-6 mb-8 fade-in">
+                <h3 class="text-lg font-semibold mb-4 flex items-center">
+                    <i class="fas fa-compass mr-2 text-cyan-400"></i>
+                    Quick Navigation
+                </h3>
+                <div class="question-nav" id="questionNav"></div>
+            </div>
+
+            <!-- Questions Container -->
+            <div id="questionsContainer"></div>
+
+        </div>
+    </div>
+
+    <script>
+        // Quiz Data
+        const quizData = [
+            {
+                id: 1,
+                type: "simulation",
+                question: "You are a cloud engineer working for a cloud service provider that is responsible for an IaaS offering. Your customer, who creates VMs and manages virtual storage, has noticed I/O bandwidth issues and low IOPS (under 9000). Your manager wants you to verify the proper storage configuration as dictated by your service level agreement (SLA).\n\nThe SLA specifies:\n• Each SFP on the hypervisor host must be set to the maximum link speed allowed by SAN.\n• All SAN disk groups must be configured in a RAID 5.\n• The SAN array must be fully configured for redundant fabric paths.\n• IOPS should not fall below 14000.\n\nTask: Click each highlighted device to review the displayed information. Change the settings of each device as necessary to conform to the SLA requirements.",
+                diagram: "Network topology showing Hypervisor connected to Fabric Switch A and Fabric Switch B, which connect to SAN storage array",
+                solution: "• Set all Hypervisor FC ports (Slot A & B, Ports 1 & 2) to 8 Gbps\n• Fabric Switch A: Select initiator 50:00:00:25:B5:A0:23:02\n• Fabric Switch B: Select initiator 50:00:00:25:B5:B0:23:04\n• Verify RAID 5 is configured on both disk groups",
+                correctAnswer: "Configuration complete with all ports at 8Gbps and proper initiator mappings"
+            },
+            {
+                id: 2,
+                type: "drag-drop",
+                question: "A highly regulated business is required to work remotely, and the risk tolerance is very low. You are tasked with providing an identity solution to the company cloud that includes the following:\n\n• Secure connectivity that minimizes user login\n• Tracks user activity and monitors for anomalous activity\n• Requires secondary authentication\n\nInstructions: Select controls and servers for the proper control points.",
+                options: ["SSO", "SIEM", "MFA"],
+                correctAnswer: "Endpoints: MFA | Internet/Connectivity: SSO | Cloud Service Provider/Server: SIEM",
+                explanation: "MFA provides secondary authentication, SSO minimizes login, SIEM tracks and monitors activity"
+            },
+            {
+                id: 3,
+                question: "Which of the following package managers would most likely be used with Ubuntu Linux?",
+                options: ["YUM", "DNF", "Pacman", "APT"],
+                correctAnswer: "D",
+                explanation: "APT (Advanced Package Tool) is the default package manager for Ubuntu and Debian-based distributions"
+            },
+            {
+                id: 4,
+                question: "Which of the following types of releases best describes the update made to a code repository production release when it changes from version 1.0 to version 1.1?",
+                options: ["Alpha", "Beta", "Minor", "Major"],
+                correctAnswer: "C",
+                explanation: "Version numbering follows semantic versioning: Major.Minor.Patch. A change from 1.0 to 1.1 is a minor release"
+            },
+            {
+                id: 5,
+                question: "A company's primary site experiences an outage and must recover as quickly as possible. Which of the following backup or recovery methods should the company use?",
+                options: ["In-place", "Incremental", "Full", "Parallel"],
+                correctAnswer: "D",
+                explanation: "Parallel recovery allows simultaneous operation of backup systems for fastest recovery"
+            },
+            {
+                id: 6,
+                question: "A high-usage cloud resource needs to be monitored in real time on specific events to guarantee its availability. Which of the following actions should be used to meet this requirement?",
+                options: [
+                    "Configure a ping command to identify when the cloud instance is out of service",
+                    "Create a dashboard with visualizations to filter the status of critical activities",
+                    "Collect all the daily activity from the cloud instance and create a dump file for analysis",
+                    "Schedule an hourly scan of the network to check for the availability of the resource"
+                ],
+                correctAnswer: "B",
+                explanation: "Real-time dashboards provide immediate visibility into resource status and critical events"
+            },
+            {
+                id: 7,
+                question: "A cloud administrator shortens the amount of time a backup runs. An executive in the company requires a guarantee that the backups can be restored with no data loss. Which of the following backup features should the administrator test for?",
+                options: ["Encryption", "Retention", "Schedule", "Integrity"],
+                correctAnswer: "D",
+                explanation: "Integrity checks ensure data can be restored without loss or corruption"
+            },
+            {
+                id: 8,
+                question: "A managed service provider's recent business growth includes customers on different continents. Which of the following should be considered to prevent issues with regulations?",
+                options: ["Data sovereignty", "Data ownership", "Classification of data", "Data locality"],
+                correctAnswer: "A",
+                explanation: "Data sovereignty addresses legal requirements for data storage across different jurisdictions"
+            },
+            {
+                id: 9,
+                question: "A company's content management system (CMS) service runs on an IaaS cluster on a public cloud. The CMS service is frequently targeted by a malicious threat actor using DDoS. Which of the following should a cloud engineer monitor to identify attacks?",
+                options: ["Network flow logs", "Endpoint detection and response logs", "Cloud provider event logs", "Instance syslog"],
+                correctAnswer: "A",
+                explanation: "Network flow logs capture traffic patterns essential for identifying DDoS attacks"
+            },
+            {
+                id: 10,
+                question: "A systems administrator needs to configure backups for the company's on-premises VM cluster. The storage used for backups will be constrained on free space until the company can implement cloud backups. Which of the following backup types will save the most space, assuming the frequency of backups is kept the same?",
+                options: ["Snapshot", "Full", "Differential", "Incremental"],
+                correctAnswer: "D",
+                explanation: "Incremental backups only save changes since the last backup, using minimal space"
+            },
+            {
+                id: 11,
+                question: "A cloud administrator deploys new VMs in a cluster and discovers they are getting IP addresses in the range of 169.254.0.0/16. Which of the following is the most likely cause?",
+                options: ["The scope has been exhausted", "The network is overlapping", "The VLAN is missing", "The NAT is improperly configured"],
+                correctAnswer: "A",
+                explanation: "169.254.0.0/16 is the APIPA range, indicating DHCP scope exhaustion"
+            },
+            {
+                id: 12,
+                question: "Which of the following migration types is best to use when migrating a highly available application, which is normally hosted on a local VM cluster, for usage with an external user population?",
+                options: ["Cloud to on-premises", "Cloud to cloud", "On-premises to cloud", "On-premises to on-premises"],
+                correctAnswer: "C",
+                explanation: "Moving from local (on-premises) to cloud provides external accessibility"
+            },
+            {
+                id: 13,
+                question: "A cloud engineer hardened the WAF for a company that operates exclusively in North America. The engineer did not make changes to any ports, and all protected applications have continued to function as expected. Which of the following configuration changes did the engineer most likely apply?",
+                options: [
+                    "The engineer implemented MFA to access the WAF configurations",
+                    "The engineer blocked all traffic originating outside the region",
+                    "The engineer installed the latest security patches on the WAF",
+                    "The engineer completed an upgrade from TLS version 1.1 to version 1.3"
+                ],
+                correctAnswer: "B",
+                explanation: "Geographic blocking is a common WAF hardening technique for region-specific operations"
+            },
+            {
+                id: 14,
+                question: "Users report that in-house developed software has performance issues and behaves in unexpected ways following a recent update. The developers investigate and find buffer overflows and broken authentications. Which of the following best describes what caused this issue?",
+                options: ["Leaked credentials", "Poor coding practices", "Cipher suite depreciation", "Incompatible hardware"],
+                correctAnswer: "B",
+                explanation: "Buffer overflows and broken authentication indicate poor coding practices"
+            },
+            {
+                id: 15,
+                question: "A developer at a small startup company deployed some code for a new feature to its public repository. A few days later, a data breach occurred. A security team investigated the incident and found that the database was hacked. Which of the following is the most likely cause of this breach?",
+                options: ["Database core dump", "Hard-coded credentials", "Compromised deployment agent", "Unpatched web servers"],
+                correctAnswer: "B",
+                explanation: "Hard-coded credentials in public repositories are a common cause of breaches"
+            },
+            {
+                id: 16,
+                question: "A public cloud environment customer wants to encrypt the data it puts in the cloud. However, the CSP prohibits customer encryption keys. Which of the following principles is the CSP violating?",
+                options: ["Data ownership", "Data sovereignty", "Data classification", "Data retention"],
+                correctAnswer: "A",
+                explanation: "Preventing customer-managed encryption keys violates data ownership principles"
+            },
+            {
+                id: 17,
+                type: "multi-select",
+                question: "Which of the following will best reduce the cost of running workloads while maintaining the same performance? (Select TWO)",
+                options: ["Instance size", "Tagging", "Reserved resources model", "Spot instance model", "Pay-as-you-go model", "Dedicated host model"],
+                correctAnswer: ["C", "D"],
+                explanation: "Reserved instances and spot instances offer significant cost savings while maintaining performance"
+            },
+            {
+                id: 18,
+                question: "A group of cloud administrators frequently uses the same deployment template to recreate a cloud-based development environment. The administrators are unable to go back and review the history of changes they have made to the template. Which of the following cloud resource deployment concepts should the administrator start using?",
+                options: ["Drift detection", "Repeatability", "Documentation", "Versioning"],
+                correctAnswer: "D",
+                explanation: "Versioning tracks changes and allows reviewing history of template modifications"
+            },
+            {
+                id: 19,
+                question: "An IT security team wants to ensure that the correct parties are informed when a specific user account is signed in. Which of the following would most likely allow an administrator to address this concern?",
+                options: [
+                    "Creating an alert based on user sign-in criteria",
+                    "Aggregating user sign-in logs from all systems",
+                    "Enabling the collection of user sign-in logs",
+                    "Configuring the retention of all sign-in logs"
+                ],
+                correctAnswer: "A",
+                explanation: "Alerts based on specific criteria provide real-time notifications for sign-in events"
+            },
+            {
+                id: 20,
+                question: "An IT manager is migrating the production environment to the cloud but needs to keep control of the operating systems, patches, and settings of all resources. Which of the following deployment models will best meet the requirements?",
+                options: ["FaaS", "PaaS", "IaaS", "SaaS"],
+                correctAnswer: "C",
+                explanation: "IaaS provides control over OS, patches, and configurations"
+            },
+            {
+                id: 21,
+                question: "Which of the following is used to quickly deploy applications across different cloud providers?",
+                options: ["Snapshot", "Container image", "Serverless function", "VM template"],
+                correctAnswer: "B",
+                explanation: "Container images provide portability across different cloud platforms"
+            },
+            {
+                id: 22,
+                question: "A cloud engineer tries to deploy five new cloud instances using code. An error occurs, and the instances are not created. The configuration fails to run. The engineer then receives the following error message:\n\nERROR: Parse error on json line x in config\n\nJSON:\n{\n  \"instance_count\": 5,\n  \"ssd_options\": [\"100GB\", \"200GB\", \"300GB\",\n  \"instance_region\": apac,\n  \"instance_code\": 255,\n  \"start_instance\": true\n}\n\nWhich of the following oversights created the error in the configuration file?",
+                options: ["Incorrect instance count", "Incorrect ssd_options", "Missing quotations on instance_region", "Missing trailing comma on start_instance"],
+                correctAnswer: "B",
+                explanation: "The ssd_options array is missing a closing bracket and has a trailing comma before the next property"
+            },
+            {
+                id: 23,
+                question: "A company wants to use cloud resources to store historical data and guarantee fast searching and information-retrieval capabilities. Which of the following types of storage should the company provision?",
+                options: ["Hot", "Warm", "Cold", "Offline"],
+                correctAnswer: "A",
+                explanation: "Hot storage provides fastest access for frequently accessed data and searches"
+            },
+            {
+                id: 24,
+                question: "A company receives files daily from a bank. The company requires that the files must be copied from the cloud storage resource to another cloud storage resource for further processing. Which of the following methods requires the least amount of effort to achieve the task?",
+                options: ["Remote procedure call", "SOAP", "Event-driven architecture", "REST"],
+                correctAnswer: "C",
+                explanation: "Event-driven architecture automatically triggers actions when files arrive, requiring minimal manual effort"
+            },
+            {
+                id: 25,
+                question: "A technician receives an email from a vendor who is requesting payment of an invoice for human resources services. The email contains a request for bank account numbers. Which of the following types of attacks does this behavior most likely indicate?",
+                options: ["Malware", "Cryptojacking", "Ransomware", "Phishing"],
+                correctAnswer: "D",
+                explanation: "Requesting sensitive financial information via email is a classic phishing attack"
+            },
+            {
+                id: 26,
+                question: "Which of the following cloud deployment models is the best way to replicate a workload non-disruptively between on-premises servers and a public cloud?",
+                options: ["Public", "Community", "Private", "Hybrid"],
+                correctAnswer: "D",
+                explanation: "Hybrid cloud enables seamless integration between on-premises and public cloud resources"
+            },
+            {
+                id: 27,
+                question: "Which of the following protocols is often used in IoT to reduce the amount of data exchanged?",
+                options: ["MQTT", "SMB", "NFS", "HTTPS"],
+                correctAnswer: "A",
+                explanation: "MQTT (Message Queuing Telemetry Transport) is a lightweight protocol designed for IoT with minimal overhead"
+            },
+            {
+                id: 28,
+                question: "A customer relationship management application, which is hosted in a public cloud IaaS network, is vulnerable to a remote command execution vulnerability. Which of the following is the best solution for the security engineer to implement to prevent the application from being exploited by basic attacks?",
+                options: ["IPS", "ACL", "DLP", "WAF"],
+                correctAnswer: "D",
+                explanation: "Web Application Firewall (WAF) protects against application-layer attacks including remote command execution"
+            },
+            {
+                id: 29,
+                question: "A network administrator is building a site-to-site VPN tunnel from the company's headquarters office to the company's public cloud development network. The network administrator confirms the following:\n\n• The VPN tunnel is established on the headquarter office firewall\n• While inside the office, developers report that they cannot connect to the development network resources\n• While outside the office on a client VPN, developers report that they can connect to the development network resources\n• The office and the client VPN have different IP subnet ranges\n• The firewall flow logs show VPN traffic is reaching the development network from the office\n\nWhich of the following is the next step the network administrator should take to troubleshoot the VPN tunnel?",
+                options: [
+                    "Review the development network routing table",
+                    "Change the ciphers on the site-to-site VPN",
+                    "Restart the site-to-site VPN tunnel",
+                    "Check the ACLs on the development workloads"
+                ],
+                correctAnswer: "A",
+                explanation: "Traffic reaches the network but developers can't connect from office - indicates routing issue preventing return traffic"
+            },
+            {
+                id: 30,
+                question: "A company is required to save historical data for seven years. A cloud administrator implements a script that automatically deletes data older than seven years. Which of the following concepts best describes why the historical data is being deleted?",
+                options: ["End of life", "Data loss prevention", "Cost implications", "Tiered storage for archiving"],
+                correctAnswer: "A",
+                explanation: "End of life policies define when data should be deleted based on retention requirements"
+            },
+            {
+                id: 31,
+                question: "A cloud engineer is troubleshooting a connectivity issue. The application server with IP 192.168.1.10 in one subnet is not connecting to the MySQL database server with IP 192.168.2.20 in a different subnet. Which of the following should the cloud engineer address to fix the communication issue?",
+                hasTable: true,
+                correctAnswer: "D",
+                explanation: "MySQL Server Subnet Routing Table has incorrect gateway - should route back to 192.168.1.0/24 via proper gateway"
+            },
+            {
+                id: 32,
+                question: "Which of the following cloud-native architecture designs is the most easily maintained, decentralized, and decoupled?",
+                options: ["Monolithic", "Hybrid cloud", "Mainframe", "Microservices"],
+                correctAnswer: "D",
+                explanation: "Microservices architecture is inherently decentralized, decoupled, and easier to maintain"
+            },
+            {
+                id: 33,
+                question: "A company's cybersecurity team receives an alert that a production VM was deleted. The log shows:\n\n\"Resource with ID: PROD-WEB001 was deleted by User: Logging Service\"\n\"User with ID: Logging Service was added to the Group: VNet Console Administrators by actor: Logging Service.\"\n\nThe logging service account was previously given full directory administration privileges. The team removes the compromised account. Which of the following should they do next to prevent repeat instances?",
+                options: [
+                    "Enable two-factor authentication on the virtual network console",
+                    "Reset the logging service account to use a long and complex password",
+                    "Disable RDP on the production virtual machines",
+                    "Create a scoped administrative role for the logging service account"
+                ],
+                correctAnswer: "D",
+                explanation: "Principle of least privilege - service accounts should have minimal necessary permissions, not full admin rights"
+            },
+            {
+                id: 34,
+                question: "Which of the following is the most cost-effective way to store data that is infrequently accessed?",
+                options: ["Cold site", "Hot site", "Off-site", "Warm site"],
+                correctAnswer: "C",
+                explanation: "Off-site/Cold storage offers lowest cost for infrequently accessed data"
+            },
+            {
+                id: 35,
+                question: "A cloud solutions architect needs to deploy a simple, public-facing website with the following requirements:\n\n• Cost-effective\n• Highly available\n• Self-healing\n• Secure\n\nWhich of the following templates (YAML configuration) is the most appropriate to use?",
+                hasYaml: true,
+                correctAnswer: "D",
+                explanation: "Configuration D combines Spot instances (cost-effective), Autoscaling (self-healing/high availability), and restricted SSH access (security)"
+            },
+            {
+                id: 36,
+                question: "A cloud administrator receives a phishing text message (\"Piz respond so we can send ur replacement laptop...\"). After clicking, they see a blank screen with a 200 response code. Which of the following should the administrator do to best prevent future instances of this potential attack?",
+                options: [
+                    "Rotate the administrator credentials",
+                    "Disable text messaging",
+                    "Enforce a security policy regarding external links",
+                    "Deploy a WAF to the network"
+                ],
+                correctAnswer: "C",
+                explanation: "Security policies and training prevent users from clicking malicious links in the future"
+            },
+            {
+                id: 37,
+                question: "A cloud administrator needs to collect process-level, memory-usage tracking for the virtual machines that are part of an autoscaling group. Which of the following is the best way to accomplish the goal using cloud-native monitoring services?",
+                options: [
+                    "Configuring page file/swap metrics",
+                    "Deploying the cloud-monitoring agent software",
+                    "Scheduling a script to collect the data",
+                    "Enabling memory monitoring in the VM configuration"
+                ],
+                correctAnswer: "B",
+                explanation: "Cloud monitoring agents provide detailed process-level metrics for VMs"
+            },
+            {
+                id: 38,
+                question: "An organization's web application experiences periodic bursts of traffic when a new video is launched. Users are reporting poor performance in the middle of the month. Which of the following scaling approaches should the organization use to scale based on forecasted traffic?",
+                options: ["Scheduled", "Manual", "Event", "Load"],
+                correctAnswer: "A",
+                explanation: "Scheduled scaling allows proactive scaling based on known traffic patterns (video launch schedule)"
+            },
+            {
+                id: 39,
+                question: "A cloud engineer wants to deploy a new application to the cloud and is writing a Terraform script. Which of the following actions will this script perform?",
+                hasCode: true,
+                correctAnswer: "B",
+                explanation: "Terraform resource definitions create new cloud resources (server_instance in this case)"
+            },
+            {
+                id: 40,
+                question: "A banking firm's cloud server will be decommissioned after a successful proof of concept using mirrored data. Which of the following is the best action to take regarding the storage used on the decommissioned server?",
+                options: ["Keep it temporarily", "Archive it", "Delete it", "Retain it permanently"],
+                correctAnswer: "B",
+                explanation: "Banking data should be archived for compliance and audit purposes, not deleted"
+            },
+            {
+                id: 41,
+                question: "An organization's internal security team mandated that public cloud resources must be accessible only by a corporate VPN and not by direct public internet access. Which of the following would achieve this objective?",
+                options: ["WAF", "ACL", "PC", "SSH"],
+                correctAnswer: "C",
+                explanation: "Private Connectivity (PC) restricts access to VPN-only, blocking public internet access"
+            },
+            {
+                id: 42,
+                question: "A cloud engineer is selecting a model for a data center that will host a workload. The database must reside within the data center on the company's SAN solution. However, the workload will be hosted by a third-party vendor. Which model should be selected?",
+                options: ["Community", "Hybrid", "Public", "Private"],
+                correctAnswer: "B",
+                explanation: "Hybrid cloud combines on-premises database with third-party hosted workload"
+            },
+            {
+                id: 43,
+                question: "A newly configured VM fails to run application updates despite having internet access. The updates download automatically from a third-party network. Given the output showing DNS timeout for na.updateserver.net, which of the following troubleshooting steps would be best to take?",
+                hasDiagram: true,
+                options: [
+                    "Checking DNS configurations",
+                    "Reconfiguring routing protocols",
+                    "Testing the IP address configuration",
+                    "Running a trace to the router"
+                ],
+                correctAnswer: "A",
+                explanation: "DNS timeout error indicates DNS configuration issues"
+            },
+            {
+                id: 44,
+                type: "multi-select",
+                question: "A security analyst reviews daily logs and notices suspicious activity: PowerShell process executed compressed, encoded command line content from John Smith's machine (10.150.71.151). Firewall logs show Kali Linux connecting to external IP 201.101.25.121 on port 4444. Which of the following steps should the security analyst take next to resolve this issue? (Select TWO)",
+                options: [
+                    "Submit an IT support ticket and request Kali Linux be uninstalled",
+                    "Block all inbound connections on port 4444 and block the IP address 201.101.25.121",
+                    "Contact John Smith and request the Ethernet cable be unplugged",
+                    "Check the running processes to confirm if a backdoor connection has been established",
+                    "Upgrade the Windows x64 operating system",
+                    "Block all outbound connections from the IP address 10.150.71.151"
+                ],
+                correctAnswer: ["B", "D"],
+                explanation: "Port 4444 is commonly used for backdoors (Metasploit). Block the connection and verify compromise status"
+            },
+            {
+                id: 45,
+                question: "A critical security patch is required on a network load balancer. The CEO does not want any interruptions during a demonstration next week. Which approach should the cloud security engineer take?",
+                options: [
+                    "Ask the management team to delay the conference",
+                    "Apply the security patch after the event",
+                    "Ask the upper management team to approve an emergency patch window",
+                    "Apply the security patch immediately before the conference"
+                ],
+                correctAnswer: "C",
+                explanation: "Critical patches require immediate action - get management approval for emergency maintenance window"
+            },
+            {
+                id: 46,
+                question: "An application running on containers writes files to the OS owned by root. A cloud engineer needs to make sure no output files are owned by root. Which action should the engineer take?",
+                options: [
+                    "Mount the volume in Docker using --user myapp",
+                    "Add USER myapp to the Dockerfile and rebuild the container",
+                    "Run chown myapp:myapp /project-files with cron every minute",
+                    "Modify the container application to execute sudo -u myapp"
+                ],
+                correctAnswer: "B",
+                explanation: "Setting USER in Dockerfile ensures all processes run as non-root user"
+            },
+            {
+                id: 47,
+                question: "A manager wants information about which users signed in to a certain VM during the past month. Which of the following can the cloud administrator use to obtain this information?",
+                options: ["Retention", "Alerting", "Aggregation", "Collection"],
+                correctAnswer: "A",
+                explanation: "Log retention policies ensure historical login data is available for review"
+            },
+            {
+                id: 48,
+                question: "A cloud administrator is building a company-standard VM image based on a public image. Which of the following should the administrator implement to secure the image?",
+                options: ["Generic security", "Least privilege", "Hardening", "Vulnerability scanning"],
+                correctAnswer: "C",
+                explanation: "Hardening involves securing and configuring an image to reduce attack surface"
+            },
+            {
+                id: 49,
+                question: "A company's engineering department is conducting a month-long test on the scalability of in-house software that requires a cluster of 100 or more servers. Which model is best to use?",
+                options: ["PaaS", "SaaS", "DBaaS", "IaaS"],
+                correctAnswer: "D",
+                explanation: "IaaS provides the flexibility and control needed for large-scale server clusters"
+            },
+            {
+                id: 50,
+                question: "A systems administrator is provisioning VMs with requirements:\n\n• Present in at least two data centers\n• Max latency of one second during replication\n• Immediate failover\n\nWhich replication method best meets these requirements?",
+                options: ["Snapshot", "Transactional", "Live", "Point-in-time"],
+                correctAnswer: "C",
+                explanation: "Live replication provides continuous synchronization with minimal latency and immediate failover"
+            },
+            {
+                id: 51,
+                question: "Which of the following strategies requires the development of new code before an application can be successfully migrated to a cloud provider?",
+                options: ["Refactor", "Rearchitect", "Rehost", "Replatform"],
+                correctAnswer: "A",
+                explanation: "Refactoring involves rewriting code to optimize for cloud environments"
+            },
+            {
+                id: 52,
+                question: "A company uses containers to implement a web application. They want to move a new feature to production while minimizing cost and targeting a specific subset of users. Which deployment model should be used?",
+                options: ["Canary", "Blue-green", "Rolling", "In-place"],
+                correctAnswer: "A",
+                explanation: "Canary deployment releases to a small subset of users first, minimizing risk and cost"
+            },
+            {
+                id: 53,
+                question: "An administrator needs a backup solution for a cloud infrastructure via a third-party, untrusted network. What is the most important feature required?",
+                options: ["Deduplication", "Replication", "Compression", "Encryption", "Labeling"],
+                correctAnswer: "D",
+                explanation: "Encryption protects data when transmitted over untrusted networks"
+            },
+            {
+                id: 54,
+                question: "A cloud engineer is exploring options to reduce the management overhead of the servers and network. Which cloud service model should be implemented?",
+                options: ["SaaS", "XaaS", "PaaS", "IaaS"],
+                correctAnswer: "C",
+                explanation: "PaaS reduces management overhead by handling infrastructure while providing platform services"
+            },
+            {
+                id: 55,
+                question: "A cloud engineer is collecting web server application logs. However, the logs are piling up and causing storage issues. Which mechanism should be implemented?",
+                options: ["Splicing", "Rotation", "Sampling", "Inspection"],
+                correctAnswer: "B",
+                explanation: "Log rotation archives old logs and creates new files, preventing storage issues"
+            },
+            {
+                id: 56,
+                question: "Which of the following technologies should be used by a person who is visually impaired to access data from the cloud?",
+                options: ["Object character recognition", "Text-to-voice", "Sentiment analysis", "Visual recognition"],
+                correctAnswer: "B",
+                explanation: "Text-to-voice (text-to-speech) technology enables visually impaired users to access content"
+            },
+            {
+                id: 57,
+                question: "A developer is building an application with multiple microservices. Currently, they manually update the IP address of each service. Which solution best resolves this and automates the process?",
+                options: ["Service discovery", "Fan-out", "Managed container services", "DNS"],
+                correctAnswer: "A",
+                explanation: "Service discovery automatically tracks and updates service endpoints in microservices architectures"
+            },
+            {
+                id: 58,
+                question: "A security team hired multiple interns who all need the same level of access. Which control should be implemented to provide access with the least amount of overhead?",
+                options: ["Missing option", "Discretionary access", "Local user access", "Group-based access control"],
+                correctAnswer: "D",
+                explanation: "Group-based access control allows managing permissions for multiple users efficiently"
+            },
+            {
+                id: 59,
+                question: "A cloud engineer is provisioning a new application that requires access to the organization's public cloud resources. What is the best way to authenticate the application?",
+                options: ["Access key", "API", "MFA token", "Username and Password"],
+                correctAnswer: "A",
+                explanation: "Access keys (API keys) provide programmatic authentication for applications"
+            },
+            {
+                id: 60,
+                question: "A cloud engineer wants containers to run the latest version of a container base image to reduce vulnerabilities. The applications require Python 3.10 and are not compatible with other versions. Given the Dockerfile using 'FROM cgr.dev/chainguard/python:3.10', which action achieves the objectives with least effort?",
+                hasCode: true,
+                options: [
+                    "Perform docker pull before executing docker run",
+                    "Execute docker update using a local cron",
+                    "Change the image to use python:latest",
+                    "Update the Dockerfile to pin the source image version"
+                ],
+                correctAnswer: "A",
+                explanation: "Docker pull ensures latest version of the specified image (3.10) is used"
+            },
+            {
+                id: 61,
+                question: "A company learns about a CVE in an open-source package. An update is available. What is the first step during the incident response phase?",
+                options: [
+                    "Blocking the package download",
+                    "Shutting down applications",
+                    "Deploying an update",
+                    "Scanning to discover applications using the package"
+                ],
+                correctAnswer: "D",
+                explanation: "First identify scope of impact by finding which applications use the vulnerable package"
+            },
+            {
+                id: 62,
+                question: "An administrator deploys a VM with an additional data disk. The developer reports the VM is sluggish after intensive read/write operations. What is the least amount of work to fix this?",
+                options: [
+                    "Create new VM with more RAM/CPU",
+                    "Stop VM -> Change data disk to high performance -> Start VM",
+                    "Create new VM with high-performance disk",
+                    "Stop VM -> Detach disk -> Create/Attach new high-performance disk -> Start VM"
+                ],
+                correctAnswer: "B",
+                explanation: "Changing disk tier in place is simplest solution for performance issues"
+            },
+            {
+                id: 63,
+                question: "An engineer needs a deployment strategy that is simple, fast, and can be performed on two identical platforms.",
+                options: ["Blue-green", "Canary", "Rolling", "In-place"],
+                correctAnswer: "A",
+                explanation: "Blue-green deployment uses two identical environments for fast, simple switching"
+            },
+            {
+                id: 64,
+                question: "Which field of computer science enables computers to identify and understand objects and people in images and videos?",
+                options: ["Image reconstruction", "Facial recognition", "Natural language processing", "Computer vision"],
+                correctAnswer: "D",
+                explanation: "Computer vision is the broad field encompassing object and people recognition in visual media"
+            },
+            {
+                id: 65,
+                question: "Two CVEs are discovered on servers with an attack vector of network and CVSS score of 9.0. Which action is the best way to mitigate?",
+                options: [
+                    "Patching the operating systems",
+                    "Upgrading to latest beta",
+                    "Encrypting disks",
+                    "Disabling open ports"
+                ],
+                correctAnswer: "A",
+                explanation: "Patching directly addresses CVEs and is the most effective mitigation"
+            },
+            {
+                id: 66,
+                question: "Which of the following costs would increase significantly for data transfer when comparing a multiregion to a single-region cloud platform design?",
+                options: ["Storage", "Power and cooling", "Network", "Compliance and regulation"],
+                correctAnswer: "C",
+                explanation: "Network costs increase significantly with multiregion deployments due to inter-region data transfer"
+            },
+            {
+                id: 67,
+                type: "multi-select",
+                question: "A security analyst confirms a zero-day vulnerability was exploited, data was breached, and ransomware installed. Which steps should be taken? (Select TWO)",
+                options: [
+                    "Contact customers to inform them",
+                    "Contact hackers to negotiate",
+                    "Send global communication",
+                    "Inform management and legal teams",
+                    "Delete confidential data",
+                    "Modify firewall rules"
+                ],
+                correctAnswer: ["D", "F"],
+                explanation: "Inform management/legal for incident response coordination, and modify firewall to prevent further access"
+            },
+            {
+                id: 68,
+                question: "A system surpasses 75% to 80% of resource consumption. Which scaling approach is the most appropriate?",
+                options: ["Trending", "Manual", "Load", "Scheduled"],
+                correctAnswer: "C",
+                explanation: "Load-based scaling automatically responds to resource utilization thresholds"
+            },
+            {
+                id: 69,
+                question: "Which of the following interfaces is most commonly used for SSDs but not for HDDs?",
+                options: ["NVMe", "Serial-attached SCSI", "SATA", "iSCSI"],
+                correctAnswer: "A",
+                explanation: "NVMe (Non-Volatile Memory Express) is designed for SSDs and not used with traditional HDDs"
+            },
+            {
+                id: 70,
+                type: "multi-select",
+                question: "A cloud networking engineer is troubleshooting the corporate office's network. Employees in IT and operations departments cannot resolve IP addresses, and IT cannot establish connections to other departments' subnets. Each employee needs max 3 hosts. Subnets must be segregated, but IT must communicate with all subnets. Which meet the IP addressing and routing requirements? (Select TWO)",
+                hasTable: true,
+                options: [
+                    "Modifying subnet mask to 255.255.254.0 for IT/Ops",
+                    "Configuring static routing to allow access from each subnet to 10.1.40.1",
+                    "Modifying BYOD policy",
+                    "Configuring static routing to allow access from 10.1.30.1 to each subnet",
+                    "Combining subnets",
+                    "Modifying subnet mask to 255.255.255.128 for IT/Ops"
+                ],
+                correctAnswer: ["D", "A"],
+                explanation: "IT subnet (10.1.30.1) needs routes to all subnets, and /23 mask provides sufficient host capacity"
+            },
+            {
+                id: 71,
+                question: "A company's main web application is no longer accessible via the internet but is accessible locally and only via an IP address. Which of the following was misconfigured?",
+                options: ["IP", "DHCP", "NAT", "DNS"],
+                correctAnswer: "D",
+                explanation: "Accessible by IP but not by name indicates DNS misconfiguration"
+            },
+            {
+                id: 72,
+                question: "A DevOps engineer receives reports that users cannot access a web application after hardening. Error: ERR_SSL_VERSION_OR_CIPHER_MISMATCH. Which action should be taken?",
+                options: [
+                    "Restart web server",
+                    "Configure TLS 1.2 or newer",
+                    "Update web server",
+                    "Review WAF logs"
+                ],
+                correctAnswer: "B",
+                explanation: "The error indicates SSL/TLS version or cipher incompatibility - enable modern TLS versions"
+            },
+            {
+                id: 73,
+                question: "A cloud resource increases its capacity based on seasonal activity. Which best describes this type of cloud instance and scaling?",
+                options: [
+                    "Fixed; triggered by load",
+                    "Permanent; triggered manually",
+                    "Elastic; triggered by trend",
+                    "Ephemeral; triggered by event"
+                ],
+                correctAnswer: "C",
+                explanation: "Elastic resources with trend-based scaling adapt to seasonal patterns"
+            },
+            {
+                id: 74,
+                question: "A healthcare organization must follow strict compliance to ensure PII is not leaked. What should the organization enable?",
+                options: ["IPS", "DLP", "ACL", "WAF"],
+                correctAnswer: "B",
+                explanation: "Data Loss Prevention (DLP) prevents unauthorized disclosure of sensitive information"
+            },
+            {
+                id: 75,
+                question: "A cloud administrator is provisioning infrastructure with requirements: 10 midsize instances for normal day, 16 midsize during peak. Costs must be low. IaaS model. No tolerance for disruption. Which option is best?",
+                options: [
+                    "Reserve 16 instances, turn off unused",
+                    "Use 10 pay-as-you-go, add 6 spot",
+                    "Deploy reserved instances for normal operation and add pay-as-you-go during peak hours",
+                    "Use spot instances"
+                ],
+                correctAnswer: "C",
+                explanation: "Reserved instances for baseline + pay-as-you-go for peaks balances cost and reliability"
+            },
+            {
+                id: 76,
+                question: "Which of the following solutions is a cost-effective and flexible way to meet the demand of local computing resource requests?",
+                options: [
+                    "Increasing network bandwidth",
+                    "Autoscaling",
+                    "Cloud bursting",
+                    "Obtaining additional hardware"
+                ],
+                correctAnswer: "C",
+                explanation: "Cloud bursting extends on-premises capacity to cloud when needed"
+            },
+            {
+                id: 77,
+                question: "An organization is preparing for seasonal sales. Which approach meets this requirement with minimal cost?",
+                options: [
+                    "Load balancer with least-connections",
+                    "Enabling a scaling configuration for the identified timeline",
+                    "Reconfiguring app for more resources",
+                    "Deploying additional compute in advance"
+                ],
+                correctAnswer: "B",
+                explanation: "Scheduled scaling for known timeframe minimizes cost by scaling only when needed"
+            },
+            {
+                id: 78,
+                question: "A cloud engineer is designing a high-performance computing (HPC) cluster requiring low latency and high throughput. Which factor has the greatest impact?",
+                options: ["Node placement", "Node size", "Node NIC", "Node OS"],
+                correctAnswer: "A",
+                explanation: "Node placement (proximity/placement groups) has greatest impact on HPC cluster latency"
+            },
+            {
+                id: 79,
+                question: "Between 11:00 am and 1:00 pm, users report the sales database is sluggish. Admin discovers hypervisors are at capacity. However, when 70% of users use the same database at other times, issues are not reported. What is the cause?",
+                options: [
+                    "Oversubscription",
+                    "Resource allocation",
+                    "Sizing issues",
+                    "Service quotas"
+                ],
+                correctAnswer: "A",
+                explanation: "Oversubscription causes issues only when multiple workloads peak simultaneously"
+            },
+            {
+                id: 80,
+                type: "multi-select",
+                question: "Supervisors request a report to understand cloud resource utilization and budget. Which steps are most important? (Select TWO)",
+                options: [
+                    "Set retention of logs",
+                    "Configure application tracing",
+                    "Integrate email alerts",
+                    "Enable resource tagging",
+                    "Configure the collection of performance/utilization logs",
+                    "Configure metric threshold alerts"
+                ],
+                correctAnswer: ["D", "E"],
+                explanation: "Resource tagging enables cost tracking, performance logs provide utilization data for reports"
+            },
+            {
+                id: 81,
+                question: "A CMS service on public cloud is targeted by DDoS. What should the engineer monitor to identify attacks?",
+                options: [
+                    "Network flow logs",
+                    "Endpoint detection logs",
+                    "Cloud provider event logs",
+                    "Instance syslog"
+                ],
+                correctAnswer: "A",
+                explanation: "Network flow logs capture traffic patterns essential for DDoS detection"
+            },
+            {
+                id: 82,
+                type: "multi-select",
+                question: "Which requirements are core considerations when migrating a small business's on-premises applications to the cloud? (Select TWO)",
+                options: [
+                    "Availability",
+                    "Hybrid",
+                    "Testing",
+                    "Networking",
+                    "Compute",
+                    "Logs"
+                ],
+                correctAnswer: ["A", "D"],
+                explanation: "Availability ensures uptime, networking ensures connectivity - both critical for cloud migration"
+            },
+            {
+                id: 83,
+                question: "A database application was migrated to the cloud. Users report it is not accessible. A subset of users from another department can connect. Which action should be taken?",
+                options: [
+                    "Increase subscription quota",
+                    "Update the permissions",
+                    "Disable API throttling",
+                    "Increase VM size"
+                ],
+                correctAnswer: "B",
+                explanation: "Partial access indicates permission/authorization issue, not quota or capacity"
+            },
+            {
+                id: 84,
+                question: "Which of the following describes what CRUD is typically used for?",
+                options: [
+                    "Relational databases",
+                    "Time series databases",
+                    "Graph databases",
+                    "NoSQL databases"
+                ],
+                correctAnswer: "A",
+                explanation: "CRUD (Create, Read, Update, Delete) operations are fundamental to relational databases"
+            },
+            {
+                id: 85,
+                question: "Which of the following types of storage provides the greatest performance advantage for a traditional relational database?",
+                options: ["File", "Object", "Block", "Ephemeral"],
+                correctAnswer: "C",
+                explanation: "Block storage provides low-latency, high-performance access ideal for databases"
+            },
+            {
+                id: 86,
+                question: "A log-parsing application requires significant processing power. Which option minimizes the impact of an instance failure while keeping costs low?",
+                options: [
+                    "Four instances of 4vCPU, 8GB RAM, 80GB SSD",
+                    "Four instances of 4vCPU, 8GB RAM, 80GB HDD",
+                    "Two instances of 8vCPU, 16GB RAM, 80GB SSD",
+                    "Two instances of 8vCPU, 16GB RAM, 80GB HDD"
+                ],
+                correctAnswer: "A",
+                explanation: "More smaller instances provide better fault tolerance, SSD provides better performance than HDD"
+            },
+            {
+                id: 87,
+                question: "Which of the following has the most influence when determining the maximum data loss in the event of a disaster?",
+                options: [
+                    "Recovery point objective (RPO)",
+                    "Business continuity and disaster recovery",
+                    "Mean time to recover",
+                    "Recovery time objective (RTO)"
+                ],
+                correctAnswer: "A",
+                explanation: "RPO defines the maximum acceptable data loss period, directly determining potential data loss"
+            },
+            {
+                id: 88,
+                question: "A customer requires data resiliency due to frequent natural disasters, data localization (privacy regs), and high availability. Which resource should be provisioned?",
+                options: [
+                    "Storage in a separate data center located in same region",
+                    "An on-premises private cloud",
+                    "Storage in an availability zone outside the region",
+                    "Storage in the same availability zone"
+                ],
+                correctAnswer: "A",
+                explanation: "Same region meets data localization, separate datacenter provides disaster resilience"
+            },
+            {
+                id: 89,
+                question: "Users report a remotely hosted application is not accessible following a migration. The cloud administrator is able to access it from the same site as the users. What should be updated?",
+                options: ["Cipher suite", "Network ACL", "Routing table", "Permissions"],
+                correctAnswer: "D",
+                explanation: "Admin can access but users cannot - indicates permissions/access control issue"
+            },
+            {
+                id: 90,
+                question: "A cloud engineer needs a storage technology with 99.99% durability, resilient to instance failures, and resilient to instance deletions. Which is the best option?",
+                options: ["Ephemeral", "Cache", "Persistent", "Local"],
+                correctAnswer: "C",
+                explanation: "Persistent storage provides durability and survives instance lifecycle events"
+            }
+        ];
+
+        // State
+        let state = {
+            currentQuestion: 1,
+            showAnswers: false,
+            darkMode: true
+        };
+
+        // Canvas Background
+        function initCanvas() {
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const particleCount = 100;
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 2 + 1
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'rgba(59, 130, 246, 0.5)';
+                ctx.strokeStyle = 'rgba(59, 130, 246, 0.2)';
+
+                particles.forEach((p, i) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Connect nearby particles
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[j].x - p.x;
+                        const dy = particles[j].y - p.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < 100) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(59, 130, 246, ${0.2 * (1 - dist / 100)})`;
+                            ctx.stroke();
+                        }
+                    }
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+
+        // Render Questions
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            quizData.forEach(q => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'glass-panel p-6 mb-6 fade-in relative';
+                questionCard.id = `question-${q.id}`;
+
+                let optionsHTML = '';
+                if (q.options && !q.type?.includes('drag')) {
+                    optionsHTML = q.options.map((opt, idx) => {
+                        const letter = String.fromCharCode(65 + idx);
+                        const isCorrect = q.type === 'multi-select' 
+                            ? q.correctAnswer.includes(letter)
+                            : q.correctAnswer === letter;
+                        
+                        return `
+                            <div class="option-card ${state.showAnswers && isCorrect ? 'correct' : ''} p-4 rounded-lg border border-gray-600 mb-3">
+                                <div class="flex items-start gap-3">
+                                    <span class="font-bold text-cyan-400">${letter}.</span>
+                                    <span class="flex-1">${opt}</span>
+                                    ${state.showAnswers && isCorrect ? '<i class="fas fa-check-circle text-green-400"></i>' : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                let typeBadge = '';
+                if (q.type === 'multi-select') {
+                    typeB adge = '<span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">Multi-Select</span>';
+                } else if (q.type === 'simulation') {
+                    typeBadge = '<span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-orange-500/20 text-orange-300 border border-orange-500/30">Simulation</span>';
+                } else if (q.type === 'drag-drop') {
+                    typeBadge = '<span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-300 border border-blue-500/30">Drag & Drop</span>';
+                }
+
+                questionCard.innerHTML = `
+                    <button class="copy-btn" onclick="copyQuestion(${q.id})">
+                        <i class="fas fa-copy mr-1"></i> Copy
+                    </button>
+                    
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="text-5xl font-bold cyber-header">${q.id}</div>
+                        <div class="flex-1">
+                            <div class="mb-2">${typeBadge}</div>
+                            <p class="text-lg leading-relaxed whitespace-pre-line">${q.question}</p>
+                        </div>
+                    </div>
+
+                    ${q.diagram ? `<div class="diagram-container"><p class="text-sm text-gray-400"><i class="fas fa-diagram-project mr-2"></i>${q.diagram}</p></div>` : ''}
+                    ${q.hasCode ? '<div class="code-block text-sm"><i class="fas fa-code mr-2 text-cyan-400"></i>Code snippet present - see original document for details</div>' : ''}
+                    ${q.hasTable ? '<div class="diagram-container"><i class="fas fa-table mr-2 text-cyan-400"></i>Configuration table present - see original document for details</div>' : ''}
+                    ${q.hasYaml ? '<div class="code-block text-sm"><i class="fas fa-file-code mr-2 text-cyan-400"></i>YAML configurations present - see original document for details</div>' : ''}
+
+                    <div class="mt-6">
+                        ${optionsHTML}
+                        ${q.solution ? `<div class="code-block mt-4"><strong class="text-cyan-400">Solution:</strong><br>${q.solution}</div>` : ''}
+                    </div>
+
+                    ${state.showAnswers ? `
+                        <div class="mt-6 p-4 rounded-lg bg-green-500/10 border border-green-500/30">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                                <strong class="text-green-400">Correct Answer: <span class="highlight">${q.correctAnswer}</span></strong>
+                            </div>
+                            ${q.explanation ? `<p class="text-sm text-gray-300 mt-2"><strong>Explanation:</strong> ${q.explanation}</p>` : ''}
+                        </div>
+                    ` : ''}
+                `;
+
+                container.appendChild(questionCard);
+            });
+        }
+
+        // Navigation
+        function renderNav() {
+            const nav = document.getElementById('questionNav');
+            nav.innerHTML = quizData.map(q => `
+                <button class="nav-btn ${state.currentQuestion === q.id ? 'active' : ''}" 
+                        onclick="scrollToQuestion(${q.id})">
+                    ${q.id}
+                </button>
+            `).join('');
+        }
+
+        function scrollToQuestion(id) {
+            state.currentQuestion = id;
+            const element = document.getElementById(`question-${id}`);
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            renderNav();
+        }
+
+        // Copy Functions
+        function copyQuestion(id) {
+            const question = quizData.find(q => q.id === id);
+            let text = `Question ${id}\n\n${question.question}\n\n`;
+            
+            if (question.options) {
+                question.options.forEach((opt, idx) => {
+                    text += `${String.fromCharCode(65 + idx)}. ${opt}\n`;
+                });
+            }
+            
+            text += `\nCorrect Answer: ${question.correctAnswer}`;
+            if (question.explanation) {
+                text += `\n\nExplanation: ${question.explanation}`;
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Question copied to clipboard!');
+            });
+        }
+
+        function copyAllQuestions() {
+            let allText = 'CompTIA Cloud+ Practice Quiz - All Questions\n\n';
+            quizData.forEach(q => {
+                allText += `=== Question ${q.id} ===\n\n${q.question}\n\n`;
+                if (q.options) {
+                    q.options.forEach((opt, idx) => {
+                        allText += `${String.fromCharCode(65 + idx)}. ${opt}\n`;
+                    });
+                }
+                allText += `\nCorrect Answer: ${q.correctAnswer}\n`;
+                if (q.explanation) {
+                    allText += `Explanation: ${q.explanation}\n`;
+                }
+                allText += '\n\n';
+            });
+
+            navigator.clipboard.writeText(allText).then(() => {
+                showToast('All questions copied to clipboard!');
+            });
+        }
+
+        function toggleAnswers() {
+            state.showAnswers = !state.showAnswers;
+            document.getElementById('toggle-text').textContent = state.showAnswers ? 'Hide Answers' : 'Show Answers';
+            renderQuestions();
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="fas fa-check mr-2"></i>${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Initialize
+        function init() {
+            initCanvas();
+            renderQuestions();
+            renderNav();
+            
+            setTimeout(() => {
+                document.getElementById('loading-overlay').classList.add('hidden');
+            }, 1000);
+
+            // Intersection Observer for scroll animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = parseInt(entry.target.id.split('-')[1]);
+                        state.currentQuestion = id;
+                        renderNav();
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            quizData.forEach(q => {
+                const el = document.getElementById(`question-${q.id}`);
+                if (el) observer.observe(el);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
