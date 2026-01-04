@@ -1,0 +1,2068 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ยุทธศาสตร์กระจก: การเผชิญหน้าจีน-สหรัฐฯ 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Sarabun:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    
+    <style>
+        :root {
+            --space-void: #0a0a1a;
+            --space-deep: #0d1025;
+            --space-surface: #151d2e;
+            --glass-panel: rgba(21, 29, 46, 0.75);
+            --glass-border: rgba(59, 130, 246, 0.2);
+            --neon-core: #3b82f6;
+            --neon-accent: #06b6d4;
+            --neon-warning: #f59e0b;
+            --neon-danger: #ef4444;
+            --neon-success: #10b981;
+            --gradient-cyber: linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #10b981 100%);
+            --gradient-fire: linear-gradient(135deg, #dc2626 0%, #f59e0b 100%);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --animation-fast: 0.2s;
+            --animation-smooth: 0.4s;
+            --blur-glass: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans Thai', 'Sarabun', sans-serif;
+            background: var(--space-void);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .font-display { font-family: 'Orbitron', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .font-thai { font-family: 'Noto Sans Thai', 'Sarabun', sans-serif; }
+
+        /* Glassmorphism System */
+        .glass-panel {
+            background: var(--glass-panel);
+            backdrop-filter: blur(var(--blur-glass));
+            -webkit-backdrop-filter: blur(var(--blur-glass));
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+        }
+
+        .glass-panel-solid {
+            background: rgba(21, 29, 46, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Neon Glow Effects */
+        .neon-text {
+            text-shadow: 0 0 10px var(--neon-core), 0 0 20px var(--neon-core), 0 0 40px var(--neon-core);
+        }
+
+        .neon-border {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3), inset 0 0 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .neon-border-danger {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3), inset 0 0 15px rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        /* Animated Gradient Background */
+        .gradient-animate {
+            background: var(--gradient-cyber);
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Loading Overlay */
+        #loading-overlay {
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        #loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-ring {
+            width: 80px;
+            height: 80px;
+            border: 3px solid transparent;
+            border-top-color: var(--neon-core);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-ring::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 3px solid transparent;
+            border-top-color: var(--neon-accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Navigation */
+        .nav-link {
+            position: relative;
+            padding: 0.75rem 1.25rem;
+            transition: all var(--animation-fast) ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-cyber);
+            transition: all var(--animation-smooth) ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 80%;
+        }
+
+        /* Cards & Panels */
+        .stat-card {
+            transition: all var(--animation-smooth) cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(59, 130, 246, 0.2);
+        }
+
+        /* Detail Slide Panel */
+        .detail-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 480px;
+            max-width: 100vw;
+            background: rgba(13, 16, 37, 0.98);
+            border-left: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform var(--animation-smooth) cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+        }
+
+        .detail-panel.open {
+            transform: translateX(0);
+        }
+
+        .detail-panel-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--animation-smooth) ease;
+        }
+
+        .detail-panel-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* D3 Visualization Container */
+        #d3-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        #d3-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .d3-node {
+            cursor: pointer;
+            transition: filter 0.2s ease;
+        }
+
+        .d3-node:hover {
+            filter: brightness(1.2) drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+        }
+
+        .d3-link {
+            stroke-opacity: 0.6;
+            transition: stroke-opacity 0.2s ease;
+        }
+
+        .d3-link:hover {
+            stroke-opacity: 1;
+        }
+
+        /* Control Buttons */
+        .control-btn {
+            padding: 0.75rem 1.25rem;
+            background: var(--glass-panel);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all var(--animation-fast) ease;
+            font-size: 0.875rem;
+        }
+
+        .control-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: var(--neon-core);
+            transform: translateY(-2px);
+        }
+
+        .control-btn.active {
+            background: var(--neon-core);
+            border-color: var(--neon-core);
+        }
+
+        /* Timeline */
+        .timeline-item {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0.75rem;
+            top: 2rem;
+            bottom: -2rem;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--neon-core), transparent);
+        }
+
+        .timeline-item:last-child::before {
+            display: none;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background: var(--gradient-cyber);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Quote Block */
+        .quote-block {
+            position: relative;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
+            border-left: 4px solid var(--neon-core);
+            border-radius: 0 16px 16px 0;
+        }
+
+        .quote-block::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 5rem;
+            font-family: 'Orbitron', sans-serif;
+            color: rgba(59, 130, 246, 0.2);
+            line-height: 1;
+        }
+
+        /* Mermaid Container */
+        .mermaid-container {
+            position: relative;
+            min-height: 400px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .mermaid-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+
+        /* Scroll Animation */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .detail-panel {
+                width: 100%;
+            }
+            
+            #d3-container {
+                height: 400px;
+            }
+        }
+
+        /* i18n System */
+        body[data-lang="en"] [lang="th"] { display: none; }
+        body[data-lang="th"] [lang="en"] { display: none; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--space-deep);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-core);
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.6); }
+        }
+
+        .pulse-danger {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        /* Split Screen Layout */
+        .split-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .split-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .split-usa {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .split-china {
+            border-left: 4px solid #dc2626;
+        }
+    </style>
+</head>
+
+<body data-lang="th">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 z-[9999] bg-[var(--space-void)] flex flex-col items-center justify-center">
+        <div class="loader-ring relative"></div>
+        <p class="mt-6 font-display text-lg tracking-wider text-[var(--neon-core)]">
+            <span lang="th">กำลังโหลดข้อมูลยุทธศาสตร์...</span>
+            <span lang="en">Loading Strategic Data...</span>
+        </p>
+    </div>
+
+    <!-- Canvas Background -->
+    <canvas id="bg-canvas" class="fixed inset-0 z-0 pointer-events-none"></canvas>
+
+    <!-- Main Content -->
+    <div class="relative z-10">
+        <!-- Header -->
+        <header class="sticky top-0 z-50 glass-panel-solid border-b border-[var(--glass-border)]">
+            <div class="max-w-7xl mx-auto px-4 py-4">
+                <div class="flex items-center justify-between">
+                    <!-- Logo -->
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl gradient-animate flex items-center justify-center">
+                            <i class="fas fa-globe-asia text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="font-display text-xl font-bold tracking-wider">
+                                <span lang="th">ยุทธศาสตร์กระจก</span>
+                                <span lang="en">MIRROR STRATEGY</span>
+                            </h1>
+                            <p class="text-xs text-[var(--text-muted)] font-mono">
+                                US-CHINA STANDOFF 2026
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <nav class="hidden md:flex items-center gap-2">
+                        <a href="#dashboard" class="nav-link text-sm font-medium">
+                            <span lang="th">แดชบอร์ด</span>
+                            <span lang="en">Dashboard</span>
+                        </a>
+                        <a href="#caribbean" class="nav-link text-sm font-medium">
+                            <span lang="th">แคริบเบียน</span>
+                            <span lang="en">Caribbean</span>
+                        </a>
+                        <a href="#taiwan" class="nav-link text-sm font-medium">
+                            <span lang="th">ไต้หวัน</span>
+                            <span lang="en">Taiwan</span>
+                        </a>
+                        <a href="#impact" class="nav-link text-sm font-medium">
+                            <span lang="th">ผลกระทบ</span>
+                            <span lang="en">Impact</span>
+                        </a>
+                        <a href="#experts" class="nav-link text-sm font-medium">
+                            <span lang="th">วิเคราะห์</span>
+                            <span lang="en">Analysis</span>
+                        </a>
+                    </nav>
+
+                    <!-- Controls -->
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleLang()" class="control-btn text-xs font-mono" id="lang-toggle">
+                            <i class="fas fa-language mr-2"></i>
+                            <span id="lang-label">EN</span>
+                        </button>
+                        <button class="md:hidden control-btn" onclick="toggleMobileNav()">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="dashboard" class="py-16 px-4">
+            <div class="max-w-7xl mx-auto">
+                <!-- Title Block -->
+                <div class="text-center mb-12 fade-up">
+                    <p class="font-mono text-[var(--neon-accent)] text-sm mb-4 tracking-widest">
+                        GEOPOLITICAL ANALYSIS • JANUARY 2026
+                    </p>
+                    <h2 class="font-display text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                        <span lang="th" class="block">ยึดเรือน้ำมันเรา</span>
+                        <span lang="th" class="block text-[var(--neon-danger)]">เราพร้อมยึดเรือขนอาวุธนายคืน</span>
+                        <span lang="en" class="block">Seize Our Oil Tankers</span>
+                        <span lang="en" class="block text-[var(--neon-danger)]">We'll Seize Your Arms Ships</span>
+                    </h2>
+                    <p class="text-xl text-[var(--text-secondary)] max-w-3xl mx-auto">
+                        <span lang="th">จีนส่งสัญญาณชนตรงสหรัฐฯ จากเวเนซุเอลาถึงไต้หวัน—สงครามตัวแทนข้ามซีกโลกเริ่มนับหนึ่ง</span>
+                        <span lang="en">China sends direct confrontation signal to US from Venezuela to Taiwan—Cross-hemisphere proxy war begins</span>
+                    </p>
+                </div>
+
+                <!-- Status Indicators -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                    <!-- Venezuela Status -->
+                    <div class="glass-panel p-6 neon-border-danger pulse-danger fade-up split-usa">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="font-mono text-xs text-[var(--text-muted)]">CARIBBEAN THEATER</span>
+                            <span class="px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-xs font-bold animate-pulse">
+                                <span lang="th">ปิดล้อมดำเนินการ</span>
+                                <span lang="en">BLOCKADE ACTIVE</span>
+                            </span>
+                        </div>
+                        <h3 class="font-display text-2xl font-bold mb-2">
+                            <span lang="th">เวเนซุเอลา</span>
+                            <span lang="en">Venezuela</span>
+                        </h3>
+                        <p class="text-[var(--text-secondary)] mb-4">
+                            <span lang="th">สหรัฐฯ ยึดเรือน้ำมัน • เรือจีนท้าทายคำสั่ง</span>
+                            <span lang="en">US seizing tankers • Chinese vessels defying orders</span>
+                        </p>
+                        <div class="flex items-center gap-4 text-sm">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-ship text-blue-400"></i>
+                                <span class="font-mono">Thousand Sunny</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-ship text-blue-400"></i>
+                                <span class="font-mono">Xing Ye</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Taiwan Status -->
+                    <div class="glass-panel p-6 neon-border-danger pulse-danger fade-up split-china" style="animation-delay: 0.2s">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="font-mono text-xs text-[var(--text-muted)]">TAIWAN STRAIT</span>
+                            <span class="px-3 py-1 bg-orange-500/20 text-orange-400 rounded-full text-xs font-bold animate-pulse">
+                                <span lang="th">ภัยคุกคามขั้นสูง</span>
+                                <span lang="en">HIGH THREAT</span>
+                            </span>
+                        </div>
+                        <h3 class="font-display text-2xl font-bold mb-2">
+                            <span lang="th">ช่องแคบไต้หวัน</span>
+                            <span lang="en">Taiwan Strait</span>
+                        </h3>
+                        <p class="text-[var(--text-secondary)] mb-4">
+                            <span lang="th">โปสเตอร์ "扼喉" เปิดตัว • ซ้อมรบใหญ่ที่สุด</span>
+                            <span lang="en">"Throat-choking" poster released • Largest drills ever</span>
+                        </p>
+                        <div class="flex items-center gap-4 text-sm">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-crosshairs text-red-400"></i>
+                                <span class="font-mono">HIMARS Target</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-helicopter text-red-400"></i>
+                                <span class="font-mono">CCG Ops</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Stats Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+                    <div class="stat-card glass-panel p-6 text-center fade-up" style="animation-delay: 0.1s">
+                        <div class="font-display text-3xl md:text-4xl font-bold text-[var(--neon-danger)] mb-2">$2.45T</div>
+                        <p class="text-xs text-[var(--text-muted)]">
+                            <span lang="th">การค้าผ่านช่องแคบไต้หวัน/ปี</span>
+                            <span lang="en">Annual Taiwan Strait Trade</span>
+                        </p>
+                    </div>
+                    <div class="stat-card glass-panel p-6 text-center fade-up" style="animation-delay: 0.2s">
+                        <div class="font-display text-3xl md:text-4xl font-bold text-[var(--neon-warning)] mb-2">$21.5B</div>
+                        <p class="text-xs text-[var(--text-muted)]">
+                            <span lang="th">อาวุธค้างส่งไต้หวัน</span>
+                            <span lang="en">Taiwan Arms Backlog</span>
+                        </p>
+                    </div>
+                    <div class="stat-card glass-panel p-6 text-center fade-up" style="animation-delay: 0.3s">
+                        <div class="font-display text-3xl md:text-4xl font-bold text-[var(--neon-core)] mb-2">$10T</div>
+                        <p class="text-xs text-[var(--text-muted)]">
+                            <span lang="th">ต้นทุนสงครามเต็มรูปแบบ</span>
+                            <span lang="en">Full Conflict Cost</span>
+                        </p>
+                    </div>
+                    <div class="stat-card glass-panel p-6 text-center fade-up" style="animation-delay: 0.4s">
+                        <div class="font-display text-3xl md:text-4xl font-bold text-[var(--neon-success)] mb-2">1,200</div>
+                        <p class="text-xs text-[var(--text-muted)]">
+                            <span lang="th">เรือผ่านช่องแคบ/สัปดาห์</span>
+                            <span lang="en">Ships/Week Through Strait</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Network Visualization -->
+                <div class="glass-panel p-6 mb-12 fade-up">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-display text-xl font-bold">
+                            <span lang="th">แผนที่ยุทธศาสตร์เชื่อมโยง</span>
+                            <span lang="en">Strategic Network Map</span>
+                        </h3>
+                        <div class="flex gap-2">
+                            <button class="control-btn active" data-layout="force" onclick="changeLayout('force')">
+                                <i class="fas fa-project-diagram mr-2"></i>Force
+                            </button>
+                            <button class="control-btn" data-layout="radial" onclick="changeLayout('radial')">
+                                <i class="fas fa-circle-notch mr-2"></i>Radial
+                            </button>
+                            <button class="control-btn" data-layout="tree" onclick="changeLayout('tree')">
+                                <i class="fas fa-sitemap mr-2"></i>Tree
+                            </button>
+                        </div>
+                    </div>
+                    <div id="d3-container" class="rounded-xl overflow-hidden bg-[var(--space-deep)]"></div>
+                    <div class="mt-4 flex flex-wrap gap-4 text-sm">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded-full bg-blue-500"></div>
+                            <span lang="th">สหรัฐอเมริกา</span>
+                            <span lang="en">United States</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded-full bg-red-500"></div>
+                            <span lang="th">จีน</span>
+                            <span lang="en">China</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded-full bg-orange-500"></div>
+                            <span lang="th">ผลกระทบเศรษฐกิจ</span>
+                            <span lang="en">Economic Impact</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded-full bg-green-500"></div>
+                            <span lang="th">เป้าหมาย</span>
+                            <span lang="en">Targets</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Caribbean Theater Section -->
+        <section id="caribbean" class="py-16 px-4 bg-gradient-to-b from-transparent via-blue-900/10 to-transparent">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex items-center gap-4 mb-8 fade-up">
+                    <div class="w-1 h-12 bg-blue-500 rounded-full"></div>
+                    <div>
+                        <p class="font-mono text-xs text-blue-400 tracking-widest">THEATER 01</p>
+                        <h2 class="font-display text-3xl font-bold">
+                            <span lang="th">สมรภูมิแคริบเบียน</span>
+                            <span lang="en">Caribbean Theater</span>
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- US Actions -->
+                    <div class="glass-panel p-8 fade-up">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                <i class="fas fa-flag-usa text-blue-400"></i>
+                            </div>
+                            <h3 class="font-display text-xl font-bold">
+                                <span lang="th">ปฏิบัติการสหรัฐฯ</span>
+                                <span lang="en">US Operations</span>
+                            </h3>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div class="bg-blue-500/10 rounded-xl p-4 border border-blue-500/20">
+                                <h4 class="font-bold mb-2">
+                                    <span lang="th">เรือที่ถูกยึด</span>
+                                    <span lang="en">Seized Vessels</span>
+                                </h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-mono text-sm">Skipper</span>
+                                        <span class="text-xs text-[var(--text-muted)]">10 ธ.ค. 2025</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-mono text-sm">Centuries</span>
+                                        <span class="text-xs text-[var(--text-muted)]">20 ธ.ค. 2025</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold mb-3">
+                                    <span lang="th">ฐานทางกฎหมาย</span>
+                                    <span lang="en">Legal Basis</span>
+                                </h4>
+                                <p class="text-[var(--text-secondary)] text-sm leading-relaxed">
+                                    <span lang="th">ข้อตกลง Salas-Becker (2002) กับปานามา อนุญาตให้สหรัฐฯ ขึ้นตรวจค้นและยึดเรือที่ต้องสงสัยว่าละเมิดมาตรการคว่ำบาตร</span>
+                                    <span lang="en">Salas-Becker agreement (2002) with Panama allows US to board and seize vessels suspected of sanctions violations</span>
+                                </p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold mb-3">
+                                    <span lang="th">มูลค่าที่ยึด</span>
+                                    <span lang="en">Seized Value</span>
+                                </h4>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="font-display text-3xl font-bold text-blue-400">$84M</span>
+                                    <span class="text-sm text-[var(--text-muted)]">
+                                        <span lang="th">(น้ำมัน Merey 1.8 ล้านบาร์เรล)</span>
+                                        <span lang="en">(1.8M barrels Merey crude)</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chinese Response -->
+                    <div class="glass-panel p-8 fade-up" style="animation-delay: 0.2s">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
+                                <i class="fas fa-ship text-red-400"></i>
+                            </div>
+                            <h3 class="font-display text-xl font-bold">
+                                <span lang="th">เรือจีนท้าทาย</span>
+                                <span lang="en">Chinese Defiance</span>
+                            </h3>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div class="bg-red-500/10 rounded-xl p-4 border border-red-500/20">
+                                <h4 class="font-bold mb-2">
+                                    <span lang="th">เรือ VLCC ที่กำลังเดินทาง</span>
+                                    <span lang="en">VLCCs in Transit</span>
+                                </h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <span class="font-mono text-sm">Thousand Sunny</span>
+                                            <span class="text-xs text-[var(--text-muted)] ml-2">IMO 9623269</span>
+                                        </div>
+                                        <span class="px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs">
+                                            <span lang="th">เปลี่ยนเส้นทาง</span>
+                                            <span lang="en">Diverted</span>
+                                        </span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <span class="font-mono text-sm">Xing Ye</span>
+                                            <span class="text-xs text-[var(--text-muted)] ml-2">IMO 9590058</span>
+                                        </div>
+                                        <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">
+                                            <span lang="th">รอคอย</span>
+                                            <span lang="en">Loitering</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold mb-3">
+                                    <span lang="th">กลยุทธ์</span>
+                                    <span lang="en">Strategy</span>
+                                </h4>
+                                <p class="text-[var(--text-secondary)] text-sm leading-relaxed">
+                                    <span lang="th">ทดสอบว่าเส้นแดงของสหรัฐฯ อยู่ตรงไหน—การแล่นฝ่าปิดล้อมไม่ใช่ความสะเพร่า หากแต่เป็นการท้าทายอย่างมีแผน</span>
+                                    <span lang="en">Testing where the US red line truly lies—navigating the blockade is deliberate strategic probing, not carelessness</span>
+                                </p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold mb-3">
+                                    <span lang="th">ส่วนแบ่งน้ำมันเวเนซุเอลา</span>
+                                    <span lang="en">Venezuela Oil Share</span>
+                                </h4>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="font-display text-3xl font-bold text-red-400">76%</span>
+                                    <span class="text-sm text-[var(--text-muted)]">
+                                        <span lang="th">(~900,000 บาร์เรล/วัน)</span>
+                                        <span lang="en">(~900,000 bbl/day)</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expert Quote -->
+                <div class="quote-block mt-8 fade-up">
+                    <p class="text-xl italic mb-4 relative z-10">
+                        <span lang="th">"ต้นทุนของการทำธุรกิจกับเวเนซุเอลาเพิ่มขึ้นอย่างมาก การยึดเรือจริงเป็นความเสี่ยงระดับที่แตกต่างออกไปโดยสิ้นเชิง"</span>
+                        <span lang="en">"The cost of doing business with Venezuela just went way up. A physical seizure is an entirely different category of risk."</span>
+                    </p>
+                    <cite class="text-sm text-[var(--text-muted)]">
+                        — Claire Jungman, Director of Maritime Risk, Vortexa
+                    </cite>
+                </div>
+            </div>
+        </section>
+
+        <!-- Taiwan Theater Section -->
+        <section id="taiwan" class="py-16 px-4 bg-gradient-to-b from-transparent via-red-900/10 to-transparent">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex items-center gap-4 mb-8 fade-up">
+                    <div class="w-1 h-12 bg-red-500 rounded-full"></div>
+                    <div>
+                        <p class="font-mono text-xs text-red-400 tracking-widest">THEATER 02</p>
+                        <h2 class="font-display text-3xl font-bold">
+                            <span lang="th">สมรภูมิช่องแคบไต้หวัน</span>
+                            <span lang="en">Taiwan Strait Theater</span>
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- CCG Poster Verification -->
+                <div class="glass-panel p-8 mb-8 fade-up">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
+                            <i class="fas fa-check-circle text-green-400"></i>
+                        </div>
+                        <div>
+                            <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs font-bold mr-2">
+                                <span lang="th">ยืนยันแล้ว</span>
+                                <span lang="en">VERIFIED</span>
+                            </span>
+                            <h3 class="font-display text-xl font-bold inline">
+                                <span lang="th">โปสเตอร์ "扼喉" (Throat-choking)</span>
+                                <span lang="en">"扼喉" (Throat-choking) Poster</span>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div>
+                            <div class="bg-gradient-to-br from-red-900/30 to-orange-900/30 rounded-xl p-6 border border-red-500/20 mb-6">
+                                <h4 class="font-bold mb-4 text-red-400">
+                                    <i class="fas fa-image mr-2"></i>
+                                    <span lang="th">รายละเอียดภาพ</span>
+                                    <span lang="en">Visual Details</span>
+                                </h4>
+                                <ul class="space-y-3 text-sm">
+                                    <li class="flex items-start gap-3">
+                                        <i class="fas fa-ship text-orange-400 mt-1"></i>
+                                        <span>
+                                            <span lang="th">เรือขนส่งสินค้า <strong>Evergreen</strong> ของไต้หวัน</span>
+                                            <span lang="en">Taiwan's <strong>Evergreen</strong> cargo vessel</span>
+                                        </span>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <i class="fas fa-rocket text-orange-400 mt-1"></i>
+                                        <span>
+                                            <span lang="th">ระบบจรวด <strong>HIMARS</strong> บนดาดฟ้า</span>
+                                            <span lang="en"><strong>HIMARS</strong> rocket systems on deck</span>
+                                        </span>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <i class="fas fa-helicopter text-orange-400 mt-1"></i>
+                                        <span>
+                                            <span lang="th">เจ้าหน้าที่ CCG โรยตัวจากเฮลิคอปเตอร์</span>
+                                            <span lang="en">CCG officers fast-roping from helicopter</span>
+                                        </span>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <i class="fas fa-link text-orange-400 mt-1"></i>
+                                        <span>
+                                            <span lang="th">ภาพกุญแจมือสื่อถึงการบังคับใช้กฎหมาย</span>
+                                            <span lang="en">Handcuff imagery symbolizing enforcement</span>
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center p-3 bg-[var(--space-surface)] rounded-lg">
+                                    <span class="text-sm text-[var(--text-muted)]">
+                                        <span lang="th">วันที่เผยแพร่</span>
+                                        <span lang="en">Release Date</span>
+                                    </span>
+                                    <span class="font-mono font-bold">30 ธ.ค. 2025</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-[var(--space-surface)] rounded-lg">
+                                    <span class="text-sm text-[var(--text-muted)]">
+                                        <span lang="th">ชื่อภาษาจีน</span>
+                                        <span lang="en">Chinese Name</span>
+                                    </span>
+                                    <span class="font-mono font-bold text-red-400">扼喉 (È hóu)</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-[var(--space-surface)] rounded-lg">
+                                    <span class="text-sm text-[var(--text-muted)]">
+                                        <span lang="th">ช่องทางเผยแพร่</span>
+                                        <span lang="en">Distribution</span>
+                                    </span>
+                                    <span class="font-mono text-sm">CCG + Global Times</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="bg-[var(--space-surface)] rounded-xl p-6 mb-6">
+                                <h4 class="font-bold mb-4">
+                                    <span lang="th">บริบทการซ้อมรบ</span>
+                                    <span lang="en">Military Exercise Context</span>
+                                </h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <span class="text-xs text-[var(--text-muted)]">
+                                            <span lang="th">ชื่อปฏิบัติการ</span>
+                                            <span lang="en">Operation Name</span>
+                                        </span>
+                                        <p class="font-display font-bold text-lg text-[var(--neon-accent)]">Justice Mission 2025</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs text-[var(--text-muted)]">
+                                            <span lang="th">ระยะเวลา</span>
+                                            <span lang="en">Duration</span>
+                                        </span>
+                                        <p class="font-mono">29-31 ธ.ค. 2025</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs text-[var(--text-muted)]">
+                                            <span lang="th">ตอบโต้</span>
+                                            <span lang="en">Response to</span>
+                                        </span>
+                                        <p class="text-sm">
+                                            <span lang="th">การขายอาวุธสหรัฐฯ-ไต้หวัน มูลค่า <strong>$11.1 พันล้าน</strong> (ใหญ่ที่สุดในประวัติศาสตร์)</span>
+                                            <span lang="en"><strong>$11.1B</strong> US-Taiwan arms sale (largest in history)</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="quote-block">
+                                <p class="text-lg italic mb-3 relative z-10">
+                                    <span lang="th">"你扣我油轮，我没收你军火"</span>
+                                    <span lang="en">"你扣我油轮，我没收你军火"</span>
+                                </p>
+                                <p class="text-sm text-[var(--text-secondary)] mb-2">
+                                    <span lang="th">"คุณยึดเรือน้ำมันเรา เราจะริบอาวุธคุณ"</span>
+                                    <span lang="en">"You seize my oil tankers, I confiscate your military goods"</span>
+                                </p>
+                                <cite class="text-xs text-[var(--text-muted)]">
+                                    — NetEase Commentary, December 2025
+                                </cite>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Legal Analysis -->
+                <div class="glass-panel p-8 fade-up">
+                    <h3 class="font-display text-xl font-bold mb-6">
+                        <i class="fas fa-balance-scale text-[var(--neon-accent)] mr-3"></i>
+                        <span lang="th">การวิเคราะห์ทางกฎหมาย</span>
+                        <span lang="en">Legal Analysis</span>
+                    </h3>
+
+                    <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-6 mb-6">
+                        <p class="text-sm leading-relaxed">
+                            <span lang="th">"หากกองกำลังเอกราชไต้หวันใช้เรือพลเรือนขนส่งอาวุธ... เรือบรรทุกสินค้าเหล่านั้นอาจถูกปฏิบัติเสมือนเป้าหมายทางทหาร"</span>
+                            <span lang="en">"If Taiwan independence forces use civilian vessels to transport weapons... the cargo ships may be treated as military targets"</span>
+                        </p>
+                        <cite class="text-xs text-[var(--text-muted)] mt-3 block">
+                            — PLA Academy of Military Science
+                        </cite>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold mb-3 text-blue-400">
+                                <span lang="th">ข้อโต้แย้งของสหรัฐฯ</span>
+                                <span lang="en">US Position</span>
+                            </h4>
+                            <p class="text-sm text-[var(--text-secondary)]">
+                                <span lang="th">การบังคับใช้มาตรการคว่ำบาตรตามกฎหมายภายในและข้อตกลงทวิภาคี มุ่งเป้าที่ระบอบมาดูโรที่ไม่ชอบธรรม</span>
+                                <span lang="en">Sanctions enforcement under domestic law and bilateral agreements, targeting illegitimate Maduro regime</span>
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-3 text-red-400">
+                                <span lang="th">ข้อโต้แย้งของจีน</span>
+                                <span lang="en">China Position</span>
+                            </h4>
+                            <p class="text-sm text-[var(--text-secondary)]">
+                                <span lang="th">การบังคับใช้กฎหมายฝ่ายเดียวในทะเลสากล (Unilateral Bullying) ถ้าสหรัฐฯ ทำได้ จีนก็อ้างอธิปไตยและความมั่นคงได้เช่นกัน</span>
+                                <span lang="en">Unilateral enforcement in international waters; if US can do it, China can cite sovereignty and security likewise</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Strategic Impact Section -->
+        <section id="impact" class="py-16 px-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex items-center gap-4 mb-8 fade-up">
+                    <div class="w-1 h-12 bg-[var(--neon-warning)] rounded-full"></div>
+                    <div>
+                        <p class="font-mono text-xs text-[var(--neon-warning)] tracking-widest">STRATEGIC IMPACT</p>
+                        <h2 class="font-display text-3xl font-bold">
+                            <span lang="th">ผลกระทบเชิงยุทธศาสตร์</span>
+                            <span lang="en">Strategic Implications</span>
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- Impact Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <!-- Oil Markets -->
+                    <div class="stat-card glass-panel p-6 fade-up">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center">
+                                <i class="fas fa-oil-can text-orange-400 text-xl"></i>
+                            </div>
+                            <h3 class="font-display font-bold">
+                                <span lang="th">ตลาดน้ำมัน</span>
+                                <span lang="en">Oil Markets</span>
+                            </h3>
+                        </div>
+                        <ul class="space-y-3 text-sm text-[var(--text-secondary)]">
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-chart-line text-orange-400 mt-1"></i>
+                                <span>
+                                    <span lang="th">ความผันผวนและ "Fear Premium" เพิ่มขึ้น</span>
+                                    <span lang="en">Increased volatility and "fear premium"</span>
+                                </span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-warehouse text-orange-400 mt-1"></i>
+                                <span>
+                                    <span lang="th">จีนสร้างคลังน้ำมันใหม่ <strong>11 แห่ง</strong> ภายในปี 2026</span>
+                                    <span lang="en">China building <strong>11 new</strong> storage sites by 2026</span>
+                                </span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-route text-orange-400 mt-1"></i>
+                                <span>
+                                    <span lang="th">บังคับให้กระจายห่วงโซ่อุปทาน</span>
+                                    <span lang="en">Forced supply chain diversification</span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Shipping Routes -->
+                    <div class="stat-card glass-panel p-6 fade-up" style="animation-delay: 0.1s">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center">
+                                <i class="fas fa-ship text-cyan-400 text-xl"></i>
+                            </div>
+                            <h3 class="font-display font-bold">
+                                <span lang="th">เส้นทางเดินเรือ</span>
+                                <span lang="en">Shipping Routes</span>
+                            </h3>
+                        </div>
+                        <ul class="space-y-3 text-sm text-[var(--text-secondary)]">
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-shield-alt text-cyan-400 mt-1"></i>
+                                <span>
+                                    <span lang="th">เบี้ยประกันความเสี่ยงสงครามพุ่ง <strong>25-40%</strong></span>
+                                    <span lang="en">War risk premiums up <strong>25-40%</strong></span>
+                                </span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-map-marked-alt text-cyan-400 mt-1"></i>
+                                <span>
+                                    <span lang="th">เปลี่ยนเส้นทางเพิ่มระยะทาง <strong>~1,000 ไมล์</strong></span>
+                                    <span lang="en">Rerouting adds <strong>~1,000 miles</strong></span>
+                                </span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-clock text-cyan-400 mt-1"></i>
+                                <span>
+                                    <span lang="th">เวลาเดินทางเพิ่ม <strong>15-20%</strong></span>
+                                    <span lang="en">Journey times up <strong>15-20%</strong></span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Defense Supply Chain -->
+                    <div class="stat-card glass-panel p-6 fade-up" style="animation-delay: 0.2s">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
+                                <i class="fas fa-fighter-jet text-red-400 text-xl"></i>
+                            </div>
+                            <h3 class="font-display font-bold">
+                                <span lang="th">ห่วงโซ่อาวุธ</span>
+                                <span lang="en">Defense Supply</span>
+                            </h3>
+                        </div>
+                        <ul class="space-y-3 text-sm text-[var(--text-secondary)]">
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-exclamation-triangle text-red-400 mt-1"></i>
+                                <span>
+                                    <span lang="th">อาวุธค้างส่ง <strong>$21.54B</strong> (110% ของงบประมาณ)</span>
+                                    <span lang="en">Backlog <strong>$21.54B</strong> (110% of budget)</span>
+                                </span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-plane text-red-400 mt-1"></i>
+                                <span>
+                                    <span lang="th">F-16 Block 70 ล่าช้า <strong>~2 ปี</strong></span>
+                                    <span lang="en">F-16 Block 70 delayed <strong>~2 years</strong></span>
+                                </span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-check-circle text-green-400 mt-1"></i>
+                                <span>
+                                    <span lang="th">HIMARS เร็วกว่ากำหนด <strong>1 ปี</strong></span>
+                                    <span lang="en">HIMARS <strong>1 year ahead</strong> of schedule</span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Taiwan Strait Trade Data -->
+                <div class="glass-panel p-8 mb-8 fade-up">
+                    <h3 class="font-display text-xl font-bold mb-6">
+                        <span lang="th">ข้อมูลการค้าผ่านช่องแคบไต้หวัน (CSIS)</span>
+                        <span lang="en">Taiwan Strait Trade Data (CSIS)</span>
+                    </h3>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="text-center p-4 bg-[var(--space-surface)] rounded-xl">
+                            <div class="font-display text-2xl font-bold text-[var(--neon-core)]">$2.45T</div>
+                            <p class="text-xs text-[var(--text-muted)]">
+                                <span lang="th">มูลค่าการค้า/ปี</span>
+                                <span lang="en">Annual Trade Value</span>
+                            </p>
+                        </div>
+                        <div class="text-center p-4 bg-[var(--space-surface)] rounded-xl">
+                            <div class="font-display text-2xl font-bold text-[var(--neon-accent)]">20%+</div>
+                            <p class="text-xs text-[var(--text-muted)]">
+                                <span lang="th">ส่วนแบ่งการค้าทางทะเลโลก</span>
+                                <span lang="en">Global Maritime Trade Share</span>
+                            </p>
+                        </div>
+                        <div class="text-center p-4 bg-[var(--space-surface)] rounded-xl">
+                            <div class="font-display text-2xl font-bold text-[var(--neon-warning)]">$444B</div>
+                            <p class="text-xs text-[var(--text-muted)]">
+                                <span lang="th">การค้าญี่ปุ่นที่เกี่ยวข้อง</span>
+                                <span lang="en">Japan Related Trade</span>
+                            </p>
+                        </div>
+                        <div class="text-center p-4 bg-[var(--space-surface)] rounded-xl">
+                            <div class="font-display text-2xl font-bold text-[var(--neon-success)]">$357B</div>
+                            <p class="text-xs text-[var(--text-muted)]">
+                                <span lang="th">การค้าเกาหลีใต้ที่เกี่ยวข้อง</span>
+                                <span lang="en">South Korea Related Trade</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fas fa-exclamation-circle text-red-400 text-xl"></i>
+                            <h4 class="font-bold text-red-400">
+                                <span lang="th">ต้นทุนสงครามเต็มรูปแบบ (Bloomberg Economics)</span>
+                                <span lang="en">Full Conflict Cost (Bloomberg Economics)</span>
+                            </h4>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                            <div>
+                                <span class="text-[var(--text-muted)]">
+                                    <span lang="th">ต้นทุนรวม</span>
+                                    <span lang="en">Total Cost</span>
+                                </span>
+                                <p class="font-display font-bold text-xl text-red-400">$10T</p>
+                            </div>
+                            <div>
+                                <span class="text-[var(--text-muted)]">
+                                    <span lang="th">GDP โลกลด</span>
+                                    <span lang="en">Global GDP Drop</span>
+                                </span>
+                                <p class="font-display font-bold text-xl">10%</p>
+                            </div>
+                            <div>
+                                <span class="text-[var(--text-muted)]">
+                                    <span lang="th">GDP ไต้หวัน (ปีที่ 1)</span>
+                                    <span lang="en">Taiwan GDP (Y1)</span>
+                                </span>
+                                <p class="font-display font-bold text-xl">-12.2%</p>
+                            </div>
+                            <div>
+                                <span class="text-[var(--text-muted)]">
+                                    <span lang="th">GDP จีน (ปีที่ 1)</span>
+                                    <span lang="en">China GDP (Y1)</span>
+                                </span>
+                                <p class="font-display font-bold text-xl">-8.9%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expert Analysis Section -->
+        <section id="experts" class="py-16 px-4 bg-gradient-to-b from-transparent via-purple-900/10 to-transparent">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex items-center gap-4 mb-8 fade-up">
+                    <div class="w-1 h-12 bg-purple-500 rounded-full"></div>
+                    <div>
+                        <p class="font-mono text-xs text-purple-400 tracking-widest">EXPERT ANALYSIS</p>
+                        <h2 class="font-display text-3xl font-bold">
+                            <span lang="th">มุมมองผู้เชี่ยวชาญ: "สงครามตัวแทนยุคใหม่" หรือ "การกัดกร่อนบรรทัดฐาน"?</span>
+                            <span lang="en">Expert Views: "New Proxy War" or "Normative Erosion"?</span>
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- Expert Quotes Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Isaac Kardon -->
+                    <div class="glass-panel p-6 fade-up">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">Isaac Kardon</h4>
+                                <p class="text-xs text-[var(--text-muted)]">Senior Fellow, Carnegie Endowment for International Peace</p>
+                            </div>
+                        </div>
+                        <blockquote class="text-sm italic text-[var(--text-secondary)] border-l-2 border-purple-500 pl-4">
+                            <span lang="th">"สหรัฐฯ กำลังสร้างความเสียหายอย่างมากต่อคุณภาพเชิงบรรทัดฐานของกฎเกณฑ์ นี่คือการโจมตีครั้งใหญ่ต่อความน่าเชื่อถือของกฎหมายระหว่างประเทศในการยับยั้งผู้กระทำอื่น... ทุกอย่างเกี่ยวกับเรื่องนี้ทำให้น้ำขุ่น"</span>
+                            <span lang="en">"Ultimately, the US is doing a lot of damage to the normative quality of the rules. That is a major blow to the credibility of international law to restrain other actors... everything about it muddies the waters."</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Craig Singleton -->
+                    <div class="glass-panel p-6 fade-up" style="animation-delay: 0.1s">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">Craig Singleton</h4>
+                                <p class="text-xs text-[var(--text-muted)]">Foundation for Defense of Democracies (FDD)</p>
+                            </div>
+                        </div>
+                        <blockquote class="text-sm italic text-[var(--text-secondary)] border-l-2 border-orange-500 pl-4">
+                            <span lang="th">"หากสหรัฐฯ ปิดล้อมเพื่อเปลี่ยนผลลัพธ์ทางการเมืองในเวเนซุเอลา จีนก็สามารถอ้างเหตุผลว่าใช้มาตรการบีบบังคับต่อไต้หวันได้ในนามของ 'ความมั่นคง' บริบททางกฎหมายต่างกัน แต่ช่องว่างทางโฆษณาชวนเชื่อเปิดกว้าง"</span>
+                            <span lang="en">"If the US blockades to change political outcomes in Venezuela, China can justify coercive measures against Taiwan on so-called security grounds. The legal contexts differ, but the propaganda opening is real."</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Milena Sterio -->
+                    <div class="glass-panel p-6 fade-up" style="animation-delay: 0.2s">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">Milena Sterio</h4>
+                                <p class="text-xs text-[var(--text-muted)]">Cleveland State University, Maritime Law Expert</p>
+                            </div>
+                        </div>
+                        <blockquote class="text-sm italic text-[var(--text-secondary)] border-l-2 border-green-500 pl-4">
+                            <span lang="th">"การปิดล้อมของสหรัฐฯ จะบั่นทอนความสามารถของเราในการวิพากษ์การปิดล้อมไต้หวันของจีน กฎหมายระหว่างประเทศชุดเดียวกันใช้กับทุกรัฐ และมันจะขัดแย้งหากสหรัฐฯ วิจารณ์คนอื่นที่ทำสิ่งที่เราทำ"</span>
+                            <span lang="en">"A US blockade would undermine our ability to criticize a Chinese blockade of Taiwan. The same rules of international law apply to all states and it would be inconsistent for the US to criticize others for doing what we are doing."</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Andrew Lipow -->
+                    <div class="glass-panel p-6 fade-up" style="animation-delay: 0.3s">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-500 to-amber-500 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">Andrew Lipow</h4>
+                                <p class="text-xs text-[var(--text-muted)]">Lipow Oil Associates</p>
+                            </div>
+                        </div>
+                        <blockquote class="text-sm italic text-[var(--text-secondary)] border-l-2 border-yellow-500 pl-4">
+                            <span lang="th">"การบีบน้ำมันเวเนซุเอลา ไม่เพียงสร้างแรงกดดันมหาศาลต่อระบอบมาดูโร แต่ยังกระทบจีนในเชิงยุทธศาสตร์ด้วย"</span>
+                            <span lang="en">"By squeezing Venezuelan oil, you are not only putting tremendous pressure on the Maduro regime, but you are also impacting China strategically."</span>
+                        </blockquote>
+                    </div>
+                </div>
+
+                <!-- Key Finding -->
+                <div class="glass-panel p-8 neon-border fade-up">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fas fa-lightbulb text-[var(--neon-warning)] text-2xl"></i>
+                        <h3 class="font-display text-xl font-bold">
+                            <span lang="th">ข้อค้นพบสำคัญ</span>
+                            <span lang="en">Key Finding</span>
+                        </h3>
+                    </div>
+                    <p class="text-lg leading-relaxed mb-6">
+                        <span lang="th">นักวิเคราะห์จากสถาบันชั้นนำ (CSIS, Carnegie, FDD) <strong class="text-[var(--neon-warning)]">ไม่ได้ใช้คำว่า "สงครามตัวแทน"</strong> แต่เน้นไปที่ <strong class="text-[var(--neon-core)]">"การกัดกร่อนบรรทัดฐาน" (Normative Erosion)</strong> และ <strong class="text-[var(--neon-accent)]">"กลยุทธ์กระจก" (Mirror Strategy)</strong> ซึ่งอธิบายพลวัตปัจจุบันได้แม่นยำกว่า</span>
+                        <span lang="en">Analysts from leading institutions (CSIS, Carnegie, FDD) <strong class="text-[var(--neon-warning)]">do not use "proxy war"</strong> terminology, instead emphasizing <strong class="text-[var(--neon-core)]">"Normative Erosion"</strong> and <strong class="text-[var(--neon-accent)]">"Mirror Strategy"</strong> as more accurate descriptors of current dynamics</span>
+                    </p>
+                    <div class="bg-[var(--space-surface)] rounded-xl p-4">
+                        <p class="text-sm text-[var(--text-secondary)]">
+                            <span lang="th"><strong>สิ่งที่กำลังเกิดขึ้น:</strong> ไม่ใช่สงครามตัวแทน (ยัง) แต่เป็นการแข่งขันที่อันตรายเพื่อกำหนด "กฎ" ที่ควบคุมพฤติกรรมมหาอำนาจในทะเลหลวง</span>
+                            <span lang="en"><strong>What's emerging:</strong> Not proxy war (yet) but dangerous competition over the "rules" governing great power behavior on the high seas</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Section -->
+        <section id="timeline" class="py-16 px-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex items-center gap-4 mb-8 fade-up">
+                    <div class="w-1 h-12 bg-[var(--neon-accent)] rounded-full"></div>
+                    <div>
+                        <p class="font-mono text-xs text-[var(--neon-accent)] tracking-widest">TIMELINE</p>
+                        <h2 class="font-display text-3xl font-bold">
+                            <span lang="th">ไทม์ไลน์เหตุการณ์</span>
+                            <span lang="en">Event Timeline</span>
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <div class="timeline-item fade-up">
+                        <div class="timeline-dot">
+                            <i class="fas fa-ship text-white text-xs"></i>
+                        </div>
+                        <div class="glass-panel p-6">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="font-mono text-sm text-[var(--neon-accent)]">10 ธ.ค. 2025</span>
+                                <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">US</span>
+                            </div>
+                            <h4 class="font-bold mb-2">
+                                <span lang="th">ยึดเรือบรรทุกน้ำมัน Skipper</span>
+                                <span lang="en">Seizure of tanker Skipper</span>
+                            </h4>
+                            <p class="text-sm text-[var(--text-secondary)]">
+                                <span lang="th">สหรัฐฯ ยึดเรือบรรทุกน้ำมันที่ขนน้ำมันเวเนซุเอลา ภายใต้ข้อตกลง Salas-Becker</span>
+                                <span lang="en">US seizes Venezuelan oil tanker under Salas-Becker agreement</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item fade-up" style="animation-delay: 0.1s">
+                        <div class="timeline-dot" style="background: var(--gradient-fire);">
+                            <i class="fas fa-ship text-white text-xs"></i>
+                        </div>
+                        <div class="glass-panel p-6">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="font-mono text-sm text-[var(--neon-accent)]">20 ธ.ค. 2025</span>
+                                <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">US</span>
+                            </div>
+                            <h4 class="font-bold mb-2">
+                                <span lang="th">ยึดเรือบรรทุกน้ำมัน Centuries</span>
+                                <span lang="en">Seizure of tanker Centuries</span>
+                            </h4>
+                            <p class="text-sm text-[var(--text-secondary)]">
+                                <span lang="th">การยึดเรือครั้งที่สอง ยกระดับแรงกดดันต่อเวเนซุเอลาและจีน</span>
+                                <span lang="en">Second seizure escalates pressure on Venezuela and China</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item fade-up" style="animation-delay: 0.2s">
+                        <div class="timeline-dot" style="background: linear-gradient(135deg, #dc2626, #f59e0b);">
+                            <i class="fas fa-bullhorn text-white text-xs"></i>
+                        </div>
+                        <div class="glass-panel p-6">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="font-mono text-sm text-[var(--neon-accent)]">22 ธ.ค. 2025</span>
+                                <span class="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">CN</span>
+                            </div>
+                            <h4 class="font-bold mb-2">
+                                <span lang="th">กระทรวงต่างประเทศจีนประณาม</span>
+                                <span lang="en">China Foreign Ministry Condemns</span>
+                            </h4>
+                            <p class="text-sm text-[var(--text-secondary)]">
+                                <span lang="th">จีนประณามการยึดเรือว่าเป็น "การกลั่นแกล้งฝ่ายเดียว" (Unilateral Bullying)</span>
+                                <span lang="en">China condemns seizures as "unilateral bullying"</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item fade-up" style="animation-delay: 0.3s">
+                        <div class="timeline-dot" style="background: linear-gradient(135deg, #dc2626, #7c2d12);">
+                            <i class="fas fa-fighter-jet text-white text-xs"></i>
+                        </div>
+                        <div class="glass-panel p-6 neon-border-danger">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="font-mono text-sm text-[var(--neon-danger)]">29-31 ธ.ค. 2025</span>
+                                <span class="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">CN</span>
+                                <span class="px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs animate-pulse">
+                                    <span lang="th">สำคัญ</span>
+                                    <span lang="en">KEY</span>
+                                </span>
+                            </div>
+                            <h4 class="font-bold mb-2">
+                                <span lang="th">ซ้อมรบ "Justice Mission 2025"</span>
+                                <span lang="en">"Justice Mission 2025" Drills</span>
+                            </h4>
+                            <p class="text-sm text-[var(--text-secondary)]">
+                                <span lang="th">กองบัญชาการกองทัพภาคตะวันออก (PLA) จัดซ้อมรบล้อมไต้หวัน ใหญ่ที่สุดในประวัติศาสตร์</span>
+                                <span lang="en">PLA Eastern Theater Command conducts largest-ever encirclement drills around Taiwan</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item fade-up" style="animation-delay: 0.4s">
+                        <div class="timeline-dot" style="background: linear-gradient(135deg, #dc2626, #991b1b);">
+                            <i class="fas fa-image text-white text-xs"></i>
+                        </div>
+                        <div class="glass-panel p-6 neon-border-danger">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="font-mono text-sm text-[var(--neon-danger)]">30 ธ.ค. 2025</span>
+                                <span class="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">CN</span>
+                                <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">
+                                    <span lang="th">ยืนยันแล้ว</span>
+                                    <span lang="en">VERIFIED</span>
+                                </span>
+                            </div>
+                            <h4 class="font-bold mb-2">
+                                <span lang="th">โปสเตอร์ "扼喉" (Throat-choking) เผยแพร่</span>
+                                <span lang="en">"扼喉" (Throat-choking) Poster Released</span>
+                            </h4>
+                            <p class="text-sm text-[var(--text-secondary)]">
+                                <span lang="th">หน่วยยามฝั่งจีน (CCG) ร่วมกับ Global Times เผยแพร่โปสเตอร์แสดงการสกัดเรือขนส่ง HIMARS ไปไต้หวัน</span>
+                                <span lang="en">CCG and Global Times release poster depicting interception of HIMARS shipments to Taiwan</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item fade-up" style="animation-delay: 0.5s">
+                        <div class="timeline-dot">
+                            <i class="fas fa-ship text-white text-xs"></i>
+                        </div>
+                        <div class="glass-panel p-6">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="font-mono text-sm text-[var(--neon-accent)]">ต้น ม.ค. 2026</span>
+                                <span class="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">CN</span>
+                            </div>
+                            <h4 class="font-bold mb-2">
+                                <span lang="th">เรือจีนท้าทายการปิดล้อม</span>
+                                <span lang="en">Chinese Vessels Defy Blockade</span>
+                            </h4>
+                            <p class="text-sm text-[var(--text-secondary)]">
+                                <span lang="th">Thousand Sunny และ Xing Ye ท้าทายคำสั่งสหรัฐฯ ในน่านน้ำแคริบเบียน</span>
+                                <span lang="en">Thousand Sunny and Xing Ye challenge US orders in Caribbean waters</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusion Section -->
+        <section id="conclusion" class="py-16 px-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="glass-panel p-8 md:p-12 neon-border fade-up">
+                    <div class="text-center mb-8">
+                        <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">
+                            <span lang="th">บทสรุป: โลกกำลังเล่นเกมที่เสี่ยงขึ้นทุกวัน</span>
+                            <span lang="en">Conclusion: A World Playing an Increasingly Risky Game</span>
+                        </h2>
+                    </div>
+
+                    <div class="prose prose-lg max-w-none text-center mb-8">
+                        <p class="text-xl text-[var(--text-secondary)] leading-relaxed">
+                            <span lang="th">หมากของจีนในเวเนซุเอลา คือการบอกว่ายุคที่สหรัฐฯ คุมทะเลฝ่ายเดียวกำลังถูกท้าทาย ส่วนหมากของสหรัฐฯ ต่อไต้หวัน คือการย้ำว่าความได้เปรียบเชิงทหารยังอยู่ในมือวอชิงตัน</span>
+                            <span lang="en">China's move in Venezuela signals that the era of unilateral US maritime dominance is being challenged. Meanwhile, Washington's Taiwan gambit reinforces its military advantage remains in hand.</span>
+                        </p>
+                    </div>
+
+                    <div class="bg-[var(--space-surface)] rounded-xl p-8 mb-8">
+                        <p class="text-2xl md:text-3xl font-display font-bold text-center leading-relaxed">
+                            <span lang="th" class="block">แต่เมื่อทั้งสองฝ่ายเริ่มพูดภาษาเดียวกัน</span>
+                            <span lang="th" class="block text-[var(--neon-danger)]">—ภาษาแห่งการ "ยึดเรือ"—</span>
+                            <span lang="th" class="block mt-2">โลกก็เข้าใกล้จุดที่ความผิดพลาดเพียงครั้งเดียว</span>
+                            <span lang="th" class="block text-[var(--neon-warning)]">อาจจุดชนวนวิกฤตใหญ่ที่ไม่มีใครตั้งใจ</span>
+                            
+                            <span lang="en" class="block">But when both powers speak the same language</span>
+                            <span lang="en" class="block text-[var(--neon-danger)]">—the language of "ship seizures"—</span>
+                            <span lang="en" class="block mt-2">the world moves closer to a point where a single miscalculation</span>
+                            <span lang="en" class="block text-[var(--neon-warning)]">could spark an unintended crisis</span>
+                        </p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="inline-block quote-block text-left">
+                            <p class="text-xl md:text-2xl font-bold italic">
+                                <span lang="th">"ยึดเรือน้ำมันเรา เราพร้อมยึดเรือขนอาวุธนายคืน"</span>
+                                <span lang="en">"Seize our oil tankers, we'll seize your arms ships in return"</span>
+                            </p>
+                            <cite class="text-sm text-[var(--text-muted)] mt-3 block">
+                                <span lang="th">— สารจากปักกิ่ง</span>
+                                <span lang="en">— Beijing's Message</span>
+                            </cite>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sources -->
+                <div class="glass-panel p-6 mt-8 fade-up">
+                    <h3 class="font-display text-lg font-bold mb-4">
+                        <i class="fas fa-book mr-2 text-[var(--neon-accent)]"></i>
+                        <span lang="th">แหล่งข้อมูล</span>
+                        <span lang="en">Sources</span>
+                    </h3>
+                    <div class="flex flex-wrap gap-3 text-sm">
+                        <span class="px-3 py-1 bg-[var(--space-surface)] rounded-full">CSIS ChinaPower</span>
+                        <span class="px-3 py-1 bg-[var(--space-surface)] rounded-full">Bloomberg Economics</span>
+                        <span class="px-3 py-1 bg-[var(--space-surface)] rounded-full">Global Times</span>
+                        <span class="px-3 py-1 bg-[var(--space-surface)] rounded-full">Carnegie Endowment</span>
+                        <span class="px-3 py-1 bg-[var(--space-surface)] rounded-full">CNBC</span>
+                        <span class="px-3 py-1 bg-[var(--space-surface)] rounded-full">Taipei Times</span>
+                        <span class="px-3 py-1 bg-[var(--space-surface)] rounded-full">Taiwan Security Monitor (GMU)</span>
+                        <span class="px-3 py-1 bg-[var(--space-surface)] rounded-full">Vortexa</span>
+                        <span class="px-3 py-1 bg-[var(--space-surface)] rounded-full">FDD</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-8 px-4 border-t border-[var(--glass-border)]">
+            <div class="max-w-7xl mx-auto text-center">
+                <p class="text-sm text-[var(--text-muted)]">
+                    <span lang="th">วิเคราะห์และรวบรวมข้อมูล • มกราคม 2026</span>
+                    <span lang="en">Analysis and Data Compilation • January 2026</span>
+                </p>
+                <p class="text-xs text-[var(--text-muted)] mt-2 font-mono">
+                    Built with Nexus-Architect Protocol
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Detail Panel -->
+    <div id="detail-overlay" class="detail-panel-overlay" onclick="closeDetailPanel()"></div>
+    <aside id="detail-panel" class="detail-panel">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="font-display text-xl font-bold" id="panel-title">Details</h3>
+                <button onclick="closeDetailPanel()" class="control-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="panel-content"></div>
+        </div>
+    </aside>
+
+    <script>
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initCanvas();
+            initD3Network();
+            initScrollAnimations();
+            initMermaid();
+            
+            // Hide loading overlay
+            setTimeout(() => {
+                document.getElementById('loading-overlay').classList.add('hidden');
+            }, 1500);
+        });
+
+        // ============================================
+        // CANVAS PARTICLE BACKGROUND
+        // ============================================
+        
+        function initCanvas() {
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            let width, height;
+            const particles = [];
+            const particleCount = 80;
+            let mouse = { x: null, y: null };
+            
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            
+            resize();
+            window.addEventListener('resize', resize);
+            
+            // Track mouse
+            document.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+            
+            // Create particles
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 2 + 1,
+                    color: `hsla(${210 + Math.random() * 30}, 70%, 60%, ${0.3 + Math.random() * 0.3})`
+                });
+            }
+            
+            function animate() {
+                ctx.fillStyle = 'rgba(10, 10, 26, 0.1)';
+                ctx.fillRect(0, 0, width, height);
+                
+                particles.forEach((p, i) => {
+                    // Move
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    
+                    // Bounce
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+                    
+                    // Mouse interaction
+                    if (mouse.x && mouse.y) {
+                        const dx = mouse.x - p.x;
+                        const dy = mouse.y - p.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 150) {
+                            p.x -= dx * 0.01;
+                            p.y -= dy * 0.01;
+                        }
+                    }
+                    
+                    // Draw particle
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    
+                    // Connect nearby particles
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dx = p.x - p2.x;
+                        const dy = p.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = `rgba(59, 130, 246, ${0.15 * (1 - dist / 120)})`;
+                            ctx.stroke();
+                        }
+                    }
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+
+        // ============================================
+        // D3 NETWORK VISUALIZATION
+        // ============================================
+        
+        let simulation, svg, nodeElements, linkElements;
+        let currentLayout = 'force';
+        
+        const networkData = {
+            nodes: [
+                // Main actors
+                { id: 'usa', label: 'สหรัฐอเมริกา', labelEn: 'United States', group: 'us', size: 50 },
+                { id: 'china', label: 'จีน', labelEn: 'China', group: 'cn', size: 50 },
+                
+                // US Actions
+                { id: 'blockade', label: 'ปิดล้อมเวเนซุเอลา', labelEn: 'Venezuela Blockade', group: 'us', size: 35 },
+                { id: 'seizure', label: 'ยึดเรือน้ำมัน', labelEn: 'Tanker Seizures', group: 'us', size: 30 },
+                { id: 'taiwan_arms', label: 'ขายอาวุธไต้หวัน', labelEn: 'Taiwan Arms Sales', group: 'us', size: 35 },
+                
+                // China Actions
+                { id: 'ccg_poster', label: 'โปสเตอร์ CCG', labelEn: 'CCG Poster', group: 'cn', size: 35 },
+                { id: 'drills', label: 'ซ้อมรบไต้หวัน', labelEn: 'Taiwan Drills', group: 'cn', size: 35 },
+                { id: 'defiance', label: 'เรือท้าทายปิดล้อม', labelEn: 'Tanker Defiance', group: 'cn', size: 30 },
+                
+                // Targets
+                { id: 'venezuela', label: 'เวเนซุเอลา', labelEn: 'Venezuela', group: 'target', size: 30 },
+                { id: 'taiwan', label: 'ไต้หวัน', labelEn: 'Taiwan', group: 'target', size: 30 },
+                
+                // Impacts
+                { id: 'oil_risk', label: 'ความเสี่ยงน้ำมัน', labelEn: 'Oil Market Risk', group: 'impact', size: 28 },
+                { id: 'shipping_risk', label: 'ความเสี่ยงเส้นทางเรือ', labelEn: 'Shipping Risk', group: 'impact', size: 28 },
+                { id: 'supply_chain', label: 'ห่วงโซ่อาวุธ', labelEn: 'Arms Supply Chain', group: 'impact', size: 28 },
+                { id: 'trade_risk', label: '$2.45T การค้า', labelEn: '$2.45T Trade', group: 'impact', size: 32 }
+            ],
+            links: [
+                // US connections
+                { source: 'usa', target: 'blockade', strength: 0.8 },
+                { source: 'usa', target: 'taiwan_arms', strength: 0.8 },
+                { source: 'blockade', target: 'seizure', strength: 0.9 },
+                { source: 'seizure', target: 'venezuela', strength: 0.7 },
+                { source: 'taiwan_arms', target: 'taiwan', strength: 0.8 },
+                
+                // China connections
+                { source: 'china', target: 'ccg_poster', strength: 0.8 },
+                { source: 'china', target: 'drills', strength: 0.8 },
+                { source: 'china', target: 'defiance', strength: 0.7 },
+                { source: 'ccg_poster', target: 'taiwan', strength: 0.7 },
+                { source: 'drills', target: 'taiwan', strength: 0.9 },
+                { source: 'defiance', target: 'venezuela', strength: 0.6 },
+                
+                // Response links (dotted)
+                { source: 'seizure', target: 'ccg_poster', strength: 0.5, type: 'response' },
+                { source: 'taiwan_arms', target: 'drills', strength: 0.5, type: 'response' },
+                
+                // Impact connections
+                { source: 'blockade', target: 'oil_risk', strength: 0.6 },
+                { source: 'defiance', target: 'oil_risk', strength: 0.5 },
+                { source: 'drills', target: 'shipping_risk', strength: 0.7 },
+                { source: 'taiwan', target: 'trade_risk', strength: 0.8 },
+                { source: 'taiwan_arms', target: 'supply_chain', strength: 0.6 },
+                { source: 'ccg_poster', target: 'supply_chain', strength: 0.5 }
+            ]
+        };
+        
+        function initD3Network() {
+            const container = document.getElementById('d3-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            
+            // Clear existing
+            container.innerHTML = '';
+            
+            svg = d3.select('#d3-container')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Defs for gradients and markers
+            const defs = svg.append('defs');
+            
+            // Arrow marker
+            defs.append('marker')
+                .attr('id', 'arrow')
+                .attr('viewBox', '0 -5 10 10')
+                .attr('refX', 25)
+                .attr('refY', 0)
+                .attr('markerWidth', 6)
+                .attr('markerHeight', 6)
+                .attr('orient', 'auto')
+                .append('path')
+                .attr('d', 'M0,-5L10,0L0,5')
+                .attr('fill', '#4b5563');
+            
+            // Gradients
+            const gradient = defs.append('linearGradient')
+                .attr('id', 'linkGradient')
+                .attr('gradientUnits', 'userSpaceOnUse');
+            gradient.append('stop').attr('offset', '0%').attr('stop-color', '#3b82f6');
+            gradient.append('stop').attr('offset', '100%').attr('stop-color', '#06b6d4');
+            
+            // Create simulation
+            simulation = d3.forceSimulation(networkData.nodes)
+                .force('link', d3.forceLink(networkData.links).id(d => d.id).distance(100))
+                .force('charge', d3.forceManyBody().strength(-300))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(d => d.size + 10));
+            
+            // Draw links
+            linkElements = svg.append('g')
+                .selectAll('line')
+                .data(networkData.links)
+                .enter()
+                .append('line')
+                .attr('class', 'd3-link')
+                .attr('stroke', d => d.type === 'response' ? '#f59e0b' : '#4b5563')
+                .attr('stroke-width', d => d.strength * 3)
+                .attr('stroke-dasharray', d => d.type === 'response' ? '5,5' : 'none')
+                .attr('marker-end', 'url(#arrow)');
+            
+            // Draw nodes
+            const nodeGroup = svg.append('g')
+                .selectAll('g')
+                .data(networkData.nodes)
+                .enter()
+                .append('g')
+                .attr('class', 'd3-node')
+                .call(d3.drag()
+                    .on('start', dragStarted)
+                    .on('drag', dragged)
+                    .on('end', dragEnded))
+                .on('click', (event, d) => showNodeDetail(d));
+            
+            // Node circles
+            nodeGroup.append('circle')
+                .attr('r', d => d.size / 2)
+                .attr('fill', d => getNodeColor(d.group))
+                .attr('stroke', d => getNodeStroke(d.group))
+                .attr('stroke-width', 2);
+            
+            // Node labels
+            nodeGroup.append('text')
+                .attr('dy', d => d.size / 2 + 15)
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#e2e8f0')
+                .attr('font-size', '11px')
+                .attr('font-family', "'Noto Sans Thai', sans-serif")
+                .text(d => document.body.dataset.lang === 'th' ? d.label : d.labelEn);
+            
+            nodeElements = nodeGroup;
+            
+            // Simulation tick
+            simulation.on('tick', () => {
+                linkElements
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+                
+                nodeElements.attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+        }
+        
+        function getNodeColor(group) {
+            const colors = {
+                'us': '#3b82f6',
+                'cn': '#dc2626',
+                'target': '#10b981',
+                'impact': '#f59e0b'
+            };
+            return colors[group] || '#6b7280';
+        }
+        
+        function getNodeStroke(group) {
+            const colors = {
+                'us': '#1d4ed8',
+                'cn': '#991b1b',
+                'target': '#047857',
+                'impact': '#d97706'
+            };
+            return colors[group] || '#4b5563';
+        }
+        
+        function dragStarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+        
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+        
+        function dragEnded(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+        
+        function changeLayout(layout) {
+            currentLayout = layout;
+            const container = document.getElementById('d3-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            
+            // Update button states
+            document.querySelectorAll('[data-layout]').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.layout === layout) btn.classList.add('active');
+            });
+            
+            // Stop current simulation
+            simulation.stop();
+            
+            if (layout === 'force') {
+                simulation
+                    .force('center', d3.forceCenter(width / 2, height / 2))
+                    .force('charge', d3.forceManyBody().strength(-300))
+                    .alpha(1)
+                    .restart();
+            } else if (layout === 'radial') {
+                const radius = Math.min(width, height) / 3;
+                networkData.nodes.forEach((d, i) => {
+                    const angle = (i / networkData.nodes.length) * 2 * Math.PI;
+                    d.x = width / 2 + radius * Math.cos(angle);
+                    d.y = height / 2 + radius * Math.sin(angle);
+                });
+                simulation.force('charge', d3.forceManyBody().strength(-50)).alpha(0.3).restart();
+            } else if (layout === 'tree') {
+                // Simple hierarchical layout
+                const levels = { 'us': 0, 'cn': 0, 'target': 2, 'impact': 3 };
+                const groupCounts = {};
+                networkData.nodes.forEach(d => {
+                    const level = levels[d.group] || 1;
+                    groupCounts[level] = (groupCounts[level] || 0) + 1;
+                });
+                const levelCounts = {};
+                networkData.nodes.forEach(d => {
+                    const level = levels[d.group] || 1;
+                    levelCounts[level] = (levelCounts[level] || 0) + 1;
+                    d.x = width * (levelCounts[level] / (groupCounts[level] + 1));
+                    d.y = height * ((level + 1) / 5);
+                });
+                simulation.force('charge', d3.forceManyBody().strength(-100)).alpha(0.3).restart();
+            }
+        }
+        
+        function showNodeDetail(d) {
+            const panel = document.getElementById('detail-panel');
+            const overlay = document.getElementById('detail-overlay');
+            const title = document.getElementById('panel-title');
+            const content = document.getElementById('panel-content');
+            
+            const lang = document.body.dataset.lang;
+            title.textContent = lang === 'th' ? d.label : d.labelEn;
+            
+            // Generate content based on node
+            let html = '';
+            
+            if (d.id === 'usa') {
+                html = `
+                    <div class="space-y-4">
+                        <div class="p-4 bg-blue-500/10 rounded-xl">
+                            <h4 class="font-bold text-blue-400 mb-2">${lang === 'th' ? 'ปฏิบัติการหลัก' : 'Main Operations'}</h4>
+                            <ul class="text-sm space-y-2 text-gray-300">
+                                <li>• ${lang === 'th' ? 'ปิดล้อมเวเนซุเอลา' : 'Venezuela Blockade'}</li>
+                                <li>• ${lang === 'th' ? 'ยึดเรือน้ำมัน Skipper, Centuries' : 'Seized tankers Skipper, Centuries'}</li>
+                                <li>• ${lang === 'th' ? 'ขายอาวุธให้ไต้หวัน $11.1B' : '$11.1B arms sale to Taiwan'}</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-gray-800 rounded-xl">
+                            <h4 class="font-bold mb-2">${lang === 'th' ? 'ฐานกฎหมาย' : 'Legal Basis'}</h4>
+                            <p class="text-sm text-gray-400">Salas-Becker Agreement (2002)</p>
+                        </div>
+                    </div>
+                `;
+            } else if (d.id === 'china') {
+                html = `
+                    <div class="space-y-4">
+                        <div class="p-4 bg-red-500/10 rounded-xl">
+                            <h4 class="font-bold text-red-400 mb-2">${lang === 'th' ? 'การตอบโต้' : 'Countermeasures'}</h4>
+                            <ul class="text-sm space-y-2 text-gray-300">
+                                <li>• ${lang === 'th' ? 'โปสเตอร์ "扼喉" (30 ธ.ค. 2025)' : '"扼喉" Poster (Dec 30, 2025)'}</li>
+                                <li>• ${lang === 'th' ? 'ซ้อมรบ Justice Mission 2025' : 'Justice Mission 2025 Drills'}</li>
+                                <li>• ${lang === 'th' ? 'เรือท้าทายปิดล้อม' : 'Tanker defiance'}</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-gray-800 rounded-xl">
+                            <h4 class="font-bold mb-2">${lang === 'th' ? 'สารสำคัญ' : 'Key Message'}</h4>
+                            <p class="text-sm text-gray-400 italic">"你扣我油轮，我没收你军火"</p>
+                        </div>
+                    </div>
+                `;
+            } else if (d.id === 'trade_risk') {
+                html = `
+                    <div class="space-y-4">
+                        <div class="p-4 bg-orange-500/10 rounded-xl">
+                            <h4 class="font-bold text-orange-400 mb-2">${lang === 'th' ? 'มูลค่าการค้าที่เสี่ยง' : 'Trade at Risk'}</h4>
+                            <div class="text-3xl font-bold text-orange-400">$2.45T</div>
+                            <p class="text-sm text-gray-400">${lang === 'th' ? 'ต่อปี ผ่านช่องแคบไต้หวัน' : 'annually through Taiwan Strait'}</p>
+                        </div>
+                        <div class="p-4 bg-gray-800 rounded-xl">
+                            <h4 class="font-bold mb-2">${lang === 'th' ? 'ผลกระทบต่อประเทศ' : 'Country Impact'}</h4>
+                            <ul class="text-sm space-y-2 text-gray-300">
+                                <li>🇯🇵 Japan: $444B</li>
+                                <li>🇰🇷 S. Korea: $357B</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            } else {
+                html = `
+                    <div class="p-4 bg-gray-800 rounded-xl">
+                        <p class="text-gray-400">${lang === 'th' ? 'คลิกที่โหนดหลักเพื่อดูรายละเอียดเพิ่มเติม' : 'Click on main nodes for more details'}</p>
+                    </div>
+                `;
+            }
+            
+            content.innerHTML = html;
+            panel.classList.add('open');
+            overlay.classList.add('open');
+        }
+        
+        function closeDetailPanel() {
+            document.getElementById('detail-panel').classList.remove('open');
+            document.getElementById('detail-overlay').classList.remove('open');
+        }
+
+        // ============================================
+        // i18n LANGUAGE TOGGLE
+        // ============================================
+        
+        function toggleLang() {
+            const body = document.body;
+            const label = document.getElementById('lang-label');
+            
+            if (body.dataset.lang === 'th') {
+                body.dataset.lang = 'en';
+                label.textContent = 'TH';
+            } else {
+                body.dataset.lang = 'th';
+                label.textContent = 'EN';
+            }
+            
+            // Update D3 labels
+            if (nodeElements) {
+                nodeElements.selectAll('text')
+                    .text(d => body.dataset.lang === 'th' ? d.label : d.labelEn);
+            }
+        }
+
+        // ============================================
+        // SCROLL ANIMATIONS
+        // ============================================
+        
+        function initScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+        }
+
+        // ============================================
+        // MERMAID
+        // ============================================
+        
+        function initMermaid() {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'dark',
+                themeVariables: {
+                    primaryColor: '#3b82f6',
+                    primaryTextColor: '#f1f5f9',
+                    primaryBorderColor: '#4b5563',
+                    lineColor: '#4b5563',
+                    secondaryColor: '#0d1025',
+                    tertiaryColor: '#151d2e'
+                }
+            });
+        }
+
+        // ============================================
+        // MOBILE NAV
+        // ============================================
+        
+        function toggleMobileNav() {
+            // Simple mobile nav toggle - can be expanded
+            const nav = document.querySelector('nav');
+            if (nav) {
+                nav.classList.toggle('flex');
+                nav.classList.toggle('hidden');
+            }
+        }
+
+        // ============================================
+        // SMOOTH SCROLL
+        // ============================================
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
