@@ -17,13 +17,34 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/png" href="https://www.isc2.org/-/media/ISC2/Certifications/Icons/CISSP-Logo.ashx" />
+    <link rel="apple-touch-icon" href="https://www.isc2.org/-/media/ISC2/Certifications/Icons/CISSP-Logo.ashx" />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Cinzel:wght@700;900&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         /* ============================================
-           CSS CUSTOM PROPERTIES & DESIGN TOKENS
+           ENHANCED CSS CUSTOM PROPERTIES & DESIGN TOKENS
            ============================================ */
         :root {
+            /* Space Theme Colors */
+            --space-void: #0a0a1a;
+            --space-deep: #0d1025;
+            --space-nebula: #1a1a3e;
+            
+            /* Glassmorphism */
+            --glass-panel: rgba(21, 29, 46, 0.7);
+            --glass-border: rgba(59, 130, 246, 0.2);
+            --glass-highlight: rgba(255, 255, 255, 0.05);
+            
+            /* Neon Accents */
+            --neon-core: #3b82f6;
+            --neon-accent: #06b6d4;
+            --neon-purple: #a855f7;
+            --neon-pink: #ec4899;
+            --neon-green: #10b981;
+            --neon-gold: #f59e0b;
+            --neon-red: #ef4444;
+            
             /* Primary Colors */
             --primary: #0ea5e9;
             --primary-dark: #0284c7;
@@ -61,15 +82,17 @@
             --border-light: #e2e8f0;
             --border-dark: #334155;
             
-            /* Gradients */
+            /* Enhanced Gradients */
             --gradient-elite: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             --gradient-cyber: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 50%, #ec4899 100%);
             --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #dc2626 100%);
             --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
             --gradient-timeline: linear-gradient(180deg, #0ea5e9 0%, #8b5cf6 50%, #ec4899 100%);
             --gradient-header: linear-gradient(90deg, #0ea5e9 0%, #8b5cf6 100%);
+            --gradient-aurora: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #06b6d4 75%, #10b981 100%);
+            --gradient-cosmic: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
             
-            /* Shadows */
+            /* Enhanced Shadows */
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
@@ -78,6 +101,8 @@
             --shadow-glow: 0 0 30px rgb(14 165 233 / 0.3);
             --shadow-glow-purple: 0 0 30px rgb(139 92 246 / 0.3);
             --shadow-glow-gold: 0 0 30px rgb(245 158 11 / 0.3);
+            --shadow-neon: 0 0 20px rgba(59, 130, 246, 0.5), 0 0 40px rgba(59, 130, 246, 0.3), 0 0 60px rgba(59, 130, 246, 0.1);
+            --shadow-neon-purple: 0 0 20px rgba(168, 85, 247, 0.5), 0 0 40px rgba(168, 85, 247, 0.3);
             
             /* Layout */
             --max-width: 1400px;
@@ -91,6 +116,7 @@
             --animation-slower: 0.8s;
             --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
             --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+            --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
             
             /* Border Radius */
             --radius-sm: 0.375rem;
@@ -108,6 +134,8 @@
             --z-modal: 500;
             --z-popover: 600;
             --z-tooltip: 700;
+            --z-overlay: 1000;
+            --z-panel: 2000;
         }
 
         /* ============================================
@@ -138,7 +166,7 @@
 
         body.dark {
             color: var(--text-dark);
-            background: var(--bg-dark);
+            background: var(--space-void);
         }
 
         /* Thai Language Support */
@@ -169,7 +197,7 @@
         }
 
         /* ============================================
-           LOADING STATE
+           ENHANCED LOADING STATE
            ============================================ */
         .loading-overlay {
             position: fixed;
@@ -187,7 +215,7 @@
         }
 
         body.dark .loading-overlay {
-            background: var(--bg-dark);
+            background: var(--space-void);
         }
 
         .loading-overlay.hidden {
@@ -197,41 +225,75 @@
         }
 
         .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid var(--border-light);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+            width: 80px;
+            height: 80px;
+            position: relative;
         }
 
-        body.dark .loading-spinner {
-            border-color: var(--border-dark);
-            border-top-color: var(--primary);
+        .loading-spinner::before,
+        .loading-spinner::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .loading-spinner::before {
+            width: 100%;
+            height: 100%;
+            border: 4px solid transparent;
+            border-top-color: var(--neon-core);
+            border-right-color: var(--neon-accent);
+            animation: spinOuter 1.5s linear infinite;
+        }
+
+        .loading-spinner::after {
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+            border: 3px solid transparent;
+            border-bottom-color: var(--neon-purple);
+            border-left-color: var(--neon-pink);
+            animation: spinInner 1s linear infinite reverse;
+        }
+
+        @keyframes spinOuter {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes spinInner {
+            to { transform: rotate(360deg); }
         }
 
         .loading-text {
-            margin-top: 1.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            font-weight: 700;
             background: var(--gradient-cyber);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: pulse 1.5s ease-in-out infinite;
+            animation: textPulse 2s ease-in-out infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .loading-subtext {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted-light);
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        body.dark .loading-subtext {
+            color: var(--text-muted-dark);
+        }
+
+        @keyframes textPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.98); }
         }
 
         /* ============================================
-           BACKGROUND EFFECTS
+           ENHANCED BACKGROUND EFFECTS
            ============================================ */
         .bg-animation {
             position: fixed;
@@ -239,10 +301,14 @@
             height: 100%;
             top: 0;
             left: 0;
-            z-index: -2;
+            z-index: -3;
             opacity: 0.03;
             pointer-events: none;
             overflow: hidden;
+        }
+
+        body.dark .bg-animation {
+            opacity: 0.08;
         }
 
         .bg-animation::before {
@@ -264,6 +330,24 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Starfield Canvas */
+        #starfield-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        body.dark #starfield-canvas {
+            opacity: 1;
+        }
+
+        /* Interactive Particle Canvas */
         #particle-canvas {
             position: fixed;
             top: 0;
@@ -274,8 +358,66 @@
             pointer-events: none;
         }
 
+        /* Cosmic Gradient Overlay */
+        .cosmic-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            background: var(--gradient-cosmic);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        body.dark .cosmic-overlay {
+            opacity: 1;
+        }
+
         /* ============================================
-           HEADER & NAVIGATION
+           GLASSMORPHISM COMPONENTS
+           ============================================ */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(14, 165, 233, 0.1);
+            border-radius: var(--radius-2xl);
+        }
+
+        body.dark .glass-panel {
+            background: var(--glass-panel);
+            border-color: var(--glass-border);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(14, 165, 233, 0.1);
+            border-radius: var(--radius-xl);
+            transition: all var(--animation-normal) var(--ease-out-expo);
+        }
+
+        body.dark .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: var(--glass-border);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(14, 165, 233, 0.15);
+            border-color: var(--neon-core);
+        }
+
+        body.dark .glass-card:hover {
+            box-shadow: var(--shadow-neon);
+        }
+
+        /* ============================================
+           ENHANCED HEADER & NAVIGATION
            ============================================ */
         header {
             position: fixed;
@@ -291,13 +433,17 @@
         }
 
         body.dark header {
-            background: rgba(2, 6, 23, 0.85);
-            border-bottom-color: rgba(14, 165, 233, 0.2);
+            background: rgba(10, 10, 26, 0.85);
+            border-bottom-color: var(--glass-border);
         }
 
         header.scrolled {
             box-shadow: var(--shadow-lg);
             height: 70px;
+        }
+
+        body.dark header.scrolled {
+            box-shadow: 0 4px 30px rgba(59, 130, 246, 0.1);
         }
 
         header.scrolled .nav-brand {
@@ -324,6 +470,23 @@
             background-clip: text;
             letter-spacing: 2px;
             transition: font-size var(--animation-normal) ease;
+            position: relative;
+        }
+
+        .nav-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-cyber);
+            transform: scaleX(0);
+            transition: transform var(--animation-normal) var(--ease-out-expo);
+        }
+
+        .nav-brand:hover::after {
+            transform: scaleX(1);
         }
 
         .nav-links {
@@ -402,13 +565,19 @@
             gap: 1rem;
         }
 
-        /* Language Switcher */
+        /* Enhanced Language Switcher */
         .lang-switcher {
             display: flex;
             gap: 0.25rem;
             background: rgba(14, 165, 233, 0.1);
             padding: 0.25rem;
             border-radius: var(--radius-lg);
+            border: 1px solid transparent;
+            transition: border-color var(--animation-fast) ease;
+        }
+
+        .lang-switcher:hover {
+            border-color: var(--neon-core);
         }
 
         .lang-btn {
@@ -425,7 +594,7 @@
         }
 
         .lang-btn.active {
-            background: var(--primary);
+            background: var(--gradient-cyber);
             color: white;
             box-shadow: var(--shadow-md);
         }
@@ -434,7 +603,7 @@
             background: rgba(14, 165, 233, 0.2);
         }
 
-        /* Theme Toggle */
+        /* Enhanced Theme Toggle */
         .theme-toggle {
             width: 44px;
             height: 44px;
@@ -444,14 +613,29 @@
             justify-content: center;
             transition: all var(--animation-fast) ease;
             color: var(--text-light);
+            position: relative;
+            overflow: hidden;
         }
 
         body.dark .theme-toggle {
             color: var(--text-dark);
         }
 
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-cyber);
+            opacity: 0;
+            transition: opacity var(--animation-fast) ease;
+            border-radius: var(--radius-lg);
+        }
+
+        .theme-toggle:hover::before {
+            opacity: 0.1;
+        }
+
         .theme-toggle:hover {
-            background: rgba(14, 165, 233, 0.1);
             transform: scale(1.05);
         }
 
@@ -459,6 +643,8 @@
             width: 22px;
             height: 22px;
             transition: transform var(--animation-normal) ease;
+            position: relative;
+            z-index: 1;
         }
 
         .theme-toggle:hover svg {
@@ -471,7 +657,199 @@
         body.dark .moon { display: block; }
 
         /* ============================================
-           EXECUTIVE SUMMARY SECTION
+           SLIDE-OVER DETAIL PANEL
+           ============================================ */
+        .slide-panel-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--animation-normal) ease;
+            z-index: var(--z-overlay);
+        }
+
+        .slide-panel-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 480px;
+            height: 100vh;
+            background: var(--bg-light);
+            border-left: 1px solid var(--border-light);
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: var(--z-panel);
+            overflow-y: auto;
+        }
+
+        body.dark .slide-panel {
+            background: var(--space-deep);
+            border-left-color: var(--glass-border);
+        }
+
+        .slide-panel.open {
+            transform: translateX(0);
+        }
+
+        .slide-panel-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--text-light);
+            font-size: 1.5rem;
+            transition: all var(--animation-fast) ease;
+            z-index: 10;
+        }
+
+        body.dark .slide-panel-close {
+            color: var(--text-dark);
+        }
+
+        .slide-panel-close:hover {
+            background: var(--danger);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .slide-panel-content {
+            padding: 2rem;
+            padding-top: 4rem;
+        }
+
+        .slide-panel-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        body.dark .slide-panel-header {
+            border-bottom-color: var(--glass-border);
+        }
+
+        .slide-panel-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--gradient-cyber);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .slide-panel-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide-panel-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted-light);
+            margin-top: 0.25rem;
+        }
+
+        body.dark .slide-panel-subtitle {
+            color: var(--text-muted-dark);
+        }
+
+        .slide-panel-body {
+            line-height: 1.9;
+        }
+
+        .slide-panel-body p {
+            margin-bottom: 1rem;
+        }
+
+        .slide-panel-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .slide-panel-tag {
+            padding: 0.375rem 0.75rem;
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--primary);
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+            transition: all var(--animation-fast) ease;
+        }
+
+        .slide-panel-tag:hover {
+            border-color: var(--primary);
+            background: rgba(14, 165, 233, 0.2);
+        }
+
+        .slide-panel-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .slide-panel-metric {
+            background: rgba(14, 165, 233, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(14, 165, 233, 0.1);
+        }
+
+        body.dark .slide-panel-metric {
+            background: rgba(14, 165, 233, 0.1);
+            border-color: var(--glass-border);
+        }
+
+        .slide-panel-metric-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide-panel-metric-label {
+            font-size: 0.8rem;
+            color: var(--text-muted-light);
+            margin-top: 0.25rem;
+        }
+
+        body.dark .slide-panel-metric-label {
+            color: var(--text-muted-dark);
+        }
+
+        /* ============================================
+           ENHANCED EXECUTIVE SUMMARY SECTION
            ============================================ */
         .executive-summary {
             background: var(--bg-gradient-light);
@@ -484,8 +862,8 @@
         }
 
         body.dark .executive-summary {
-            background: var(--bg-gradient-dark);
-            border-color: var(--border-dark);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%);
+            border-color: var(--glass-border);
         }
 
         .executive-summary::before {
@@ -498,6 +876,16 @@
             background: var(--gradient-cyber);
         }
 
+        .executive-summary::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+        }
+
         .summary-title {
             font-size: 1.5rem;
             font-weight: 800;
@@ -508,14 +896,15 @@
         }
 
         .summary-title-icon {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             background: var(--gradient-cyber);
             border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-glow);
         }
 
         .summary-cards {
@@ -530,19 +919,32 @@
             border-radius: var(--radius-xl);
             text-align: center;
             border: 1px solid var(--border-light);
-            transition: all var(--animation-normal) ease;
+            transition: all var(--animation-normal) var(--ease-out-expo);
             position: relative;
             overflow: hidden;
         }
 
         body.dark .summary-card {
-            background: var(--card-dark);
-            border-color: var(--border-dark);
+            background: rgba(15, 23, 42, 0.5);
+            border-color: var(--glass-border);
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-cyber);
+            opacity: 0;
+            transition: opacity var(--animation-normal) ease;
+        }
+
+        .summary-card:hover::before {
+            opacity: 0.05;
         }
 
         .summary-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: var(--shadow-glow);
             border-color: var(--primary);
         }
 
@@ -555,6 +957,8 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             line-height: 1.2;
+            position: relative;
+            z-index: 1;
         }
 
         .summary-card-label {
@@ -562,6 +966,8 @@
             font-weight: 600;
             color: var(--text-muted-light);
             margin-top: 0.5rem;
+            position: relative;
+            z-index: 1;
         }
 
         body.dark .summary-card-label {
@@ -574,10 +980,16 @@
             right: 1rem;
             font-size: 1.5rem;
             opacity: 0.3;
+            transition: all var(--animation-normal) ease;
+        }
+
+        .summary-card:hover .summary-card-icon {
+            opacity: 0.6;
+            transform: scale(1.2);
         }
 
         /* ============================================
-           AFFIRMATION / QUOTE SECTION
+           ENHANCED AFFIRMATION / QUOTE SECTION
            ============================================ */
         .affirmation-section {
             background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
@@ -587,6 +999,7 @@
             margin: 3rem 0;
             border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
             position: relative;
+            overflow: hidden;
         }
 
         body.dark .affirmation-section {
@@ -598,14 +1011,25 @@
             position: absolute;
             top: -20px;
             left: 20px;
-            font-size: 6rem;
+            font-size: 8rem;
             font-family: Georgia, serif;
             background: var(--gradient-cyber);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            opacity: 0.3;
+            opacity: 0.2;
             line-height: 1;
+        }
+
+        .affirmation-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .affirmation-text {
@@ -620,7 +1044,10 @@
         .affirmation-author {
             margin-top: 1.5rem;
             font-weight: 700;
-            color: var(--primary);
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -628,10 +1055,11 @@
 
         .affirmation-author::before {
             content: '—';
+            color: var(--primary);
         }
 
         /* ============================================
-           HERO SECTION
+           ENHANCED HERO SECTION
            ============================================ */
         #hero {
             min-height: 100vh;
@@ -643,6 +1071,54 @@
             overflow: hidden;
         }
 
+        /* Hero Background Orbs */
+        .hero-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            pointer-events: none;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .hero-orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--neon-core);
+            top: 10%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+
+        .hero-orb-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--neon-purple);
+            top: 60%;
+            right: -5%;
+            animation-delay: -7s;
+        }
+
+        .hero-orb-3 {
+            width: 250px;
+            height: 250px;
+            background: var(--neon-pink);
+            bottom: 10%;
+            left: 30%;
+            animation-delay: -14s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.1); }
+            50% { transform: translate(-20px, 20px) scale(0.9); }
+            75% { transform: translate(20px, 30px) scale(1.05); }
+        }
+
+        body:not(.dark) .hero-orb {
+            opacity: 0.1;
+        }
+
         .hero-content {
             max-width: var(--max-width);
             width: 100%;
@@ -650,10 +1126,28 @@
             grid-template-columns: 1.2fr 1fr;
             gap: 5rem;
             align-items: center;
+            position: relative;
+            z-index: 1;
         }
 
         .hero-text {
             animation: fadeInUp var(--animation-slower) var(--ease-out-expo);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .hero-badge {
@@ -668,6 +1162,8 @@
             color: var(--primary);
             margin-bottom: 1.5rem;
             border: 1px solid rgba(14, 165, 233, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .hero-badge-dot {
@@ -676,11 +1172,12 @@
             background: var(--success);
             border-radius: 50%;
             animation: blink 2s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--success);
         }
 
         @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--success); }
+            50% { opacity: 0.3; box-shadow: 0 0 5px var(--success); }
         }
 
         .hero-text h1 {
@@ -697,6 +1194,13 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            background-size: 200% 200%;
+            animation: gradientShift 5s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .hero-subtitle {
@@ -734,14 +1238,16 @@
             background: var(--card-light);
             border-radius: var(--radius-xl);
             border: 1px solid var(--border-light);
-            transition: all var(--animation-normal) ease;
+            transition: all var(--animation-normal) var(--ease-out-expo);
             position: relative;
             overflow: hidden;
         }
 
         body.dark .stat-item {
-            background: var(--card-dark);
-            border-color: var(--border-dark);
+            background: rgba(15, 23, 42, 0.5);
+            border-color: var(--glass-border);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .stat-item::before {
@@ -764,6 +1270,10 @@
             transform: translateY(-5px);
             box-shadow: var(--shadow-glow);
             border-color: var(--primary);
+        }
+
+        body.dark .stat-item:hover {
+            box-shadow: var(--shadow-neon);
         }
 
         .stat-number {
@@ -789,7 +1299,7 @@
             color: var(--text-muted-dark);
         }
 
-        /* CTA Buttons */
+        /* Enhanced CTA Buttons */
         .cta-buttons {
             display: flex;
             gap: 1rem;
@@ -802,12 +1312,25 @@
             font-weight: 700;
             font-size: 1rem;
             letter-spacing: 0.5px;
-            transition: all var(--animation-normal) ease;
+            transition: all var(--animation-normal) var(--ease-out-expo);
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             position: relative;
             overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .btn:hover::before {
+            transform: translateX(100%);
         }
 
         .btn-primary {
@@ -819,6 +1342,10 @@
         .btn-primary:hover {
             transform: translateY(-3px);
             box-shadow: var(--shadow-glow);
+        }
+
+        body.dark .btn-primary:hover {
+            box-shadow: var(--shadow-neon);
         }
 
         .btn-secondary {
@@ -841,7 +1368,7 @@
             transform: translateX(3px);
         }
 
-        /* Hero Image */
+        /* Enhanced Hero Image */
         .hero-image {
             position: relative;
             animation: fadeIn var(--animation-slower) var(--ease-out-expo) 0.3s both;
@@ -854,6 +1381,10 @@
             box-shadow: var(--shadow-2xl);
         }
 
+        body.dark .hero-image-wrapper {
+            box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.25);
+        }
+
         .hero-image-wrapper::before {
             content: '';
             position: absolute;
@@ -861,6 +1392,31 @@
             background: var(--gradient-cyber);
             opacity: 0.1;
             z-index: 1;
+            transition: opacity var(--animation-normal) ease;
+        }
+
+        .hero-image-wrapper:hover::before {
+            opacity: 0.2;
+        }
+
+        .hero-image-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 2px solid transparent;
+            border-radius: var(--radius-2xl);
+            background: var(--gradient-cyber) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity var(--animation-normal) ease;
+            z-index: 2;
+        }
+
+        .hero-image-wrapper:hover::after {
+            opacity: 1;
         }
 
         .hero-image img {
@@ -884,10 +1440,87 @@
             border-radius: var(--radius-2xl);
             z-index: -1;
             opacity: 0.2;
+            transition: all var(--animation-normal) ease;
+        }
+
+        .hero-image:hover .hero-image-decoration {
+            top: 25px;
+            left: 25px;
+            opacity: 0.3;
+        }
+
+        /* Floating Elements */
+        .hero-floating-badge {
+            position: absolute;
+            background: var(--card-light);
+            border-radius: var(--radius-xl);
+            padding: 1rem 1.25rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: float 6s ease-in-out infinite;
+            z-index: 10;
+            border: 1px solid var(--border-light);
+        }
+
+        body.dark .hero-floating-badge {
+            background: rgba(15, 23, 42, 0.8);
+            border-color: var(--glass-border);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .hero-floating-badge-1 {
+            top: 10%;
+            right: -10%;
+            animation-delay: 0s;
+        }
+
+        .hero-floating-badge-2 {
+            bottom: 20%;
+            left: -15%;
+            animation-delay: -2s;
+        }
+
+        .hero-floating-badge-3 {
+            bottom: 5%;
+            right: 5%;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+
+        .floating-badge-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-cyber);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .floating-badge-text {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .floating-badge-subtext {
+            font-size: 0.75rem;
+            color: var(--text-muted-light);
+        }
+
+        body.dark .floating-badge-subtext {
+            color: var(--text-muted-dark);
         }
 
         /* ============================================
-           SECTION STYLES
+           ENHANCED SECTION STYLES
            ============================================ */
         section {
             padding: 5rem 2rem;
@@ -913,6 +1546,7 @@
             margin-bottom: 1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            border: 1px solid rgba(14, 165, 233, 0.2);
         }
 
         .section-title {
@@ -953,7 +1587,7 @@
         }
 
         /* ============================================
-           SPLIT PANEL LAYOUT (Timeline)
+           ENHANCED SPLIT PANEL LAYOUT (Timeline)
            ============================================ */
         .split-panel {
             display: grid;
@@ -969,11 +1603,25 @@
             border: 1px solid var(--border-light);
             overflow-y: auto;
             max-height: 700px;
+            position: relative;
         }
 
         body.dark .split-panel-left {
-            background: var(--card-dark);
-            border-color: var(--border-dark);
+            background: rgba(15, 23, 42, 0.5);
+            border-color: var(--glass-border);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .split-panel-left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-cyber);
+            border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
         }
 
         .split-panel-right {
@@ -989,11 +1637,24 @@
         }
 
         body.dark .split-panel-right {
-            background: var(--card-dark);
-            border-color: var(--border-dark);
+            background: rgba(15, 23, 42, 0.5);
+            border-color: var(--glass-border);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
-        /* Vertical Timeline */
+        .split-panel-right::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-elite);
+            border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+        }
+
+        /* Enhanced Vertical Timeline */
         .vertical-timeline {
             position: relative;
             padding-left: 2rem;
@@ -1018,7 +1679,7 @@
             border-radius: var(--radius-xl);
             border: 1px solid transparent;
             cursor: pointer;
-            transition: all var(--animation-normal) ease;
+            transition: all var(--animation-normal) var(--ease-out-expo);
         }
 
         body.dark .timeline-event {
@@ -1030,18 +1691,18 @@
             position: absolute;
             left: -2rem;
             top: 1.75rem;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             background: var(--primary);
             border-radius: 50%;
             border: 3px solid var(--card-light);
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-md), 0 0 0 3px rgba(14, 165, 233, 0.2);
             transition: all var(--animation-fast) ease;
             transform: translateX(-50%);
         }
 
         body.dark .timeline-event::before {
-            border-color: var(--card-dark);
+            border-color: var(--space-deep);
         }
 
         .timeline-event:hover,
@@ -1051,24 +1712,44 @@
             transform: translateX(5px);
         }
 
+        body.dark .timeline-event:hover,
+        body.dark .timeline-event.active {
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.1);
+        }
+
         .timeline-event:hover::before,
         .timeline-event.active::before {
             transform: translateX(-50%) scale(1.3);
             background: var(--secondary);
+            box-shadow: var(--shadow-md), 0 0 0 5px rgba(139, 92, 246, 0.2), var(--shadow-glow-purple);
         }
 
         /* Conflict Event (Diamond Shape) */
         .timeline-event.conflict::before {
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             background: var(--danger);
-            border-radius: 2px;
+            border-radius: 3px;
             transform: translateX(-50%) rotate(45deg);
+            box-shadow: var(--shadow-md), 0 0 0 3px rgba(239, 68, 68, 0.2);
         }
 
         .timeline-event.conflict:hover::before,
         .timeline-event.conflict.active::before {
             transform: translateX(-50%) rotate(45deg) scale(1.2);
+            box-shadow: var(--shadow-md), 0 0 0 5px rgba(239, 68, 68, 0.3), 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Research Event (Star Shape) */
+        .timeline-event.research::before {
+            background: var(--secondary);
+            box-shadow: var(--shadow-md), 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+
+        /* Achievement Event */
+        .timeline-event.achievement::before {
+            background: var(--success);
+            box-shadow: var(--shadow-md), 0 0 0 3px rgba(16, 185, 129, 0.2);
         }
 
         .timeline-event-year {
@@ -1094,6 +1775,20 @@
             color: var(--text-muted-dark);
         }
 
+        .timeline-event-icon {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            opacity: 0.5;
+            transition: all var(--animation-fast) ease;
+        }
+
+        .timeline-event:hover .timeline-event-icon {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
         /* Detail Panel */
         .detail-panel-header {
             display: flex;
@@ -1105,7 +1800,7 @@
         }
 
         body.dark .detail-panel-header {
-            border-bottom-color: var(--border-dark);
+            border-bottom-color: var(--glass-border);
         }
 
         .detail-panel-icon {
@@ -1118,12 +1813,17 @@
             justify-content: center;
             font-size: 1.75rem;
             flex-shrink: 0;
+            box-shadow: var(--shadow-glow);
         }
 
         .detail-panel-title {
             font-size: 1.5rem;
             font-weight: 800;
             margin-bottom: 0.25rem;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .detail-panel-subtitle {
@@ -1157,10 +1857,17 @@
             border-radius: var(--radius-full);
             font-size: 0.8rem;
             font-weight: 600;
+            border: 1px solid transparent;
+            transition: all var(--animation-fast) ease;
+        }
+
+        .detail-tag:hover {
+            border-color: var(--primary);
+            background: rgba(14, 165, 233, 0.2);
         }
 
         /* ============================================
-           VISUALIZATION CONTAINERS
+           ENHANCED VISUALIZATION CONTAINERS
            ============================================ */
         .viz-container {
             background: var(--card-light);
@@ -1174,8 +1881,10 @@
         }
 
         body.dark .viz-container {
-            background: var(--card-dark);
-            border-color: var(--border-dark);
+            background: rgba(15, 23, 42, 0.5);
+            border-color: var(--glass-border);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .viz-container::before {
@@ -1186,6 +1895,16 @@
             right: 0;
             height: 4px;
             background: var(--gradient-cyber);
+        }
+
+        .viz-container::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
         }
 
         .viz-header {
@@ -1206,13 +1925,19 @@
             background-clip: text;
         }
 
-        /* View Toggle Buttons */
+        /* Enhanced View Toggle Buttons */
         .view-toggle {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.25rem;
             background: rgba(14, 165, 233, 0.1);
             padding: 0.25rem;
             border-radius: var(--radius-lg);
+            border: 1px solid transparent;
+            transition: border-color var(--animation-fast) ease;
+        }
+
+        .view-toggle:hover {
+            border-color: rgba(14, 165, 233, 0.3);
         }
 
         .view-toggle-btn {
@@ -1229,7 +1954,7 @@
         }
 
         .view-toggle-btn.active {
-            background: var(--primary);
+            background: var(--gradient-cyber);
             color: white;
             box-shadow: var(--shadow-md);
         }
@@ -1238,7 +1963,7 @@
             background: rgba(14, 165, 233, 0.2);
         }
 
-        /* Filter Pills */
+        /* Enhanced Filter Pills */
         .filter-pills {
             display: flex;
             flex-wrap: wrap;
@@ -1264,46 +1989,32 @@
 
         .filter-pill:hover {
             border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
         .filter-pill.active {
             background: var(--primary);
             color: white;
+            box-shadow: var(--shadow-md);
         }
 
-        .filter-pill[data-type="milestone"] {
-            --pill-color: var(--primary);
-        }
-
-        .filter-pill[data-type="achievement"] {
-            --pill-color: var(--success);
-        }
-
-        .filter-pill[data-type="conflict"] {
-            --pill-color: var(--danger);
-        }
-
-        .filter-pill[data-type="research"] {
-            --pill-color: var(--secondary);
-        }
-
-        .filter-pill.active[data-type="milestone"] {
+        .filter-pill[data-type="milestone"].active {
             background: var(--primary);
         }
 
-        .filter-pill.active[data-type="achievement"] {
+        .filter-pill[data-type="achievement"].active {
             background: var(--success);
         }
 
-        .filter-pill.active[data-type="conflict"] {
+        .filter-pill[data-type="conflict"].active {
             background: var(--danger);
         }
 
-        .filter-pill.active[data-type="research"] {
+        .filter-pill[data-type="research"].active {
             background: var(--secondary);
         }
 
-        /* Legend */
+        /* Enhanced Legend */
         .viz-legend {
             display: flex;
             flex-wrap: wrap;
@@ -1314,7 +2025,7 @@
         }
 
         body.dark .viz-legend {
-            border-top-color: var(--border-dark);
+            border-top-color: var(--glass-border);
         }
 
         .legend-item {
@@ -1323,12 +2034,18 @@
             gap: 0.5rem;
             font-size: 0.9rem;
             font-weight: 500;
+            transition: transform var(--animation-fast) ease;
+        }
+
+        .legend-item:hover {
+            transform: scale(1.05);
         }
 
         .legend-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
+            box-shadow: 0 0 8px currentColor;
         }
 
         .legend-diamond {
@@ -1336,141 +2053,11 @@
             height: 10px;
             transform: rotate(45deg);
             border-radius: 2px;
+            box-shadow: 0 0 8px currentColor;
         }
 
         /* ============================================
-           COLLAPSIBLE HIERARCHICAL TREE
-           ============================================ */
-        .hierarchy-tree {
-            padding: 1rem 0;
-        }
-
-        .tree-node {
-            margin-left: 1.5rem;
-            position: relative;
-        }
-
-        .tree-node::before {
-            content: '';
-            position: absolute;
-            left: -1rem;
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background: var(--border-light);
-        }
-
-        body.dark .tree-node::before {
-            background: var(--border-dark);
-        }
-
-        .tree-node-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            background: rgba(14, 165, 233, 0.03);
-            border-radius: var(--radius-lg);
-            cursor: pointer;
-            transition: all var(--animation-fast) ease;
-            margin-bottom: 0.5rem;
-            position: relative;
-        }
-
-        body.dark .tree-node-header {
-            background: rgba(14, 165, 233, 0.05);
-        }
-
-        .tree-node-header::before {
-            content: '';
-            position: absolute;
-            left: -1rem;
-            top: 50%;
-            width: 1rem;
-            height: 1px;
-            background: var(--border-light);
-        }
-
-        body.dark .tree-node-header::before {
-            background: var(--border-dark);
-        }
-
-        .tree-node-header:hover {
-            background: rgba(14, 165, 233, 0.08);
-        }
-
-        .tree-toggle {
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--primary);
-            color: white;
-            border-radius: var(--radius-md);
-            font-size: 0.9rem;
-            font-weight: 700;
-            transition: transform var(--animation-fast) ease;
-            flex-shrink: 0;
-        }
-
-        .tree-toggle.expanded {
-            transform: rotate(90deg);
-        }
-
-        .tree-node-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--gradient-cyber);
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            flex-shrink: 0;
-        }
-
-        .tree-node-content {
-            flex: 1;
-        }
-
-        .tree-node-title {
-            font-weight: 700;
-            font-size: 1rem;
-        }
-
-        .tree-node-subtitle {
-            font-size: 0.85rem;
-            color: var(--text-muted-light);
-        }
-
-        body.dark .tree-node-subtitle {
-            color: var(--text-muted-dark);
-        }
-
-        .tree-node-children {
-            display: none;
-            padding-left: 1rem;
-        }
-
-        .tree-node-children.expanded {
-            display: block;
-            animation: slideDown var(--animation-normal) var(--ease-out-expo);
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ============================================
-           CARDS GRID
+           ENHANCED CARDS GRID
            ============================================ */
         .cards-grid {
             display: grid;
@@ -1483,15 +2070,17 @@
             border-radius: var(--radius-2xl);
             padding: 2rem;
             box-shadow: var(--shadow-md);
-            transition: all var(--animation-normal) ease;
+            transition: all var(--animation-normal) var(--ease-out-expo);
             position: relative;
             overflow: hidden;
             border: 1px solid var(--border-light);
         }
 
         body.dark .card {
-            background: var(--card-dark);
-            border-color: var(--border-dark);
+            background: rgba(15, 23, 42, 0.5);
+            border-color: var(--glass-border);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .card::before {
@@ -1511,10 +2100,28 @@
             transform: scaleX(1);
         }
 
+        .card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-cyber);
+            opacity: 0;
+            transition: opacity var(--animation-normal) ease;
+            pointer-events: none;
+        }
+
+        .card:hover::after {
+            opacity: 0.03;
+        }
+
         .card:hover {
             transform: translateY(-8px);
             box-shadow: var(--shadow-xl);
             border-color: var(--primary);
+        }
+
+        body.dark .card:hover {
+            box-shadow: var(--shadow-neon);
         }
 
         .card-icon {
@@ -1527,7 +2134,9 @@
             justify-content: center;
             font-size: 1.75rem;
             margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-glow);
+            position: relative;
+            z-index: 1;
         }
 
         .card h3 {
@@ -1538,11 +2147,15 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            position: relative;
+            z-index: 1;
         }
 
         .card p {
             line-height: 1.8;
             color: var(--text-muted-light);
+            position: relative;
+            z-index: 1;
         }
 
         body.dark .card p {
@@ -1550,7 +2163,7 @@
         }
 
         /* ============================================
-           INSIGHTS SECTION
+           ENHANCED INSIGHTS SECTION
            ============================================ */
         .insights-grid {
             display: grid;
@@ -1564,7 +2177,7 @@
             border-radius: var(--radius-xl);
             padding: 1.5rem;
             border: 1px solid rgba(14, 165, 233, 0.2);
-            transition: all var(--animation-normal) ease;
+            transition: all var(--animation-normal) var(--ease-out-expo);
             display: flex;
             gap: 1rem;
         }
@@ -1579,6 +2192,10 @@
             border-color: var(--primary);
         }
 
+        body.dark .insight-card:hover {
+            box-shadow: var(--shadow-neon);
+        }
+
         .insight-icon {
             width: 48px;
             height: 48px;
@@ -1589,6 +2206,7 @@
             justify-content: center;
             font-size: 1.5rem;
             flex-shrink: 0;
+            box-shadow: var(--shadow-glow);
         }
 
         .insight-content h4 {
@@ -1608,7 +2226,7 @@
         }
 
         /* ============================================
-           CERTIFICATIONS GRID
+           ENHANCED CERTIFICATIONS GRID
            ============================================ */
         .cert-grid {
             display: grid;
@@ -1623,14 +2241,14 @@
             padding: 2rem 1.5rem;
             text-align: center;
             border: 2px solid var(--border-light);
-            transition: all var(--animation-normal) ease;
+            transition: all var(--animation-normal) var(--ease-out-expo);
             position: relative;
             overflow: hidden;
         }
 
         body.dark .cert-badge {
-            background: var(--card-dark);
-            border-color: var(--border-dark);
+            background: rgba(15, 23, 42, 0.5);
+            border-color: var(--glass-border);
         }
 
         .cert-badge::before {
@@ -1649,13 +2267,19 @@
         }
 
         .cert-badge:hover {
-            transform: scale(1.05);
+            transform: scale(1.05) translateY(-5px);
             border-color: transparent;
+            box-shadow: var(--shadow-glow-gold);
         }
 
         .cert-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
+            transition: transform var(--animation-normal) ease;
+        }
+
+        .cert-badge:hover .cert-icon {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .cert-name {
@@ -1674,7 +2298,7 @@
         }
 
         /* ============================================
-           RESEARCH GRID
+           ENHANCED RESEARCH GRID
            ============================================ */
         .research-grid {
             display: grid;
@@ -1688,7 +2312,7 @@
             border-radius: var(--radius-2xl);
             padding: 2rem;
             border: 1px solid rgba(14, 165, 233, 0.2);
-            transition: all var(--animation-normal) ease;
+            transition: all var(--animation-normal) var(--ease-out-expo);
             position: relative;
             overflow: hidden;
         }
@@ -1707,10 +2331,25 @@
             background: var(--gradient-cyber);
         }
 
+        .research-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
         .research-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-8px) translateX(5px);
             box-shadow: var(--shadow-glow);
             border-color: var(--primary);
+        }
+
+        body.dark .research-card:hover {
+            box-shadow: var(--shadow-neon);
         }
 
         .research-number {
@@ -1742,7 +2381,7 @@
         }
 
         /* ============================================
-           CONFLICT ANALYSIS SECTION
+           ENHANCED CONFLICT ANALYSIS SECTION
            ============================================ */
         .conflict-analysis {
             background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(245, 158, 11, 0.05) 100%);
@@ -1750,10 +2389,22 @@
             padding: 2rem;
             margin: 2rem 0;
             border: 1px solid rgba(239, 68, 68, 0.2);
+            position: relative;
+            overflow: hidden;
         }
 
         body.dark .conflict-analysis {
             background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+        }
+
+        .conflict-analysis::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-gold);
         }
 
         .conflict-header {
@@ -1772,6 +2423,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
+            box-shadow: var(--shadow-glow-gold);
         }
 
         .conflict-title {
@@ -1790,11 +2442,17 @@
             border-radius: var(--radius-xl);
             padding: 1.5rem;
             border: 1px solid var(--border-light);
+            transition: all var(--animation-normal) ease;
         }
 
         body.dark .conflict-item {
-            background: var(--card-dark);
-            border-color: var(--border-dark);
+            background: rgba(15, 23, 42, 0.5);
+            border-color: var(--glass-border);
+        }
+
+        .conflict-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
         }
 
         .conflict-item-header {
@@ -1842,7 +2500,7 @@
         }
 
         /* ============================================
-           CONTACT SECTION
+           ENHANCED CONTACT SECTION
            ============================================ */
         .contact-container {
             display: grid;
@@ -1856,11 +2514,25 @@
             border-radius: var(--radius-2xl);
             padding: 2rem;
             border: 1px solid var(--border-light);
+            position: relative;
+            overflow: hidden;
         }
 
         body.dark .contact-card {
-            background: var(--card-dark);
-            border-color: var(--border-dark);
+            background: rgba(15, 23, 42, 0.5);
+            border-color: var(--glass-border);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-cyber);
         }
 
         .contact-card-title {
@@ -1878,6 +2550,11 @@
             align-items: flex-start;
             gap: 1rem;
             margin-bottom: 1.5rem;
+            transition: transform var(--animation-fast) ease;
+        }
+
+        .contact-item:hover {
+            transform: translateX(5px);
         }
 
         .contact-icon {
@@ -1891,6 +2568,7 @@
             color: white;
             font-size: 1.25rem;
             flex-shrink: 0;
+            box-shadow: var(--shadow-glow);
         }
 
         .contact-label {
@@ -1915,10 +2593,16 @@
             border-bottom: 1px solid var(--border-light);
             display: flex;
             gap: 0.75rem;
+            transition: all var(--animation-fast) ease;
         }
 
         body.dark .engagement-list li {
-            border-bottom-color: var(--border-dark);
+            border-bottom-color: var(--glass-border);
+        }
+
+        .engagement-list li:hover {
+            transform: translateX(5px);
+            padding-left: 0.5rem;
         }
 
         .engagement-list li:last-child {
@@ -1944,7 +2628,7 @@
         }
 
         /* ============================================
-           FOOTER
+           ENHANCED FOOTER
            ============================================ */
         footer {
             background: var(--card-light);
@@ -1953,11 +2637,12 @@
             margin-top: 4rem;
             border-top: 1px solid var(--border-light);
             position: relative;
+            overflow: hidden;
         }
 
         body.dark footer {
-            background: var(--card-dark);
-            border-top-color: var(--border-dark);
+            background: var(--space-deep);
+            border-top-color: var(--glass-border);
         }
 
         footer::before {
@@ -1970,9 +2655,23 @@
             background: var(--gradient-cyber);
         }
 
+        footer::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
         .footer-content {
             max-width: var(--max-width);
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         .footer-brand {
@@ -2000,6 +2699,7 @@
             font-size: 0.9rem;
             color: var(--text-muted-light);
             margin-bottom: 2rem;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         body.dark .footer-credentials {
@@ -2024,12 +2724,21 @@
             color: white;
             font-weight: 700;
             font-size: 1rem;
-            transition: all var(--animation-normal) ease;
+            transition: all var(--animation-normal) var(--ease-out-expo);
+            box-shadow: var(--shadow-md);
+        }
+
+        .social-link svg {
+            filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
         }
 
         .social-link:hover {
             transform: translateY(-5px) rotate(5deg);
             box-shadow: var(--shadow-glow);
+        }
+
+        body.dark .social-link:hover {
+            box-shadow: var(--shadow-neon);
         }
 
         .footer-copyright {
@@ -2042,7 +2751,7 @@
         }
 
         /* ============================================
-           TOOLTIP
+           ENHANCED TOOLTIP
            ============================================ */
         .tooltip {
             position: absolute;
@@ -2057,11 +2766,14 @@
             max-width: 300px;
             line-height: 1.5;
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
         }
 
         body.dark .tooltip {
             background: rgba(241, 245, 249, 0.95);
             color: var(--text-light);
+            border-color: rgba(59, 130, 246, 0.3);
         }
 
         .tooltip-title {
@@ -2079,7 +2791,7 @@
         }
 
         /* ============================================
-           SCROLL REVEAL ANIMATIONS
+           ENHANCED SCROLL REVEAL ANIMATIONS
            ============================================ */
         .scroll-reveal {
             opacity: 0;
@@ -2097,6 +2809,32 @@
         .scroll-reveal.delay-3 { transition-delay: 0.3s; }
         .scroll-reveal.delay-4 { transition-delay: 0.4s; }
 
+        /* Fade Directions */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all var(--animation-slower) var(--ease-out-expo);
+        }
+
+        .fade-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: all var(--animation-slower) var(--ease-out-expo);
+        }
+
+        .fade-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: all var(--animation-slower) var(--ease-out-expo);
+        }
+
+        .fade-up.visible,
+        .fade-left.visible,
+        .fade-right.visible {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
         /* Staggered Animation for Children */
         .stagger-children > * {
             opacity: 0;
@@ -2110,6 +2848,8 @@
         .stagger-children.active > *:nth-child(4) { transition-delay: 0.2s; }
         .stagger-children.active > *:nth-child(5) { transition-delay: 0.25s; }
         .stagger-children.active > *:nth-child(6) { transition-delay: 0.3s; }
+        .stagger-children.active > *:nth-child(7) { transition-delay: 0.35s; }
+        .stagger-children.active > *:nth-child(8) { transition-delay: 0.4s; }
 
         .stagger-children.active > * {
             opacity: 1;
@@ -2153,6 +2893,10 @@
                 position: static;
                 max-height: none;
             }
+
+            .hero-floating-badge {
+                display: none;
+            }
         }
 
         @media (max-width: 1024px) {
@@ -2194,7 +2938,7 @@
             }
 
             body.dark .nav-links {
-                background: var(--card-dark);
+                background: var(--space-deep);
             }
 
             .nav-links.active {
@@ -2231,6 +2975,10 @@
                 width: 100%;
                 justify-content: center;
             }
+
+            .slide-panel {
+                max-width: 100%;
+            }
         }
 
         @media (max-width: 480px) {
@@ -2245,13 +2993,18 @@
             .insights-grid {
                 grid-template-columns: 1fr;
             }
+
+            .hero-orb {
+                display: none;
+            }
         }
 
         /* ============================================
            PRINT STYLES
            ============================================ */
         @media print {
-            header, .bg-animation, #particle-canvas, .theme-toggle, .lang-switcher {
+            header, .bg-animation, #particle-canvas, #starfield-canvas, .cosmic-overlay, 
+            .theme-toggle, .lang-switcher, .hero-orb, .slide-panel, .slide-panel-overlay {
                 display: none !important;
             }
 
@@ -2280,6 +3033,11 @@
             html {
                 scroll-behavior: auto;
             }
+
+            .hero-orb,
+            .hero-floating-badge {
+                animation: none !important;
+            }
         }
 
         :focus-visible {
@@ -2298,6 +3056,48 @@
             white-space: nowrap;
             border: 0;
         }
+
+        /* ============================================
+           CUSTOM SCROLLBAR
+           ============================================ */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+
+        body.dark ::-webkit-scrollbar-track {
+            background: var(--space-void);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-cyber);
+            border-radius: var(--radius-full);
+            border: 2px solid var(--bg-light);
+        }
+
+        body.dark ::-webkit-scrollbar-thumb {
+            border-color: var(--space-void);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gradient-elite);
+        }
+
+        /* ============================================
+           SELECTION STYLES
+           ============================================ */
+        ::selection {
+            background: rgba(14, 165, 233, 0.3);
+            color: inherit;
+        }
+
+        body.dark ::selection {
+            background: rgba(14, 165, 233, 0.5);
+        }
     </style>
 </head>
 <body data-lang="en">
@@ -2305,14 +3105,45 @@
     <div class="loading-overlay" id="loading-overlay">
         <div class="loading-spinner"></div>
         <div class="loading-text">
-            <span lang="en">Initializing...</span>
-            <span lang="th">กำลังโหลด...</span>
+            <span lang="en">Initializing Cognitive Architecture...</span>
+            <span lang="th">กำลังเริ่มต้นสถาปัตยกรรมปัญญาประดิษฐ์...</span>
+        </div>
+        <div class="loading-subtext">
+            <span lang="en">Loading visualizations</span>
+            <span lang="th">กำลังโหลดการแสดงผล</span>
         </div>
     </div>
 
     <!-- Background Effects -->
     <div class="bg-animation"></div>
+    <canvas id="starfield-canvas" aria-hidden="true"></canvas>
     <canvas id="particle-canvas" aria-hidden="true"></canvas>
+    <div class="cosmic-overlay"></div>
+
+    <!-- Slide-Over Detail Panel -->
+    <div class="slide-panel-overlay" id="slide-panel-overlay"></div>
+    <div class="slide-panel" id="slide-panel">
+        <button class="slide-panel-close" id="slide-panel-close" aria-label="Close panel">×</button>
+        <div class="slide-panel-content">
+            <div class="slide-panel-header">
+                <div class="slide-panel-icon" id="slide-panel-icon">📋</div>
+                <div>
+                    <h4 class="slide-panel-title" id="slide-panel-title">
+                        <span lang="en">Select an Event</span>
+                        <span lang="th">เลือกเหตุการณ์</span>
+                    </h4>
+                    <p class="slide-panel-subtitle" id="slide-panel-subtitle">
+                        <span lang="en">Click on a timeline event to view details</span>
+                        <span lang="th">คลิกที่เหตุการณ์เพื่อดูรายละเอียด</span>
+                    </p>
+                </div>
+            </div>
+            <div class="slide-panel-body" id="slide-panel-body">
+                <p lang="en">Each position in my career has been strategically chosen to build the convergent expertise necessary for developing the Cognitive SOAR framework.</p>
+                <p lang="th">แต่ละตำแหน่งในอาชีพของผมได้รับการเลือกอย่างมีกลยุทธ์เพื่อสร้างความเชี่ยวชาญที่จำเป็นสำหรับการพัฒนา Cognitive SOAR framework</p>
+            </div>
+        </div>
+    </div>
 
     <!-- Header -->
     <header id="header">
@@ -2381,6 +3212,11 @@
     <main>
         <!-- Hero Section -->
         <section id="hero">
+            <!-- Floating Orbs -->
+            <div class="hero-orb hero-orb-1"></div>
+            <div class="hero-orb hero-orb-2"></div>
+            <div class="hero-orb hero-orb-3"></div>
+
             <div class="hero-content">
                 <div class="hero-text">
                     <div class="hero-badge">
@@ -2448,6 +3284,29 @@
                     <div class="hero-image-wrapper">
                         <img src="http://defense.engineer/Tanat-FullBody.jpg" alt="Tanat Tonguthaisri - Cybersecurity Visionary" loading="eager">
                     </div>
+                    
+                    <!-- Floating Badges -->
+                    <div class="hero-floating-badge hero-floating-badge-1">
+                        <div class="floating-badge-icon">🛡️</div>
+                        <div>
+                            <div class="floating-badge-text">CISSP</div>
+                            <div class="floating-badge-subtext">Since 2015</div>
+                        </div>
+                    </div>
+                    <div class="hero-floating-badge hero-floating-badge-2">
+                        <div class="floating-badge-icon">🎓</div>
+                        <div>
+                            <div class="floating-badge-text">M.Eng</div>
+                            <div class="floating-badge-subtext">RMIT University</div>
+                        </div>
+                    </div>
+                    <div class="hero-floating-badge hero-floating-badge-3">
+                        <div class="floating-badge-icon">🏦</div>
+                        <div>
+                            <div class="floating-badge-text">FCI Defense</div>
+                            <div class="floating-badge-subtext">₿200B+ Protected</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -2470,40 +3329,40 @@
             </div>
 
             <!-- Executive Summary -->
-            <div class="executive-summary">
+            <div class="executive-summary glass-panel">
                 <h3 class="summary-title">
                     <span class="summary-title-icon">📊</span>
                     <span lang="en">Executive Summary</span>
                     <span lang="th">สรุปผู้บริหาร</span>
                 </h3>
                 <div class="summary-cards stagger-children" id="summary-cards">
-                    <div class="summary-card">
+                    <div class="summary-card glass-card">
                         <span class="summary-card-icon">🎓</span>
-                        <div class="summary-card-value">3</div>
+                        <div class="summary-card-value" data-count="3">0</div>
                         <div class="summary-card-label">
                             <span lang="en">Degrees Earned</span>
                             <span lang="th">ปริญญาที่ได้รับ</span>
                         </div>
                     </div>
-                    <div class="summary-card">
+                    <div class="summary-card glass-card">
                         <span class="summary-card-icon">🛡️</span>
-                        <div class="summary-card-value">4</div>
+                        <div class="summary-card-value" data-count="4">0</div>
                         <div class="summary-card-label">
                             <span lang="en">Elite Certifications</span>
                             <span lang="th">ใบรับรองระดับสูง</span>
                         </div>
                     </div>
-                    <div class="summary-card">
+                    <div class="summary-card glass-card">
                         <span class="summary-card-icon">🏢</span>
-                        <div class="summary-card-value">8</div>
+                        <div class="summary-card-value" data-count="8">0</div>
                         <div class="summary-card-label">
                             <span lang="en">Organizations Served</span>
                             <span lang="th">องค์กรที่ให้บริการ</span>
                         </div>
                     </div>
-                    <div class="summary-card">
+                    <div class="summary-card glass-card">
                         <span class="summary-card-icon">🌏</span>
-                        <div class="summary-card-value">5</div>
+                        <div class="summary-card-value" data-count="5">0</div>
                         <div class="summary-card-label">
                             <span lang="en">Years ITPEC Rep</span>
                             <span lang="th">ปีตัวแทน ITPEC</span>
@@ -2522,7 +3381,7 @@
             </div>
 
             <div class="cards-grid stagger-children" id="about-cards">
-                <div class="card">
+                <div class="card glass-card">
                     <div class="card-icon">🎓</div>
                     <h3>
                         <span lang="en">Academic Excellence</span>
@@ -2533,7 +3392,7 @@
                         <span lang="th">ปริญญาโทวิศวกรรมศาสตร์จาก RMIT University วิจัยบุกเบิก Case-Based Reasoning (2004) ที่วางรากฐานของ Cognitive SOAR framework ในปัจจุบัน ปริญญาตรี 2 ใบในวิศวกรรมคอมพิวเตอร์และวิทยาการคอมพิวเตอร์</span>
                     </p>
                 </div>
-                <div class="card">
+                <div class="card glass-card">
                     <div class="card-icon">🛡️</div>
                     <h3>
                         <span lang="en">Critical Infrastructure Defense</span>
@@ -2544,7 +3403,7 @@
                         <span lang="th">ปัจจุบันบริหารความมั่นคงปลอดภัยไซเบอร์ให้กองทุน กยศ. ซึ่งเป็นโครงสร้างพื้นฐานทางการเงินสำคัญที่ประมวลผลบัญชีกว่า 7 ล้านบัญชีและมูลค่ากว่า 200,000 ล้านบาท</span>
                     </p>
                 </div>
-                <div class="card">
+                <div class="card glass-card">
                     <div class="card-icon">🚀</div>
                     <h3>
                         <span lang="en">Research Mission</span>
@@ -2576,7 +3435,7 @@
             </div>
 
             <!-- Interactive Timeline Visualization -->
-            <div class="viz-container">
+            <div class="viz-container glass-panel">
                 <div class="viz-header">
                     <h3 class="viz-title">
                         <span lang="en">Career Trajectory: 20 Years of Systematic Mastery</span>
@@ -2611,6 +3470,10 @@
                         <span lang="en">Challenges</span>
                         <span lang="th">ความท้าทาย</span>
                     </button>
+                    <button class="filter-pill" data-type="research">
+                        <span lang="en">Research</span>
+                        <span lang="th">งานวิจัย</span>
+                    </button>
                 </div>
                 
                 <div id="timeline-viz"></div>
@@ -2641,7 +3504,7 @@
 
             <!-- Split Panel: Vertical Timeline + Detail -->
             <div class="split-panel">
-                <div class="split-panel-left">
+                <div class="split-panel-left glass-panel">
                     <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;">
                         <span lang="en">Career Timeline</span>
                         <span lang="th">ไทม์ไลน์อาชีพ</span>
@@ -2650,7 +3513,7 @@
                         <!-- Timeline events will be populated by JavaScript -->
                     </div>
                 </div>
-                <div class="split-panel-right" id="detail-panel">
+                <div class="split-panel-right glass-panel" id="detail-panel">
                     <div class="detail-panel-header">
                         <div class="detail-panel-icon">📋</div>
                         <div>
@@ -2672,7 +3535,7 @@
             </div>
 
             <!-- Collapsible Hierarchical Tree -->
-            <div class="viz-container" style="margin-top: 2rem;">
+            <div class="viz-container glass-panel" style="margin-top: 2rem;">
                 <div class="viz-header">
                     <h3 class="viz-title">
                         <span lang="en">Expertise Hierarchy</span>
@@ -2711,7 +3574,7 @@
             </div>
 
             <!-- Skills Radar Chart -->
-            <div class="viz-container">
+            <div class="viz-container glass-panel">
                 <div class="viz-header">
                     <h3 class="viz-title">
                         <span lang="en">Expertise Radar: Multi-Domain Mastery</span>
@@ -2722,7 +3585,7 @@
             </div>
 
             <!-- Network Graph -->
-            <div class="viz-container">
+            <div class="viz-container glass-panel">
                 <div class="viz-header">
                     <h3 class="viz-title">
                         <span lang="en">Knowledge Network: Interconnected Competencies</span>
@@ -2734,27 +3597,27 @@
 
             <!-- Certifications -->
             <div class="cert-grid stagger-children" id="cert-grid">
-                <div class="cert-badge">
+                <div class="cert-badge glass-card">
                     <div class="cert-icon">🛡️</div>
                     <div class="cert-name">CISSP</div>
                     <div class="cert-org">(ISC)² | <span class="thai-date" data-year="2015">Since 2015</span></div>
                 </div>
-                <div class="cert-badge">
+                <div class="cert-badge glass-card">
                     <div class="cert-icon">🔍</div>
                     <div class="cert-name">CEH v12</div>
                     <div class="cert-org">EC-Council | <span class="thai-date" data-year="2025">2025</span></div>
                 </div>
-                <div class="cert-badge">
+                <div class="cert-badge glass-card">
                     <div class="cert-icon">🕵️</div>
                     <div class="cert-name">CHFI v11</div>
                     <div class="cert-org">EC-Council | <span class="thai-date" data-year="2025">2025</span></div>
                 </div>
-                <div class="cert-badge">
+                <div class="cert-badge glass-card">
                     <div class="cert-icon">📋</div>
                     <div class="cert-name">Project+</div>
                     <div class="cert-org">CompTIA | Current</div>
                 </div>
-                <div class="cert-badge">
+                <div class="cert-badge glass-card">
                     <div class="cert-icon">🎓</div>
                     <div class="cert-name">M.Eng</div>
                     <div class="cert-org">RMIT | <span class="thai-date" data-year="2004">2004</span></div>
@@ -2763,7 +3626,7 @@
 
             <!-- Key Insights -->
             <div class="insights-grid stagger-children" id="insights-grid">
-                <div class="insight-card">
+                <div class="insight-card glass-card">
                     <div class="insight-icon">🧠</div>
                     <div class="insight-content">
                         <h4>
@@ -2776,7 +3639,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="insight-card">
+                <div class="insight-card glass-card">
                     <div class="insight-icon">⚡</div>
                     <div class="insight-content">
                         <h4>
@@ -2789,7 +3652,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="insight-card">
+                <div class="insight-card glass-card">
                     <div class="insight-icon">🔐</div>
                     <div class="insight-content">
                         <h4>
@@ -2802,7 +3665,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="insight-card">
+                <div class="insight-card glass-card">
                     <div class="insight-icon">🤖</div>
                     <div class="insight-content">
                         <h4>
@@ -2835,6 +3698,17 @@
                 </p>
             </div>
 
+            <!-- C-SOAR Architecture Visualization -->
+            <div class="viz-container glass-panel">
+                <div class="viz-header">
+                    <h3 class="viz-title">
+                        <span lang="en">C-SOAR Triadic Architecture</span>
+                        <span lang="th">สถาปัตยกรรมสามเหลี่ยม C-SOAR</span>
+                    </h3>
+                </div>
+                <div id="csoar-architecture"></div>
+            </div>
+
             <!-- Conflict Analysis -->
             <div class="conflict-analysis">
                 <div class="conflict-header">
@@ -2845,7 +3719,7 @@
                     </h3>
                 </div>
                 <div class="conflict-grid">
-                    <div class="conflict-item">
+                    <div class="conflict-item glass-card">
                         <div class="conflict-item-header">
                             <span class="conflict-item-title">
                                 <span lang="en">Novel Threat Failure</span>
@@ -2858,7 +3732,7 @@
                             <span lang="th">70% ของระบบ SOAR แบบดั้งเดิมล้มเหลวต่อภัยคุกคามรูปแบบใหม่</span>
                         </p>
                     </div>
-                    <div class="conflict-item">
+                    <div class="conflict-item glass-card">
                         <div class="conflict-item-header">
                             <span class="conflict-item-title">
                                 <span lang="en">Manual Response Delay</span>
@@ -2871,7 +3745,7 @@
                             <span lang="th">การตอบสนองด้วยตนเอง 47 นาทีระหว่างการโจมตี APT zero-day มีนาคม 2024</span>
                         </p>
                     </div>
-                    <div class="conflict-item">
+                    <div class="conflict-item glass-card">
                         <div class="conflict-item-header">
                             <span class="conflict-item-title">
                                 <span lang="en">Black-Box AI Rejection</span>
@@ -2884,7 +3758,7 @@
                             <span lang="th">ข้อกำหนดด้านกฎระเบียบ (PDPA, สตง.) กำหนดให้ต้องมีการตัดสินใจที่อธิบายได้</span>
                         </p>
                     </div>
-                    <div class="conflict-item">
+                    <div class="conflict-item glass-card">
                         <div class="conflict-item-header">
                             <span class="conflict-item-title">
                                 <span lang="en">Alert Fatigue</span>
@@ -2902,7 +3776,7 @@
 
             <!-- Research Areas -->
             <div class="research-grid stagger-children" id="research-grid">
-                <div class="research-card">
+                <div class="research-card glass-card">
                     <div class="research-number">01</div>
                     <div class="research-title">
                         <span lang="en">Vectorized Case-Based Reasoning</span>
@@ -2913,7 +3787,7 @@
                         <span lang="th">แปลงความเชี่ยวชาญ CBR 20 ปีเป็น embeddings 768 มิติระดับการผลิตที่ค้นหาความคล้ายคลึงได้ต่ำกว่า 10ms</span>
                     </p>
                 </div>
-                <div class="research-card">
+                <div class="research-card glass-card">
                     <div class="research-number">02</div>
                     <div class="research-title">
                         <span lang="en">LLM-Powered Synthesis</span>
@@ -2924,7 +3798,7 @@
                         <span lang="th">โมเดล transformer ในเครื่องสร้างกลยุทธ์การตอบสนองตามบริบทโดยสังเคราะห์จากหลายกรณีในอดีต</span>
                     </p>
                 </div>
-                <div class="research-card">
+                <div class="research-card glass-card">
                     <div class="research-number">03</div>
                     <div class="research-title">
                         <span lang="en">Formal Logic Verification</span>
@@ -2935,7 +3809,7 @@
                         <span lang="th">การพิสูจน์ทางคณิตศาสตร์ของค่าคงที่ด้านความปลอดภัยที่เรียนรู้จากข้อกำหนดการปฏิบัติตามของธนาคารแห่งประเทศไทย</span>
                     </p>
                 </div>
-                <div class="research-card">
+                <div class="research-card glass-card">
                     <div class="research-number">04</div>
                     <div class="research-title">
                         <span lang="en">Production Data Engineering</span>
@@ -2946,7 +3820,7 @@
                         <span lang="th">การจัดการ Apache Airflow (เพิ่มประสิทธิภาพ 3 ชม. → 12 นาที), การแปลง dbt, การติดตั้ง Cassandra/vector DB ที่ 50M+ events/day</span>
                     </p>
                 </div>
-                <div class="research-card">
+                <div class="research-card glass-card">
                     <div class="research-number">05</div>
                     <div class="research-title">
                         <span lang="en">Explainable Autonomous Actions</span>
@@ -2957,7 +3831,7 @@
                         <span lang="th">ความโปร่งใสตามแบบอย่างที่สืบทอดจากรากฐาน CBR—ทุกการตัดสินใจอัตโนมัติสามารถติดตามไปยังกรณีในอดีตได้</span>
                     </p>
                 </div>
-                <div class="research-card">
+                <div class="research-card glass-card">
                     <div class="research-number">06</div>
                     <div class="research-title">
                         <span lang="en">Empirical Validation</span>
@@ -3001,7 +3875,7 @@
             </div>
 
             <div class="cards-grid stagger-children" id="achievements-cards">
-                <div class="card">
+                <div class="card glass-card">
                     <div class="card-icon">🏆</div>
                     <h3>
                         <span lang="en">Competitive Innovation</span>
@@ -3012,7 +3886,7 @@
                         <span lang="th"><strong>Siam RegTech:</strong> ผู้เข้ารอบ 10 อันดับแรก (ก.ล.ต./ธปท./คปภ.) - ML ขั้นสูงสำหรับการต่อต้านการฟอกเงิน<br><br><strong>Learn Sabai:</strong> 100 อันดับแรก (SIPA) - Swarm Intelligence สำหรับระบบการเรียนรู้แบบปรับตัว</span>
                     </p>
                 </div>
-                <div class="card">
+                <div class="card glass-card">
                     <div class="card-icon">👔</div>
                     <h3>
                         <span lang="en">Strategic Advisory</span>
@@ -3023,7 +3897,7 @@
                         <span lang="th"><strong>คณะกรรมการทุนการศึกษาระดับบัณฑิตศึกษา:</strong> ได้รับเลือกจากธนาคารแห่งประเทศไทย สำนักงาน ก.พ. สภาพัฒน์ (2565, 2567) เพื่อประเมินผู้สมัครสาขาความมั่นคงปลอดภัยไซเบอร์และการวิเคราะห์ข้อมูลขั้นสูง</span>
                     </p>
                 </div>
-                <div class="card">
+                <div class="card glass-card">
                     <div class="card-icon">🎤</div>
                     <h3>
                         <span lang="en">Thought Leadership</span>
@@ -3037,7 +3911,7 @@
             </div>
 
             <!-- International Recognition -->
-            <div class="viz-container" style="margin-top: 2rem;">
+            <div class="viz-container glass-panel" style="margin-top: 2rem;">
                 <div class="viz-header">
                     <h3 class="viz-title">
                         <span lang="en">International Recognition</span>
@@ -3045,7 +3919,7 @@
                     </h3>
                 </div>
                 <div class="insights-grid">
-                    <div class="insight-card">
+                    <div class="insight-card glass-card">
                         <div class="insight-icon">🌏</div>
                         <div class="insight-content">
                             <h4>
@@ -3058,7 +3932,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="insight-card">
+                    <div class="insight-card glass-card">
                         <div class="insight-icon">🎓</div>
                         <div class="insight-content">
                             <h4>
@@ -3071,7 +3945,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="insight-card">
+                    <div class="insight-card glass-card">
                         <div class="insight-icon">🔐</div>
                         <div class="insight-content">
                             <h4>
@@ -3106,7 +3980,7 @@
             </div>
 
             <div class="contact-container">
-                <div class="contact-card">
+                <div class="contact-card glass-panel">
                     <h3 class="contact-card-title">
                         <span lang="en">Contact Information</span>
                         <span lang="th">ข้อมูลการติดต่อ</span>
@@ -3152,7 +4026,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="contact-card">
+                <div class="contact-card glass-panel">
                     <h3 class="contact-card-title">
                         <span lang="en">Engagement Opportunities</span>
                         <span lang="th">โอกาสในการมีส่วนร่วม</span>
@@ -3225,11 +4099,62 @@
                 <span lang="th">เชื่อมทฤษฎีกับการปฏิบัติในด้านความปลอดภัยแบบปัญญาประดิษฐ์</span>
             </p>
             <p class="footer-credentials">CISSP | CEH v12 | CHFI v11 | Project+ | M.Eng (RMIT) | DSc Candidate (Capitol Technology University)</p>
-            <div class="social-links">
-                <a href="https://linkedin.com/in/epicure" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">in</a>
-                <a href="https://github.com/000" class="social-link" aria-label="GitHub" target="_blank" rel="noopener noreferrer">gh</a>
-                <a href="mailto:ii@ieee.org" class="social-link" aria-label="Email">@</a>
-            </div>
+                <div class="social-links">
+                    <a href="https://linkedin.com/in/epicure" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </a>
+                    <a href="https://github.com/000" class="social-link" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    </a>
+                    <a href="https://www.facebook.com/epicure" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/malware/" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                    <a href="https://x.com/gastronomy" class="social-link" aria-label="X (Twitter)" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <a href="https://www.credly.com/users/x" class="social-link" aria-label="Credly" target="_blank" rel="noopener noreferrer">
+                        <img src="https://cdn.credly.com/assets/structure/logo-28bf7f66afb35eec098b1e0208a6b54c03930e99584360b036d17c9fbf617236.svg" alt="Credly" style="width: 20px; height: 20px; filter: brightness(0) invert(1);">
+                    </a>
+                    <a href="https://www.youtube.com/@CyberOps" class="social-link" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    </a>
+                    <a href="http://tiktok.com/@dataops" class="social-link" aria-label="TikTok" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                    </a>
+                    <a href="https://cnx.medium.com/" class="social-link" aria-label="Medium" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>
+                    </a>
+                    <a href="https://vsco.co/epicure/gallery" class="social-link" aria-label="VSCO" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.824c5.062 0 9.176 4.114 9.176 9.176s-4.114 9.176-9.176 9.176S2.824 17.062 2.824 12 6.938 2.824 12 2.824zM12 5.647A6.353 6.353 0 005.647 12 6.353 6.353 0 0012 18.353 6.353 6.353 0 0018.353 12 6.353 6.353 0 0012 5.647z"/></svg>
+                    </a>
+                    <a href="https://www.pinterest.com/xxx/" class="social-link" aria-label="Pinterest" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
+                    </a>
+                    <a href="https://dribbble.com/xxx/shots" class="social-link" aria-label="Dribbble" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 24C5.385 24 0 18.615 0 12S5.385 0 12 0s12 5.385 12 12-5.385 12-12 12zm10.12-10.358c-.35-.11-3.17-.953-6.384-.438 1.34 3.684 1.887 6.684 1.992 7.308 2.3-1.555 3.936-4.02 4.395-6.87zm-6.115 7.808c-.153-.9-.75-4.032-2.19-7.77l-.066.02c-5.79 2.015-7.86 6.025-8.04 6.4 1.73 1.358 3.92 2.166 6.29 2.166 1.42 0 2.77-.29 4-.814zm-11.62-2.58c.232-.4 3.045-5.055 8.332-6.765.135-.045.27-.084.405-.12-.26-.585-.54-1.167-.832-1.74C7.17 11.775 2.206 11.71 1.756 11.7l-.004.312c0 2.633.998 5.037 2.634 6.855zm-2.42-8.955c.46.008 4.683.026 9.477-1.248-1.698-3.018-3.53-5.558-3.8-5.928-2.868 1.35-5.01 3.99-5.676 7.17zM9.6 2.052c.282.38 2.145 2.914 3.822 6 3.645-1.365 5.19-3.44 5.373-3.702-1.81-1.61-4.19-2.586-6.795-2.586-.825 0-1.63.1-2.4.285zm10.335 3.483c-.218.29-1.935 2.493-5.724 4.04.24.49.47.985.68 1.486.08.18.15.36.22.53 3.41-.43 6.8.26 7.14.33-.02-2.42-.88-4.64-2.31-6.38z"/></svg>
+                    </a>
+                    <a href="https://www.reddit.com/user/Linkback/" class="social-link" aria-label="Reddit" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+                    </a>
+                    <a href="https://stackoverflow.com/users/572163/tanat-tonguthaisri" class="social-link" aria-label="Stack Overflow" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M15.725 0l-1.72 1.277 6.39 8.588 1.716-1.277L15.725 0zm-3.94 3.418l-1.369 1.644 8.225 6.85 1.369-1.644-8.225-6.85zm-3.15 4.465l-.905 1.94 9.702 4.517.904-1.94-9.701-4.517zm-1.85 4.86l-.44 2.093 10.473 2.201.44-2.092-10.473-2.203zM1.89 15.47V24h19.19v-8.53h-2.133v6.397H4.021v-6.396H1.89zm4.265 2.133v2.13h10.66v-2.13H6.154Z"/></svg>
+                    </a>
+                    <a href="https://discord.com/users/380558117441765386" class="social-link" aria-label="Discord" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                    </a>
+                    <a href="https://bsky.app/profile/devops.bsky.social" class="social-link" aria-label="Bluesky" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg>
+                    </a>
+                    <a href="https://about.me/siam" class="social-link" aria-label="About.me" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19.536 9.146c-1.373 0-2.133 1.014-2.294 2.116h4.608c-.125-1.05-.867-2.115-2.314-2.115m-2.26 3.617c.235 1.156 1.193 1.97 2.532 1.97.725 0 1.77-.27 2.384-.853l1.634 1.456c-1.01 1.116-2.789 1.659-4.082 1.659-2.93 0-5.093-2.057-5.093-4.89 0-2.826 2.078-4.943 4.82-4.943 3.036 0 4.856 2.329 4.856 4.957 0 .36-.032.719-.096 1.079h-6.955zM3.403 7.196h2.113c2.394 0 4.408 1.768 4.408 4.252 0 2.595-2.014 4.38-4.408 4.38H5.13v4.095H3.403V7.196zm2.113 6.517c1.378 0 2.645-.93 2.645-2.265 0-1.322-1.267-2.136-2.645-2.136H5.13v4.401h.386z M0 0v24h24V0H0zm22.028 5.032v13.936c0 .558-.452 1.01-1.01 1.01H2.982c-.558 0-1.01-.452-1.01-1.01V5.032c0-.558.452-1.01 1.01-1.01h18.036c.558 0 1.01.452 1.01 1.01z"/></svg>
+                    </a>
+                    <a href="mailto:ii@ieee.org" class="social-link" aria-label="Email">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-9.458l4.623 3.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm5.694 7.188l3.824 3.099 3.83-3.104 5.612 6.817h-18.779l5.513-6.812zm9.208-1.264l4.616-3.741v9.348l-4.616-5.607z"/></svg>
+                    </a>
+                </div>
             <p class="footer-copyright">
                 <span lang="en">© 2025 Tanat Tonguthaisri. All rights reserved.</span>
                 <span lang="th">© 2568 ธนัท ทองอุทัยศรี สงวนลิขสิทธิ์</span>
@@ -3242,19 +4167,24 @@
     
     <script>
         // ============================================
-        // CONFIGURATION & DATA
+        // ENHANCED CONFIGURATION & DATA
         // ============================================
         const CONFIG = {
             animationDuration: 300,
             debounceDelay: 150,
-            particleCount: 80,
+            particleCount: 100,
+            starCount: 250,
             colors: {
                 primary: '#0ea5e9',
                 secondary: '#8b5cf6',
                 accent: '#f59e0b',
                 success: '#10b981',
                 danger: '#ef4444',
-                warning: '#f59e0b'
+                warning: '#f59e0b',
+                neonCore: '#3b82f6',
+                neonAccent: '#06b6d4',
+                neonPurple: '#a855f7',
+                neonPink: '#ec4899'
             }
         };
 
@@ -3273,7 +4203,8 @@
                 icon: "🎓",
                 description: "Enhancing Academic Advisement using Case-Based Reasoning (87% accuracy). Proved expertise-as-experiences, similarity-based retrieval, and precedent transparency—the three principles that define C-SOAR 20 years later.",
                 descriptionTh: "การปรับปรุงการให้คำปรึกษาทางวิชาการโดยใช้ Case-Based Reasoning (ความแม่นยำ 87%) พิสูจน์ความเชี่ยวชาญเป็นประสบการณ์ การดึงข้อมูลตามความคล้ายคลึง และความโปร่งใสตามแบบอย่าง",
-                tags: ["CBR", "AI", "Research", "Academic"]
+                tags: ["CBR", "AI", "Research", "Academic"],
+                metrics: { accuracy: "87%", cases: "500+", duration: "2 years" }
             },
             {
                 year: 2009,
@@ -3288,7 +4219,8 @@
                 icon: "💼",
                 description: "7 years deploying Case-Based Reasoning for IT service desk (73% first-call resolution). Scaled case libraries to 100,000+ incidents, encountering O(n²) performance degradation—the motivation for C-SOAR's vectorized O(log n) approach.",
                 descriptionTh: "7 ปีในการติดตั้ง Case-Based Reasoning สำหรับ IT service desk (แก้ปัญหาได้ 73% ในการโทรครั้งแรก) ขยาย case libraries เป็นกว่า 100,000 incidents",
-                tags: ["CBR", "Production", "IT Service", "Australia"]
+                tags: ["CBR", "Production", "IT Service", "Australia"],
+                metrics: { resolution: "73%", cases: "100K+", years: "7" }
             },
             {
                 year: 2010,
@@ -3303,7 +4235,8 @@
                 icon: "🔬",
                 description: "8 Years Deep AI Research: Swarm Intelligence (Bee's Algorithm), evolutionary algorithms, reinforcement learning. Published research on multi-objective optimization—balancing competing constraints critical for C-SOAR's formal verification.",
                 descriptionTh: "8 ปีวิจัย AI เชิงลึก: Swarm Intelligence (Bee's Algorithm) อัลกอริทึมวิวัฒนาการ การเรียนรู้แบบเสริมกำลัง ตีพิมพ์งานวิจัยเรื่องการเพิ่มประสิทธิภาพหลายวัตถุประสงค์",
-                tags: ["AI", "Research", "Swarm Intelligence", "NSTDA"]
+                tags: ["AI", "Research", "Swarm Intelligence", "NSTDA"],
+                metrics: { publications: "5+", algorithms: "3", years: "8" }
             },
             {
                 year: 2018,
@@ -3318,7 +4251,8 @@
                 icon: "🚀",
                 description: "Led R&D for autonomous systems, counter-terrorism financing, OSINT using transformer-based Thai NLP. Explored dual-use AI, predictive maintenance, WMD proliferation controls.",
                 descriptionTh: "นำ R&D สำหรับระบบอัตโนมัติ การต่อต้านการเงินก่อการร้าย OSINT โดยใช้ Thai NLP แบบ transformer สำรวจ AI แบบใช้งานคู่ การบำรุงรักษาเชิงพยากรณ์",
-                tags: ["AI", "NLP", "Transformers", "National Security"]
+                tags: ["AI", "NLP", "Transformers", "National Security"],
+                metrics: { projects: "10+", team: "15", budget: "฿50M" }
             },
             {
                 year: 2019,
@@ -3333,7 +4267,8 @@
                 icon: "🛡️",
                 description: "AI for National Security: Led R&D for autonomous systems, counter-terrorism financing, OSINT using transformer-based Thai NLP. Built transformer expertise (embeddings) and multi-modal fusion.",
                 descriptionTh: "AI สำหรับความมั่นคงแห่งชาติ: นำ R&D สำหรับระบบอัตโนมัติ การต่อต้านการเงินก่อการร้าย OSINT โดยใช้ Thai NLP แบบ transformer",
-                tags: ["AI", "National Security", "Transformers", "OSINT"]
+                tags: ["AI", "National Security", "Transformers", "OSINT"],
+                metrics: { accuracy: "92%", languages: "2", models: "5" }
             },
             {
                 year: 2020,
@@ -3348,7 +4283,8 @@
                 icon: "⚔️",
                 description: "The Epiphany: Advised AI-augmented defense against 50K+ daily alerts (94% false positives). Observed expert analysts defeating APTs through analogical reasoning—'this reminds me of 2017 campaign.' This human case-based cognitive process became C-SOAR's architectural blueprint.",
                 descriptionTh: "การตระหนักรู้: ให้คำปรึกษาการป้องกันด้วย AI ต่อการแจ้งเตือนกว่า 50,000 รายการต่อวัน (ผลบวกลวง 94%) สังเกตนักวิเคราะห์ผู้เชี่ยวชาญเอาชนะ APT ผ่านการให้เหตุผลแบบเปรียบเทียบ",
-                tags: ["Military", "Cyber Defense", "APT", "Alert Fatigue"]
+                tags: ["Military", "Cyber Defense", "APT", "Alert Fatigue"],
+                metrics: { alerts: "50K/day", falsePositive: "94%", APTs: "12" }
             },
             {
                 year: 2022,
@@ -3363,7 +4299,8 @@
                 icon: "🔐",
                 description: "National PKI Architecture: Led gap analysis for Thailand's CA infrastructure against WebTrust/Chrome Root Program. Mastered formal architectural assessment—identifying deficiencies and validating solutions.",
                 descriptionTh: "สถาปัตยกรรม PKI แห่งชาติ: นำการวิเคราะห์ช่องว่างสำหรับโครงสร้างพื้นฐาน CA ของไทยเทียบกับ WebTrust/Chrome Root Program",
-                tags: ["PKI", "Digital Identity", "WebTrust", "ETDA"]
+                tags: ["PKI", "Digital Identity", "WebTrust", "ETDA"],
+                metrics: { CAs: "5", standards: "3", compliance: "100%" }
             },
             {
                 year: 2023,
@@ -3378,7 +4315,8 @@
                 icon: "🏦",
                 description: "The Crucible: Managing security for 200B+ baht infrastructure where March 2024 zero-day APT exposed complete SOAR failure (47-minute manual response). Architected production vector pipelines (Airflow DAGs: 3hrs → 12min), deployed 768-dimensional fraud detection (sub-10ms on 10M+ records).",
                 descriptionTh: "การทดสอบ: บริหารความปลอดภัยสำหรับโครงสร้างพื้นฐานมูลค่ากว่า 200,000 ล้านบาท ที่ APT zero-day มีนาคม 2567 เปิดเผยความล้มเหลวของ SOAR อย่างสมบูรณ์ (การตอบสนองด้วยตนเอง 47 นาที)",
-                tags: ["FCI", "Vector DB", "Fraud Detection", "Production"]
+                tags: ["FCI", "Vector DB", "Fraud Detection", "Production"],
+                metrics: { assets: "฿200B+", accounts: "7M+", latency: "<10ms" }
             },
             {
                 year: 2025,
@@ -3393,7 +4331,8 @@
                 icon: "🎯",
                 description: "Pursuing Doctor of Science to formalize the Cognitive SOAR framework—transcending static automation through Vectorized Case-Based Reasoning, LLM-powered synthesis, and Formal Verification.",
                 descriptionTh: "กำลังศึกษาปริญญาเอกวิทยาศาสตร์เพื่อพัฒนา Cognitive SOAR framework อย่างเป็นทางการ—ก้าวข้ามระบบอัตโนมัติแบบคงที่ผ่าน Vectorized Case-Based Reasoning",
-                tags: ["DSc", "C-SOAR", "Research", "Capitol Tech"]
+                tags: ["DSc", "C-SOAR", "Research", "Capitol Tech"],
+                metrics: { framework: "C-SOAR", improvement: "70%→95%", timeline: "3 years" }
             }
         ];
 
@@ -3411,19 +4350,19 @@
 
         // Expertise Network Data
         const networkNodes = [
-            { id: 'C-SOAR', group: 1, size: 35 },
-            { id: 'CBR', group: 2, size: 25 },
-            { id: 'Vector DB', group: 2, size: 22 },
-            { id: 'LLM', group: 2, size: 22 },
-            { id: 'Formal Logic', group: 2, size: 20 },
-            { id: 'Python', group: 3, size: 18 },
-            { id: 'Airflow', group: 3, size: 16 },
-            { id: 'Transformers', group: 3, size: 18 },
-            { id: 'SIEM', group: 3, size: 16 },
-            { id: 'FCI', group: 4, size: 14 },
-            { id: 'CISSP', group: 4, size: 14 },
-            { id: 'PDPA', group: 4, size: 12 },
-            { id: 'Audit', group: 4, size: 12 }
+            { id: 'C-SOAR', group: 1, size: 40, description: 'Cognitive SOAR Framework' },
+            { id: 'CBR', group: 2, size: 28, description: 'Case-Based Reasoning' },
+            { id: 'Vector DB', group: 2, size: 24, description: 'Vector Databases' },
+            { id: 'LLM', group: 2, size: 24, description: 'Large Language Models' },
+            { id: 'Formal Logic', group: 2, size: 22, description: 'Formal Verification' },
+            { id: 'Python', group: 3, size: 20, description: 'Python Programming' },
+            { id: 'Airflow', group: 3, size: 18, description: 'Apache Airflow' },
+            { id: 'Transformers', group: 3, size: 20, description: 'Transformer Models' },
+            { id: 'SIEM', group: 3, size: 18, description: 'Security Information & Event Management' },
+            { id: 'FCI', group: 4, size: 16, description: 'Financial Critical Infrastructure' },
+            { id: 'CISSP', group: 4, size: 16, description: 'CISSP Certification' },
+            { id: 'PDPA', group: 4, size: 14, description: 'Personal Data Protection Act' },
+            { id: 'Audit', group: 4, size: 14, description: 'Security Auditing' }
         ];
 
         const networkLinks = [
@@ -3486,11 +4425,27 @@
             ]
         };
 
+        // C-SOAR Architecture Data
+        const csoarNodes = [
+            { id: 'csoar', label: 'C-SOAR', group: 'hub', x: 0, y: 0, size: 50, icon: '🧠' },
+            { id: 'vcbr', label: 'Vectorized CBR', group: 'pillar', x: -150, y: -100, size: 35, icon: '📚' },
+            { id: 'llm', label: 'LLM Synthesis', group: 'pillar', x: 150, y: -100, size: 35, icon: '🤖' },
+            { id: 'formal', label: 'Formal Logic', group: 'pillar', x: 0, y: 150, size: 35, icon: '✅' }
+        ];
+
+        const csoarLinks = [
+            { source: 'csoar', target: 'vcbr', type: 'core' },
+            { source: 'csoar', target: 'llm', type: 'core' },
+            { source: 'csoar', target: 'formal', type: 'core' },
+            { source: 'vcbr', target: 'llm', type: 'supply' },
+            { source: 'llm', target: 'formal', type: 'supply' },
+            { source: 'formal', target: 'vcbr', type: 'supply' }
+        ];
+
         // ============================================
         // UTILITY FUNCTIONS
         // ============================================
         
-        // Debounce function for resize events
         function debounce(func, wait) {
             let timeout;
             return function executedFunction(...args) {
@@ -3503,22 +4458,18 @@
             };
         }
 
-        // Get current theme
         function isDarkMode() {
             return document.body.classList.contains('dark');
         }
 
-        // Get current language
         function getCurrentLang() {
             return document.body.dataset.lang || 'en';
         }
 
-        // Format year for Thai Buddhist Era
         function formatThaiYear(year) {
             return year + 543;
         }
 
-        // Get color based on event type
         function getTypeColor(type) {
             const colors = {
                 milestone: CONFIG.colors.primary,
@@ -3537,7 +4488,7 @@
             if (overlay) {
                 setTimeout(() => {
                     overlay.classList.add('hidden');
-                }, 500);
+                }, 800);
             }
         }
 
@@ -3548,7 +4499,6 @@
             const themeToggle = document.getElementById('theme-toggle');
             const body = document.body;
             
-            // Check saved preference
             const savedTheme = localStorage.getItem('theme');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             
@@ -3560,12 +4510,12 @@
                 body.classList.toggle('dark');
                 localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
                 
-                // Redraw visualizations with new theme
                 setTimeout(() => {
                     createTimelineViz();
                     createSkillsRadar();
                     createExpertiseNetwork();
                     createHierarchyTree();
+                    createCSOARArchitecture();
                 }, 100);
             });
         }
@@ -3577,7 +4527,6 @@
             const langButtons = document.querySelectorAll('.lang-btn');
             const body = document.body;
             
-            // Check saved preference
             const savedLang = localStorage.getItem('language') || 'en';
             body.dataset.lang = savedLang;
             
@@ -3592,15 +4541,11 @@
                     langButtons.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     
-                    // Update Thai dates
                     updateThaiDates();
-                    
-                    // Update vertical timeline
                     populateVerticalTimeline();
                 });
             });
             
-            // Initial Thai date update
             updateThaiDates();
         }
 
@@ -3628,7 +4573,6 @@
                 navLinks.classList.toggle('active');
             });
             
-            // Close menu when clicking a link
             navLinks.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', () => {
                     toggle.classList.remove('active');
@@ -3645,8 +4589,6 @@
             const navLinks = document.querySelectorAll('.nav-links a');
             const sections = document.querySelectorAll('section[id]');
             
-            // Header scroll effect
-            let lastScroll = 0;
             window.addEventListener('scroll', () => {
                 const currentScroll = window.pageYOffset;
                 
@@ -3655,11 +4597,8 @@
                 } else {
                     header.classList.remove('scrolled');
                 }
-                
-                lastScroll = currentScroll;
             });
             
-            // Scroll spy for navigation
             const observerOptions = {
                 threshold: 0.3,
                 rootMargin: '-100px 0px -50% 0px'
@@ -3683,7 +4622,7 @@
         // SCROLL REVEAL ANIMATIONS
         // ============================================
         function initScrollReveal() {
-            const revealElements = document.querySelectorAll('.scroll-reveal, .stagger-children');
+            const revealElements = document.querySelectorAll('.scroll-reveal, .stagger-children, .fade-up, .fade-left, .fade-right');
             
             const observerOptions = {
                 threshold: 0.1,
@@ -3694,6 +4633,7 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
+                        entry.target.classList.add('visible');
                     }
                 });
             }, observerOptions);
@@ -3727,7 +4667,7 @@
         // COUNTER ANIMATION
         // ============================================
         function initCounterAnimation() {
-            const counters = document.querySelectorAll('.stat-number[data-count]');
+            const counters = document.querySelectorAll('.stat-number[data-count], .summary-card-value[data-count]');
             
             const observerOptions = {
                 threshold: 0.5
@@ -3739,7 +4679,7 @@
                         const counter = entry.target;
                         const target = parseInt(counter.dataset.count);
                         const prefix = counter.dataset.prefix || '';
-                        const suffix = counter.dataset.suffix || '+';
+                        const suffix = counter.dataset.suffix || '';
                         const duration = 2000;
                         const step = target / (duration / 16);
                         let current = 0;
@@ -3764,7 +4704,66 @@
         }
 
         // ============================================
-        // PARTICLE CANVAS
+        // STARFIELD CANVAS
+        // ============================================
+        function initStarfieldCanvas() {
+            const canvas = document.getElementById('starfield-canvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            let stars = [];
+            let animationId;
+            
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                initStars();
+            }
+            
+            function initStars() {
+                stars = [];
+                for (let i = 0; i < CONFIG.starCount; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        size: Math.random() * 1.5 + 0.5,
+                        speed: Math.random() * 0.3 + 0.1,
+                        twinkle: Math.random() * Math.PI * 2,
+                        twinkleSpeed: Math.random() * 0.02 + 0.01
+                    });
+                }
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                stars.forEach(star => {
+                    star.twinkle += star.twinkleSpeed;
+                    const opacity = 0.3 + 0.7 * Math.abs(Math.sin(star.twinkle));
+                    
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+                    ctx.fill();
+                    
+                    // Subtle movement
+                    star.y += star.speed * 0.1;
+                    if (star.y > canvas.height) {
+                        star.y = 0;
+                        star.x = Math.random() * canvas.width;
+                    }
+                });
+                
+                animationId = requestAnimationFrame(animate);
+            }
+            
+            window.addEventListener('resize', debounce(resize, CONFIG.debounceDelay));
+            resize();
+            animate();
+        }
+
+        // ============================================
+        // INTERACTIVE PARTICLE CANVAS
         // ============================================
         function initParticleCanvas() {
             const canvas = document.getElementById('particle-canvas');
@@ -3789,7 +4788,15 @@
                     this.baseX = this.x;
                     this.baseY = this.y;
                     this.density = (Math.random() * 30) + 1;
-                    this.color = `rgba(14, 165, 233, ${Math.random() * 0.3 + 0.1})`;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    
+                    const colors = [
+                        `rgba(14, 165, 233, ${Math.random() * 0.3 + 0.1})`,
+                        `rgba(139, 92, 246, ${Math.random() * 0.3 + 0.1})`,
+                        `rgba(236, 72, 153, ${Math.random() * 0.2 + 0.05})`
+                    ];
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
                 }
                 
                 draw() {
@@ -3801,37 +4808,46 @@
                 }
                 
                 update() {
-                    if (mouse.x === null || mouse.y === null) return;
-                    
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    let forceDirectionX = dx / distance;
-                    let forceDirectionY = dy / distance;
-                    let maxDistance = mouse.radius;
-                    let force = (maxDistance - distance) / maxDistance;
-                    let directionX = forceDirectionX * force * this.density;
-                    let directionY = forceDirectionY * force * this.density;
-                    
-                    if (distance < mouse.radius) {
-                        this.x -= directionX;
-                        this.y -= directionY;
-                    } else {
-                        if (this.x !== this.baseX) {
-                            let dx = this.x - this.baseX;
-                            this.x -= dx / 10;
-                        }
-                        if (this.y !== this.baseY) {
-                            let dy = this.y - this.baseY;
-                            this.y -= dy / 10;
+                    // Mouse interaction
+                    if (mouse.x !== null && mouse.y !== null) {
+                        let dx = mouse.x - this.x;
+                        let dy = mouse.y - this.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < mouse.radius) {
+                            let forceDirectionX = dx / distance;
+                            let forceDirectionY = dy / distance;
+                            let force = (mouse.radius - distance) / mouse.radius;
+                            this.x -= forceDirectionX * force * this.density * 0.5;
+                            this.y -= forceDirectionY * force * this.density * 0.5;
                         }
                     }
+                    
+                    // Return to base position
+                    if (this.x !== this.baseX) {
+                        let dx = this.x - this.baseX;
+                        this.x -= dx / 20;
+                    }
+                    if (this.y !== this.baseY) {
+                        let dy = this.y - this.baseY;
+                        this.y -= dy / 20;
+                    }
+                    
+                    // Subtle drift
+                    this.baseX += this.vx * 0.1;
+                    this.baseY += this.vy * 0.1;
+                    
+                    // Wrap around
+                    if (this.baseX < 0) this.baseX = canvas.width;
+                    if (this.baseX > canvas.width) this.baseX = 0;
+                    if (this.baseY < 0) this.baseY = canvas.height;
+                    if (this.baseY > canvas.height) this.baseY = 0;
                 }
             }
             
             function init() {
                 particles = [];
-                const numberOfParticles = Math.min((canvas.width * canvas.height) / 15000, CONFIG.particleCount);
+                const numberOfParticles = Math.min((canvas.width * canvas.height) / 12000, CONFIG.particleCount);
                 for (let i = 0; i < numberOfParticles; i++) {
                     let x = Math.random() * canvas.width;
                     let y = Math.random() * canvas.height;
@@ -3839,12 +4855,35 @@
                 }
             }
             
+            function drawConnections() {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(59, 130, 246, ${0.15 * (1 - distance / 120)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+            
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
                 for (let i = 0; i < particles.length; i++) {
                     particles[i].draw();
                     particles[i].update();
                 }
+                
+                drawConnections();
+                
                 animationId = requestAnimationFrame(animate);
             }
             
@@ -3865,6 +4904,73 @@
         }
 
         // ============================================
+        // SLIDE-OVER PANEL
+        // ============================================
+        function initSlidePanel() {
+            const panel = document.getElementById('slide-panel');
+            const overlay = document.getElementById('slide-panel-overlay');
+            const closeBtn = document.getElementById('slide-panel-close');
+            
+            function closePanel() {
+                panel.classList.remove('open');
+                overlay.classList.remove('open');
+            }
+            
+            closeBtn.addEventListener('click', closePanel);
+            overlay.addEventListener('click', closePanel);
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && panel.classList.contains('open')) {
+                    closePanel();
+                }
+            });
+        }
+
+        function openSlidePanel(event) {
+            const panel = document.getElementById('slide-panel');
+            const overlay = document.getElementById('slide-panel-overlay');
+            const icon = document.getElementById('slide-panel-icon');
+            const title = document.getElementById('slide-panel-title');
+            const subtitle = document.getElementById('slide-panel-subtitle');
+            const body = document.getElementById('slide-panel-body');
+            
+            const lang = getCurrentLang();
+            const year = lang === 'th' ? `พ.ศ. ${event.yearThai}` : event.year;
+            const role = lang === 'th' ? event.roleTh : event.roleEn;
+            const org = lang === 'th' ? event.orgTh : event.org;
+            const description = lang === 'th' ? event.descriptionTh : event.description;
+            
+            icon.textContent = event.icon;
+            title.textContent = role;
+            subtitle.textContent = `${org} | ${year}`;
+            
+            let metricsHtml = '';
+            if (event.metrics) {
+                metricsHtml = `
+                    <div class="slide-panel-metrics">
+                        ${Object.entries(event.metrics).map(([key, value]) => `
+                            <div class="slide-panel-metric">
+                                <div class="slide-panel-metric-value">${value}</div>
+                                <div class="slide-panel-metric-label">${key.charAt(0).toUpperCase() + key.slice(1)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            body.innerHTML = `
+                <p>${description}</p>
+                ${metricsHtml}
+                <div class="slide-panel-tags">
+                    ${event.tags.map(tag => `<span class="slide-panel-tag">${tag}</span>`).join('')}
+                </div>
+            `;
+            
+            panel.classList.add('open');
+            overlay.classList.add('open');
+        }
+
+        // ============================================
         // VERTICAL TIMELINE
         // ============================================
         function populateVerticalTimeline() {
@@ -3876,7 +4982,7 @@
             
             timelineData.forEach((event, index) => {
                 const eventEl = document.createElement('div');
-                eventEl.className = `timeline-event ${event.type === 'conflict' ? 'conflict' : ''}`;
+                eventEl.className = `timeline-event ${event.type}`;
                 eventEl.dataset.index = index;
                 
                 const year = lang === 'th' ? `พ.ศ. ${event.yearThai}` : event.year;
@@ -3887,15 +4993,18 @@
                     <div class="timeline-event-year">${year}</div>
                     <div class="timeline-event-title">${role}</div>
                     <div class="timeline-event-org">${org}</div>
+                    <div class="timeline-event-icon">${event.icon}</div>
                 `;
                 
                 eventEl.addEventListener('click', () => {
-                    // Remove active from all
                     container.querySelectorAll('.timeline-event').forEach(el => el.classList.remove('active'));
                     eventEl.classList.add('active');
-                    
-                    // Update detail panel
                     updateDetailPanel(event);
+                    
+                    // Also open slide panel on mobile
+                    if (window.innerWidth <= 1200) {
+                        openSlidePanel(event);
+                    }
                 });
                 
                 container.appendChild(eventEl);
@@ -3904,7 +5013,10 @@
             // Animate entrance
             setTimeout(() => {
                 container.querySelectorAll('.timeline-event').forEach((el, i) => {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateX(-20px)';
                     setTimeout(() => {
+                        el.style.transition = 'all 0.5s ease';
                         el.style.opacity = '1';
                         el.style.transform = 'translateX(0)';
                     }, i * 100);
@@ -3927,8 +5039,23 @@
             panel.querySelector('.detail-panel-title').textContent = role;
             panel.querySelector('.detail-panel-subtitle').textContent = `${org} | ${year}`;
             
+            let metricsHtml = '';
+            if (event.metrics) {
+                metricsHtml = `
+                    <div class="slide-panel-metrics" style="margin-top: 1.5rem;">
+                        ${Object.entries(event.metrics).map(([key, value]) => `
+                            <div class="slide-panel-metric">
+                                <div class="slide-panel-metric-value">${value}</div>
+                                <div class="slide-panel-metric-label">${key.charAt(0).toUpperCase() + key.slice(1)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
             content.innerHTML = `
                 <p>${description}</p>
+                ${metricsHtml}
                 <div class="detail-panel-tags">
                     ${event.tags.map(tag => `<span class="detail-tag">${tag}</span>`).join('')}
                 </div>
@@ -3957,7 +5084,6 @@
             const g = svg.append('g')
                 .attr('transform', `translate(${margin.left},${margin.top})`);
             
-            // Filter data
             const filteredData = currentFilter === 'all' 
                 ? timelineData 
                 : timelineData.filter(d => d.type === currentFilter);
@@ -3974,7 +5100,6 @@
             const textColor = isDark ? '#f1f5f9' : '#0f172a';
             const gridColor = isDark ? '#334155' : '#e2e8f0';
             
-            // Scales
             const xScale = d3.scaleLinear()
                 .domain([d3.min(data, d => d.year) - 1, d3.max(data, d => d.year) + 1])
                 .range([0, width]);
@@ -3984,8 +5109,8 @@
                 .range([height, 0]);
             
             // Gradient definition
-            const gradient = g.append('defs')
-                .append('linearGradient')
+            const defs = g.append('defs');
+            const gradient = defs.append('linearGradient')
                 .attr('id', 'timeline-gradient')
                 .attr('gradientUnits', 'userSpaceOnUse')
                 .attr('x1', 0).attr('y1', 0)
@@ -3994,6 +5119,22 @@
             gradient.append('stop').attr('offset', '0%').attr('stop-color', '#0ea5e9');
             gradient.append('stop').attr('offset', '50%').attr('stop-color', '#8b5cf6');
             gradient.append('stop').attr('offset', '100%').attr('stop-color', '#ec4899');
+            
+            // Glow filter
+            const filter = defs.append('filter')
+                .attr('id', 'glow')
+                .attr('x', '-50%')
+                .attr('y', '-50%')
+                .attr('width', '200%')
+                .attr('height', '200%');
+            
+            filter.append('feGaussianBlur')
+                .attr('stdDeviation', '3')
+                .attr('result', 'coloredBlur');
+            
+            const feMerge = filter.append('feMerge');
+            feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+            feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
             
             // Grid lines
             g.append('g')
@@ -4006,19 +5147,32 @@
                 .selectAll('line')
                 .attr('stroke', gridColor);
             
+            // Area under the line
+            const area = d3.area()
+                .x(d => xScale(d.year))
+                .y0(height)
+                .y1(d => yScale(d.impact))
+                .curve(d3.curveMonotoneX);
+            
+            g.append('path')
+                .datum(data)
+                .attr('fill', 'url(#timeline-gradient)')
+                .attr('fill-opacity', 0.1)
+                .attr('d', area);
+            
             // Line path
             const line = d3.line()
                 .x(d => xScale(d.year))
                 .y(d => yScale(d.impact))
                 .curve(d3.curveMonotoneX);
             
-            // Animated line
             const path = g.append('path')
                 .datum(data)
                 .attr('fill', 'none')
                 .attr('stroke', 'url(#timeline-gradient)')
                 .attr('stroke-width', 4)
                 .attr('stroke-linecap', 'round')
+                .attr('filter', isDark ? 'url(#glow)' : 'none')
                 .attr('d', line);
             
             // Animate line drawing
@@ -4043,7 +5197,8 @@
                 .append('g')
                 .attr('class', 'point')
                 .attr('transform', d => `translate(${xScale(d.year)},${yScale(d.impact)})`)
-                .style('opacity', 0);
+                .style('opacity', 0)
+                .style('cursor', 'pointer');
             
             // Point shapes based on type
             points.each(function(d) {
@@ -4051,26 +5206,32 @@
                 const color = getTypeColor(d.type);
                 
                 if (d.type === 'conflict') {
-                    // Diamond shape for conflicts
                     point.append('rect')
-                        .attr('width', 14)
-                        .attr('height', 14)
-                        .attr('x', -7)
-                        .attr('y', -7)
+                        .attr('width', 16)
+                        .attr('height', 16)
+                        .attr('x', -8)
+                        .attr('y', -8)
                         .attr('transform', 'rotate(45)')
                         .attr('fill', color)
                         .attr('stroke', '#fff')
                         .attr('stroke-width', 2)
-                        .style('cursor', 'pointer');
+                        .attr('filter', isDark ? 'url(#glow)' : 'none');
                 } else {
-                    // Circle for other types
                     point.append('circle')
-                        .attr('r', 10)
+                        .attr('r', 12)
                         .attr('fill', color)
                         .attr('stroke', '#fff')
                         .attr('stroke-width', 3)
-                        .style('cursor', 'pointer');
+                        .attr('filter', isDark ? 'url(#glow)' : 'none');
                 }
+                
+                // Icon
+                point.append('text')
+                    .attr('text-anchor', 'middle')
+                    .attr('dy', '0.35em')
+                    .attr('font-size', '10px')
+                    .text(d.icon)
+                    .style('pointer-events', 'none');
             });
             
             // Animate points entrance
@@ -4110,8 +5271,8 @@
                 })
                 .on('click', function(event, d) {
                     updateDetailPanel(d);
+                    openSlidePanel(d);
                     
-                    // Highlight corresponding vertical timeline event
                     const verticalEvents = document.querySelectorAll('.timeline-event');
                     verticalEvents.forEach(el => el.classList.remove('active'));
                     const index = timelineData.findIndex(item => item.year === d.year);
@@ -4120,25 +5281,6 @@
                         verticalEvents[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                 });
-            
-            // Labels
-            g.selectAll('.label')
-                .data(data)
-                .enter()
-                .append('text')
-                .attr('class', 'label')
-                .attr('x', d => xScale(d.year))
-                .attr('y', d => yScale(d.impact) - 20)
-                .attr('text-anchor', 'middle')
-                .attr('font-size', '11px')
-                .attr('font-weight', '600')
-                .attr('fill', textColor)
-                .text(d => d.role)
-                .style('opacity', 0)
-                .transition()
-                .delay((d, i) => 800 + i * 150)
-                .duration(500)
-                .style('opacity', 1);
             
             // X Axis
             g.append('g')
@@ -4187,12 +5329,27 @@
             const g = svg.append('g')
                 .attr('transform', `translate(${centerX},${centerY})`);
             
-            // Angle scale
+            // Glow filter
+            const defs = svg.append('defs');
+            const filter = defs.append('filter')
+                .attr('id', 'radial-glow')
+                .attr('x', '-50%')
+                .attr('y', '-50%')
+                .attr('width', '200%')
+                .attr('height', '200%');
+            
+            filter.append('feGaussianBlur')
+                .attr('stdDeviation', '3')
+                .attr('result', 'coloredBlur');
+            
+            const feMerge = filter.append('feMerge');
+            feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+            feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+            
             const angleScale = d3.scaleLinear()
                 .domain([d3.min(data, d => d.year), d3.max(data, d => d.year)])
                 .range([0, 2 * Math.PI - 0.5]);
             
-            // Radius scale based on impact
             const radiusScale = d3.scaleLinear()
                 .domain([0, 100])
                 .range([radius * 0.3, radius]);
@@ -4236,7 +5393,8 @@
                     const r = radiusScale(d.impact);
                     return `translate(${r * Math.cos(angle)},${r * Math.sin(angle)})`;
                 })
-                .style('opacity', 0);
+                .style('opacity', 0)
+                .style('cursor', 'pointer');
             
             points.each(function(d) {
                 const point = d3.select(this);
@@ -4244,30 +5402,30 @@
                 
                 if (d.type === 'conflict') {
                     point.append('rect')
-                        .attr('width', 16)
-                        .attr('height', 16)
-                        .attr('x', -8)
-                        .attr('y', -8)
+                        .attr('width', 18)
+                        .attr('height', 18)
+                        .attr('x', -9)
+                        .attr('y', -9)
                         .attr('transform', 'rotate(45)')
                         .attr('fill', color)
                         .attr('stroke', '#fff')
                         .attr('stroke-width', 2)
-                        .style('cursor', 'pointer');
+                        .attr('filter', isDark ? 'url(#radial-glow)' : 'none');
                 } else {
                     point.append('circle')
-                        .attr('r', 12)
+                        .attr('r', 14)
                         .attr('fill', color)
                         .attr('stroke', '#fff')
                         .attr('stroke-width', 3)
-                        .style('cursor', 'pointer');
+                        .attr('filter', isDark ? 'url(#radial-glow)' : 'none');
                 }
                 
-                // Icon
                 point.append('text')
                     .attr('text-anchor', 'middle')
                     .attr('dy', '0.35em')
-                    .attr('font-size', '10px')
-                    .text(d.icon);
+                    .attr('font-size', '12px')
+                    .text(d.icon)
+                    .style('pointer-events', 'none');
             });
             
             // Animate entrance
@@ -4327,6 +5485,7 @@
                 })
                 .on('click', function(event, d) {
                     updateDetailPanel(d);
+                    openSlidePanel(d);
                 });
             
             // Center label
@@ -4340,7 +5499,6 @@
         }
 
         function initTimelineControls() {
-            // View toggle
             const viewToggle = document.getElementById('timeline-view-toggle');
             if (viewToggle) {
                 viewToggle.querySelectorAll('.view-toggle-btn').forEach(btn => {
@@ -4353,7 +5511,6 @@
                 });
             }
             
-            // Filter pills
             const filterPills = document.getElementById('timeline-filters');
             if (filterPills) {
                 filterPills.querySelectorAll('.filter-pill').forEach(pill => {
@@ -4389,6 +5546,24 @@
                 .style('display', 'block')
                 .style('margin', '0 auto');
             
+            const defs = svg.append('defs');
+            
+            // Glow filter
+            const filter = defs.append('filter')
+                .attr('id', 'radar-glow')
+                .attr('x', '-50%')
+                .attr('y', '-50%')
+                .attr('width', '200%')
+                .attr('height', '200%');
+            
+            filter.append('feGaussianBlur')
+                .attr('stdDeviation', '4')
+                .attr('result', 'coloredBlur');
+            
+            const feMerge = filter.append('feMerge');
+            feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+            feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+            
             const g = svg.append('g')
                 .attr('transform', `translate(${size/2},${size/2})`);
             
@@ -4405,7 +5580,6 @@
                     .attr('stroke-width', 1)
                     .attr('opacity', 0.3);
                 
-                // Level labels
                 g.append('text')
                     .attr('x', 5)
                     .attr('y', -levelFactor + 4)
@@ -4440,15 +5614,14 @@
                     .attr('y', y)
                     .attr('text-anchor', 'middle')
                     .attr('dominant-baseline', 'middle')
-                    .attr('font-size', '12px')
+                    .attr('font-size', '11px')
                     .attr('font-weight', '600')
                     .attr('fill', textColor)
                     .text(d.axis);
             });
             
             // Gradient definition
-            const radarGradient = g.append('defs')
-                .append('radialGradient')
+            const radarGradient = defs.append('radialGradient')
                 .attr('id', 'radar-gradient')
                 .attr('cx', '50%')
                 .attr('cy', '50%')
@@ -4477,7 +5650,8 @@
                 .attr('fill-opacity', 0)
                 .attr('stroke', '#0ea5e9')
                 .attr('stroke-width', 3)
-                .attr('stroke-opacity', 0);
+                .attr('stroke-opacity', 0)
+                .attr('filter', isDark ? 'url(#radar-glow)' : 'none');
             
             // Animate entrance
             radarPath.transition()
@@ -4503,12 +5677,14 @@
                 .attr('r', 0)
                 .attr('fill', '#0ea5e9')
                 .attr('stroke', '#fff')
-                .attr('stroke-width', 2);
+                .attr('stroke-width', 2)
+                .attr('filter', isDark ? 'url(#radar-glow)' : 'none')
+                .style('cursor', 'pointer');
             
             points.transition()
                 .delay((d, i) => 500 + i * 100)
                 .duration(500)
-                .attr('r', 6);
+                .attr('r', 7);
             
             // Tooltip
             const tooltip = d3.select('body').selectAll('.tooltip').data([0]).join('div')
@@ -4520,7 +5696,7 @@
                     d3.select(this)
                         .transition()
                         .duration(200)
-                        .attr('r', 10);
+                        .attr('r', 12);
                     
                     tooltip.transition().duration(200).style('opacity', 0.95);
                     tooltip.html(`
@@ -4534,7 +5710,7 @@
                     d3.select(this)
                         .transition()
                         .duration(200)
-                        .attr('r', 6);
+                        .attr('r', 7);
                     
                     tooltip.transition().duration(300).style('opacity', 0);
                 });
@@ -4558,6 +5734,24 @@
                 .attr('width', width)
                 .attr('height', height);
             
+            const defs = svg.append('defs');
+            
+            // Glow filter
+            const filter = defs.append('filter')
+                .attr('id', 'network-glow')
+                .attr('x', '-50%')
+                .attr('y', '-50%')
+                .attr('width', '200%')
+                .attr('height', '200%');
+            
+            filter.append('feGaussianBlur')
+                .attr('stdDeviation', '3')
+                .attr('result', 'coloredBlur');
+            
+            const feMerge = filter.append('feMerge');
+            feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+            feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+            
             // Color scale for groups
             const colorScale = d3.scaleOrdinal()
                 .domain([1, 2, 3, 4])
@@ -4565,10 +5759,10 @@
             
             // Create simulation
             const simulation = d3.forceSimulation(networkNodes)
-                .force('link', d3.forceLink(networkLinks).id(d => d.id).distance(80))
-                .force('charge', d3.forceManyBody().strength(-400))
+                .force('link', d3.forceLink(networkLinks).id(d => d.id).distance(100))
+                .force('charge', d3.forceManyBody().strength(-500))
                 .force('center', d3.forceCenter(width / 2, height / 2))
-                .force('collision', d3.forceCollide().radius(d => d.size + 15));
+                .force('collision', d3.forceCollide().radius(d => d.size + 20));
             
             // Links
             const link = svg.append('g')
@@ -4598,13 +5792,13 @@
                 .attr('stroke', '#fff')
                 .attr('stroke-width', 3)
                 .style('cursor', 'pointer')
-                .style('filter', 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))');
+                .attr('filter', isDark ? 'url(#network-glow)' : 'none');
             
             // Node labels
             node.append('text')
                 .attr('text-anchor', 'middle')
                 .attr('dy', '0.35em')
-                .attr('font-size', d => d.size > 25 ? '12px' : '10px')
+                .attr('font-size', d => d.size > 30 ? '12px' : '10px')
                 .attr('font-weight', '700')
                 .attr('fill', '#fff')
                 .text(d => d.id)
@@ -4622,13 +5816,17 @@
                         .duration(200)
                         .attr('r', d.size * 1.2);
                     
-                    // Highlight connected links
                     link.attr('opacity', l => 
                         l.source.id === d.id || l.target.id === d.id ? 1 : 0.1
+                    ).attr('stroke-width', l =>
+                        l.source.id === d.id || l.target.id === d.id ? Math.sqrt(l.value) * 2 : Math.sqrt(l.value)
                     );
                     
                     tooltip.transition().duration(200).style('opacity', 0.95);
-                    tooltip.html(`<div class="tooltip-title">${d.id}</div>`)
+                    tooltip.html(`
+                        <div class="tooltip-title">${d.id}</div>
+                        <div>${d.description || ''}</div>
+                    `)
                         .style('left', (event.pageX + 15) + 'px')
                         .style('top', (event.pageY - 30) + 'px');
                 })
@@ -4638,7 +5836,7 @@
                         .duration(200)
                         .attr('r', d.size);
                     
-                    link.attr('opacity', 0.4);
+                    link.attr('opacity', 0.4).attr('stroke-width', l => Math.sqrt(l.value));
                     tooltip.transition().duration(300).style('opacity', 0);
                 });
             
@@ -4692,16 +5890,47 @@
                 .attr('width', width)
                 .attr('height', height);
             
+            const defs = svg.append('defs');
+            
+            // Glow filter
+            const filter = defs.append('filter')
+                .attr('id', 'tree-glow')
+                .attr('x', '-50%')
+                .attr('y', '-50%')
+                .attr('width', '200%')
+                .attr('height', '200%');
+            
+            filter.append('feGaussianBlur')
+                .attr('stdDeviation', '3')
+                .attr('result', 'coloredBlur');
+            
+            const feMerge = filter.append('feMerge');
+            feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+            feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+            
+            // Gradients
+            const gradient0 = defs.append('linearGradient').attr('id', 'node-gradient-0');
+            gradient0.append('stop').attr('offset', '0%').attr('stop-color', '#ec4899');
+            gradient0.append('stop').attr('offset', '100%').attr('stop-color', '#8b5cf6');
+            
+            const gradient1 = defs.append('linearGradient').attr('id', 'node-gradient-1');
+            gradient1.append('stop').attr('offset', '0%').attr('stop-color', '#0ea5e9');
+            gradient1.append('stop').attr('offset', '100%').attr('stop-color', '#8b5cf6');
+            
+            const gradient2 = defs.append('linearGradient').attr('id', 'node-gradient-2');
+            gradient2.append('stop').attr('offset', '0%').attr('stop-color', '#10b981');
+            gradient2.append('stop').attr('offset', '100%').attr('stop-color', '#0ea5e9');
+            
             const root = d3.hierarchy(hierarchyData);
             
             if (currentTreeView === 'tree') {
-                createTreeLayout(svg, root, width, height, textColor, linkColor);
+                createTreeLayout(svg, root, width, height, textColor, linkColor, isDark);
             } else {
-                createRadialTreeLayout(svg, root, width, height, textColor, linkColor);
+                createRadialTreeLayout(svg, root, width, height, textColor, linkColor, isDark);
             }
         }
 
-        function createTreeLayout(svg, root, width, height, textColor, linkColor) {
+        function createTreeLayout(svg, root, width, height, textColor, linkColor, isDark) {
             const margin = { top: 40, right: 120, bottom: 40, left: 120 };
             const innerWidth = width - margin.left - margin.right;
             const innerHeight = height - margin.top - margin.bottom;
@@ -4737,7 +5966,8 @@
                 .append('g')
                 .attr('class', 'node')
                 .attr('transform', d => `translate(${d.y},${d.x})`)
-                .style('opacity', 0);
+                .style('opacity', 0)
+                .style('cursor', 'pointer');
             
             nodes.transition()
                 .delay((d, i) => i * 100)
@@ -4746,7 +5976,7 @@
             
             // Node circles
             nodes.append('circle')
-                .attr('r', d => d.depth === 0 ? 25 : d.children ? 18 : 12)
+                .attr('r', d => d.depth === 0 ? 28 : d.children ? 20 : 14)
                 .attr('fill', d => {
                     if (d.depth === 0) return 'url(#node-gradient-0)';
                     if (d.depth === 1) return 'url(#node-gradient-1)';
@@ -4754,35 +5984,19 @@
                 })
                 .attr('stroke', '#fff')
                 .attr('stroke-width', 3)
-                .style('cursor', 'pointer')
-                .style('filter', 'drop-shadow(0 4px 6px rgba(0,0,0,0.15))');
-            
-            // Gradients
-            const defs = svg.append('defs');
-            
-            const gradient0 = defs.append('linearGradient').attr('id', 'node-gradient-0');
-            gradient0.append('stop').attr('offset', '0%').attr('stop-color', '#ec4899');
-            gradient0.append('stop').attr('offset', '100%').attr('stop-color', '#8b5cf6');
-            
-            const gradient1 = defs.append('linearGradient').attr('id', 'node-gradient-1');
-            gradient1.append('stop').attr('offset', '0%').attr('stop-color', '#0ea5e9');
-            gradient1.append('stop').attr('offset', '100%').attr('stop-color', '#8b5cf6');
-            
-            const gradient2 = defs.append('linearGradient').attr('id', 'node-gradient-2');
-            gradient2.append('stop').attr('offset', '0%').attr('stop-color', '#10b981');
-            gradient2.append('stop').attr('offset', '100%').attr('stop-color', '#0ea5e9');
+                .attr('filter', isDark ? 'url(#tree-glow)' : 'none');
             
             // Node icons
             nodes.append('text')
                 .attr('text-anchor', 'middle')
                 .attr('dy', '0.35em')
-                .attr('font-size', d => d.depth === 0 ? '16px' : '12px')
+                .attr('font-size', d => d.depth === 0 ? '18px' : '14px')
                 .text(d => d.data.icon)
                 .style('pointer-events', 'none');
             
             // Node labels
             nodes.append('text')
-                .attr('dy', d => d.depth === 0 ? 45 : 30)
+                .attr('dy', d => d.depth === 0 ? 50 : 35)
                 .attr('text-anchor', 'middle')
                 .attr('font-size', d => d.depth === 0 ? '14px' : '11px')
                 .attr('font-weight', '600')
@@ -4790,28 +6004,36 @@
                 .text(d => d.data.name)
                 .style('pointer-events', 'none');
             
+            // Tooltip
+            const tooltip = d3.select('body').selectAll('.tooltip').data([0]).join('div')
+                .attr('class', 'tooltip')
+                .style('opacity', 0);
+            
             // Interactions
-            nodes.on('mouseover', function() {
+            nodes.on('mouseover', function(event, d) {
                 d3.select(this).select('circle')
                     .transition()
                     .duration(200)
                     .attr('r', function() {
-                        const d = d3.select(this.parentNode).datum();
-                        return (d.depth === 0 ? 25 : d.children ? 18 : 12) * 1.2;
+                        return (d.depth === 0 ? 28 : d.children ? 20 : 14) * 1.2;
                     });
+                
+                tooltip.transition().duration(200).style('opacity', 0.95);
+                tooltip.html(`<div class="tooltip-title">${d.data.name}</div>`)
+                    .style('left', (event.pageX + 15) + 'px')
+                    .style('top', (event.pageY - 30) + 'px');
             })
-            .on('mouseout', function() {
+            .on('mouseout', function(event, d) {
                 d3.select(this).select('circle')
                     .transition()
                     .duration(200)
-                    .attr('r', function() {
-                        const d = d3.select(this.parentNode).datum();
-                        return d.depth === 0 ? 25 : d.children ? 18 : 12;
-                    });
+                    .attr('r', d.depth === 0 ? 28 : d.children ? 20 : 14);
+                
+                tooltip.transition().duration(300).style('opacity', 0);
             });
         }
 
-        function createRadialTreeLayout(svg, root, width, height, textColor, linkColor) {
+        function createRadialTreeLayout(svg, root, width, height, textColor, linkColor, isDark) {
             const radius = Math.min(width, height) / 2 - 80;
             
             const treeLayout = d3.tree()
@@ -4848,58 +6070,71 @@
                 .append('g')
                 .attr('class', 'node')
                 .attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`)
-                .style('opacity', 0);
+                .style('opacity', 0)
+                .style('cursor', 'pointer');
             
             nodes.transition()
                 .delay((d, i) => i * 100)
                 .duration(500)
                 .style('opacity', 1);
             
-            // Gradients
-            const defs = svg.append('defs');
-            
-            const gradient0 = defs.append('linearGradient').attr('id', 'radial-node-gradient-0');
-            gradient0.append('stop').attr('offset', '0%').attr('stop-color', '#ec4899');
-            gradient0.append('stop').attr('offset', '100%').attr('stop-color', '#8b5cf6');
-            
-            const gradient1 = defs.append('linearGradient').attr('id', 'radial-node-gradient-1');
-            gradient1.append('stop').attr('offset', '0%').attr('stop-color', '#0ea5e9');
-            gradient1.append('stop').attr('offset', '100%').attr('stop-color', '#8b5cf6');
-            
-            const gradient2 = defs.append('linearGradient').attr('id', 'radial-node-gradient-2');
-            gradient2.append('stop').attr('offset', '0%').attr('stop-color', '#10b981');
-            gradient2.append('stop').attr('offset', '100%').attr('stop-color', '#0ea5e9');
-            
             // Node circles
             nodes.append('circle')
-                .attr('r', d => d.depth === 0 ? 25 : d.children ? 16 : 10)
+                .attr('r', d => d.depth === 0 ? 28 : d.children ? 18 : 12)
                 .attr('fill', d => {
-                    if (d.depth === 0) return 'url(#radial-node-gradient-0)';
-                    if (d.depth === 1) return 'url(#radial-node-gradient-1)';
-                    return 'url(#radial-node-gradient-2)';
+                    if (d.depth === 0) return 'url(#node-gradient-0)';
+                    if (d.depth === 1) return 'url(#node-gradient-1)';
+                    return 'url(#node-gradient-2)';
                 })
                 .attr('stroke', '#fff')
                 .attr('stroke-width', 2)
-                .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))');
+                .attr('filter', isDark ? 'url(#tree-glow)' : 'none');
             
             // Node icons
             nodes.append('text')
                 .attr('text-anchor', 'middle')
                 .attr('dy', '0.35em')
                 .attr('transform', d => `rotate(${90 - d.x * 180 / Math.PI})`)
-                .attr('font-size', d => d.depth === 0 ? '14px' : '10px')
-                .text(d => d.data.icon);
+                .attr('font-size', d => d.depth === 0 ? '16px' : '12px')
+                .text(d => d.data.icon)
+                .style('pointer-events', 'none');
             
             // Labels
             nodes.append('text')
                 .attr('dy', '0.35em')
-                .attr('x', d => d.x < Math.PI === !d.children ? 20 : -20)
+                .attr('x', d => d.x < Math.PI === !d.children ? 25 : -25)
                 .attr('text-anchor', d => d.x < Math.PI === !d.children ? 'start' : 'end')
                 .attr('transform', d => d.x >= Math.PI ? 'rotate(180)' : null)
                 .attr('font-size', '10px')
                 .attr('font-weight', '600')
                 .attr('fill', textColor)
-                .text(d => d.data.name);
+                .text(d => d.data.name)
+                .style('pointer-events', 'none');
+            
+            // Tooltip
+            const tooltip = d3.select('body').selectAll('.tooltip').data([0]).join('div')
+                .attr('class', 'tooltip')
+                .style('opacity', 0);
+            
+            nodes.on('mouseover', function(event, d) {
+                d3.select(this).select('circle')
+                    .transition()
+                    .duration(200)
+                    .attr('r', (d.depth === 0 ? 28 : d.children ? 18 : 12) * 1.2);
+                
+                tooltip.transition().duration(200).style('opacity', 0.95);
+                tooltip.html(`<div class="tooltip-title">${d.data.name}</div>`)
+                    .style('left', (event.pageX + 15) + 'px')
+                    .style('top', (event.pageY - 30) + 'px');
+            })
+            .on('mouseout', function(event, d) {
+                d3.select(this).select('circle')
+                    .transition()
+                    .duration(200)
+                    .attr('r', d.depth === 0 ? 28 : d.children ? 18 : 12);
+                
+                tooltip.transition().duration(300).style('opacity', 0);
+            });
         }
 
         function initTreeControls() {
@@ -4917,6 +6152,353 @@
         }
 
         // ============================================
+        // D3.js C-SOAR ARCHITECTURE VISUALIZATION
+        // ============================================
+        function createCSOARArchitecture() {
+            const container = d3.select('#csoar-architecture');
+            container.selectAll('*').remove();
+            
+            const containerWidth = container.node().getBoundingClientRect().width;
+            const width = containerWidth;
+            const height = 450;
+            
+            const isDark = isDarkMode();
+            const textColor = isDark ? '#f1f5f9' : '#0f172a';
+            
+            const svg = container.append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            const defs = svg.append('defs');
+            
+            // Glow filter
+            const filter = defs.append('filter')
+                .attr('id', 'csoar-glow')
+                .attr('x', '-100%')
+                .attr('y', '-100%')
+                .attr('width', '300%')
+                .attr('height', '300%');
+            
+            filter.append('feGaussianBlur')
+                .attr('stdDeviation', '6')
+                .attr('result', 'coloredBlur');
+            
+            const feMerge = filter.append('feMerge');
+            feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+            feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+            
+            // Gradients
+            const hubGradient = defs.append('radialGradient')
+                .attr('id', 'hub-gradient')
+                .attr('cx', '50%')
+                .attr('cy', '50%')
+                .attr('r', '50%');
+            hubGradient.append('stop').attr('offset', '0%').attr('stop-color', '#ec4899');
+            hubGradient.append('stop').attr('offset', '100%').attr('stop-color', '#8b5cf6');
+            
+            const pillarGradient1 = defs.append('linearGradient')
+                .attr('id', 'pillar-gradient-1');
+            pillarGradient1.append('stop').attr('offset', '0%').attr('stop-color', '#0ea5e9');
+            pillarGradient1.append('stop').attr('offset', '100%').attr('stop-color', '#06b6d4');
+            
+            const pillarGradient2 = defs.append('linearGradient')
+                .attr('id', 'pillar-gradient-2');
+            pillarGradient2.append('stop').attr('offset', '0%').attr('stop-color', '#8b5cf6');
+            pillarGradient2.append('stop').attr('offset', '100%').attr('stop-color', '#a855f7');
+            
+            const pillarGradient3 = defs.append('linearGradient')
+                .attr('id', 'pillar-gradient-3');
+            pillarGradient3.append('stop').attr('offset', '0%').attr('stop-color', '#10b981');
+            pillarGradient3.append('stop').attr('offset', '100%').attr('stop-color', '#14b8a6');
+            
+            // Link gradient
+            const linkGradient = defs.append('linearGradient')
+                .attr('id', 'link-gradient')
+                .attr('gradientUnits', 'userSpaceOnUse');
+            linkGradient.append('stop').attr('offset', '0%').attr('stop-color', '#a855f7');
+            linkGradient.append('stop').attr('offset', '100%').attr('stop-color', '#3b82f6');
+            
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = 140;
+            
+            const g = svg.append('g')
+                .attr('transform', `translate(${centerX},${centerY})`);
+            
+            // Calculate positions
+            const positions = {
+                csoar: { x: 0, y: 0 },
+                vcbr: { x: -radius * Math.cos(Math.PI / 6), y: -radius * Math.sin(Math.PI / 6) - 30 },
+                llm: { x: radius * Math.cos(Math.PI / 6), y: -radius * Math.sin(Math.PI / 6) - 30 },
+                formal: { x: 0, y: radius - 20 }
+            };
+            
+            // Draw outer triangle
+            const trianglePoints = [
+                positions.vcbr,
+                positions.llm,
+                positions.formal
+            ];
+            
+            g.append('polygon')
+                .attr('points', trianglePoints.map(p => `${p.x},${p.y}`).join(' '))
+                .attr('fill', 'none')
+                .attr('stroke', isDark ? 'rgba(139, 92, 246, 0.3)' : 'rgba(139, 92, 246, 0.2)')
+                .attr('stroke-width', 2)
+                .attr('stroke-dasharray', '10,5');
+            
+            // Draw connecting lines from center to pillars
+            const links = [
+                { source: positions.csoar, target: positions.vcbr, color: '#0ea5e9' },
+                { source: positions.csoar, target: positions.llm, color: '#8b5cf6' },
+                { source: positions.csoar, target: positions.formal, color: '#10b981' }
+            ];
+            
+            // Animated particle paths
+            links.forEach((link, i) => {
+                const pathId = `path-${i}`;
+                
+                // Main link line
+                g.append('line')
+                    .attr('x1', link.source.x)
+                    .attr('y1', link.source.y)
+                    .attr('x2', link.target.x)
+                    .attr('y2', link.target.y)
+                    .attr('stroke', link.color)
+                    .attr('stroke-width', 3)
+                    .attr('opacity', 0.6)
+                    .attr('filter', isDark ? 'url(#csoar-glow)' : 'none');
+                
+                // Create path for particle animation
+                const path = g.append('path')
+                    .attr('id', pathId)
+                    .attr('d', `M${link.source.x},${link.source.y} L${link.target.x},${link.target.y}`)
+                    .attr('fill', 'none')
+                    .attr('stroke', 'none');
+                
+                // Animated particles
+                function animateParticle() {
+                    g.append('circle')
+                        .attr('r', 4)
+                        .attr('fill', link.color)
+                        .attr('filter', isDark ? 'url(#csoar-glow)' : 'none')
+                        .attr('opacity', 0.8)
+                        .transition()
+                        .duration(2000)
+                        .ease(d3.easeLinear)
+                        .attrTween('transform', function() {
+                            const pathNode = path.node();
+                            const length = pathNode.getTotalLength();
+                            return function(t) {
+                                const point = pathNode.getPointAtLength(t * length);
+                                return `translate(${point.x},${point.y})`;
+                            };
+                        })
+                        .on('end', function() {
+                            d3.select(this).remove();
+                        });
+                }
+                
+                // Start particle animation with staggered delays
+                setInterval(() => animateParticle(), 3000 + i * 1000);
+                setTimeout(() => animateParticle(), i * 1000);
+            });
+            
+            // Draw supply lines between pillars
+            const supplyLinks = [
+                { source: positions.vcbr, target: positions.llm },
+                { source: positions.llm, target: positions.formal },
+                { source: positions.formal, target: positions.vcbr }
+            ];
+            
+            supplyLinks.forEach(link => {
+                g.append('line')
+                    .attr('x1', link.source.x)
+                    .attr('y1', link.source.y)
+                    .attr('x2', link.target.x)
+                    .attr('y2', link.target.y)
+                    .attr('stroke', isDark ? 'rgba(139, 92, 246, 0.4)' : 'rgba(139, 92, 246, 0.3)')
+                    .attr('stroke-width', 2)
+                    .attr('stroke-dasharray', '5,5');
+            });
+            
+            // Tooltip
+            const tooltip = d3.select('body').selectAll('.tooltip').data([0]).join('div')
+                .attr('class', 'tooltip')
+                .style('opacity', 0);
+            
+            // Draw nodes
+            const nodeData = [
+                { 
+                    id: 'csoar', 
+                    pos: positions.csoar, 
+                    size: 55, 
+                    gradient: 'url(#hub-gradient)', 
+                    icon: '🧠', 
+                    label: 'C-SOAR',
+                    description: 'Cognitive SOAR Framework - The central orchestration hub'
+                },
+                { 
+                    id: 'vcbr', 
+                    pos: positions.vcbr, 
+                    size: 40, 
+                    gradient: 'url(#pillar-gradient-1)', 
+                    icon: '📚', 
+                    label: 'Vectorized CBR',
+                    description: 'Case-Based Reasoning with 768-dimensional embeddings'
+                },
+                { 
+                    id: 'llm', 
+                    pos: positions.llm, 
+                    size: 40, 
+                    gradient: 'url(#pillar-gradient-2)', 
+                    icon: '🤖', 
+                    label: 'LLM Synthesis',
+                    description: 'Local transformer models for response generation'
+                },
+                { 
+                    id: 'formal', 
+                    pos: positions.formal, 
+                    size: 40, 
+                    gradient: 'url(#pillar-gradient-3)', 
+                    icon: '✅', 
+                    label: 'Formal Logic',
+                    description: 'Mathematical verification of safety invariants'
+                }
+            ];
+            
+            const nodes = g.selectAll('.csoar-node')
+                .data(nodeData)
+                .enter()
+                .append('g')
+                .attr('class', 'csoar-node')
+                .attr('transform', d => `translate(${d.pos.x},${d.pos.y})`)
+                .style('cursor', 'pointer');
+            
+            // Outer glow ring for hub
+            nodes.filter(d => d.id === 'csoar')
+                .append('circle')
+                .attr('r', 65)
+                .attr('fill', 'none')
+                .attr('stroke', 'url(#hub-gradient)')
+                .attr('stroke-width', 2)
+                .attr('opacity', 0.3)
+                .attr('filter', isDark ? 'url(#csoar-glow)' : 'none');
+            
+            // Pulsing animation for hub
+            nodes.filter(d => d.id === 'csoar')
+                .append('circle')
+                .attr('r', 55)
+                .attr('fill', 'none')
+                .attr('stroke', 'url(#hub-gradient)')
+                .attr('stroke-width', 3)
+                .attr('opacity', 0.5)
+                .attr('filter', isDark ? 'url(#csoar-glow)' : 'none')
+                .style('animation', 'pulse 2s ease-in-out infinite');
+            
+            // Main node circles
+            nodes.append('circle')
+                .attr('r', d => d.size)
+                .attr('fill', d => d.gradient)
+                .attr('stroke', '#fff')
+                .attr('stroke-width', 3)
+                .attr('filter', isDark ? 'url(#csoar-glow)' : 'none');
+            
+            // Node icons
+            nodes.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '0.35em')
+                .attr('font-size', d => d.id === 'csoar' ? '28px' : '22px')
+                .text(d => d.icon)
+                .style('pointer-events', 'none');
+            
+            // Node labels
+            nodes.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', d => d.size + 25)
+                .attr('font-size', d => d.id === 'csoar' ? '16px' : '13px')
+                .attr('font-weight', '700')
+                .attr('fill', textColor)
+                .text(d => d.label)
+                .style('pointer-events', 'none');
+            
+            // Interactions
+            nodes
+                .on('mouseover', function(event, d) {
+                    d3.select(this).select('circle:last-of-type')
+                        .transition()
+                        .duration(200)
+                        .attr('r', d.size * 1.15);
+                    
+                    tooltip.transition().duration(200).style('opacity', 0.95);
+                    tooltip.html(`
+                        <div class="tooltip-title">${d.label}</div>
+                        <div>${d.description}</div>
+                    `)
+                        .style('left', (event.pageX + 15) + 'px')
+                        .style('top', (event.pageY - 30) + 'px');
+                })
+                .on('mouseout', function(event, d) {
+                    d3.select(this).select('circle:last-of-type')
+                        .transition()
+                        .duration(200)
+                        .attr('r', d.size);
+                    
+                    tooltip.transition().duration(300).style('opacity', 0);
+                })
+                .on('click', function(event, d) {
+                    // Open slide panel with more details
+                    const panelData = {
+                        icon: d.icon,
+                        year: 2025,
+                        yearThai: 2568,
+                        roleEn: d.label,
+                        roleTh: d.label,
+                        org: 'C-SOAR Framework',
+                        orgTh: 'กรอบงาน C-SOAR',
+                        description: d.description,
+                        descriptionTh: d.description,
+                        tags: ['C-SOAR', 'Research', 'Innovation'],
+                        metrics: {}
+                    };
+                    openSlidePanel(panelData);
+                });
+            
+            // Add CSS animation for pulse
+            if (!document.getElementById('csoar-pulse-style')) {
+                const style = document.createElement('style');
+                style.id = 'csoar-pulse-style';
+                style.textContent = `
+                    @keyframes pulse {
+                        0%, 100% { transform: scale(1); opacity: 0.5; }
+                        50% { transform: scale(1.1); opacity: 0.3; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Add descriptive text
+            const descriptions = [
+                { x: -width/2 + 100, y: -height/2 + 60, text: 'Sub-10ms Retrieval', color: '#0ea5e9' },
+                { x: width/2 - 100, y: -height/2 + 60, text: '30s Zero-Day Response', color: '#8b5cf6' },
+                { x: 0, y: height/2 - 40, text: 'Explainable Decisions', color: '#10b981' }
+            ];
+            
+            g.selectAll('.desc-text')
+                .data(descriptions)
+                .enter()
+                .append('text')
+                .attr('x', d => d.x)
+                .attr('y', d => d.y)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '11px')
+                .attr('font-weight', '600')
+                .attr('fill', d => d.color)
+                .attr('opacity', 0.8)
+                .text(d => d.text);
+        }
+
+        // ============================================
         // RESIZE HANDLER
         // ============================================
         function initResizeHandler() {
@@ -4925,6 +6507,7 @@
                 createSkillsRadar();
                 createExpertiseNetwork();
                 createHierarchyTree();
+                createCSOARArchitecture();
             }, CONFIG.debounceDelay);
             
             window.addEventListener('resize', debouncedResize);
@@ -4942,7 +6525,9 @@
             initScrollReveal();
             initSmoothScroll();
             initCounterAnimation();
+            initStarfieldCanvas();
             initParticleCanvas();
+            initSlidePanel();
             
             // Populate vertical timeline
             populateVerticalTimeline();
@@ -4952,6 +6537,7 @@
             createSkillsRadar();
             createExpertiseNetwork();
             createHierarchyTree();
+            createCSOARArchitecture();
             
             // Initialize controls
             initTimelineControls();
@@ -4962,6 +6548,8 @@
             
             // Hide loading overlay
             hideLoadingOverlay();
+            
+            console.log('🚀 Tanat Tonguthaisri Portfolio initialized successfully!');
         }
 
         // Run initialization when DOM is ready
@@ -4971,7 +6559,7 @@
             init();
         }
 
-        // Also run on window load for images
+        // Also run on window load for images and fonts
         window.addEventListener('load', () => {
             // Ensure visualizations are properly sized after all content loads
             setTimeout(() => {
@@ -4979,6 +6567,7 @@
                 createSkillsRadar();
                 createExpertiseNetwork();
                 createHierarchyTree();
+                createCSOARArchitecture();
             }, 100);
         });
     </script>
