@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ยุทธศาสตร์กระจก: การเผชิญหน้าจีน-สหรัฐฯ 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Sarabun:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    
+    <style>
+        :root {
+            --space-void: #0a0a1a;
+            --space-deep: #0d1025;
+            --space-surface: #151d2e;
+            --glass-panel: rgba(21, 29, 46, 0.75);
+            --glass-border: rgba(59, 130, 246, 0.2);
+            --neon-core: #3b82f6;
+            --neon-accent: #06b6d4;
+            --neon-warning: #f59e0b;
+            --neon-danger: #ef4444;
+            --neon-success: #10b981;
+            --gradient-cyber: linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #10b981 100%);
+            --gradient-fire: linear-gradient(135deg, #dc2626 0%, #f59e0b 100%);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --animation-fast: 0.2s;
+            --animation-smooth: 0.4s;
+            --blur-glass: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans Thai', 'Sarabun', sans-serif;
+            background: var(--space-void);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .font-display { font-family: 'Orbitron', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .font-thai { font-family: 'Noto Sans Thai', 'Sarabun', sans-serif; }
+
+        /* Utility Classes - Tailwind Replacement */
+        .fixed { position: fixed; }
+        .sticky { position: sticky; }
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+        .top-0 { top: 0; }
+        .right-0 { right: 0; }
+        .bottom-0 { bottom: 0; }
+        .left-0 { left: 0; }
+        .z-0 { z-index: 0; }
+        .z-10 { z-index: 10; }
+        .z-50 { z-index: 50; }
+        .z-999 { z-index: 9999; }
+        
+        .flex { display: flex; }
+        .inline-flex { display: inline-flex; }
+        .grid { display: grid; }
+        .hidden { display: none; }
+        .block { display: block; }
+        .inline-block { display: inline-block; }
+        
+        .flex-col { flex-direction: column; }
+        .flex-wrap { flex-wrap: wrap; }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .items-baseline { align-items: baseline; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .flex-shrink-0 { flex-shrink: 0; }
+        
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .gap-8 { gap: 2rem; }
+        
+        .p-1 { padding: 0.25rem; }
+        .p-2 { padding: 0.5rem; }
+        .p-3 { padding: 0.75rem; }
+        .p-4 { padding: 1rem; }
+        .p-6 { padding: 1.5rem; }
+        .p-8 { padding: 2rem; }
+        .p-12 { padding: 3rem; }
+        .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+        .py-16 { padding-top: 4rem; padding-bottom: 4rem; }
+        .pl-4 { padding-left: 1rem; }
+        .pt-1 { padding-top: 0.25rem; }
+        
+        .m-0 { margin: 0; }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 0.75rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mt-8 { margin-top: 2rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mb-12 { margin-bottom: 3rem; }
+        .mr-2 { margin-right: 0.5rem; }
+        .mr-3 { margin-right: 0.75rem; }
+        .ml-2 { margin-left: 0.5rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        
+        .w-1 { width: 0.25rem; }
+        .w-4 { width: 1rem; }
+        .w-10 { width: 2.5rem; }
+        .w-12 { width: 3rem; }
+        .w-full { width: 100%; }
+        .max-w-3xl { max-width: 48rem; }
+        .max-w-7xl { max-width: 80rem; }
+        .max-w-none { max-width: none; }
+        .max-w-full { max-width: 100%; }
+        .min-h-screen { min-height: 100vh; }
+        
+        .h-1 { height: 0.25rem; }
+        .h-4 { height: 1rem; }
+        .h-8 { height: 2rem; }
+        .h-10 { height: 2.5rem; }
+        .h-12 { height: 3rem; }
+        .h-full { height: 100%; }
+        
+        .text-xs { font-size: 0.75rem; line-height: 1rem; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-base { font-size: 1rem; line-height: 1.5rem; }
+        .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+        .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+        .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+        .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+        .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+        .text-5xl { font-size: 3rem; line-height: 1; }
+        .text-6xl { font-size: 3.75rem; line-height: 1; }
+        
+        .font-bold { font-weight: 700; }
+        .font-medium { font-weight: 500; }
+        .italic { font-style: italic; }
+        
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        
+        .text-white { color: #ffffff; }
+        .text-blue-400 { color: #60a5fa; }
+        .text-red-400 { color: #f87171; }
+        .text-orange-400 { color: #fb923c; }
+        .text-yellow-400 { color: #facc15; }
+        .text-green-400 { color: #4ade80; }
+        .text-cyan-400 { color: #22d3ee; }
+        .text-purple-400 { color: #c084fc; }
+        .text-gray-300 { color: #d1d5db; }
+        .text-gray-400 { color: #9ca3af; }
+        
+        .bg-blue-500\/10 { background-color: rgba(59, 130, 246, 0.1); }
+        .bg-blue-500\/20 { background-color: rgba(59, 130, 246, 0.2); }
+        .bg-red-500\/10 { background-color: rgba(239, 68, 68, 0.1); }
+        .bg-red-500\/20 { background-color: rgba(239, 68, 68, 0.2); }
+        .bg-orange-500\/20 { background-color: rgba(251, 146, 60, 0.2); }
+        .bg-yellow-500\/20 { background-color: rgba(234, 179, 8, 0.2); }
+        .bg-green-500\/20 { background-color: rgba(34, 197, 94, 0.2); }
+        .bg-gray-800 { background-color: #1f2937; }
+        
+        .border { border-width: 1px; }
+        .border-l-2 { border-left-width: 2px; }
+        .border-l-4 { border-left-width: 4px; }
+        .border-t { border-top-width: 1px; }
+        .border-blue-500 { border-color: #3b82f6; }
+        .border-blue-500\/20 { border-color: rgba(59, 130, 246, 0.2); }
+        .border-red-500\/20 { border-color: rgba(239, 68, 68, 0.2); }
+        .border-orange-500 { border-color: #f97316; }
+        .border-purple-500 { border-color: #a855f7; }
+        .border-green-500 { border-color: #22c55e; }
+        .border-yellow-500 { border-color: #eab308; }
+        
+        .rounded { border-radius: 0.25rem; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-xl { border-radius: 0.75rem; }
+        .rounded-full { border-radius: 9999px; }
+        
+        .overflow-hidden { overflow: hidden; }
+        .overflow-y-auto { overflow-y: auto; }
+        
+        .pointer-events-none { pointer-events: none; }
+        .cursor-pointer { cursor: pointer; }
+        
+        .opacity-0 { opacity: 0; }
+        .opacity-1 { opacity: 1; }
+        
+        .space-y-2 > * + * { margin-top: 0.5rem; }
+        .space-y-3 > * + * { margin-top: 0.75rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        .space-y-6 > * + * { margin-top: 1.5rem; }
+        .space-y-8 > * + * { margin-top: 2rem; }
+        
+        .tracking-wider { letter-spacing: 0.05em; }
+        .tracking-widest { letter-spacing: 0.1em; }
+        
+        .leading-relaxed { line-height: 1.625; }
+        .leading-tight { line-height: 1.25; }
+        
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .transition { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+        
+        /* Grid Utilities */
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+        /* Glassmorphism System */
+        .glass-panel {
+            background: var(--glass-panel);
+            backdrop-filter: blur(var(--blur-glass));
+            -webkit-backdrop-filter: blur(var(--blur-glass));
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+        }
+
+        .glass-panel-solid {
+            background: rgba(21, 29, 46, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Neon Glow Effects */
+        .neon-text {
+            text-shadow: 0 0 10px var(--neon-core), 0 0 20px var(--neon-core), 0 0 40px var(--neon-core);
+        }
+
+        .neon-border {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3), inset 0 0 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .neon-border-danger {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3), inset 0 0 15px rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        /* Animated Gradient Background */
+        .gradient-animate {
+            background: var(--gradient-cyber);
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Loading Overlay */
+        #loading-overlay {
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        #loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-ring {
+            width: 80px;
+            height: 80px;
+            border: 3px solid transparent;
+            border-top-color: var(--neon-core);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-ring::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 3px solid transparent;
+            border-top-color: var(--neon-accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Navigation */
+        .nav-link {
+            position: relative;
+            padding: 0.75rem 1.25rem;
+            transition: all var(--animation-fast) ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-cyber);
+            transition: all var(--animation-smooth) ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 80%;
+        }
+
+        /* Cards & Panels */
+        .stat-card {
+            transition: all var(--animation-smooth) cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(59, 130, 246, 0.2);
+        }
+
+        /* Detail Slide Panel */
+        .detail-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 480px;
+            max-width: 100vw;
+            background: rgba(13, 16, 37, 0.98);
+            border-left: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform var(--animation-smooth) cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+        }
+
+        .detail-panel.open {
+            transform: translateX(0);
+        }
+
+        .detail-panel-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--animation-smooth) ease;
+        }
+
+        .detail-panel-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* D3 Visualization Container */
+        #d3-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        #d3-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .d3-node {
+            cursor: pointer;
+            transition: filter 0.2s ease;
+        }
+
+        .d3-node:hover {
+            filter: brightness(1.2) drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+        }
+
+        .d3-link {
+            stroke-opacity: 0.6;
+            transition: stroke-opacity 0.2s ease;
+        }
+
+        .d3-link:hover {
+            stroke-opacity: 1;
+        }
+
+        /* Control Buttons */
+        .control-btn {
+            padding: 0.75rem 1.25rem;
+            background: var(--glass-panel);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all var(--animation-fast) ease;
+            font-size: 0.875rem;
+        }
+
+        .control-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: var(--neon-core);
+            transform: translateY(-2px);
+        }
+
+        .control-btn.active {
+            background: var(--neon-core);
+            border-color: var(--neon-core);
+        }
+
+        /* Timeline */
+        .timeline-item {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0.75rem;
+            top: 2rem;
+            bottom: -2rem;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--neon-core), transparent);
+        }
+
+        .timeline-item:last-child::before {
+            display: none;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background: var(--gradient-cyber);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Quote Block */
+        .quote-block {
+            position: relative;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
+            border-left: 4px solid var(--neon-core);
+            border-radius: 0 16px 16px 0;
+        }
+
+        .quote-block::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 5rem;
+            font-family: 'Orbitron', sans-serif;
+            color: rgba(59, 130, 246, 0.2);
+            line-height: 1;
+        }
+
+        /* Scroll Animation */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .detail-panel { width: 100%; }
+            #d3-container { height: 400px; }
+            .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .md-grid-cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .md-text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+            .md-text-6xl { font-size: 3rem; line-height: 1; }
+            .md-text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+            .md-p-12 { padding: 2rem; }
+            .md-flex { display: flex; }
+            .md-hidden { display: none; }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .lg-grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (min-width: 769px) {
+            .md-grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .md-grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .md-grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+            .md-text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+            .md-text-6xl { font-size: 3.75rem; line-height: 1; }
+            .md-text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+            .md-p-12 { padding: 3rem; }
+            .md-flex { display: flex; }
+            .md-hidden { display: none; }
+        }
+
+        @media (min-width: 1025px) {
+            .lg-grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        /* i18n System */
+        body[data-lang="en"] [lang="th"] { display: none; }
+        body[data-lang="th"] [lang="en"] { display: none; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--space-deep);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-core);
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.6); }
+        }
+
+        .pulse-danger {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        /* Split Screen Layout */
+        .split-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .split-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .split-usa {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .split-china {
+            border-left: 4px solid #dc2626;
+        }
+
+        /* SVG Icon Styles */
+        .icon-svg {
+            display: inline-block;
+            vertical-align: middle;
+            fill: currentColor;
+        }
+
+        .icon-sm { width: 0.875rem; height: 0.875rem; }
+        .icon-md { width: 1.25rem; height: 1.25rem; }
+        .icon-lg { width: 1.5rem; height: 1.5rem; }
+        .icon-xl { width: 2rem; height: 2rem; }
+    </style>
+</head>
+
+<body data-lang="th">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 z-999 flex flex-col items-center justify-center" style="background: var(--space-void);">
+        <div class="loader-ring relative"></div>
+        <p class="mt-6 font-display text-lg tracking-wider" style="color: var(--neon-core);">
+            <span lang="th">กำลังโหลดข้อมูลยุทธศาสตร์...</span>
+            <span lang="en">Loading Strategic Data...</span>
+        </p>
+    </div>
+
+    <!-- Canvas Background -->
+    <canvas id="bg-canvas" class="fixed inset-0 z-0 pointer-events-none"></canvas>
+
+    <!-- Main Content -->
+    <div class="relative z-10">
+        <!-- Header -->
+        <header class="sticky top-0 z-50 glass-panel-solid border-b" style="border-color: var(--glass-border);">
+            <div class="max-w-7xl mx-auto px-4 py-4">
+                <div class="flex items-center justify-between">
+                    <!-- Logo -->
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl gradient-animate flex items-center justify-center">
+                            <svg class="icon-svg icon-xl text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="font-display text-xl font-bold tracking-wider">
+                                <span lang="th">ยุทธศาสตร์กระจก</span>
+                                <span lang="en">MIRROR STRATEGY</span>
+                            </h1>
+                            <p class="text-xs font-mono" style="color: var(--text-muted);">
+                                US-CHINA STANDOFF 2026
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <nav id="main-nav" class="hidden md-flex items-center gap-2">
+                        <a href="#dashboard" class="nav-link text-sm font-medium">
+                            <span lang="th">แดชบอร์ด</span>
+                            <span lang="en">Dashboard</span>
+                        </a>
+                        <a href="#caribbean" class="nav-link text-sm font-medium">
+                            <span lang="th">แคริบเบียน</span>
+                            <span lang="en">Caribbean</span>
+                        </a>
+                        <a href="#taiwan" class="nav-link text-sm font-medium">
+                            <span lang="th">ไต้หวัน</span>
+                            <span lang="en">Taiwan</span>
+                        </a>
+                        <a href="#impact" class="nav-link text-sm font-medium">
+                            <span lang="th">ผลกระทบ</span>
+                            <span lang="en">Impact</span>
+                        </a>
+                        <a href="#experts" class="nav-link text-sm font-medium">
+                            <span lang="th">วิเคราะห์</span>
+                            <span lang="en">Analysis</span>
+                        </a>
+                    </nav>
+
+                    <!-- Controls -->
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleLang()" class="control-btn text-xs font-mono" id="lang-toggle">
+                            <svg class="icon-svg icon-sm mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                <path d="M2 12h20"/>
+                            </svg>
+                            <span id="lang-label">EN</span>
+                        </button>
+                        <button class="md-hidden control-btn" onclick="toggleMobileNav()">
+                            <svg class="icon-svg icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="3" y1="6" x2="21" y2="6"/>
+                                <line x1="3" y1="12" x2="21" y2="12"/>
+                                <line x1="3" y1="18" x2="21" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="dashboard" class="py-16 px-4">
+            <div class="max-w-7xl mx-auto">
+                <!-- Title Block -->
+                <div class="text-center mb-12 fade-up">
+                    <p class="font-mono text-sm mb-4 tracking-widest" style="color: var(--neon-accent);">
+                        GEOPOLITICAL ANALYSIS • JANUARY 2026
+                    </p>
+                    <h2 class="font-display text-4xl md-text-6xl font-bold mb-6 leading-tight">
+                        <span lang="th" class="block">ยึดเรือน้ำมันเรา</span>
+                        <span lang="th" class="block" style="color: var(--neon-danger);">เราพร้อมยึดเรือขนอาวุธนายคืน</span>
+                        <span lang="en" class="block">Seize Our Oil Tankers</span>
+                        <span lang="en" class="block" style="color: var(--neon-danger);">We'll Seize Your Arms Ships</span>
+                    </h2>
+                    <p class="text-xl max-w-3xl mx-auto" style="color: var(--text-secondary);">
+                        <span lang="th">จีนส่งสัญญาณชนตรงสหรัฐฯ จากเวเนซุเอลาถึงไต้หวัน—สงครามตัวแทนข้ามซีกโลกเริ่มนับหนึ่ง</span>
+                        <span lang="en">China sends direct confrontation signal to US from Venezuela to Taiwan—Cross-hemisphere proxy war begins</span>
+                    </p>
+                </div>
+
+                <!-- Status Indicators -->
+                <div class="grid grid-cols-1 md-grid-cols-2 gap-6 mb-12">
+                    <!-- Venezuela Status -->
+                    <div class="glass-panel p-6 neon-border-danger pulse-danger fade-up split-usa">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="font-mono text-xs" style="color: var(--text-muted);">CARIBBEAN THEATER</span>
+                            <span class="px-3 py-1 bg-red-500\/20 text-red-400 rounded-full text-xs font-bold animate-pulse">
+                                <span lang="th">ปิดล้อมดำเนินการ</span>
+                                <span lang="en">BLOCKADE ACTIVE</span>
+                            </span>
+                        </div>
+                        <h3 class="font-display text-2xl font-bold mb-2">
+                            <span lang="th">เวเนซุเอลา</span>
+                            <span lang="en">Venezuela</span>
+                        </h3>
+                        <p class="mb-4" style="color: var(--text-secondary);">
+                            <span lang="th">สหรัฐฯ ยึดเรือน้ำมัน • เรือจีนท้าทายคำสั่ง</span>
+                            <span lang="en">US seizing tankers • Chinese vessels defying orders</span>
+                        </p>
+                        <div class="flex items-center gap-4 text-sm">
+                            <div class="flex items-center gap-2">
+                                <svg class="icon-svg icon-sm text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+                                </svg>
+                                <span class="font-mono">Thousand Sunny</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="icon-svg icon-sm text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+                                </svg>
+                                <span class="font-mono">Xing Ye</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Taiwan Status -->
+                    <div class="glass-panel p-6 neon-border-danger pulse-danger fade-up split-china" style="animation-delay: 0.2s">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="font-mono text-xs" style="color: var(--text-muted);">TAIWAN STRAIT</span>
+                            <span class="px-3 py-1 bg-orange-500\/20 text-orange-400 rounded-full text-xs font-bold animate-pulse">
+                                <span lang="th">ภัยคุกคามขั้นสูง</span>
+                                <span lang="en">HIGH THREAT</span>
+                            </span>
+                        </div>
+                        <h3 class="font-display text-2xl font-bold mb-2">
+                            <span lang="th">ช่องแคบไต้หวัน</span>
+                            <span lang="en">Taiwan Strait</span>
+                        </h3>
+                        <p class="mb-4" style="color: var(--text-secondary);">
+                            <span lang="th">โปสเตอร์ "扼喉" เปิดตัว • ซ้อมรบใหญ่ที่สุด</span>
+                            <span lang="en">"Throat-choking" poster released • Largest drills ever</span>
+                        </p>
+                        <div class="flex items-center gap-4 text-sm">
+                            <div class="flex items-center gap-2">
+                                <svg class="icon-svg icon-sm text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="22" y1="12" x2="18" y2="12"/>
+                                    <line x1="6" y1="12" x2="2" y2="12"/>
+                                    <line x1="12" y1="6" x2="12" y2="2"/>
+                                    <line x1="12" y1="22" x2="12" y2="18"/>
+                                </svg>
+                                <span class="font-mono">HIMARS Target</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="icon-svg icon-sm text-red-400" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M20.38 8.57l-1.23 1.85a8 8 0 0 1-.22 7.58H5.07A8 8 0 0 1 15.58 6.85l1.85-1.23A10 10 0 0 0 3.35 19a2 2 0 0 0 1.72 1h13.85a2 2 0 0 0 1.74-1 10 10 0 0 0-.27-10.44z"/>
+                                    <path d="M10.59 15.41a2 2 0 0 0 2.83 0l5.66-8.49-8.49 5.66a2 2 0 0 0 0 2.83z"/>
+                                </svg>
+                                <span class="font-mono">CCG Ops</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Stats Grid -->
+                <div class="grid grid-cols-2 md-grid-cols-4 gap-4 mb-12">
+                    <div class="stat-card glass-panel p-6 text-center fade-up" style="animation-delay: 0.1s">
+                        <div class="font-display text-3xl md-text-4xl font-bold mb-2" style="color: var(--neon-danger);">$2.45T</div>
+                        <p class="text-xs" style="color: var(--text-muted);">
+                            <span lang="th">การค้าผ่านช่องแคบไต้หวัน/ปี</span>
+                            <span lang="en">Annual Taiwan Strait Trade</span>
+                        </p>
+                    </div>
+                    <div class="stat-card glass-panel p-6 text-center fade-up" style="animation-delay: 0.2s">
+                        <div class="font-display text-3xl md-text-4xl font-bold mb-2" style="color: var(--neon-warning);">$21.5B</div>
+                        <p class="text-xs" style="color: var(--text-muted);">
+                            <span lang="th">อาวุธค้างส่งไต้หวัน</span>
+                            <span lang="en">Taiwan Arms Backlog</span>
+                        </p>
+                    </div>
+                    <div class="stat-card glass-panel p-6 text-center fade-up" style="animation-delay: 0.3s">
+                        <div class="font-display text-3xl md-text-4xl font-bold mb-2" style="color: var(--neon-core);">$10T</div>
+                        <p class="text-xs" style="color: var(--text-muted);">
+                            <span lang="th">ต้นทุนสงครามเต็มรูปแบบ</span>
+                            <span lang="en">Full Conflict Cost</span>
+                        </p>
+                    </div>
+                    <div class="stat-card glass-panel p-6 text-center fade-up" style="animation-delay: 0.4s">
+                        <div class="font-display text-3xl md-text-4xl font-bold mb-2" style="color: var(--neon-success);">1,200</div>
+                        <p class="text-xs" style="color: var(--text-muted);">
+                            <span lang="th">เรือผ่านช่องแคบ/สัปดาห์</span>
+                            <span lang="en">Ships/Week Through Strait</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Network Visualization -->
+                <div class="glass-panel p-6 mb-12 fade-up">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-display text-xl font-bold">
+                            <span lang="th">แผนที่ยุทธศาสตร์เชื่อมโยง</span>
+                            <span lang="en">Strategic Network Map</span>
+                        </h3>
+                        <div class="flex gap-2">
+                            <button class="control-btn active" data-layout="force" onclick="changeLayout('force')">
+                                <svg class="icon-svg icon-sm mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="5" cy="5" r="3"/>
+                                    <circle cx="19" cy="5" r="3"/>
+                                    <circle cx="5" cy="19" r="3"/>
+                                    <circle cx="19" cy="19" r="3"/>
+                                    <line x1="7" y1="6" x2="17" y2="6"/>
+                                    <line x1="7" y1="18" x2="17" y2="18"/>
+                                    <line x1="6" y1="7" x2="6" y2="17"/>
+                                    <line x1="18" y1="7" x2="18" y2="17"/>
+                                </svg>
+                                Force
+                            </button>
+                            <button class="control-btn" data-layout="radial" onclick="changeLayout('radial')">
+                                <svg class="icon-svg icon-sm mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <circle cx="12" cy="12" r="6"/>
+                                    <circle cx="12" cy="12" r="2"/>
+                                </svg>
+                                Radial
+                            </button>
+                            <button class="control-btn" data-layout="tree" onclick="changeLayout('tree')">
+                                <svg class="icon-svg icon-sm mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="2" x2="12" y2="8"/>
+                                    <line x1="12" y1="8" x2="8" y2="14"/>
+                                    <line x1="12" y1="8" x2="16" y2="14"/>
+                                    <line x1="8" y1="14" x2="6" y2="20"/>
+                                    <line x1="8" y1="14" x2="10" y2="20"/>
+                                    <line x1="16" y1="14" x2="14" y2="20"/>
+                                    <line x1="16" y1="14" x2="18" y2="20"/>
+                                </svg>
+                                Tree
+                            </button>
+                        </div>
+                    </div>
+                    <div id="d3-container" class="rounded-xl overflow-hidden" style="background: var(--space-deep);"></div>
+                    <div class="mt-4 flex flex-wrap gap-4 text-sm">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded-full" style="background: #3b82f6;"></div>
+                            <span lang="th">สหรัฐอเมริกา</span>
+                            <span lang="en">United States</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded-full" style="background: #dc2626;"></div>
+                            <span lang="th">จีน</span>
+                            <span lang="en">China</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded-full" style="background: #f59e0b;"></div>
+                            <span lang="th">ผลกระทบเศรษฐกิจ</span>
+                            <span lang="en">Economic Impact</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded-full" style="background: #10b981;"></div>
+                            <span lang="th">เป้าหมาย</span>
+                            <span lang="en">Targets</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-8 px-4 border-t" style="border-color: var(--glass-border);">
+            <div class="max-w-7xl mx-auto text-center">
+                <p class="text-sm" style="color: var(--text-muted);">
+                    <span lang="th">วิเคราะห์และรวบรวมข้อมูล • มกราคม 2026</span>
+                    <span lang="en">Analysis and Data Compilation • January 2026</span>
+                </p>
+                <p class="text-xs mt-2 font-mono" style="color: var(--text-muted);">
+                    Built with Nexus-Architect Protocol
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Detail Panel -->
+    <div id="detail-overlay" class="detail-panel-overlay" onclick="closeDetailPanel()"></div>
+    <aside id="detail-panel" class="detail-panel">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="font-display text-xl font-bold" id="panel-title">Details</h3>
+                <button onclick="closeDetailPanel()" class="control-btn">
+                    <svg class="icon-svg icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="panel-content"></div>
+        </div>
+    </aside>
+
+    <!-- D3.js Library -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <script>
+        // ============================================
+        // INITIALIZATION - Wait for D3 to load
+        // ============================================
+        
+        function initializeApp() {
+            if (typeof d3 === 'undefined') {
+                console.log('กำลังโหลด D3.js...');
+                setTimeout(initializeApp, 100);
+                return;
+            }
+            
+            console.log('D3.js โหลดสำเร็จ! กำลังเริ่มต้นระบบ...');
+            initCanvas();
+            initD3Network();
+            initScrollAnimations();
+            
+            setTimeout(() => {
+                document.getElementById('loading-overlay').classList.add('hidden');
+            }, 1500);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
+
+        // ============================================
+        // CANVAS PARTICLE BACKGROUND
+        // ============================================
+        
+        function initCanvas() {
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            let width, height;
+            const particles = [];
+            const particleCount = 80;
+            let mouse = { x: null, y: null };
+            
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            
+            resize();
+            window.addEventListener('resize', resize);
+            
+            document.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+            
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 2 + 1,
+                    color: `hsla(${210 + Math.random() * 30}, 70%, 60%, ${0.3 + Math.random() * 0.3})`
+                });
+            }
+            
+            function animate() {
+                ctx.fillStyle = 'rgba(10, 10, 26, 0.1)';
+                ctx.fillRect(0, 0, width, height);
+                
+                particles.forEach((p, i) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+                    
+                    if (mouse.x && mouse.y) {
+                        const dx = mouse.x - p.x;
+                        const dy = mouse.y - p.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 150) {
+                            p.x -= dx * 0.01;
+                            p.y -= dy * 0.01;
+                        }
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dx = p.x - p2.x;
+                        const dy = p.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = `rgba(59, 130, 246, ${0.15 * (1 - dist / 120)})`;
+                            ctx.stroke();
+                        }
+                    }
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+
+        // ============================================
+        // D3 NETWORK VISUALIZATION
+        // ============================================
+        
+        let simulation, svg, nodeElements, linkElements;
+        let currentLayout = 'force';
+        
+        const networkData = {
+            nodes: [
+                { id: 'usa', label: 'สหรัฐอเมริกา', labelEn: 'United States', group: 'us', size: 50 },
+                { id: 'china', label: 'จีน', labelEn: 'China', group: 'cn', size: 50 },
+                { id: 'blockade', label: 'ปิดล้อมเวเนซุเอลา', labelEn: 'Venezuela Blockade', group: 'us', size: 35 },
+                { id: 'seizure', label: 'ยึดเรือน้ำมัน', labelEn: 'Tanker Seizures', group: 'us', size: 30 },
+                { id: 'taiwan_arms', label: 'ขายอาวุธไต้หวัน', labelEn: 'Taiwan Arms Sales', group: 'us', size: 35 },
+                { id: 'ccg_poster', label: 'โปสเตอร์ CCG', labelEn: 'CCG Poster', group: 'cn', size: 35 },
+                { id: 'drills', label: 'ซ้อมรบไต้หวัน', labelEn: 'Taiwan Drills', group: 'cn', size: 35 },
+                { id: 'defiance', label: 'เรือท้าทายปิดล้อม', labelEn: 'Tanker Defiance', group: 'cn', size: 30 },
+                { id: 'venezuela', label: 'เวเนซุเอลา', labelEn: 'Venezuela', group: 'target', size: 30 },
+                { id: 'taiwan', label: 'ไต้หวัน', labelEn: 'Taiwan', group: 'target', size: 30 },
+                { id: 'oil_risk', label: 'ความเสี่ยงน้ำมัน', labelEn: 'Oil Market Risk', group: 'impact', size: 28 },
+                { id: 'shipping_risk', label: 'ความเสี่ยงเส้นทางเรือ', labelEn: 'Shipping Risk', group: 'impact', size: 28 },
+                { id: 'supply_chain', label: 'ห่วงโซ่อาวุธ', labelEn: 'Arms Supply Chain', group: 'impact', size: 28 },
+                { id: 'trade_risk', label: '$2.45T การค้า', labelEn: '$2.45T Trade', group: 'impact', size: 32 }
+            ],
+            links: [
+                { source: 'usa', target: 'blockade', strength: 0.8 },
+                { source: 'usa', target: 'taiwan_arms', strength: 0.8 },
+                { source: 'blockade', target: 'seizure', strength: 0.9 },
+                { source: 'seizure', target: 'venezuela', strength: 0.7 },
+                { source: 'taiwan_arms', target: 'taiwan', strength: 0.8 },
+                { source: 'china', target: 'ccg_poster', strength: 0.8 },
+                { source: 'china', target: 'drills', strength: 0.8 },
+                { source: 'china', target: 'defiance', strength: 0.7 },
+                { source: 'ccg_poster', target: 'taiwan', strength: 0.7 },
+                { source: 'drills', target: 'taiwan', strength: 0.9 },
+                { source: 'defiance', target: 'venezuela', strength: 0.6 },
+                { source: 'seizure', target: 'ccg_poster', strength: 0.5, type: 'response' },
+                { source: 'taiwan_arms', target: 'drills', strength: 0.5, type: 'response' },
+                { source: 'blockade', target: 'oil_risk', strength: 0.6 },
+                { source: 'defiance', target: 'oil_risk', strength: 0.5 },
+                { source: 'drills', target: 'shipping_risk', strength: 0.7 },
+                { source: 'taiwan', target: 'trade_risk', strength: 0.8 },
+                { source: 'taiwan_arms', target: 'supply_chain', strength: 0.6 },
+                { source: 'ccg_poster', target: 'supply_chain', strength: 0.5 }
+            ]
+        };
+        
+        function initD3Network() {
+            const container = document.getElementById('d3-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            
+            container.innerHTML = '';
+            
+            svg = d3.select('#d3-container')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            const defs = svg.append('defs');
+            
+            defs.append('marker')
+                .attr('id', 'arrow')
+                .attr('viewBox', '0 -5 10 10')
+                .attr('refX', 25)
+                .attr('refY', 0)
+                .attr('markerWidth', 6)
+                .attr('markerHeight', 6)
+                .attr('orient', 'auto')
+                .append('path')
+                .attr('d', 'M0,-5L10,0L0,5')
+                .attr('fill', '#4b5563');
+            
+            simulation = d3.forceSimulation(networkData.nodes)
+                .force('link', d3.forceLink(networkData.links).id(d => d.id).distance(100))
+                .force('charge', d3.forceManyBody().strength(-300))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(d => d.size + 10));
+            
+            linkElements = svg.append('g')
+                .selectAll('line')
+                .data(networkData.links)
+                .enter()
+                .append('line')
+                .attr('class', 'd3-link')
+                .attr('stroke', d => d.type === 'response' ? '#f59e0b' : '#4b5563')
+                .attr('stroke-width', d => d.strength * 3)
+                .attr('stroke-dasharray', d => d.type === 'response' ? '5,5' : 'none')
+                .attr('marker-end', 'url(#arrow)');
+            
+            const nodeGroup = svg.append('g')
+                .selectAll('g')
+                .data(networkData.nodes)
+                .enter()
+                .append('g')
+                .attr('class', 'd3-node')
+                .call(d3.drag()
+                    .on('start', dragStarted)
+                    .on('drag', dragged)
+                    .on('end', dragEnded))
+                .on('click', (event, d) => showNodeDetail(d));
+            
+            nodeGroup.append('circle')
+                .attr('r', d => d.size / 2)
+                .attr('fill', d => getNodeColor(d.group))
+                .attr('stroke', d => getNodeStroke(d.group))
+                .attr('stroke-width', 2);
+            
+            nodeGroup.append('text')
+                .attr('dy', d => d.size / 2 + 15)
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#e2e8f0')
+                .attr('font-size', '11px')
+                .attr('font-family', "'Noto Sans Thai', sans-serif")
+                .text(d => document.body.dataset.lang === 'th' ? d.label : d.labelEn);
+            
+            nodeElements = nodeGroup;
+            
+            simulation.on('tick', () => {
+                linkElements
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+                
+                nodeElements.attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+        }
+        
+        function getNodeColor(group) {
+            const colors = {
+                'us': '#3b82f6',
+                'cn': '#dc2626',
+                'target': '#10b981',
+                'impact': '#f59e0b'
+            };
+            return colors[group] || '#6b7280';
+        }
+        
+        function getNodeStroke(group) {
+            const colors = {
+                'us': '#1d4ed8',
+                'cn': '#991b1b',
+                'target': '#047857',
+                'impact': '#d97706'
+            };
+            return colors[group] || '#4b5563';
+        }
+        
+        function dragStarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+        
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+        
+        function dragEnded(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+        
+        function changeLayout(layout) {
+            currentLayout = layout;
+            const container = document.getElementById('d3-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            
+            document.querySelectorAll('[data-layout]').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.layout === layout) btn.classList.add('active');
+            });
+            
+            simulation.stop();
+            
+            if (layout === 'force') {
+                simulation
+                    .force('center', d3.forceCenter(width / 2, height / 2))
+                    .force('charge', d3.forceManyBody().strength(-300))
+                    .alpha(1)
+                    .restart();
+            } else if (layout === 'radial') {
+                const radius = Math.min(width, height) / 3;
+                networkData.nodes.forEach((d, i) => {
+                    const angle = (i / networkData.nodes.length) * 2 * Math.PI;
+                    d.x = width / 2 + radius * Math.cos(angle);
+                    d.y = height / 2 + radius * Math.sin(angle);
+                });
+                simulation.force('charge', d3.forceManyBody().strength(-50)).alpha(0.3).restart();
+            } else if (layout === 'tree') {
+                const levels = { 'us': 0, 'cn': 0, 'target': 2, 'impact': 3 };
+                const groupCounts = {};
+                networkData.nodes.forEach(d => {
+                    const level = levels[d.group] || 1;
+                    groupCounts[level] = (groupCounts[level] || 0) + 1;
+                });
+                const levelCounts = {};
+                networkData.nodes.forEach(d => {
+                    const level = levels[d.group] || 1;
+                    levelCounts[level] = (levelCounts[level] || 0) + 1;
+                    d.x = width * (levelCounts[level] / (groupCounts[level] + 1));
+                    d.y = height * ((level + 1) / 5);
+                });
+                simulation.force('charge', d3.forceManyBody().strength(-100)).alpha(0.3).restart();
+            }
+        }
+        
+        function showNodeDetail(d) {
+            const panel = document.getElementById('detail-panel');
+            const overlay = document.getElementById('detail-overlay');
+            const title = document.getElementById('panel-title');
+            const content = document.getElementById('panel-content');
+            
+            const lang = document.body.dataset.lang;
+            title.textContent = lang === 'th' ? d.label : d.labelEn;
+            
+            let html = '<div class="p-4 bg-gray-800 rounded-xl"><p class="text-gray-400">รายละเอียดโหนด: ' + d.id + '</p></div>';
+            
+            content.innerHTML = html;
+            panel.classList.add('open');
+            overlay.classList.add('open');
+        }
+        
+        function closeDetailPanel() {
+            document.getElementById('detail-panel').classList.remove('open');
+            document.getElementById('detail-overlay').classList.remove('open');
+        }
+
+        // ============================================
+        // LANGUAGE TOGGLE
+        // ============================================
+        
+        function toggleLang() {
+            const body = document.body;
+            const label = document.getElementById('lang-label');
+            
+            if (body.dataset.lang === 'th') {
+                body.dataset.lang = 'en';
+                label.textContent = 'TH';
+            } else {
+                body.dataset.lang = 'th';
+                label.textContent = 'EN';
+            }
+            
+            if (nodeElements) {
+                nodeElements.selectAll('text')
+                    .text(d => body.dataset.lang === 'th' ? d.label : d.labelEn);
+            }
+        }
+
+        // ============================================
+        // SCROLL ANIMATIONS
+        // ============================================
+        
+        function initScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+        }
+
+        // ============================================
+        // MOBILE NAV
+        // ============================================
+        
+        function toggleMobileNav() {
+            const nav = document.querySelector('nav');
+            if (nav) {
+                nav.classList.toggle('flex');
+                nav.classList.toggle('hidden');
+            }
+        }
+
+        // ============================================
+        // SMOOTH SCROLL
+        // ============================================
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
