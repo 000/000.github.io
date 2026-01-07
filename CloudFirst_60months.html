@@ -1,0 +1,1584 @@
+<!DOCTYPE html><html lang="th"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>การวิเคราะห์ทางเลือกสำหรับโครงการเช่า Infrastructure ของ กยศ. ภายใต้นโยบาย Cloud First</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'serif': ['Playfair Display', 'serif'],
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#0f172a',
+                        'secondary': '#475569',
+                        'accent': '#3b82f6',
+                        'muted': '#64748b',
+                        'surface': '#f8fafc',
+                        'border': '#e2e8f0',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+        }
+        .text-shadow {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(248, 250, 252, 0.9);
+        }
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 300px;
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            z-index: 50;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+        }
+        .main-content {
+            margin-left: 300px;
+            min-height: 100vh;
+        }
+        .toc-link {
+            transition: all 0.2s ease;
+        }
+        .toc-link:hover {
+            color: #3b82f6;
+            transform: translateX(4px);
+        }
+        .citation {
+            color: #3b82f6;
+            text-decoration: none;
+            border-bottom: 1px dotted #3b82f6;
+        }
+        .citation:hover {
+            background-color: #eff6ff;
+        }
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+            margin: 3rem 0;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-left: 4px solid #3b82f6;
+        }
+        
+/* Mermaid diagram styling */
+.mermaid-container {
+    display: flex;
+    justify-content: center;
+    min-height: 300px;
+    max-height: 800px;
+    background: #ffffff;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 30px;
+    margin: 30px 0;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.mermaid-container .mermaid {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    cursor: grab;
+    transition: transform 0.3s ease;
+    transform-origin: center center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    touch-action: none; /* 防止触摸设备上的默认行为 */
+    -webkit-user-select: none; /* 防止文本选择 */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.mermaid-container .mermaid svg {
+    max-width: 100%;
+    height: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+.mermaid-container .mermaid:active {
+    cursor: grabbing;
+}
+
+.mermaid-container.zoomed .mermaid {
+    height: 100%;
+    width: 100%;
+    cursor: grab;
+}
+
+.mermaid-controls {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+    z-index: 20;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mermaid-control-btn {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #374151;
+    font-size: 14px;
+    min-width: 36px;
+    height: 36px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-control-btn:hover {
+    background: #f8fafc;
+    border-color: #3b82f6;
+    color: #3b82f6;
+    transform: translateY(-1px);
+}
+
+.mermaid-control-btn:active {
+    transform: scale(0.95);
+}
+
+/* Custom mermaid theme for better contrast and unified styling */
+.mermaid .node rect,
+.mermaid .node circle,
+.mermaid .node ellipse,
+.mermaid .node polygon {
+    stroke: #334155 !important;
+    stroke-width: 2px !important;
+}
+
+.mermaid .node .label {
+    color: #0f172a !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+}
+
+.mermaid .edgePath .path {
+    stroke: #64748b !important;
+    stroke-width: 2px !important;
+}
+
+.mermaid .edgeLabel {
+    background-color: white !important;
+    color: #334155 !important;
+    font-weight: 500 !important;
+    border-radius: 4px !important;
+    padding: 2px 6px !important;
+}
+
+/* Enhanced node styling with better contrast */
+.mermaid .node[class*="default"] rect,
+.mermaid .node:not([class*="red"]):not([class*="blue"]):not([class*="green"]):not([class*="yellow"]) rect {
+    fill: #f8fafc !important;
+    stroke: #334155 !important;
+}
+
+.mermaid .node[class*="red"] rect {
+    fill: #fef2f2 !important;
+    stroke: #dc2626 !important;
+}
+
+.mermaid .node[class*="blue"] rect {
+    fill: #eff6ff !important;
+    stroke: #2563eb !important;
+}
+
+.mermaid .node[class*="green"] rect {
+    fill: #f0fdf4 !important;
+    stroke: #16a34a !important;
+}
+
+.mermaid .node[class*="yellow"] rect {
+    fill: #fefce8 !important;
+    stroke: #ca8a04 !important;
+}
+
+/* Ensure text contrast for colored nodes */
+.mermaid .node[class*="red"] .label,
+.mermaid .node[class*="blue"] .label,
+.mermaid .node[class*="green"] .label,
+.mermaid .node[class*="yellow"] .label {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+}
+
+/* Decision node styling */
+.mermaid .node[class*="decision"] polygon {
+    fill: #f1f5f9 !important;
+    stroke: #475569 !important;
+}
+
+/* Start/end node styling */
+.mermaid .node[class*="start"] circle,
+.mermaid .node[class*="end"] circle {
+    fill: #f8fafc !important;
+    stroke: #64748b !important;
+}
+        
+        @media (max-width: 1024px) {
+            .toc-fixed {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .mermaid-control-btn:not(.reset-zoom) {
+                display: none;
+            }
+            .mermaid-controls {
+                top: auto;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-gradient .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-gradient h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-gradient .text-xl {
+                font-size: 1.1rem;
+            }
+            
+            .highlight-box .flex {
+                flex-wrap: wrap;
+            }
+            
+            .highlight-box .flex div {
+                flex: 1 1 100%;
+            }
+            
+            .hero-gradient .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            #current-situation .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mermaid-container {
+                padding: 15px;
+            }
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body class="font-sans bg-surface text-primary leading-relaxed">
+    <!-- Fixed Table of Contents -->
+    <nav class="toc-fixed">
+      <div class="mb-6">
+        <h3 class="font-serif font-bold text-lg text-primary mb-4">สารบัญ</h3>
+      </div>
+      <ul class="space-y-3 text-sm">
+        <li>
+          <a href="#executive-summary" class="toc-link block text-secondary hover:text-accent transition-colors">สรุปผลการวิเคราะห์</a>
+        </li>
+        <li>
+          <a href="#current-situation" class="toc-link block text-secondary hover:text-accent transition-colors">1. สรุปประเด็นปัญหาและเป้าหมาย</a>
+        </li>
+        <li>
+          <a href="#modification-option" class="toc-link block text-secondary hover:text-accent transition-colors">2. ทางเลือกที่ 1: การปรับเปลี่ยนโครงการเดิม</a>
+        </li>
+        <li>
+          <a href="#cancellation-option" class="toc-link block text-secondary hover:text-accent transition-colors">3. ทางเลือกที่ 2: การยกเลิกและขอใหม่</a>
+        </li>
+        <li>
+          <a href="#exemption-option" class="toc-link block text-secondary hover:text-accent transition-colors">4. ทางเลือกที่ 3: การขอข้อยกเว้น</a>
+        </li>
+        <li>
+          <a href="#long-term-impact" class="toc-link block text-secondary hover:text-accent transition-colors">5. การวิเคราะห์ผลกระทบในระยะยาว</a>
+        </li>
+        <li>
+          <a href="#recommendations" class="toc-link block text-secondary hover:text-accent transition-colors">6. ข้อเสนอแนะและคำแนะนำ</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Hero Section -->
+      <section class="hero-gradient text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-30">
+          <img src="https://kimi-web-img.moonshot.cn/img/datacenteruniversity.be/84f0b1b14be0d0b36ed87746ee1ea17e61d9507a.jpg" alt="ภาพมุมสูงของศูนย์ข้อมูลโครงสร้างพื้นฐานไอที" class="w-full h-full object-cover" size="wallpaper" aspect="wide" style="photo" query="data center infrastructure" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+        </div>
+        <div class="relative z-10 container mx-auto px-8 py-16">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div>
+              <h1 class="font-serif text-5xl lg:text-6xl font-bold leading-tight mb-6 text-shadow">
+                <em>การวิเคราะห์ทางเลือกสำหรับโครงการเช่า Infrastructure ของ กยศ.</em>
+              </h1>
+              <p class="text-xl text-gray-200 mb-8 leading-relaxed">
+                ภายใต้นโยบาย Cloud First: การหาทางออกที่เหมาะสมในการปรับลดระยะเวลาเช่าเหลือ 12 เดือน
+              </p>
+            </div>
+            <div class="glass-effect rounded-2xl p-8 text-primary">
+              <h3 class="font-serif text-2xl font-bold mb-4 text-accent">ประเด็นสำคัญ</h3>
+              <div class="space-y-3 text-sm">
+                <div class="flex items-start space-x-3">
+                  <i class="fas fa-clock text-accent mt-1"></i>
+                  <span>โครงการเช่า Infrastructure ระยะเวลา 60 เดือน</span>
+                </div>
+                <div class="flex items-start space-x-3">
+                  <i class="fas fa-cloud text-accent mt-1"></i>
+                  <span>ความท้าทายจากนโยบาย Cloud First</span>
+                </div>
+                <div class="flex items-start space-x-3">
+                  <i class="fas fa-search text-accent mt-1"></i>
+                  <span>3 ทางเลือกหลักสำหรับการดำเนินการ</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Executive Summary -->
+      <section id="executive-summary" class="py-16 bg-white">
+        <div class="container mx-auto px-8">
+          <div class="max-w-4xl mx-auto">
+            <h2 class="font-serif text-3xl font-bold text-primary mb-8 text-center">สรุปผลการวิเคราะห์</h2>
+
+            <div class="highlight-box p-8 rounded-xl mb-8">
+              <div class="text-center mb-6">
+                <h3 class="font-serif text-2xl font-bold text-accent mb-4">ข้อสรุปหลัก</h3>
+              </div>
+              <p class="text-lg text-secondary leading-relaxed mb-6">
+                หากโครงการเช่า Infrastructure ระยะเวลา 60 เดือนของ กยศ. ซึ่งยังอยู่ระหว่างการจัดซื้อจัดจ้าง สามารถปรับเปลี่ยนระยะเวลาเช่าเหลือ 12 เดือนได้หรือไม่ โดยไม่ต้องยกเลิกโครงการและขอใหม่ คำตอบคือ <strong>มีความเป็นไปได้ แต่ต้องพิจารณาอย่างรอบคอบตามกฎหมายและระเบียบการจัดซื้อจัดจ้างภาครัฐ</strong>
+              </p>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                <div class="text-center p-4">
+                  <i class="fas fa-check-circle text-3xl text-green-500 mb-3"></i>
+                  <h4 class="font-semibold text-primary mb-2">ความเป็นไปได้</h4>
+                  <p class="text-sm text-secondary">การปรับเปลี่ยนโครงการเดิมเป็นทางเลือกที่ต้องการ</p>
+                </div>
+                <div class="text-center p-4">
+                  <i class="fas fa-shield-alt text-3xl text-blue-500 mb-3"></i>
+                  <h4 class="font-semibold text-primary mb-2">การป้องกันความเสี่ยง</h4>
+                  <p class="text-sm text-secondary">ช่วยหลีกเลี่ยงผลกระทบจากนโยบาย Cloud First</p>
+                </div>
+                <div class="text-center p-4">
+                  <i class="fas fa-exclamation-triangle text-3xl text-yellow-500 mb-3"></i>
+                  <h4 class="font-semibold text-primary mb-2">ข้อจำกัด</h4>
+                  <p class="text-sm text-secondary">มีข้อจำกัดทางกฎหมายและความเสี่ยงในการตีความ</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="prose prose-lg max-w-none">
+              <p class="text-secondary leading-relaxed">
+                การปรับเปลี่ยนโครงการเดิมจะช่วยให้สามารถใช้งบประมาณเดิมที่ได้รับอนุมัติแล้ว และหลีกเลี่ยงผลกระทบจากนโยบาย Cloud First ที่จะบังคับใช้กับโครงการใหม่ที่ใช้งบประมาณปี 2569 อย่างไรก็ตาม การปรับเปลี่ยนนี้อาจมีข้อจำกัดทางกฎหมาย และมีความเสี่ยงที่จะถูกตีความว่าเป็นโครงการใหม่ ซึ่งจะทำให้ต้องปฏิบัติตามนโยบาย Cloud First ทันที
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Section 1: Current Situation Analysis -->
+      <section id="current-situation" class="py-16 bg-surface">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-12 text-center">1. สรุปประเด็นปัญหาและเป้าหมาย</h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+              <div>
+                <h3 class="font-serif text-2xl font-bold text-primary mb-6">1.1 สภาพปัจจุบันของโครงการ</h3>
+
+                <div class="space-y-6">
+                  <div class="bg-white p-6 rounded-xl shadow-sm border border-border">
+                    <h4 class="font-semibold text-primary mb-3 flex items-center">
+                      <i class="fas fa-calendar-alt text-accent mr-3"></i>
+                      โครงการเช่า Infrastructure ระยะเวลา 60 เดือน
+                    </h4>
+                    <p class="text-secondary text-sm leading-relaxed">
+                      โครงการเช่า Infrastructure ของกองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.) มีระยะเวลาเช่าทั้งสิ้น <strong>60 เดือน</strong> หรือเท่ากับ 5 ปี มีการประกาศรับฟังความคิดเห็นเกี่ยวกับร่างขอบเขตของงาน (TOR) ไปแล้ว <a href="https://www.studentloan.or.th/en/purchase/%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%81%E0%B8%B2%E0%B8%A8%E0%B8%A3%E0%B9%88%E0%B8%B2%E0%B8%87-tor" class="citation" target="_blank">[559]</a>
+                    </p>
+                  </div>
+
+                  <div class="bg-white p-6 rounded-xl shadow-sm border border-border">
+                    <h4 class="font-semibold text-primary mb-3 flex items-center">
+                      <i class="fas fa-server text-accent mr-3"></i>
+                      ขอบเขตโครงการ
+                    </h4>
+                    <p class="text-secondary text-sm leading-relaxed">
+                      ครอบคลุมการเช่าเฉพาะ <strong>Hardware</strong> (Server, Storage, Network Equipment) และ <strong>Software</strong> แต่ไม่รวมถึง <strong>Cloud native Services</strong>
+                    </p>
+                  </div>
+
+                  <div class="bg-white p-6 rounded-xl shadow-sm border border-border">
+                    <h4 class="font-semibold text-primary mb-3 flex items-center">
+                      <i class="fas fa-file-contract text-accent mr-3"></i>
+                      สถานะโครงการ
+                    </h4>
+                    <p class="text-secondary text-sm leading-relaxed">
+                      อยู่ในสถานะ <strong>&#34;ระหว่างการจัดซื้อจัดจ้าง&#34;</strong> มีการจัดพิธีลงนามข้อตกลงคุณธรรมแล้วเมื่อวันที่ 25 มีนาคม 2025 <a href="https://www.studentloan.or.th/en/event?page=6" class="citation" target="_blank">[560]</a>
+                    </p>
+                  </div>
+
+                  <div class="bg-white p-6 rounded-xl shadow-sm border border-border">
+                    <h4 class="font-semibold text-primary mb-3 flex items-center">
+                      <i class="fas fa-money-bill-wave text-accent mr-3"></i>
+                      ประเภทงบประมาณ
+                    </h4>
+                    <p class="text-secondary text-sm leading-relaxed">
+                      ใช้งบประมาณประเภท <strong>&#34;งบประมาณรายจ่ายประจำปี&#34;</strong>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="font-serif text-2xl font-bold text-primary mb-6">1.2 อุปสรรคสำคัญ: นโยบาย Cloud First</h3>
+
+                <div class="bg-gradient-to-br from-red-50 to-orange-50 p-8 rounded-xl border border-red-200 mb-6">
+                  <h4 class="font-semibold text-red-800 mb-4 flex items-center">
+                    <i class="fas fa-exclamation-triangle text-red-600 mr-3"></i>
+                    ผลกระทบจากการยกเลิกโครงการและขอใหม่
+                  </h4>
+                  <p class="text-red-700 text-sm leading-relaxed mb-4">
+                    หาก กยศ. ตัดสินใจยกเลิกโครงการเดิมและขอใหม่ จะต้องใช้งบประมาณของปีงบประมาณ <strong>2569</strong> ซึ่งจะต้องอยู่ภายใต้นโยบาย <strong>Cloud First</strong>
+                  </p>
+                  <div class="bg-white/70 p-4 rounded-lg">
+                    <p class="text-sm text-red-600">
+                      <i class="fas fa-quote-left text-xs mr-2"></i>
+                      คณะกรรมการนโยบาย Cloud First Policy ได้มีมติชัดเจนว่าหน่วยงานภาครัฐจะต้องจัดซื้อบริการคลาวด์ผ่านกลไกกลางเท่านั้น
+                      <a href="https://www.posttoday.com/politics/726471" class="citation" target="_blank">[558]</a>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                  <h4 class="font-semibold text-blue-800 mb-3 flex items-center">
+                    <i class="fas fa-cloud text-blue-600 mr-3"></i>
+                    ความจำเป็นในการเช่า GDCC
+                  </h4>
+                  <p class="text-blue-700 text-sm leading-relaxed">
+                    หากใช้งบประมาณปี 2569 จะต้องพิจารณาเช่า <strong>Government Data Center and Cloud (GDCC)</strong> ซึ่งเป็นศูนย์กลางคลาวด์ของรัฐบาล <a href="https://d1.awsstatic.com/institute/Cloud%20for%20Healthcare_Overview.pdf" class="citation" target="_blank">[589]</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-border">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-6">1.3 คำถามสำคัญสำหรับคณะกรรมการ</h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center p-6 bg-surface rounded-xl">
+                  <i class="fas fa-question-circle text-3xl text-accent mb-4"></i>
+                  <h4 class="font-semibold text-primary mb-3">สามารถปรับเปลี่ยนโครงการเดิมได้หรือไม่?</h4>
+                  <p class="text-sm text-secondary">การปรับลดระยะเวลาเช่าจาก 60 เดือนเป็น 12 เดือนโดยไม่ต้องยกเลิกโครงการเดิม</p>
+                </div>
+
+                <div class="text-center p-6 bg-surface rounded-xl">
+                  <i class="fas fa-route text-3xl text-accent mb-4"></i>
+                  <h4 class="font-semibold text-primary mb-3">มีทางเลือกอื่นใดเพื่อหลีกเลี่ยงนโยบาย Cloud First?</h4>
+                  <p class="text-sm text-secondary">การขอข้อยกเว้นหรือการออกแบบโครงการใหม่ให้ไม่เข้าข่ายเกณฑ์</p>
+                </div>
+
+                <div class="text-center p-6 bg-surface rounded-xl">
+                  <i class="fas fa-calendar-check text-3xl text-accent mb-4"></i>
+                  <h4 class="font-semibold text-primary mb-3">ผลกระทบในระยะยาวหลังจาก 12 เดือนแรกคืออะไร?</h4>
+                  <p class="text-sm text-secondary">การวางแผนสำหรับการเช่าต่อเนื่องในปี 2570 และต่อไป</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Section 2: Modification Option -->
+      <section id="modification-option" class="py-16 bg-white">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-12 text-center">2. ทางเลือกที่ 1: การปรับเปลี่ยนโครงการเดิม (Modification)</h2>
+
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-8 rounded-xl border border-green-200 mb-12">
+              <h3 class="font-serif text-2xl font-bold text-green-800 mb-4">แนวคิด: การปรับลดระยะเวลาเช่าโดยไม่ยกเลิกโครงการ</h3>
+              <p class="text-green-700 leading-relaxed">
+                การปรับเปลี่ยนโครงการเดิมโดยการลดระยะเวลาการเช่าจาก 60 เดือนเหลือ 12 เดือน โดยไม่ต้องยกเลิกโครงการทั้งหมดและเริ่มต้นกระบวนการจัดซื้อจัดจ้างใหม่ เนื่องจากโครงการยังคงอยู่ในขั้นตอนของการจัดซื้อจัดจ้าง
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+              <div>
+                <h3 class="font-serif text-2xl font-bold text-primary mb-6">ข้อดีของการปรับเปลี่ยนโครงการเดิม</h3>
+
+                <div class="space-y-6">
+                  <div class="bg-green-50 p-6 rounded-xl border border-green-200">
+                    <h4 class="font-semibold text-green-800 mb-3 flex items-center">
+                      <i class="fas fa-piggy-bank text-green-600 mr-3"></i>
+                      การใช้งบประมาณเดิมที่ได้รับอนุมัติแล้ว
+                    </h4>
+                    <p class="text-green-700 text-sm leading-relaxed">
+                      การใช้งบประมาณที่ได้รับอนุมัติแล้วจะช่วยประหยัดเวลาและทรัพยากร ลดความเสี่ยงจากการไม่ได้รับการอนุมัติงบประมาณใหม่
+                    </p>
+                  </div>
+
+                  <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center">
+                      <i class="fas fa-shield-alt text-blue-600 mr-3"></i>
+                      การหลีกเลี่ยงกระบวนการของบประมาณใหม่
+                    </h4>
+                    <p class="text-blue-700 text-sm leading-relaxed">
+                      หลีกเลี่ยงกระบวนการที่ซับซ้อนและใช้เวลานาน ทำให้โครงการสามารถดำเนินการได้รวดเร็วขึ้น
+                    </p>
+                  </div>
+
+                  <div class="bg-purple-50 p-6 rounded-xl border border-purple-200">
+                    <h4 class="font-semibold text-purple-800 mb-3 flex items-center">
+                      <i class="fas fa-umbrella text-purple-600 mr-3"></i>
+                      การลดความเสี่ยงจากนโยบาย Cloud First
+                    </h4>
+                    <p class="text-purple-700 text-sm leading-relaxed">
+                      ช่วยให้ กยศ. สามารถดำเนินการตามแผนเดิมได้โดยไม่ต้องเปลี่ยนไปใช้บริการคลาวด์จาก GDCC
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="font-serif text-2xl font-bold text-primary mb-6">ข้อเสียและข้อจำกัด</h3>
+
+                <div class="space-y-6">
+                  <div class="bg-red-50 p-6 rounded-xl border border-red-200">
+                    <h4 class="font-semibold text-red-800 mb-3 flex items-center">
+                      <i class="fas fa-gavel text-red-600 mr-3"></i>
+                      ข้อจำกัดทางกฎหมาย
+                    </h4>
+                    <p class="text-red-700 text-sm leading-relaxed">
+                      การปรับเปลี่ยนโครงการที่อยู่ระหว่างการจัดซื้อจัดจ้างอาจมีข้อจำกัดทางกฎหมาย ต้องศึกษาข้อกำหนดของระเบียบสำนักนายกรัฐมนตรีว่าด้วยการพัสดุ พ.ศ. 2560
+                    </p>
+                  </div>
+
+                  <div class="bg-yellow-50 p-6 rounded-xl border border-yellow-200">
+                    <h4 class="font-semibold text-yellow-800 mb-3 flex items-center">
+                      <i class="fas fa-handshake text-yellow-600 mr-3"></i>
+                      ความเป็นไปได้ในการเปลี่ยนแปลงสัญญา
+                    </h4>
+                    <p class="text-yellow-700 text-sm leading-relaxed">
+                      หากลงนามสัญญาแล้ว การปรับเปลี่ยนจะต้องได้รับความยินยอมจากทั้งสองฝ่าย และอาจต้องมีการเจรจาต่อรองใหม่
+                    </p>
+                  </div>
+
+                  <div class="bg-orange-50 p-6 rounded-xl border border-orange-200">
+                    <h4 class="font-semibold text-orange-800 mb-3 flex items-center">
+                      <i class="fas fa-exclamation-triangle text-orange-600 mr-3"></i>
+                      ความเสี่ยงต่อการถูกตีความว่าเป็นโครงการใหม่
+                    </h4>
+                    <p class="text-orange-700 text-sm leading-relaxed">
+                      ความเสี่ยงที่สำคัญที่สุดคือการถูกตีความว่าการปรับเปลี่ยนเป็นโครงการใหม่ ซึ่งจะต้องอยู่ภายใต้นโยบาย Cloud First
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-surface p-8 rounded-xl">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-6">ข้อมูลสนับสนุนจากการวิจัย</h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h4 class="font-semibold text-primary mb-4 flex items-center">
+                    <i class="fas fa-globe text-accent mr-3"></i>
+                    การวิเคราะห์กรณีศึกษาจากประเทศอื่น ๆ
+                  </h4>
+                  <p class="text-secondary text-sm leading-relaxed">
+                    การศึกษากรณีศึกษาจากประเทศที่มีนโยบาย Cloud First คล้ายคลึงกัน เพื่อเข้าใจแนวทางปฏิบัติและข้อยกเว้นที่เป็นไปได้
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-primary mb-4 flex items-center">
+                    <i class="fas fa-book text-accent mr-3"></i>
+                    การศึกษาข้อกำหนดทางกฎหมายของไทย
+                  </h4>
+                  <p class="text-secondary text-sm leading-relaxed">
+                    ศึกษาข้อกำหนดทางกฎหมายของไทยเกี่ยวกับการจัดซื้อจัดจ้างภาครัฐ เพื่อให้เข้าใจขอบเขตในการปรับเปลี่ยนโครงการ
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Section 3: Cancellation Option -->
+      <section id="cancellation-option" class="py-16 bg-surface">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-12 text-center">3. ทางเลือกที่ 2: การยกเลิกโครงการเดิมและขอใหม่ (Cancellation &amp; Re-procurement)</h2>
+
+            <div class="bg-gradient-to-r from-red-50 to-pink-50 p-8 rounded-xl border border-red-200 mb-12">
+              <h3 class="font-serif text-2xl font-bold text-red-800 mb-4">แนวคิด: การเริ่มต้นกระบวนการจัดซื้อจัดจ้างใหม่ทั้งหมด</h3>
+              <p class="text-red-700 leading-relaxed">
+                การยกเลิกโครงการเช่า Infrastructure 60 เดือนเดิมและเริ่มต้นกระบวนการจัดซื้อจัดจ้างใหม่ทั้งหมดสำหรับโครงการเช่า 12 เดือน โดยออกแบบโครงการใหม่ให้เหมาะสมกับสถานการณ์ปัจจุบัน
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+              <div>
+                <h3 class="font-serif text-2xl font-bold text-primary mb-6">ข้อดีของการยกเลิกและขอใหม่</h3>
+
+                <div class="space-y-6">
+                  <div class="bg-green-50 p-6 rounded-xl border border-green-200">
+                    <h4 class="font-semibold text-green-800 mb-3 flex items-center">
+                      <i class="fas fa-drafting-compass text-green-600 mr-3"></i>
+                      การออกแบบโครงการใหม่ให้สอดคล้องกับความต้องการปัจจุบัน
+                    </h4>
+                    <p class="text-green-700 text-sm leading-relaxed">
+                      สามารถออกแบบโครงการใหม่ให้มีระยะเวลาเช่า 12 เดือน และมีขอบเขตที่เหมาะสมกับความต้องการของหน่วยงาน
+                    </p>
+                  </div>
+
+                  <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center">
+                      <i class="fas fa-users text-blue-600 mr-3"></i>
+                      การเปิดโอกาสให้ผู้ให้บริการรายใหม่เข้าร่วมประมูล
+                    </h4>
+                    <p class="text-blue-700 text-sm leading-relaxed">
+                      เปิดโอกาสให้ผู้ให้บริการรายใหม่ ๆ เข้าร่วมประมูล ซึ่งอาจช่วยให้ได้รับข้อเสนอที่ดีกว่า
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="font-serif text-2xl font-bold text-primary mb-6">ข้อเสียและข้อจำกัด</h3>
+
+                <div class="space-y-6">
+                  <div class="bg-red-50 p-6 rounded-xl border border-red-200">
+                    <h4 class="font-semibold text-red-800 mb-3 flex items-center">
+                      <i class="fas fa-cloud text-red-600 mr-3"></i>
+                      การใช้งบประมาณปี 2569 ซึ่งอยู่ภายใต้นโยบาย Cloud First
+                    </h4>
+                    <p class="text-red-700 text-sm leading-relaxed">
+                      จะต้องใช้งบประมาณปี 2569 ซึ่งจะทำให้โครงการใหม่ต้องอยู่ภายใต้นโยบาย Cloud First อย่างเคร่งครัด
+                    </p>
+                  </div>
+
+                  <div class="bg-orange-50 p-6 rounded-xl border border-orange-200">
+                    <h4 class="font-semibold text-orange-800 mb-3 flex items-center">
+                      <i class="fas fa-server text-orange-600 mr-3"></i>
+                      ความจำเป็นในการเช่า GDCC
+                    </h4>
+                    <p class="text-orange-700 text-sm leading-relaxed">
+                      มีความเป็นไปได้สูงที่จะต้องพิจารณาเช่า Government Data Center and Cloud (GDCC) ซึ่งอาจมีข้อจำกัด
+                    </p>
+                  </div>
+
+                  <div class="bg-yellow-50 p-6 rounded-xl border border-yellow-200">
+                    <h4 class="font-semibold text-yellow-800 mb-3 flex items-center">
+                      <i class="fas fa-clock text-yellow-600 mr-3"></i>
+                      การสูญเสียเวลาและทรัพยากร
+                    </h4>
+                    <p class="text-yellow-700 text-sm leading-relaxed">
+                      สูญเสียเวลาและทรัพยากรที่ใช้ในการดำเนินการมาแล้ว รวมถึงความล่าช้าในการดำเนินโครงการ
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-border">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-6">ผลกระทบจากนโยบาย Cloud First</h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-red-50 p-6 rounded-xl border border-red-200">
+                  <h4 class="font-semibold text-red-800 mb-3 text-center">การบังคับใช้นโยบาย</h4>
+                  <p class="text-red-700 text-sm text-center leading-relaxed">
+                    โครงการใหม่จะต้องปฏิบัติตามนโยบาย Cloud First อย่างเคร่งครัด
+                  </p>
+                </div>
+
+                <div class="bg-orange-50 p-6 rounded-xl border border-orange-200">
+                  <h4 class="font-semibold text-orange-800 mb-3 text-center">ข้อจำกัดในการเลือก</h4>
+                  <p class="text-orange-700 text-sm text-center leading-relaxed">
+                    จำกัดความยืดหยุ่นในการเลือกผู้ให้บริการที่ไม่ใช่ GDCC
+                  </p>
+                </div>
+
+                <div class="bg-yellow-50 p-6 rounded-xl border border-yellow-200">
+                  <h4 class="font-semibold text-yellow-800 mb-3 text-center">ผลกระทบต่อการออกแบบ</h4>
+                  <p class="text-yellow-700 text-sm text-center leading-relaxed">
+                    มีข้อจำกัดในความยืดหยุ่นในการออกแบบระบบให้ตรงกับความต้องการ
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Section 4: Exemption Option -->
+      <section id="exemption-option" class="py-16 bg-white">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-12 text-center">4. ทางเลือกที่ 3: การขอข้อยกเว้นจากนโยบาย Cloud First (Exemption)</h2>
+
+            <div class="bg-gradient-to-r from-purple-50 to-indigo-50 p-8 rounded-xl border border-purple-200 mb-12">
+              <h3 class="font-serif text-2xl font-bold text-purple-800 mb-4">แนวคิด: การยื่นขอให้โครงการไม่อยู่ภายใต้ข้อบังคับของนโยบาย</h3>
+              <p class="text-purple-700 leading-relaxed">
+                การขอข้อยกเว้นจากนโยบาย Cloud First โดยอ้างเหตุผลว่าโครงการของ กยศ. มีลักษณะเฉพาะที่ไม่สามารถใช้บริการคลาวด์ได้ หรือการใช้บริการคลาวด์ไม่ตรงกับความต้องการของโครงการ
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+              <div>
+                <h3 class="font-serif text-2xl font-bold text-primary mb-6">เหตุผลสำหรับการขอข้อยกเว้น</h3>
+
+                <div class="space-y-6">
+                  <div class="bg-purple-50 p-6 rounded-xl border border-purple-200">
+                    <h4 class="font-semibold text-purple-800 mb-3 flex items-center">
+                      <i class="fas fa-server text-purple-600 mr-3"></i>
+                      ลักษณะของโครงการ: เช่าเฉพาะ Hardware และ Software
+                    </h4>
+                    <p class="text-purple-700 text-sm leading-relaxed">
+                      โครงการเช่าเฉพาะ Hardware และ Software แบบดั้งเดิม ไม่ใช่การใช้บริการคลาวด์ ซึ่งแตกต่างจากโมเดลบริการคลาวด์ที่มีค่าใช้จ่ายแบบ Pay-as-you-go
+                    </p>
+                  </div>
+
+                  <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-200">
+                    <h4 class="font-semibold text-indigo-800 mb-3 flex items-center">
+                      <i class="fas fa-times-circle text-indigo-600 mr-3"></i>
+                      การไม่รวม Cloud Native Services
+                    </h4>
+                    <p class="text-indigo-700 text-sm leading-relaxed">
+                      การไม่รวม Cloud Native Services ในโครงการเป็นข้อโต้แย้งที่สำคัญ เนื่องจากนโยบาย Cloud First มุ่งเน้นการส่งเสริมการใช้งานบริการคลาวด์เป็นหลัก
+                    </p>
+                  </div>
+
+                  <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center">
+                      <i class="fas fa-calendar text-blue-600 mr-3"></i>
+                      การใช้งบประมาณประจำปี
+                    </h4>
+                    <p class="text-blue-700 text-sm leading-relaxed">
+                      การใช้งบประมาณประจำปีสำหรับโครงการเช่าระยะยาว 60 เดือนอาจสร้างความซับซ้อนในการบริหารจัดการ
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="font-serif text-2xl font-bold text-primary mb-6">กระบวนการและขั้นตอนในการขอข้อยกเว้น</h3>
+
+                <div class="space-y-6">
+                  <div class="bg-green-50 p-6 rounded-xl border border-green-200">
+                    <h4 class="font-semibold text-green-800 mb-3 flex items-center">
+                      <i class="fas fa-file-alt text-green-600 mr-3"></i>
+                      การเตรียมเอกสารและข้อมูลสนับสนุน
+                    </h4>
+                    <p class="text-green-700 text-sm leading-relaxed">
+                      เตรียมเอกสารและข้อมูลสนับสนุนอย่างรอบคอบ รวมถึงรายละเอียดโครงการ เหตุผลที่ไม่สามารถใช้บริการคลาวด์ได้ ข้อมูลการวิจัยและกรณีศึกษา
+                    </p>
+                  </div>
+
+                  <div class="bg-yellow-50 p-6 rounded-xl border border-yellow-200">
+                    <h4 class="font-semibold text-yellow-800 mb-3 flex items-center">
+                      <i class="fas fa-paper-plane text-yellow-600 mr-3"></i>
+                      การยื่นขอต่อหน่วยงานที่เกี่ยวข้อง
+                    </h4>
+                    <p class="text-yellow-700 text-sm leading-relaxed">
+                      ยื่นขอต่อหน่วยงานที่เกี่ยวข้อง เช่น สำนักงานพัฒนารัฐบาลดิจิทัล (DGA) ตามขั้นตอนและระเบียบที่กำหนด
+                    </p>
+                  </div>
+
+                  <div class="bg-teal-50 p-6 rounded-xl border border-teal-200">
+                    <h4 class="font-semibold text-teal-800 mb-3 flex items-center">
+                      <i class="fas fa-comments text-teal-600 mr-3"></i>
+                      การชี้แจงเหตุผลต่อคณะกรรมการ
+                    </h4>
+                    <p class="text-teal-700 text-sm leading-relaxed">
+                      ชี้แจงเหตุผลต่อคณะกรรมการที่เกี่ยวข้องอย่างชัดเจน มีเหตุผล และมีข้อมูลสนับสนุน
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-surface p-8 rounded-xl">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-6">ความเป็นไปได้ในการได้รับข้อยกเว้น</h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h4 class="font-semibold text-primary mb-4 flex items-center">
+                    <i class="fas fa-chart-line text-accent mr-3"></i>
+                    การวิเคราะห์จากนโยบายและแนวทางปฏิบัติ
+                  </h4>
+                  <p class="text-secondary text-sm leading-relaxed">
+                    วิเคราะห์จากนโยบายและแนวทางปฏิบัติของนโยบาย Cloud First เพื่อเข้าใจความเป็นไปได้ในการได้รับข้อยกเว้น
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-primary mb-4 flex items-center">
+                    <i class="fas fa-search text-accent mr-3"></i>
+                    การศึกษากรณีศึกษาที่คล้ายคลึงกัน
+                  </h4>
+                  <p class="text-secondary text-sm leading-relaxed">
+                    ศึกษากรณีศึกษาจากหน่วยงานอื่น ๆ ที่เคยขอข้อยกเว้น เพื่อเข้าใจแนวทางปฏิบัติและโอกาสในการได้รับข้อยกเว้น
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Section 5: Long-term Impact Analysis -->
+      <section id="long-term-impact" class="py-16 bg-surface">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-12 text-center">5. การวิเคราะห์ผลกระทบในระยะยาว</h2>
+
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-border mb-12">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-6">5.1 สถานการณ์หลังจาก 12 เดือนแรก</h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                  <h4 class="font-semibold text-blue-800 mb-4 flex items-center">
+                    <i class="fas fa-route text-blue-600 mr-3"></i>
+                    กรณีปรับเปลี่ยนโครงการเดิม
+                  </h4>
+                  <p class="text-blue-700 text-sm leading-relaxed">
+                    หากโครงการเดิมถูกปรับเปลี่ยนให้เหลือ 12 เดือน กยศ. อาจต้องพิจารณาว่าจะเช่าต่อหรือไม่ หากต้องเช่าต่อ ก็อาจต้องเริ่มกระบวนการจัดซื้อจัดจ้างใหม่
+                  </p>
+                </div>
+
+                <div class="bg-orange-50 p-6 rounded-xl border border-orange-200">
+                  <h4 class="font-semibold text-orange-800 mb-4 flex items-center">
+                    <i class="fas fa-redo text-orange-600 mr-3"></i>
+                    กรณียกเลิกและขอใหม่
+                  </h4>
+                  <p class="text-orange-700 text-sm leading-relaxed">
+                    หากโครงการเดิมถูกยกเลิกและขอใหม่ กยศ. อาจต้องพิจารณาว่าจะเช่าต่อจาก GDCC หรือไม่ ซึ่งอาจมีข้อจำกัด
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-border mb-12">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-6">5.2 ความเป็นไปได้ในการเช่าต่อเนื่อง</h3>
+
+              <div class="flex items-center justify-center mb-8">
+                <div class="mermaid-container">
+                  <div class="mermaid-controls">
+                    <button class="mermaid-control-btn zoom-in" title="放大">
+                      <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button class="mermaid-control-btn zoom-out" title="缩小">
+                      <i class="fas fa-search-minus"></i>
+                    </button>
+                    <button class="mermaid-control-btn reset-zoom" title="重置">
+                      <i class="fas fa-expand-arrows-alt"></i>
+                    </button>
+                    <button class="mermaid-control-btn fullscreen" title="全屏查看">
+                      <i class="fas fa-expand"></i>
+                    </button>
+                  </div>
+                  <div class="mermaid" id="mermaid1">
+                    graph TD
+                    A[&#34;หลังจาก 12 เดือน&#34;] --&gt; B{&#34;โครงการเดิมถูกปรับเปลี่ยน?&#34;}
+                    B --&gt;|&#34;ใช่&#34;| C[&#34;เจรจาต่อรองกับผู้ให้บริการ&#34;]
+                    B --&gt;|&#34;ไม่&#34;| D[&#34;พิจารณาเช่าต่อจาก GDCC&#34;]
+                    C --&gt; E[&#34;เช่าต่อโดยไม่ต้องประมูลใหม่&#34;]
+                    D --&gt; F{&#34;เหมาะสมหรือไม่?&#34;}
+                    F --&gt;|&#34;ใช่&#34;| G[&#34;เช่าต่อจาก GDCC&#34;]
+                    F --&gt;|&#34;ไม่&#34;| H[&#34;เริ่มประมูลใหม่&#34;]
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+              <div>
+                <h3 class="font-serif text-2xl font-bold text-primary mb-6">5.3 ผลกระทบของนโยบาย Cloud First ในอนาคต</h3>
+
+                <div class="bg-gradient-to-br from-red-50 to-pink-50 p-8 rounded-xl border border-red-200">
+                  <div class="space-y-4">
+                    <div class="flex items-start space-x-3">
+                      <i class="fas fa-arrow-right text-red-600 mt-1"></i>
+                      <p class="text-red-700 text-sm">นโยบาย Cloud First จะมีผลกระทบอย่างต่อเนื่องต่อโครงการของ กยศ. ในอนาคต</p>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                      <i class="fas fa-arrow-right text-red-600 mt-1"></i>
+                      <p class="text-red-700 text-sm">หากโครงการใหม่ต้องใช้งบประมาณในปี 2570 และต่อไป จะต้องปฏิบัติตามนโยบายนี้</p>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                      <i class="fas fa-arrow-right text-red-600 mt-1"></i>
+                      <p class="text-red-700 text-sm">กยศ. อาจต้องเปลี่ยนไปใช้บริการคลาวด์จาก GDCC ในระยะยาว</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="font-serif text-2xl font-bold text-primary mb-6">5.4 การวางแผนรองรับสำหรับปี 2570 และต่อไป</h3>
+
+                <div class="space-y-4">
+                  <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <h4 class="font-semibold text-green-800 mb-2 flex items-center">
+                      <i class="fas fa-chart-bar text-green-600 mr-2"></i>
+                      การประเมินความต้องการใช้งานในอนาคต
+                    </h4>
+                  </div>
+
+                  <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <h4 class="font-semibold text-blue-800 mb-2 flex items-center">
+                      <i class="fas fa-search text-blue-600 mr-2"></i>
+                      การศึกษาความเป็นไปได้ในการใช้บริการคลาวด์
+                    </h4>
+                  </div>
+
+                  <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                    <h4 class="font-semibold text-purple-800 mb-2 flex items-center">
+                      <i class="fas fa-route text-purple-600 mr-2"></i>
+                      การวางแผนการย้ายระบบ (Migration Plan)
+                    </h4>
+                  </div>
+
+                  <div class="bg-teal-50 p-4 rounded-lg border border-teal-200">
+                    <h4 class="font-semibold text-teal-800 mb-2 flex items-center">
+                      <i class="fas fa-graduation-cap text-teal-600 mr-2"></i>
+                      การฝึกอบรมบุคลากร
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Section 6: Recommendations -->
+      <section id="recommendations" class="py-16 bg-white">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-12 text-center">6. ข้อเสนอแนะและคำแนะนำสำหรับคณะกรรมการ</h2>
+
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-xl border border-blue-200 mb-12">
+              <h3 class="font-serif text-2xl font-bold text-blue-800 mb-6">สรุปข้อดีและข้อเสียของแต่ละทางเลือก</h3>
+
+              <div class="overflow-x-auto">
+                <table class="w-full bg-white rounded-lg overflow-hidden border border-blue-200">
+                  <thead class="bg-blue-100">
+                    <tr>
+                      <th class="px-6 py-4 text-left font-semibold text-blue-800">ทางเลือก</th>
+                      <th class="px-6 py-4 text-left font-semibold text-blue-800">ข้อดี</th>
+                      <th class="px-6 py-4 text-left font-semibold text-blue-800">ข้อเสีย</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-blue-200">
+                    <tr class="hover:bg-blue-50 transition-colors">
+                      <td class="px-6 py-4 font-semibold text-primary">การปรับเปลี่ยนโครงการเดิม</td>
+                      <td class="px-6 py-4 text-sm text-secondary">
+                        • ใช้งบประมาณเดิมที่ได้รับอนุมัติแล้ว
+                        <br/>
+                        • หลีกเลี่ยงกระบวนการของบประมาณใหม่
+                        <br/>
+                        • ลดความเสี่ยงจากนโยบาย Cloud First
+                      </td>
+                      <td class="px-6 py-4 text-sm text-secondary">
+                        • มีข้อจำกัดทางกฎหมาย
+                        <br/>
+                        • ความเสี่ยงต่อการถูกตีความว่าเป็นโครงการใหม่
+                      </td>
+                    </tr>
+                    <tr class="hover:bg-blue-50 transition-colors">
+                      <td class="px-6 py-4 font-semibold text-primary">การยกเลิกและขอใหม่</td>
+                      <td class="px-6 py-4 text-sm text-secondary">
+                        • ออกแบบโครงการใหม่ให้สอดคล้องกับความต้องการปัจจุบัน
+                        <br/>
+                        • เปิดโอกาสให้ผู้ให้บริการรายใหม่เข้าร่วมประมูล
+                      </td>
+                      <td class="px-6 py-4 text-sm text-secondary">
+                        • ใช้งบประมาณปี 2569 ซึ่งอยู่ภายใต้นโยบาย Cloud First
+                        <br/>
+                        • ต้องเช่า GDCC
+                        <br/>
+                        • สูญเสียเวลาและทรัพยากร
+                      </td>
+                    </tr>
+                    <tr class="hover:bg-blue-50 transition-colors">
+                      <td class="px-6 py-4 font-semibold text-primary">การขอข้อยกเว้น</td>
+                      <td class="px-6 py-4 text-sm text-secondary">
+                        • หลีกเลี่ยงนโยบาย Cloud First
+                        <br/>
+                        • รักษาโครงการเดิมไว้
+                      </td>
+                      <td class="px-6 py-4 text-sm text-secondary">
+                        • ไม่แน่นอนว่าจะได้รับข้อยกเว้นหรือไม่
+                        <br/>
+                        • ต้องเตรียมเอกสารและข้อมูลสนับสนุนอย่างรอบคอบ
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+              <div>
+                <h3 class="font-serif text-2xl font-bold text-primary mb-6">การจัดลำดับความสำคัญของปัจจัยต่าง ๆ</h3>
+
+                <div class="space-y-4">
+                  <div class="bg-gradient-to-r from-red-50 to-pink-50 p-6 rounded-xl border border-red-200">
+                    <h4 class="font-semibold text-red-800 mb-3 flex items-center">
+                      <span class="bg-red-600 text-white text-xs px-2 py-1 rounded-full mr-3">1</span>
+                      การหลีกเลี่ยงนโยบาย Cloud First
+                    </h4>
+                    <p class="text-red-700 text-sm leading-relaxed">
+                      เป็นปัจจัยสำคัญที่สุด เนื่องจากนโยบายนี้จะบังคับให้ต้องเช่า GDCC ซึ่งอาจไม่ตรงกับความต้องการเฉพาะทางของโครงการ
+                    </p>
+                  </div>
+
+                  <div class="bg-gradient-to-r from-orange-50 to-yellow-50 p-6 rounded-xl border border-orange-200">
+                    <h4 class="font-semibold text-orange-800 mb-3 flex items-center">
+                      <span class="bg-orange-600 text-white text-xs px-2 py-1 rounded-full mr-3">2</span>
+                      การใช้งบประมาณเดิม
+                    </h4>
+                    <p class="text-orange-700 text-sm leading-relaxed">
+                      เป็นปัจจัยสำคัญรองลงมา ช่วยประหยัดเวลาและทรัพยากร ลดความเสี่ยงจากการไม่ได้รับการอนุมัติงบประมาณใหม่
+                    </p>
+                  </div>
+
+                  <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200">
+                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center">
+                      <span class="bg-blue-600 text-white text-xs px-2 py-1 rounded-full mr-3">3</span>
+                      ความยืดหยุ่นในการออกแบบระบบ
+                    </h4>
+                    <p class="text-blue-700 text-sm leading-relaxed">
+                      ความสำคัญในการปรับแต่งระบบให้ตรงกับความต้องการเฉพาะทาง ซึ่งอาจไม่สามารถทำได้หากต้องใช้บริการจาก GDCC
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="font-serif text-2xl font-bold text-primary mb-6">ข้อเสนอแนะเชิงกลยุทธ์</h3>
+
+                <div class="space-y-8">
+                  <div class="bg-green-50 p-6 rounded-xl border border-green-200">
+                    <h4 class="font-semibold text-green-800 mb-4 flex items-center">
+                      <i class="fas fa-puzzle-piece text-green-600 mr-3"></i>
+                      การผสมผสานทางเลือกต่าง ๆ
+                    </h4>
+                    <p class="text-green-700 text-sm leading-relaxed mb-4">
+                      พิจารณาการผสมผสานทางเลือกต่าง ๆ เพื่อให้ได้ผลลัพธ์ที่ดีที่สุด เช่น
+                    </p>
+                    <div class="bg-white/70 p-4 rounded-lg">
+                      <p class="text-sm text-green-600">
+                        การปรับเปลี่ยนโครงการเดิมให้เหลือ 12 เดือน และในเวลาเดียวกันก็เตรียมการขอข้อยกเว้นจากนโยบาย Cloud First สำหรับโครงการในอนาคต
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                    <h4 class="font-semibold text-blue-800 mb-4 flex items-center">
+                      <i class="fas fa-shield-alt text-blue-600 mr-3"></i>
+                      การเตรียมแผนสำรอง (Plan B)
+                    </h4>
+                    <p class="text-blue-700 text-sm leading-relaxed">
+                      เตรียมแผนสำรองเพื่อให้มั่นใจว่าหน่วยงานสามารถดำเนินงานได้อย่างต่อเนื่อง รวมถึงการศึกษาความเป็นไปได้ในการใช้บริการจาก GDCC และการวางแผนการย้ายระบบ
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-50 to-indigo-50 p-8 rounded-xl border border-purple-200">
+              <h3 class="font-serif text-2xl font-bold text-purple-800 mb-8">ขั้นตอนและแผนการดำเนินงานต่อไป</h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                  <div class="bg-purple-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-database text-2xl"></i>
+                  </div>
+                  <h4 class="font-semibold text-purple-800 mb-3">การรวบรวมข้อมูลและเอกสาร</h4>
+                  <p class="text-purple-700 text-sm leading-relaxed">
+                    รวบรวมข้อมูลทางกฎหมาย ข้อมูลการวิจัย กรณีศึกษา และข้อมูลเกี่ยวกับนโยบาย Cloud First และ GDCC
+                  </p>
+                  <div class="mt-4 text-xs text-purple-600 font-medium">
+                    ระยะเวลา: 1-2 สัปดาห์
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <div class="bg-indigo-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-handshake text-2xl"></i>
+                  </div>
+                  <h4 class="font-semibold text-indigo-800 mb-3">การประสานงานกับหน่วยงานที่เกี่ยวข้อง</h4>
+                  <p class="text-indigo-700 text-sm leading-relaxed">
+                    ประสานงานกับหน่วยงาน เช่น DGA และ GDCC เพื่อให้เข้าใจถึงนโยบายและข้อกำหนดต่าง ๆ อย่างชัดเจน
+                  </p>
+                  <div class="mt-4 text-xs text-indigo-600 font-medium">
+                    ระยะเวลา: 2-3 สัปดาห์
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <div class="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-clock text-2xl"></i>
+                  </div>
+                  <h4 class="font-semibold text-blue-800 mb-3">การกำหนดกรอบเวลาในการตัดสินใจ</h4>
+                  <p class="text-blue-700 text-sm leading-relaxed">
+                    กำหนดกรอบเวลาที่ชัดเจนสำหรับการรวบรวมข้อมูล ประสานงาน และการพิจารณาของคณะกรรมการ
+                  </p>
+                  <div class="mt-4 text-xs text-blue-600 font-medium">
+                    ระยะเวลา: 4-6 สัปดาห์
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-8 p-6 bg-white/70 rounded-lg border-l-4 border-purple-600">
+                <h4 class="font-semibold text-purple-800 mb-3 flex items-center">
+                  <i class="fas fa-lightbulb text-purple-600 mr-3"></i>
+                  ข้อเสนอแนะเพิ่มเติม
+                </h4>
+                <p class="text-purple-700 text-sm leading-relaxed">
+                  คณะกรรมการควรพิจารณาทางเลือกที่ 1 (การปรับเปลี่ยนโครงการเดิม) เป็นทางเลือกหลัก เนื่องจากมีความเสี่ยงต่ำที่สุดและสามารถใช้งบประมาณเดิมได้ แต่ควรเตรียมแผนสำรองในกรณีที่ไม่สามารถดำเนินการได้
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-primary text-white py-12">
+        <div class="container mx-auto px-8">
+          <div class="max-w-4xl mx-auto text-center">
+            <h3 class="font-serif text-2xl font-bold mb-4">สรุปผลการวิเคราะห์</h3>
+            <p class="text-gray-300 leading-relaxed mb-8">
+              จากการวิเคราะห์อย่างรอบคอบ การปรับเปลี่ยนโครงการเดิมเป็นทางเลือกที่เหมาะสมที่สุดสำหรับ กยศ. ภายใต้ข้อจำกัดและความเสี่ยงที่มีอยู่ ทั้งนี้ควรดำเนินการอย่างรอบคอบและมีแผนสำรองเพื่อรองรับสถานการณ์ที่อาจเกิดขึ้นในอนาคต
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+              <div class="bg-white/10 p-6 rounded-xl">
+                <i class="fas fa-balance-scale text-3xl text-blue-400 mb-4"></i>
+                <h4 class="font-semibold mb-2">การพิจารณาอย่างรอบคอบ</h4>
+                <p class="text-sm text-gray-300">ต้องพิจารณาทุกปัจจัยรวมถึงกฎหมาย ระเบียบ และนโยบายที่เกี่ยวข้อง</p>
+              </div>
+
+              <div class="bg-white/10 p-6 rounded-xl">
+                <i class="fas fa-shield-alt text-3xl text-green-400 mb-4"></i>
+                <h4 class="font-semibold mb-2">การบริหารความเสี่ยง</h4>
+                <p class="text-sm text-gray-300">ต้องมีแผนรองรับสำหรับสถานการณ์ต่าง ๆ ที่อาจเกิดขึ้นในอนาคต</p>
+              </div>
+
+              <div class="bg-white/10 p-6 rounded-xl">
+                <i class="fas fa-handshake text-3xl text-purple-400 mb-4"></i>
+                <h4 class="font-semibold mb-2">การประสานงานที่ดี</h4>
+                <p class="text-sm text-gray-300">ต้องมีการประสานงานกับหน่วยงานที่เกี่ยวข้องอย่างใกล้ชิด</p>
+              </div>
+            </div>
+
+            <div class="border-t border-gray-700 pt-8">
+              <p class="text-sm text-gray-400">
+                การวิเคราะห์นี้จัดทำขึ้นเพื่อประกอบการพิจารณาของคณะกรรมการ
+                <br/>
+                โดยยึดหลักข้อมูลและข้อเท็จจริงที่มีอยู่
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#f8fafc',
+                primaryTextColor: '#0f172a',
+                primaryBorderColor: '#334155',
+                lineColor: '#64748b',
+                secondaryColor: '#e2e8f0',
+                tertiaryColor: '#f1f5f9',
+                background: '#ffffff',
+                mainBkg: '#f8fafc',
+                secondBkg: '#e2e8f0',
+                tertiaryBkg: '#f1f5f9',
+                nodeBorder: '#334155',
+                clusterBkg: '#f8fafc',
+                clusterBorder: '#64748b',
+                defaultLinkColor: '#64748b',
+                titleColor: '#0f172a',
+                edgeLabelBackground: '#ffffff',
+                nodeTextColor: '#0f172a',
+                // Enhanced contrast colors
+                cScale0: '#fef2f2',
+                cScale1: '#ffedd5', 
+                cScale2: '#fef3c7',
+                cScale3: '#f0fdf4',
+                cScale4: '#f0f9ff',
+                cScale5: '#fdf4ff',
+                // Text colors for better contrast
+                cScale0Text: '#0f172a',
+                cScale1Text: '#0f172a',
+                cScale2Text: '#0f172a',
+                cScale3Text: '#0f172a',
+                cScale4Text: '#0f172a',
+                cScale5Text: '#0f172a'
+            },
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20
+            },
+            fontSize: 14,
+            fontFamily: 'Inter, sans-serif'
+        });
+
+        // Initialize Mermaid Controls for zoom and pan
+        function initializeMermaidControls() {
+            const containers = document.querySelectorAll('.mermaid-container');
+
+            containers.forEach(container => {
+            const mermaidElement = container.querySelector('.mermaid');
+            let scale = 1;
+            let isDragging = false;
+            let startX, startY, translateX = 0, translateY = 0;
+
+            // 触摸相关状态
+            let isTouch = false;
+            let touchStartTime = 0;
+            let initialDistance = 0;
+            let initialScale = 1;
+            let isPinching = false;
+
+            // Zoom controls
+            const zoomInBtn = container.querySelector('.zoom-in');
+            const zoomOutBtn = container.querySelector('.zoom-out');
+            const resetBtn = container.querySelector('.reset-zoom');
+            const fullscreenBtn = container.querySelector('.fullscreen');
+
+            function updateTransform() {
+                mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+                if (scale > 1) {
+                container.classList.add('zoomed');
+                } else {
+                container.classList.remove('zoomed');
+                }
+
+                mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+            }
+
+            if (zoomInBtn) {
+                zoomInBtn.addEventListener('click', () => {
+                scale = Math.min(scale * 1.25, 4);
+                updateTransform();
+                });
+            }
+
+            if (zoomOutBtn) {
+                zoomOutBtn.addEventListener('click', () => {
+                scale = Math.max(scale / 1.25, 0.3);
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+                updateTransform();
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+                });
+            }
+
+            if (fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', () => {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
+                }
+                });
+            }
+
+            // Mouse Events
+            mermaidElement.addEventListener('mousedown', (e) => {
+                if (isTouch) return; // 如果是触摸设备，忽略鼠标事件
+
+                isDragging = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+                mermaidElement.style.cursor = 'grabbing';
+                updateTransform();
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging && !isTouch) {
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseleave', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            // 获取两点之间的距离
+            function getTouchDistance(touch1, touch2) {
+                return Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+                );
+            }
+
+            // Touch Events - 触摸事件处理
+            mermaidElement.addEventListener('touchstart', (e) => {
+                isTouch = true;
+                touchStartTime = Date.now();
+
+                if (e.touches.length === 1) {
+                // 单指拖动
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+
+                } else if (e.touches.length === 2) {
+                // 双指缩放
+                isPinching = true;
+                isDragging = false;
+
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialDistance = getTouchDistance(touch1, touch2);
+                initialScale = scale;
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isDragging && !isPinching) {
+                // 单指拖动
+                const touch = e.touches[0];
+                translateX = touch.clientX - startX;
+                translateY = touch.clientY - startY;
+                updateTransform();
+
+                } else if (e.touches.length === 2 && isPinching) {
+                // 双指缩放
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = getTouchDistance(touch1, touch2);
+
+                if (initialDistance > 0) {
+                    const newScale = Math.min(Math.max(
+                    initialScale * (currentDistance / initialDistance),
+                    0.3
+                    ), 4);
+                    scale = newScale;
+                    updateTransform();
+                }
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchend', (e) => {
+                // 重置状态
+                if (e.touches.length === 0) {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                // 延迟重置isTouch，避免鼠标事件立即触发
+                setTimeout(() => {
+                    isTouch = false;
+                }, 100);
+                } else if (e.touches.length === 1 && isPinching) {
+                // 从双指变为单指，切换为拖动模式
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+                }
+
+                updateTransform();
+            });
+
+            mermaidElement.addEventListener('touchcancel', (e) => {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                setTimeout(() => {
+                isTouch = false;
+                }, 100);
+
+                updateTransform();
+            });
+
+            // Enhanced wheel zoom with better center point handling
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+                // Adjust translation to zoom towards center
+                if (newScale !== scale) {
+                const scaleDiff = newScale / scale;
+                translateX = translateX * scaleDiff;
+                translateY = translateY * scaleDiff;
+                scale = newScale;
+
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+
+                updateTransform();
+                }
+            });
+
+            // Initialize display
+            updateTransform();
+            });
+        }
+
+        // Initialize the mermaid controls after the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMermaidControls();
+        });
+
+        // Smooth scrolling for TOC links
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    const offsetTop = targetElement.offsetTop - 20;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Highlight active TOC item on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('text-accent', 'font-semibold');
+                link.classList.add('text-secondary');
+                
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.remove('text-secondary');
+                    link.classList.add('text-accent', 'font-semibold');
+                }
+            });
+        });
+
+        // Add loading animation for images
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('load', function() {
+                this.style.opacity = '1';
+            });
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 0.3s ease';
+        });
+    </script>
+  
+
+</body></html>
