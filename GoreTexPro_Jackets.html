@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Gore-Tex Pro 3L Market Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/2.0.1/chartjs-plugin-annotation.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Alpine Technical -->
+    <!-- Colors: Slate-50 (Background), Slate-900 (Text), Orange-500 (Safety/Accent), Blue-600 (Data/Primary) -->
+    
+    <!-- Application Structure Plan: 
+         1. Header: Report Context & Controls.
+         2. Executive Summary: Key stats at a glance.
+         3. Comparative Landscape (Scatter Plot): Price vs. Weight analysis.
+         4. Field Survey Results (Bar Chart): Customer satisfaction including "Куртка".
+         5. Technical Specs Table: Sortable/Filterable data grid.
+         6. Methodology: Context on the survey.
+         Rationale: This structure moves from high-level insights to granular data, allowing the user to verify the "Куртка" brand performance against market leaders.
+    -->
+
+    <!-- Visualization & Content Choices:
+         1. Scatter Plot (Chart.js): Price vs. Durability Index. Goal: Compare value propositions.
+         2. Radar Chart (Chart.js): The "Куртка" vs Arc'teryx comparison. Goal: Highlight specific trade-offs.
+         3. Interactive Cards: Detailed product breakdown.
+         4. NO SVG/Mermaid: All icons use Unicode or CSS shapes. Charts use Canvas.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            height: 400px; 
+            max-height: 500px;
+        }
+        .card { transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .nav-btn.active { border-bottom: 2px solid #f97316; color: #ea580c; font-weight: 600; }
+        
+        /* Custom Scrollbar for tables */
+        .custom-scroll::-webkit-scrollbar { height: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl mr-2">🏔️</span>
+                    <span class="font-bold text-xl tracking-tight text-slate-800">Alpine<span class="text-orange-500">Tech</span> Analytics</span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" class="nav-btn active px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900">Dashboard</button>
+                    <button onclick="navigate('comparison')" class="nav-btn px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900">Market Landscape</button>
+                    <button onclick="navigate('field-survey')" class="nav-btn px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900">Field Survey: "Куртка"</button>
+                    <button onclick="navigate('methodology')" class="nav-btn px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900">Methodology</button>
+                </div>
+                <!-- Mobile menu button placeholder (simplified) -->
+                <div class="flex items-center md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-slate-500 hover:text-slate-700">☰</button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 p-4">
+            <button onclick="navigate('dashboard')" class="block w-full text-left py-2">Dashboard</button>
+            <button onclick="navigate('comparison')" class="block w-full text-left py-2">Market Landscape</button>
+            <button onclick="navigate('field-survey')" class="block w-full text-left py-2">Field Survey</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- Header Section -->
+        <header class="text-center md:text-left border-b border-slate-200 pb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Gore-Tex Pro 3L Market Analysis</h1>
+            <p class="text-lg text-slate-600 max-w-3xl">
+                A comparative study of premium hardshells, focusing on durability, breathability, and price-to-performance ratios. 
+                Includes exclusive field data on the emerging challenger brand <span class="font-semibold text-orange-600">"Куртка"</span>.
+            </p>
+        </header>
+
+        <!-- VIEW: DASHBOARD -->
+        <section id="dashboard" class="view-section animate-fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div class="text-sm text-slate-500 font-medium uppercase tracking-wider">Avg. Market Price</div>
+                    <div class="text-3xl font-bold text-slate-900 mt-2">$685</div>
+                    <div class="text-xs text-green-600 mt-1">↑ 4.2% YoY</div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div class="text-sm text-slate-500 font-medium uppercase tracking-wider">Top Rated (Durability)</div>
+                    <div class="text-2xl font-bold text-slate-900 mt-2">Arc'teryx Alpha SV</div>
+                    <div class="text-xs text-slate-400 mt-1">100 Denier Face Fabric</div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div class="text-sm text-slate-500 font-medium uppercase tracking-wider">Best Value</div>
+                    <div class="text-2xl font-bold text-slate-900 mt-2">Куртка Pro</div>
+                    <div class="text-xs text-orange-500 mt-1">Field Survey Surprise</div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div class="text-sm text-slate-500 font-medium uppercase tracking-wider">Models Analyze</div>
+                    <div class="text-3xl font-bold text-slate-900 mt-2">12</div>
+                    <div class="text-xs text-slate-400 mt-1">Across 6 Brands</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Top Chart: Weight vs Price -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-2">Price vs. Weight Correlation</h3>
+                    <p class="text-sm text-slate-500 mb-6">Analyzing if lighter weight correlates with higher premiums in the Pro 3L category.</p>
+                    <div class="chart-container">
+                        <canvas id="scatterChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Product List -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4">Top Contenders</h3>
+                    <div class="overflow-y-auto custom-scroll flex-grow pr-2" style="max-height: 400px;">
+                        <div id="product-list-container" class="space-y-3">
+                            <!-- JS populated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: COMPARISON (Market Landscape) -->
+        <section id="comparison" class="view-section hidden animate-fade-in">
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8">
+                <h3 class="font-bold text-blue-900">Landscape Analysis</h3>
+                <p class="text-blue-800 text-sm">
+                    This section visualizes the trade-offs between fabric weight (Denier) and breathability (RET). 
+                    Premium jackets typically sacrifice some breathability for extreme durability (Higher Denier).
+                </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 mb-8">
+                <div class="flex flex-wrap justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-slate-800">Durability vs. Breathability Matrix</h3>
+                    <div class="flex space-x-2">
+                        <button onclick="updateLandscape('all')" class="px-3 py-1 text-xs rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium">All</button>
+                        <button onclick="updateLandscape('premium')" class="px-3 py-1 text-xs rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600">Tier 1 Premium</button>
+                        <button onclick="updateLandscape('challenger')" class="px-3 py-1 text-xs rounded-full bg-orange-100 hover:bg-orange-200 text-orange-700">Challengers</button>
+                    </div>
+                </div>
+                <div class="chart-container h-96">
+                    <canvas id="landscapeChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Feature Explanation Cards -->
+                <div class="bg-slate-50 p-5 rounded-lg border border-slate-100">
+                    <div class="text-2xl mb-2">🛡️</div>
+                    <h4 class="font-bold text-slate-900">Gore-Tex Pro "Most Rugged"</h4>
+                    <p class="text-sm text-slate-600 mt-2">Used in Arc'teryx Alpha SV and Mammut Nordwand. Prioritizes abrasion resistance over maximum breathability.</p>
+                </div>
+                <div class="bg-slate-50 p-5 rounded-lg border border-slate-100">
+                    <div class="text-2xl mb-2">💨</div>
+                    <h4 class="font-bold text-slate-900">Gore-Tex Pro "Most Breathable"</h4>
+                    <p class="text-sm text-slate-600 mt-2">Used in lighter alpine shells like the Patagonia Pluma. Better for high-output activities.</p>
+                </div>
+                <div class="bg-slate-50 p-5 rounded-lg border border-slate-100">
+                    <div class="text-2xl mb-2">⚖️</div>
+                    <h4 class="font-bold text-slate-900">Hybrid Construction</h4>
+                    <p class="text-sm text-slate-600 mt-2">The "Куртка" brand utilizes a proprietary hybrid weave, balancing cost and durability effectively.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: FIELD SURVEY -->
+        <section id="field-survey" class="view-section hidden animate-fade-in">
+             <div class="mb-8">
+                <h2 class="text-2xl font-bold text-slate-900">Project "Куртка": Field Survey Results</h2>
+                <p class="text-slate-600 mt-2">
+                    We included the challenger brand "Куртка" (Cyrillic for "Jacket") in a blind field test alongside market leaders.
+                    Testers (n=45) were professional mountain guides in the Caucasus region.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4">Direct Comparison: User Scores (1-10)</h3>
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <span class="inline-block px-2 py-1 bg-slate-800 text-white text-xs mr-2 rounded">Arc'teryx Alpha SV</span>
+                        <span class="inline-block px-2 py-1 bg-orange-500 text-white text-xs rounded">Куртка Expedition</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col justify-center">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4">Key Findings</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-sm font-bold mt-0.5">1</span>
+                            <div class="ml-3">
+                                <p class="text-sm font-bold text-slate-900">Price Perception</p>
+                                <p class="text-sm text-slate-600">The "Куртка" model was rated highest for value, costing roughly 40% less than the Alpha SV while retaining 85% of the performance functionality.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 h-6 w-6 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center text-sm font-bold mt-0.5">2</span>
+                            <div class="ml-3">
+                                <p class="text-sm font-bold text-slate-900">Fit & Articulation</p>
+                                <p class="text-sm text-slate-600">Established brands like Norrøna and Arc'teryx still lead in articulated patterning. Testers noted "Куртка" felt boxier in the shoulders.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 h-6 w-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-bold mt-0.5">3</span>
+                            <div class="ml-3">
+                                <p class="text-sm font-bold text-slate-900">Waterproof Integrity</p>
+                                <p class="text-sm text-slate-600">No statistical difference in waterproofing failures after 60 days of use. Gore-Tex Pro 3L membrane performed consistently across brands.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Survey Comments Table -->
+            <div class="bg-white shadow-sm rounded-xl overflow-hidden border border-slate-200">
+                <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                    <h3 class="text-lg font-semibold text-slate-800">Tester Comments Feed</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-200">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Brand</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Guide Role</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Feedback Snippet</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Sentiment</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-slate-200" id="feedback-table">
+                            <!-- JS Populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: METHODOLOGY -->
+        <section id="methodology" class="view-section hidden animate-fade-in">
+            <div class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-slate-100">
+                <h2 class="text-2xl font-bold text-slate-900 mb-6">Research Methodology</h2>
+                <div class="space-y-6 text-slate-700">
+                    <p>
+                        This analysis compiles technical specifications from manufacturer datasheets and combined them with a proprietary field survey conducted in Jan 2026.
+                    </p>
+                    <h4 class="font-bold text-slate-900">Selection Criteria</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Membrane: Must use Gore-Tex Pro 3L (Most Rugged or Most Breathable).</li>
+                        <li>Intended Use: Technical Alpinism / Ice Climbing.</li>
+                        <li>Availability: Current Market (2025/2026 Season).</li>
+                    </ul>
+                    
+                    <h4 class="font-bold text-slate-900">The "Куртка" Brand Inclusion</h4>
+                    <p>
+                        Per specific client request, the localized brand "Куртка" was included to assess domestic manufacturing capabilities against international standards. Sample jackets were provided blindly to guides.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2026 AlpineTech Analytics. Data simulated for demonstration purposes.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- DATA STORE ---
+        const products = [
+            { id: 1, brand: "Arc'teryx", model: "Alpha SV", price: 900, weight: 485, denier: 100, rating: 9.8, type: "premium" },
+            { id: 2, brand: "Norrøna", model: "Trollveggen", price: 799, weight: 650, denier: 70, rating: 9.5, type: "premium" },
+            { id: 3, brand: "Mammut", model: "Nordwand Pro", price: 825, weight: 620, denier: 80, rating: 9.6, type: "premium" },
+            { id: 4, brand: "Patagonia", model: "Pluma", price: 599, weight: 414, denier: 40, rating: 8.9, type: "standard" },
+            { id: 5, brand: "Mountain Hardwear", model: "Exposure/2", price: 650, weight: 470, denier: 80, rating: 9.0, type: "standard" },
+            { id: 6, brand: "Куртка", model: "Expedition Pro", price: 450, weight: 550, denier: 90, rating: 8.7, type: "challenger" },
+            { id: 7, brand: "Black Diamond", model: "Sharp End", price: 550, weight: 455, denier: 70, rating: 8.5, type: "standard" },
+            { id: 8, brand: "Montane", model: "Alpine Resolve", price: 520, weight: 480, denier: 80, rating: 8.6, type: "standard" }
+        ];
+
+        const feedbackData = [
+            { brand: "Arc'teryx", role: "Lead Guide", text: "Bombproof. I trust it in the worst storms. The pocket layout is perfect for harnesses.", sentiment: "Positive" },
+            { brand: "Куртка", role: "Ice Climber", text: "Surprisingly tough fabric. The zippers feel a bit stiff compared to the Alpha, but for the price, it's unbeatable.", sentiment: "Mixed" },
+            { brand: "Mammut", role: "Alpinist", text: "High reach visibility is great. Hood fits helmet perfectly.", sentiment: "Positive" },
+            { brand: "Куртка", role: "Ski Patroller", text: "I've abused this for 30 days straight. No wet outs. The fit is a bit boxy though.", sentiment: "Positive" },
+            { brand: "Norrøna", role: "Expedition Leader", text: "Long cut is great for weather protection, but it is heavy.", sentiment: "Neutral" }
+        ];
+
+        // --- NAVIGATION ---
+        function navigate(viewId) {
+            // Update UI
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(viewId).classList.remove('hidden');
+            
+            // Update Buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active', 'text-orange-600'));
+            const activeBtns = document.querySelectorAll(`button[onclick="navigate('${viewId}')"]`);
+            activeBtns.forEach(btn => btn.classList.add('active', 'text-orange-600'));
+
+            // Re-render charts if hidden (Chart.js canvas resizing fix)
+            if (viewId === 'dashboard') renderScatterChart();
+            if (viewId === 'comparison') renderLandscapeChart();
+            if (viewId === 'field-survey') renderRadarChart();
+            
+            // Mobile menu close
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // --- RENDER FUNCTIONS ---
+        
+        function renderProductList() {
+            const container = document.getElementById('product-list-container');
+            container.innerHTML = products.map(p => `
+                <div class="card p-3 rounded-lg border border-slate-100 flex justify-between items-center bg-slate-50 hover:bg-white">
+                    <div>
+                        <div class="font-bold text-slate-800 text-sm">${p.brand} ${p.model}</div>
+                        <div class="text-xs text-slate-500">${p.denier}D Gore-Tex Pro • ${p.weight}g</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-bold text-slate-900">$${p.price}</div>
+                        <div class="text-xs font-semibold ${p.rating >= 9.0 ? 'text-green-600' : 'text-orange-500'}">★ ${p.rating}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderFeedbackTable() {
+            const container = document.getElementById('feedback-table');
+            container.innerHTML = feedbackData.map(f => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">${f.brand}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">${f.role}</td>
+                    <td class="px-6 py-4 text-sm text-slate-600 italic">"${f.text}"</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            ${f.sentiment === 'Positive' ? 'bg-green-100 text-green-800' : 
+                              f.sentiment === 'Mixed' ? 'bg-yellow-100 text-yellow-800' : 'bg-slate-100 text-slate-800'}">
+                            ${f.sentiment}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // --- CHARTS ---
+        let scatterChartInstance = null;
+        let landscapeChartInstance = null;
+        let radarChartInstance = null;
+
+        function renderScatterChart() {
+            const ctx = document.getElementById('scatterChart').getContext('2d');
+            if (scatterChartInstance) scatterChartInstance.destroy();
+
+            scatterChartInstance = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Market Leaders',
+                            data: products.filter(p => p.brand !== 'Куртка').map(p => ({ x: p.price, y: p.rating, r: p.weight/50, product: p })),
+                            backgroundColor: 'rgba(51, 65, 85, 0.6)',
+                            borderColor: 'rgba(51, 65, 85, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Куртка (Challenger)',
+                            data: products.filter(p => p.brand === 'Куртка').map(p => ({ x: p.price, y: p.rating, r: p.weight/40, product: p })), // Slightly larger radius for emphasis
+                            backgroundColor: 'rgba(249, 115, 22, 0.8)',
+                            borderColor: 'rgba(249, 115, 22, 1)',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => {
+                                    const p = ctx.raw.product;
+                                    return `${p.brand} ${p.model}: $${p.price}, Rating: ${p.rating}`;
+                                }
+                            }
+                        },
+                        legend: { position: 'bottom' },
+                        title: { display: true, text: 'Price vs. Rating (Bubble size = Weight)' }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Price (USD)' }, min: 300, max: 1000 },
+                        y: { title: { display: true, text: 'Expert Rating (1-10)' }, min: 7, max: 10 }
+                    }
+                }
+            });
+        }
+
+        function renderLandscapeChart() {
+            const ctx = document.getElementById('landscapeChart').getContext('2d');
+            if (landscapeChartInstance) landscapeChartInstance.destroy();
+
+            // Mapping: Denier (Durability) vs Weight (Penalty)
+            landscapeChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: products.map(p => p.model),
+                    datasets: [
+                        {
+                            label: 'Fabric Denier (Durability)',
+                            data: products.map(p => p.denier),
+                            backgroundColor: 'rgba(37, 99, 235, 0.7)',
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Weight (g)',
+                            data: products.map(p => p.weight),
+                            backgroundColor: 'rgba(148, 163, 184, 0.5)',
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { type: 'linear', position: 'left', title: { display: true, text: 'Denier (Face Fabric)' } },
+                        y1: { type: 'linear', position: 'right', title: { display: true, text: 'Total Weight (g)' }, grid: { drawOnChartArea: false } }
+                    }
+                }
+            });
+        }
+
+        function renderRadarChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            if (radarChartInstance) radarChartInstance.destroy();
+
+            radarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Waterproofness', 'Breathability', 'Durability', 'Fit/Articulation', 'Features', 'Value'],
+                    datasets: [{
+                        label: "Arc'teryx Alpha SV",
+                        data: [10, 8, 10, 10, 9, 6],
+                        fill: true,
+                        backgroundColor: 'rgba(51, 65, 85, 0.2)',
+                        borderColor: 'rgb(51, 65, 85)',
+                        pointBackgroundColor: 'rgb(51, 65, 85)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(51, 65, 85)'
+                    }, {
+                        label: 'Куртка Expedition Pro',
+                        data: [9.5, 7.5, 9, 7, 8.5, 10],
+                        fill: true,
+                        backgroundColor: 'rgba(249, 115, 22, 0.2)',
+                        borderColor: 'rgb(249, 115, 22)',
+                        pointBackgroundColor: 'rgb(249, 115, 22)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(249, 115, 22)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: { line: { borderWidth: 3 } },
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateLandscape(filter) {
+            let filteredProducts = products;
+            if (filter === 'premium') filteredProducts = products.filter(p => p.type === 'premium');
+            if (filter === 'challenger') filteredProducts = products.filter(p => p.type === 'challenger');
+            
+            landscapeChartInstance.data.labels = filteredProducts.map(p => p.model);
+            landscapeChartInstance.data.datasets[0].data = filteredProducts.map(p => p.denier);
+            landscapeChartInstance.data.datasets[1].data = filteredProducts.map(p => p.weight);
+            landscapeChartInstance.update();
+        }
+
+        // --- INIT ---
+        window.addEventListener('load', () => {
+            renderProductList();
+            renderScatterChart();
+            renderFeedbackTable();
+            // Pre-load logic for charts hidden by tabs
+            // Initial view is dashboard, so scatter is rendered.
+        });
+
+    </script>
+</body>
+</html>
