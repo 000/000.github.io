@@ -3,7 +3,7 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║  RECALC TOOLKIT: DSL1 ↔ DSL2 ↔ PAYMENT_SCHEDULE RECONCILIATION ENGINE       ║
 ║  Codename: "NEXUS GRILL SUMMIT CONVERGENCE"                                  ║
-║  Version: 3.0.0                                                              ║
+║  Version: 4.0.0                                                              ║
 ║                                                                              ║
 ║  Purpose: Multi-Source Reconciliation with GROUP_FLAG Filtering              ║
 ║                                                                              ║
@@ -19,6 +19,15 @@
 ║        - ACC_NO ↔ เลขบัญชี (Join Key)                                        ║
 ║        - DUE_PAYMENT_DATE ↔ วันที่เริ่มชำระหนี้                                ║
 ║        - CAPITAL_REMAIN ↔ ยอดหนี้เงินกู้                                      ║
+║                                                                              ║
+║    [C] DSL1 vs DSL2 vs Payment Schedule (Three-Way):                         ║
+║        - ACC_NO ↔ เลขบัญชี (Join Key, WHERE GROUP_FLAG = 1)                  ║
+║        - FIRST_PAYMENT_DATE ↔ วันที่เริ่มชำระหนี้ ↔ DUE_PAYMENT_DATE          ║
+║        - PRE_BALANCE ↔ EXACT_PRE_BALANCE ↔ ยอดหนี้เงินกู้ ↔ CAPITAL_REMAIN   ║
+║                                                                              ║
+║  DSL2 Pre-Processing:                                                        ║
+║    - Deduplication: Remove exact duplicates (same ACC, DATE, BALANCE)        ║
+║    - Conflict Detection: Flag same ACC with different DATE/BALANCE           ║
 ║                                                                              ║
 ║  Compliance: Nexus Protocol v10.0 / DoD DevSecOps Reference Design          ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
@@ -245,7 +254,7 @@ def get_system_stats() -> Dict[str, str]:
     return stats
 
 
-def render_header_panel(title: str, version: str = "3.0.0"):
+def render_header_panel(title: str, version: str = "4.0.0"):
     """Render the Nexus-style header panel."""
     if not console:
         print(f"\n{'='*70}\n{title} v{version}\n{'='*70}\n")
@@ -574,6 +583,175 @@ def get_file_hash(file_path: Path, chunk_size: int = 8192) -> str:
         for chunk in iter(lambda: f.read(chunk_size), b""):
             sha256.update(chunk)
     return sha256.hexdigest()[:16]
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# DSL2 PRE-PROCESSING: DEDUPLICATION & CONFLICT DETECTION
+# ══════════════════════════════════════════════════════════════════════════════
+
+class DSL2PreProcessingResult:
+    """Container for DSL2 pre-processing results."""
+    
+    def __init__(self):
+        self.original_rows: int = 0
+        self.deduplicated_rows: int = 0
+        self.duplicates_removed: int = 0
+        self.conflict_accounts: int = 0
+        self.conflict_records: List[Dict] = []
+        self.deduplicated_data: pl.DataFrame = None
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "original_rows": self.original_rows,
+            "deduplicated_rows": self.deduplicated_rows,
+            "duplicates_removed": self.duplicates_removed,
+            "conflict_accounts": self.conflict_accounts,
+            "conflict_records_count": len(self.conflict_records),
+        }
+
+
+def preprocess_dsl2_with_source_tracking(folder: Path, progress_callback=None) -> Tuple[pl.DataFrame, DSL2PreProcessingResult]:
+    """
+    Load DSL2 files with source file tracking, then perform:
+    1. Deduplication: Remove exact duplicates (same เลขบัญชี, วันที่เริ่มชำระหนี้, ยอดหนี้เงินกู้)
+    2. Conflict Detection: Identify same เลขบัญชี with different values
+    
+    Returns:
+        Tuple of (deduplicated DataFrame, PreProcessingResult)
+    """
+    start_timer("preprocess_dsl2")
+    log_flux("Starting DSL2 pre-processing with source tracking...")
+    
+    result = DSL2PreProcessingResult()
+    
+    files = discover_files(folder)
+    if not files:
+        raise FileNotFoundError(f"No data files found in {folder}")
+    
+    log_recon(f"Discovered {len(files)} file(s) in DSL2 folder")
+    
+    required_cols = ["เลขบัญชี", "วันที่เริ่มชำระหนี้", "ยอดหนี้เงินกู้"]
+    
+    all_records = []
+    
+    for file_path in files:
+        file_start = time.time()
+        encoding = detect_encoding(file_path)
+        log_flux(f"Loading {file_path.name} with encoding: {encoding}")
+        
+        header_row_idx = detect_header_row_index(file_path, encoding, required_cols)
+        
+        try:
+            df = pd.read_csv(
+                file_path,
+                encoding=encoding,
+                skiprows=header_row_idx,
+                dtype={"เลขบัญชี": str},
+                low_memory=False,
+                on_bad_lines="skip"
+            )
+            
+            available_cols = df.columns.tolist()
+            
+            # Map columns
+            col_mapping = {}
+            for req_col in required_cols:
+                if req_col in available_cols:
+                    col_mapping[req_col] = req_col
+                else:
+                    for avail_col in available_cols:
+                        if req_col in avail_col or avail_col in req_col:
+                            col_mapping[req_col] = avail_col
+                            break
+            
+            if "เลขบัญชี" not in col_mapping:
+                log_warn(f"Column เลขบัญชี not found in {file_path.name}")
+                continue
+            
+            # Select and rename columns
+            df_selected = df[[col_mapping[c] for c in required_cols if c in col_mapping]].copy()
+            df_selected.columns = [c for c in required_cols if c in col_mapping]
+            
+            # Add source file column
+            df_selected["_SOURCE_FILE"] = file_path.name
+            
+            # Ensure ACC_NO is string
+            df_selected["เลขบัญชี"] = df_selected["เลขบัญชี"].astype(str).str.strip()
+            
+            all_records.append(df_selected)
+            
+            file_elapsed = time.time() - file_start
+            log_secure(f"Loaded {file_path.name} ({len(df_selected):,} rows) [{file_elapsed:.2f}s]")
+            
+            if progress_callback:
+                progress_callback()
+                
+        except Exception as e:
+            log_warn(f"Failed to load {file_path.name}: {e}")
+            continue
+    
+    if not all_records:
+        raise ValueError("No valid DSL2 files could be loaded")
+    
+    # Combine all records
+    combined_df = pd.concat(all_records, ignore_index=True)
+    result.original_rows = len(combined_df)
+    log_info(f"Combined DSL2 data: {result.original_rows:,} rows")
+    
+    # Step 1: Identify conflicts (same เลขบัญชี with different values)
+    start_timer("detect_conflicts")
+    log_flux("Detecting conflicts (same ACC with different DATE/BALANCE)...")
+    
+    # Group by เลขบัญชี and check for variations
+    grouped = combined_df.groupby("เลขบัญชี")
+    
+    conflict_records = []
+    conflict_acc_nos = set()
+    
+    for acc_no, group in grouped:
+        if len(group) > 1:
+            # Check if there are different values for date or balance
+            unique_combinations = group[["วันที่เริ่มชำระหนี้", "ยอดหนี้เงินกู้"]].drop_duplicates()
+            
+            if len(unique_combinations) > 1:
+                # This account has conflicts
+                conflict_acc_nos.add(acc_no)
+                
+                for _, row in group.iterrows():
+                    conflict_records.append({
+                        "เลขบัญชี": acc_no,
+                        "วันที่เริ่มชำระหนี้": row.get("วันที่เริ่มชำระหนี้", ""),
+                        "ยอดหนี้เงินกู้": row.get("ยอดหนี้เงินกู้", ""),
+                        "_SOURCE_FILE": row.get("_SOURCE_FILE", ""),
+                    })
+    
+    result.conflict_accounts = len(conflict_acc_nos)
+    result.conflict_records = conflict_records
+    
+    log_info(f"Detected {result.conflict_accounts:,} accounts with conflicts ({len(conflict_records):,} records)", "detect_conflicts")
+    
+    # Step 2: Deduplicate exact duplicates
+    start_timer("deduplicate")
+    log_flux("Removing exact duplicates...")
+    
+    # Keep first occurrence of each unique combination
+    dedup_cols = ["เลขบัญชี", "วันที่เริ่มชำระหนี้", "ยอดหนี้เงินกู้"]
+    deduplicated_df = combined_df.drop_duplicates(subset=dedup_cols, keep="first")
+    
+    result.deduplicated_rows = len(deduplicated_df)
+    result.duplicates_removed = result.original_rows - result.deduplicated_rows
+    
+    log_secure(f"Deduplication complete: {result.duplicates_removed:,} duplicates removed", "deduplicate")
+    log_info(f"Deduplicated DSL2 data: {result.deduplicated_rows:,} rows")
+    
+    # Convert to Polars for subsequent processing
+    # Remove source file column for main processing (keep it for reference)
+    deduplicated_for_processing = deduplicated_df.drop(columns=["_SOURCE_FILE"])
+    result.deduplicated_data = pl.from_pandas(deduplicated_for_processing)
+    
+    log_secure(f"DSL2 pre-processing complete", "preprocess_dsl2")
+    
+    return result.deduplicated_data, result
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1201,21 +1379,93 @@ class PaymentScheduleResult:
         }
 
 
+class ThreeWayReconciliationResult:
+    """Container for DSL1 vs DSL2 vs Payment Schedule three-way reconciliation results."""
+    
+    def __init__(self):
+        self.total_dsl1_filtered_rows: int = 0
+        self.total_dsl2_rows: int = 0
+        self.total_ps_rows: int = 0
+        self.matched_all_three: int = 0
+        self.matched_dsl1_dsl2_only: int = 0
+        self.matched_dsl1_ps_only: int = 0
+        self.matched_dsl2_ps_only: int = 0
+        self.unmatched_any: int = 0
+        
+        # Perfect matches (all dates and balances match across all three)
+        self.perfect_matches: int = 0
+        self.perfect_match_records: List[Dict] = []
+        
+        # Discrepancy counts
+        self.date_mismatches: int = 0
+        self.balance_mismatches: int = 0
+        self.both_mismatches: int = 0
+        
+        # Detailed records
+        self.discrepancy_records: List[Dict] = []
+        
+        # Timing
+        self.start_time: float = 0
+        self.end_time: float = 0
+    
+    @property
+    def match_rate(self) -> float:
+        total = max(self.total_dsl1_filtered_rows, self.total_dsl2_rows, self.total_ps_rows)
+        if total == 0:
+            return 0.0
+        return (self.matched_all_three / total) * 100
+    
+    @property
+    def perfect_match_rate(self) -> float:
+        if self.matched_all_three == 0:
+            return 0.0
+        return (self.perfect_matches / self.matched_all_three) * 100
+    
+    @property
+    def duration_seconds(self) -> float:
+        return self.end_time - self.start_time
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "total_dsl1_filtered_rows": self.total_dsl1_filtered_rows,
+            "total_dsl2_rows": self.total_dsl2_rows,
+            "total_ps_rows": self.total_ps_rows,
+            "matched_all_three": self.matched_all_three,
+            "matched_dsl1_dsl2_only": self.matched_dsl1_dsl2_only,
+            "matched_dsl1_ps_only": self.matched_dsl1_ps_only,
+            "matched_dsl2_ps_only": self.matched_dsl2_ps_only,
+            "unmatched_any": self.unmatched_any,
+            "perfect_matches": self.perfect_matches,
+            "date_mismatches": self.date_mismatches,
+            "balance_mismatches": self.balance_mismatches,
+            "both_mismatches": self.both_mismatches,
+            "match_rate_pct": round(self.match_rate, 2),
+            "perfect_match_rate_pct": round(self.perfect_match_rate, 2),
+            "duration_seconds": round(self.duration_seconds, 2),
+            "perfect_match_count": len(self.perfect_match_records),
+            "discrepancy_count": len(self.discrepancy_records),
+        }
+
+
 class CombinedReconciliationResult:
     """Combined container for all reconciliation results."""
     
     def __init__(self):
         self.dsl1_vs_dsl2: ReconciliationResult = ReconciliationResult()
         self.ps_vs_dsl2: PaymentScheduleResult = PaymentScheduleResult()
+        self.three_way: ThreeWayReconciliationResult = ThreeWayReconciliationResult()
+        self.dsl2_preprocessing: DSL2PreProcessingResult = DSL2PreProcessingResult()
         self.generated_at: str = datetime.now().isoformat()
-        self.version: str = "3.0.0"
+        self.version: str = "4.0.0"
     
     def to_dict(self) -> Dict[str, Any]:
         return {
             "version": self.version,
             "generated_at": self.generated_at,
+            "dsl2_preprocessing": self.dsl2_preprocessing.to_dict(),
             "dsl1_vs_dsl2": self.dsl1_vs_dsl2.to_dict(),
             "ps_vs_dsl2": self.ps_vs_dsl2.to_dict(),
+            "three_way": self.three_way.to_dict(),
         }
 
 
@@ -1694,6 +1944,235 @@ def reconcile_ps_vs_dsl2(
     return result
 
 
+def reconcile_three_way(
+    dsl1_data: pl.DataFrame,
+    dsl2_data: pl.DataFrame,
+    ps_data: pl.DataFrame,
+    balance_tolerance: float = 0.01,
+    max_records: int = 100000,
+    progress: Progress = None,
+    task_id = None
+) -> ThreeWayReconciliationResult:
+    """
+    Perform three-way reconciliation between DSL1, DSL2, and Payment Schedule.
+    
+    Comparison Logic:
+    - Join on ACC_NO = เลขบัญชี (WHERE GROUP_FLAG = 1)
+    - Compare FIRST_PAYMENT_DATE ↔ วันที่เริ่มชำระหนี้ ↔ DUE_PAYMENT_DATE
+    - Compare PRE_BALANCE ↔ EXACT_PRE_BALANCE ↔ ยอดหนี้เงินกู้ ↔ CAPITAL_REMAIN
+    
+    Perfect Match: All dates equal AND all balances equal across all three sources.
+    """
+    result = ThreeWayReconciliationResult()
+    result.start_time = time.time()
+    
+    start_timer("reconcile_three_way")
+    log_flux("Starting Three-Way Reconciliation (DSL1 ↔ DSL2 ↔ Payment Schedule)...")
+    
+    total_steps = 10
+    current_step = 0
+    
+    def update_progress():
+        nonlocal current_step
+        current_step += 1
+        if progress and task_id:
+            progress.update(task_id, completed=int(current_step / total_steps * 100))
+    
+    # Filter DSL1 by GROUP_FLAG = 1
+    log_flux("Filtering DSL1 by GROUP_FLAG = 1...")
+    
+    if "GROUP_FLAG" in dsl1_data.columns:
+        dsl1_filtered = dsl1_data.filter(
+            (pl.col("GROUP_FLAG").cast(pl.Int64, strict=False) == 1) |
+            (pl.col("GROUP_FLAG").cast(pl.Utf8) == "1")
+        )
+    else:
+        dsl1_filtered = dsl1_data
+    
+    result.total_dsl1_filtered_rows = len(dsl1_filtered)
+    result.total_dsl2_rows = len(dsl2_data)
+    result.total_ps_rows = len(ps_data)
+    
+    log_info(f"DSL1 filtered rows: {result.total_dsl1_filtered_rows:,}")
+    log_info(f"DSL2 rows: {result.total_dsl2_rows:,}")
+    log_info(f"Payment Schedule rows: {result.total_ps_rows:,}")
+    update_progress()
+    
+    # Normalize account numbers
+    log_flux("Normalizing account numbers for three-way join...")
+    
+    dsl1_normalized = dsl1_filtered.with_columns([
+        pl.col("ACC_NO").str.strip_chars().str.replace_all(r"^0+", "").alias("ACC_NO_NORM")
+    ])
+    
+    dsl2_normalized = dsl2_data.with_columns([
+        pl.col("เลขบัญชี").str.strip_chars().str.replace_all(r"^0+", "").alias("ACC_NO_NORM")
+    ])
+    
+    ps_normalized = ps_data.with_columns([
+        pl.col("ACC_NO").str.strip_chars().str.replace_all(r"^0+", "").alias("ACC_NO_NORM")
+    ])
+    
+    update_progress()
+    
+    # Perform three-way join
+    log_flux("Performing three-way join...")
+    
+    # First join DSL1 with DSL2
+    joined_dsl1_dsl2 = dsl1_normalized.join(
+        dsl2_normalized,
+        on="ACC_NO_NORM",
+        how="inner",
+        suffix="_dsl2"
+    )
+    
+    # Then join with Payment Schedule
+    joined_all = joined_dsl1_dsl2.join(
+        ps_normalized,
+        on="ACC_NO_NORM",
+        how="inner",
+        suffix="_ps"
+    )
+    
+    result.matched_all_three = len(joined_all)
+    log_info(f"Records matched in all three sources: {result.matched_all_three:,}")
+    update_progress()
+    
+    if result.matched_all_three == 0:
+        log_warn("No records found matching in all three sources!")
+        result.end_time = time.time()
+        return result
+    
+    # Convert to pandas for date parsing
+    log_flux("Parsing dates and balances...")
+    
+    joined_pd = joined_all.to_pandas()
+    update_progress()
+    
+    # Parse all dates
+    joined_pd["DATE_DSL1"] = joined_pd["FIRST_PAYMENT_DATE"].apply(parse_date_dsl1)
+    joined_pd["DATE_DSL2"] = joined_pd["วันที่เริ่มชำระหนี้"].apply(parse_date_dsl2_buddhist)
+    joined_pd["DATE_PS"] = joined_pd["DUE_PAYMENT_DATE"].apply(parse_date_payment_schedule)
+    
+    update_progress()
+    
+    # Parse all balances
+    joined_pd["BAL_DSL1_PRE"] = joined_pd["PRE_BALANCE"].apply(safe_float)
+    
+    if "EXACT_PRE_BALANCE" in joined_pd.columns:
+        joined_pd["BAL_DSL1_EXACT"] = joined_pd["EXACT_PRE_BALANCE"].apply(safe_float)
+    else:
+        joined_pd["BAL_DSL1_EXACT"] = joined_pd["BAL_DSL1_PRE"]
+    
+    joined_pd["BAL_DSL2"] = joined_pd["ยอดหนี้เงินกู้"].apply(safe_float)
+    joined_pd["BAL_PS"] = joined_pd["CAPITAL_REMAIN"].apply(safe_float)
+    
+    update_progress()
+    
+    # Calculate date matches
+    log_flux("Calculating three-way matches...")
+    
+    # Valid date check
+    def is_valid_date(dt):
+        if pd.isna(dt):
+            return False
+        try:
+            year = dt.year if hasattr(dt, 'year') else pd.Timestamp(dt).year
+            return 1900 <= year <= 2100
+        except:
+            return False
+    
+    valid_dates_mask = (
+        joined_pd["DATE_DSL1"].apply(is_valid_date) &
+        joined_pd["DATE_DSL2"].apply(is_valid_date) &
+        joined_pd["DATE_PS"].apply(is_valid_date)
+    )
+    
+    # Date equality check (all three dates must match)
+    joined_pd["ALL_DATES_MATCH"] = False
+    joined_pd.loc[valid_dates_mask, "ALL_DATES_MATCH"] = (
+        (joined_pd.loc[valid_dates_mask, "DATE_DSL1"] == joined_pd.loc[valid_dates_mask, "DATE_DSL2"]) &
+        (joined_pd.loc[valid_dates_mask, "DATE_DSL2"] == joined_pd.loc[valid_dates_mask, "DATE_PS"])
+    )
+    
+    # Balance equality check (all four balance fields must match within tolerance)
+    # PRE_BALANCE ↔ EXACT_PRE_BALANCE ↔ ยอดหนี้เงินกู้ ↔ CAPITAL_REMAIN
+    joined_pd["BAL_PRE_EXACT_MATCH"] = (joined_pd["BAL_DSL1_PRE"] - joined_pd["BAL_DSL1_EXACT"]).abs() <= balance_tolerance
+    joined_pd["BAL_EXACT_DSL2_MATCH"] = (joined_pd["BAL_DSL1_EXACT"] - joined_pd["BAL_DSL2"]).abs() <= balance_tolerance
+    joined_pd["BAL_DSL2_PS_MATCH"] = (joined_pd["BAL_DSL2"] - joined_pd["BAL_PS"]).abs() <= balance_tolerance
+    
+    joined_pd["ALL_BALANCES_MATCH"] = (
+        joined_pd["BAL_PRE_EXACT_MATCH"] &
+        joined_pd["BAL_EXACT_DSL2_MATCH"] &
+        joined_pd["BAL_DSL2_PS_MATCH"]
+    )
+    
+    # Perfect match: all dates AND all balances match
+    joined_pd["PERFECT_MATCH"] = joined_pd["ALL_DATES_MATCH"] & joined_pd["ALL_BALANCES_MATCH"]
+    
+    update_progress()
+    
+    # Count results
+    result.perfect_matches = int(joined_pd["PERFECT_MATCH"].sum())
+    result.date_mismatches = int((~joined_pd["ALL_DATES_MATCH"] & joined_pd["ALL_BALANCES_MATCH"]).sum())
+    result.balance_mismatches = int((joined_pd["ALL_DATES_MATCH"] & ~joined_pd["ALL_BALANCES_MATCH"]).sum())
+    result.both_mismatches = int((~joined_pd["ALL_DATES_MATCH"] & ~joined_pd["ALL_BALANCES_MATCH"]).sum())
+    
+    log_info(f"Perfect matches (all dates & balances equal): {result.perfect_matches:,}")
+    log_info(f"Date mismatches only: {result.date_mismatches:,}")
+    log_info(f"Balance mismatches only: {result.balance_mismatches:,}")
+    log_info(f"Both mismatched: {result.both_mismatches:,}")
+    
+    update_progress()
+    
+    # Collect perfect match records
+    log_flux(f"Collecting perfect match records (max {max_records:,})...")
+    
+    perfect_rows = joined_pd[joined_pd["PERFECT_MATCH"]].head(max_records)
+    
+    for _, row in perfect_rows.iterrows():
+        record = {
+            "ACC_NO": str(row.get("ACC_NO", "")),
+            "DATE_DSL1": format_date_iso(row.get("DATE_DSL1", "")),
+            "DATE_DSL2": str(row.get("วันที่เริ่มชำระหนี้", "")),
+            "DATE_PS": format_date_iso(row.get("DATE_PS", "")),
+            "BAL_DSL1_PRE": float(row.get("BAL_DSL1_PRE", 0)),
+            "BAL_DSL1_EXACT": float(row.get("BAL_DSL1_EXACT", 0)),
+            "BAL_DSL2": float(row.get("BAL_DSL2", 0)),
+            "BAL_PS": float(row.get("BAL_PS", 0)),
+        }
+        result.perfect_match_records.append(record)
+    
+    # Collect discrepancy records
+    discrepancy_rows = joined_pd[~joined_pd["PERFECT_MATCH"]].head(max_records)
+    
+    for _, row in discrepancy_rows.iterrows():
+        record = {
+            "ACC_NO": str(row.get("ACC_NO", "")),
+            "DATE_DSL1": format_date_iso(row.get("DATE_DSL1", "")),
+            "DATE_DSL2": str(row.get("วันที่เริ่มชำระหนี้", "")),
+            "DATE_PS": format_date_iso(row.get("DATE_PS", "")),
+            "ALL_DATES_MATCH": bool(row.get("ALL_DATES_MATCH", False)),
+            "BAL_DSL1_PRE": float(row.get("BAL_DSL1_PRE", 0)),
+            "BAL_DSL1_EXACT": float(row.get("BAL_DSL1_EXACT", 0)),
+            "BAL_DSL2": float(row.get("BAL_DSL2", 0)),
+            "BAL_PS": float(row.get("BAL_PS", 0)),
+            "ALL_BALANCES_MATCH": bool(row.get("ALL_BALANCES_MATCH", False)),
+        }
+        result.discrepancy_records.append(record)
+    
+    log_info(f"Collected {len(result.perfect_match_records):,} perfect match records")
+    log_info(f"Collected {len(result.discrepancy_records):,} discrepancy records")
+    
+    update_progress()
+    
+    result.end_time = time.time()
+    
+    log_secure(f"Three-Way Reconciliation complete", "reconcile_three_way")
+    
+    return result
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # NEXUS v10.0 ARTIFACT GENERATOR
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1721,6 +2200,7 @@ def generate_nexus_artifact(
     - Native SVG Icons (NO FontAwesome)
     - Titanium-Void Aesthetics
     - Airlock Data Injection (Base64 encoded)
+    - Radar chart WITHOUT velocity metric
     """
     start_timer("generate_html")
     log_write("Generating Nexus v10.0 Zenith Artifact...")
@@ -1731,14 +2211,15 @@ def generate_nexus_artifact(
     # Prepare comprehensive payload
     dsl1_result = combined_result.dsl1_vs_dsl2
     ps_result = combined_result.ps_vs_dsl2
+    three_way_result = combined_result.three_way
+    dsl2_preprocess = combined_result.dsl2_preprocessing
     
-    # Calculate quality metrics for radar chart
+    # Calculate quality metrics for radar chart (WITHOUT velocity)
     quality_metrics = {
         "data_integrity": min(100, dsl1_result.accuracy_rate + 5),
         "match_coverage": dsl1_result.match_rate,
         "date_accuracy": max(0, 100 - (dsl1_result.date_mismatches / max(dsl1_result.matched_rows, 1) * 100)),
         "balance_accuracy": max(0, 100 - (dsl1_result.balance_mismatches / max(dsl1_result.matched_rows, 1) * 100)),
-        "processing_velocity": min(100, (dsl1_result.total_dsl1_rows + dsl1_result.total_dsl2_rows) / max(dsl1_result.duration_seconds, 1) / 10000),
     }
     
     # Prepare scatter plot data (balance errors vs date differences)
@@ -1794,8 +2275,10 @@ def generate_nexus_artifact(
         "version": combined_result.version,
         "generated_at": combined_result.generated_at,
         "stats": {
+            "dsl2_preprocessing": dsl2_preprocess.to_dict(),
             "dsl1_vs_dsl2": dsl1_result.to_dict(),
             "ps_vs_dsl2": ps_result.to_dict(),
+            "three_way": three_way_result.to_dict(),
             "total_rows": dsl1_result.total_dsl1_rows + dsl1_result.total_dsl2_rows + ps_result.total_ps_rows,
             "error_count": len(dsl1_result.error_records) + len(ps_result.error_records),
         },
@@ -1803,15 +2286,21 @@ def generate_nexus_artifact(
             "dsl1_vs_dsl2": dsl1_result.error_records[:1000],
             "ps_vs_dsl2": ps_result.error_records[:1000],
             "debt_separation": dsl1_result.debt_separation_records[:500],
+            "dsl2_conflicts": dsl2_preprocess.conflict_records[:500],
+            "three_way_discrepancies": three_way_result.discrepancy_records[:500],
+        },
+        "perfect_matches": {
+            "three_way": three_way_result.perfect_match_records[:1000],
         },
         "viz": {
+            # Radar chart with 4 metrics (no velocity)
             "radar": [
                 round(quality_metrics["data_integrity"], 1),
                 round(quality_metrics["match_coverage"], 1),
                 round(quality_metrics["date_accuracy"], 1),
                 round(quality_metrics["balance_accuracy"], 1),
-                round(quality_metrics["processing_velocity"], 1),
             ],
+            "radar_labels": ["Data Integrity", "Match Coverage", "Date Accuracy", "Balance Accuracy"],
             "scatter": scatter_data,
             "histogram_dsl1": histogram_data,
             "histogram_ps": ps_histogram_data,
@@ -1826,6 +2315,12 @@ def generate_nexus_artifact(
                 "date_only": ps_result.date_mismatches,
                 "balance_only": ps_result.balance_mismatches,
                 "both": ps_result.both_mismatches,
+            },
+            "pie_three_way": {
+                "perfect": three_way_result.perfect_matches,
+                "date_only": three_way_result.date_mismatches,
+                "balance_only": three_way_result.balance_mismatches,
+                "both": three_way_result.both_mismatches,
             },
         },
         "system": get_system_stats(),
@@ -1844,8 +2339,30 @@ def generate_nexus_artifact(
     
     log_write("Building HTML content...")
     
-    # Generate the Nexus v10.0 HTML
-    html_content = f'''<!DOCTYPE html>
+    # Generate the Nexus v10.0 HTML (abbreviated for space - full HTML would be here)
+    # The key change is in the radar chart configuration
+    html_content = generate_full_html_content(b64_data)
+    
+    if progress and task_id:
+        progress.update(task_id, completed=90)
+    
+    # Write artifact
+    log_write("Writing HTML file to disk...")
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(html_content)
+    
+    if progress and task_id:
+        progress.update(task_id, completed=100)
+    
+    log_secure(f"Nexus v10.0 Artifact generated: {output_path}", "generate_html")
+
+
+def generate_full_html_content(b64_data: str) -> str:
+    """Generate the complete HTML content for the Nexus artifact."""
+    # This is a helper function to keep the main function cleaner
+    # The full HTML template is included here
+    
+    return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1916,6 +2433,7 @@ def generate_nexus_artifact(
             .grid-cols-3 {{ grid-template-columns: repeat(3, 1fr); }}
             .grid-cols-4 {{ grid-template-columns: repeat(4, 1fr); }}
             .grid-cols-5 {{ grid-template-columns: repeat(5, 1fr); }}
+            .grid-cols-6 {{ grid-template-columns: repeat(6, 1fr); }}
             .flex {{ display: flex; }}
             .flex-col {{ flex-direction: column; }}
             .flex-wrap {{ flex-wrap: wrap; }}
@@ -1962,11 +2480,11 @@ def generate_nexus_artifact(
             .top-4 {{ top: 1rem; }}
             
             @media (max-width: 1024px) {{
-                .grid-cols-4, .grid-cols-5 {{ grid-template-columns: repeat(2, 1fr); }}
+                .grid-cols-4, .grid-cols-5, .grid-cols-6 {{ grid-template-columns: repeat(2, 1fr); }}
                 .grid-cols-3 {{ grid-template-columns: 1fr; }}
             }}
             @media (max-width: 768px) {{
-                .grid-cols-4, .grid-cols-5, .grid-cols-3, .grid-cols-2 {{ grid-template-columns: 1fr; }}
+                .grid-cols-4, .grid-cols-5, .grid-cols-6, .grid-cols-3, .grid-cols-2 {{ grid-template-columns: 1fr; }}
             }}
         }}
 
@@ -2009,12 +2527,18 @@ def generate_nexus_artifact(
             .stat-card.warning::before {{
                 background: linear-gradient(90deg, var(--warning), var(--peach-fuzz));
             }}
+            .stat-card.violet::before {{
+                background: linear-gradient(90deg, var(--violet), var(--neon-core));
+            }}
             
             .stat-value {{
                 font-size: 2.5rem;
                 font-weight: 700;
                 font-family: 'JetBrains Mono', monospace;
                 line-height: 1.2;
+            }}
+            .stat-value.small {{
+                font-size: 1.8rem;
             }}
             .stat-label {{
                 font-size: 0.7rem;
@@ -2089,6 +2613,9 @@ def generate_nexus_artifact(
             }}
             .data-table tr.warning-row {{
                 border-left: 3px solid var(--warning);
+            }}
+            .data-table tr.success-row {{
+                border-left: 3px solid var(--success);
             }}
             
             /* Badges */
@@ -2180,6 +2707,7 @@ def generate_nexus_artifact(
                 gap: 0;
                 border-bottom: 1px solid var(--glass-border);
                 margin-bottom: 1.5rem;
+                flex-wrap: wrap;
             }}
             .tab-btn {{
                 padding: 1rem 1.5rem;
@@ -2309,6 +2837,7 @@ def generate_nexus_artifact(
             .text-warning {{ color: var(--warning); }}
             .text-peach {{ color: var(--peach-fuzz); }}
             .text-gold {{ color: var(--accent-gold); }}
+            .text-violet {{ color: var(--violet); }}
             .bg-void {{ background: var(--space-void); }}
             .bg-deep {{ background: var(--space-deep); }}
             .rounded {{ border-radius: 8px; }}
@@ -2383,8 +2912,8 @@ def generate_nexus_artifact(
                         NEXUS // <span class="gradient-text-gold">ZENITH</span>
                     </h1>
                     <p class="text-xs text-titanium tracking-wide">
-                        <span lang="en">DSL1 ↔ DSL2 ↔ Payment Schedule Reconciliation</span>
-                        <span lang="th">การกระทบยอด DSL1 ↔ DSL2 ↔ ตารางชำระหนี้</span>
+                        <span lang="en">DSL1 ↔ DSL2 ↔ Payment Schedule Reconciliation v4.0</span>
+                        <span lang="th">การกระทบยอด DSL1 ↔ DSL2 ↔ ตารางชำระหนี้ v4.0</span>
                     </p>
                 </div>
             </div>
@@ -2400,41 +2929,87 @@ def generate_nexus_artifact(
         <!-- Main Container -->
         <main class="container py-8">
             <!-- Summary Stats Row -->
-            <section class="grid grid-cols-5 gap-4 mb-8 reveal">
+            <section class="grid grid-cols-6 gap-4 mb-8 reveal">
                 <div class="glass-panel stat-card p-4">
                     <div class="stat-label">
                         <span lang="en">Total Records</span>
                         <span lang="th">ระเบียนทั้งหมด</span>
                     </div>
-                    <div class="stat-value text-silver" id="stat-total">--</div>
+                    <div class="stat-value small text-silver" id="stat-total">--</div>
                 </div>
                 <div class="glass-panel stat-card success p-4">
                     <div class="stat-label">
                         <span lang="en">Matched</span>
                         <span lang="th">ตรงกัน</span>
                     </div>
-                    <div class="stat-value text-success" id="stat-matched">--</div>
+                    <div class="stat-value small text-success" id="stat-matched">--</div>
                 </div>
                 <div class="glass-panel stat-card danger p-4 border-danger">
                     <div class="stat-label">
                         <span lang="en">Anomalies</span>
                         <span lang="th">ความผิดปกติ</span>
                     </div>
-                    <div class="stat-value text-danger" id="stat-errors">--</div>
+                    <div class="stat-value small text-danger" id="stat-errors">--</div>
                 </div>
                 <div class="glass-panel stat-card warning p-4 border-warning">
                     <div class="stat-label">
-                        <span lang="en">Debt Separation (แยกหนี้)</span>
-                        <span lang="th">แยกหนี้</span>
+                        <span lang="en">DSL2 Conflicts</span>
+                        <span lang="th">ข้อมูลขัดแย้ง DSL2</span>
                     </div>
-                    <div class="stat-value text-warning" id="stat-debt-sep">--</div>
+                    <div class="stat-value small text-warning" id="stat-conflicts">--</div>
+                </div>
+                <div class="glass-panel stat-card violet p-4">
+                    <div class="stat-label">
+                        <span lang="en">3-Way Perfect</span>
+                        <span lang="th">ตรงกัน 3 ทาง</span>
+                    </div>
+                    <div class="stat-value small text-violet" id="stat-three-way">--</div>
                 </div>
                 <div class="glass-panel stat-card p-4">
                     <div class="stat-label">
                         <span lang="en">Accuracy Rate</span>
                         <span lang="th">อัตราความถูกต้อง</span>
                     </div>
-                    <div class="stat-value gradient-text" id="stat-accuracy">--</div>
+                    <div class="stat-value small gradient-text" id="stat-accuracy">--</div>
+                </div>
+            </section>
+            
+            <!-- DSL2 Pre-Processing Summary -->
+            <section class="glass-panel p-6 mb-8 reveal" style="border-color: rgba(6, 182, 212, 0.3)">
+                <div class="section-header">
+                    <span class="icon" id="icon-preprocess"></span>
+                    <span lang="en">DSL2 Pre-Processing Summary</span>
+                    <span lang="th">สรุปการประมวลผลล่วงหน้า DSL2</span>
+                </div>
+                <div class="grid grid-cols-4 gap-4">
+                    <div class="p-4 rounded-lg" style="background: rgba(6, 182, 212, 0.1)">
+                        <div class="text-xs text-titanium uppercase tracking-wide mb-1">
+                            <span lang="en">Original Rows</span>
+                            <span lang="th">แถวเดิม</span>
+                        </div>
+                        <div class="text-2xl font-mono font-bold" style="color: var(--neon-accent)" id="dsl2-original">--</div>
+                    </div>
+                    <div class="p-4 rounded-lg" style="background: rgba(16, 185, 129, 0.1)">
+                        <div class="text-xs text-titanium uppercase tracking-wide mb-1">
+                            <span lang="en">After Deduplication</span>
+                            <span lang="th">หลังลบซ้ำ</span>
+                        </div>
+                        <div class="text-2xl font-mono font-bold text-success" id="dsl2-dedup">--</div>
+                    </div>
+                    <div class="p-4 rounded-lg" style="background: rgba(239, 68, 68, 0.1)">
+                        <div class="text-xs text-titanium uppercase tracking-wide mb-1">
+                            <span lang="en">Duplicates Removed</span>
+                            <span lang="th">ลบซ้ำแล้ว</span>
+                        </div>
+                        <div class="text-2xl font-mono font-bold text-danger" id="dsl2-removed">--</div>
+                    </div>
+                    <div class="p-4 rounded-lg" style="background: rgba(245, 158, 11, 0.1)">
+                        <div class="text-xs text-titanium uppercase tracking-wide mb-1">
+                            <span lang="en">Conflict Accounts</span>
+                            <span lang="th">บัญชีที่ขัดแย้ง</span>
+                        </div>
+                        <div class="text-2xl font-mono font-bold text-warning" id="dsl2-conflicts">--</div>
+                    </div>
                 </div>
             </section>
             
@@ -2446,11 +3021,19 @@ def generate_nexus_artifact(
                         <span lang="th">DSL1 เทียบ DSL2</span>
                     </button>
                     <button class="tab-btn" data-tab="ps-dsl2">
-                        <span lang="en">Payment Schedule vs DSL2</span>
-                        <span lang="th">ตารางชำระหนี้ เทียบ DSL2</span>
+                        <span lang="en">PS vs DSL2</span>
+                        <span lang="th">ตารางชำระ เทียบ DSL2</span>
+                    </button>
+                    <button class="tab-btn" data-tab="three-way">
+                        <span lang="en">Three-Way [C]</span>
+                        <span lang="th">เปรียบเทียบ 3 ทาง [C]</span>
+                    </button>
+                    <button class="tab-btn" data-tab="dsl2-conflicts">
+                        <span lang="en">DSL2 Conflicts</span>
+                        <span lang="th">ข้อมูลขัดแย้ง DSL2</span>
                     </button>
                     <button class="tab-btn" data-tab="debt-separation">
-                        <span lang="en">Debt Separation (แยกหนี้)</span>
+                        <span lang="en">Debt Separation</span>
                         <span lang="th">แยกหนี้</span>
                     </button>
                 </div>
@@ -2526,30 +3109,6 @@ def generate_nexus_artifact(
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- EXACT_PRE_BALANCE Comparison Section -->
-                    <div class="p-4 rounded-lg mb-6" style="background: rgba(255, 190, 152, 0.1); border: 1px solid rgba(255, 190, 152, 0.3)">
-                        <h4 class="font-orbitron text-sm font-bold text-peach mb-4">
-                            <span lang="en">EXACT_PRE_BALANCE Analysis</span>
-                            <span lang="th">การวิเคราะห์ EXACT_PRE_BALANCE</span>
-                        </h4>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <div class="text-xs text-titanium mb-1">
-                                    <span lang="en">EXACT_PRE_BALANCE vs ยอดหนี้เงินกู้ (DSL2) Mismatches</span>
-                                    <span lang="th">EXACT_PRE_BALANCE เทียบ ยอดหนี้เงินกู้ ไม่ตรง</span>
-                                </div>
-                                <div class="text-2xl font-mono font-bold text-peach" id="exact-vs-dsl2">--</div>
-                            </div>
-                            <div>
-                                <div class="text-xs text-titanium mb-1">
-                                    <span lang="en">EXACT_PRE_BALANCE vs PRE_BALANCE Mismatches</span>
-                                    <span lang="th">EXACT_PRE_BALANCE เทียบ PRE_BALANCE ไม่ตรง</span>
-                                </div>
-                                <div class="text-2xl font-mono font-bold text-gold" id="exact-vs-pre">--</div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 
                 <!-- Payment Schedule vs DSL2 Tab -->
@@ -2584,35 +3143,118 @@ def generate_nexus_artifact(
                             <div class="text-2xl font-mono font-bold text-danger" id="ps-accuracy">--</div>
                         </div>
                     </div>
+                </div>
+                
+                <!-- Three-Way Comparison Tab -->
+                <div class="tab-content" id="tab-three-way">
+                    <div class="p-4 rounded-lg mb-6" style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3)">
+                        <h4 class="font-orbitron text-sm font-bold text-violet mb-2">
+                            <span lang="en">Three-Way Comparison [C]: DSL1 ↔ DSL2 ↔ Payment Schedule</span>
+                            <span lang="th">การเปรียบเทียบ 3 ทาง [C]: DSL1 ↔ DSL2 ↔ ตารางชำระหนี้</span>
+                        </h4>
+                        <p class="text-sm text-titanium mb-4">
+                            <span lang="en">
+                                Records where ACC_NO matches in all three sources. Perfect matches require:
+                                FIRST_PAYMENT_DATE = วันที่เริ่มชำระหนี้ = DUE_PAYMENT_DATE AND
+                                PRE_BALANCE = EXACT_PRE_BALANCE = ยอดหนี้เงินกู้ = CAPITAL_REMAIN
+                            </span>
+                            <span lang="th">
+                                ระเบียนที่ ACC_NO ตรงกันในทั้ง 3 แหล่ง การจับคู่สมบูรณ์ต้องการ:
+                                FIRST_PAYMENT_DATE = วันที่เริ่มชำระหนี้ = DUE_PAYMENT_DATE และ
+                                PRE_BALANCE = EXACT_PRE_BALANCE = ยอดหนี้เงินกู้ = CAPITAL_REMAIN
+                            </span>
+                        </p>
+                    </div>
                     
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="p-4 rounded border">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm text-titanium">
-                                    <span lang="en">Date Mismatches</span>
-                                    <span lang="th">วันที่ไม่ตรง</span>
-                                </span>
-                                <span class="text-xl font-mono font-bold text-warning" id="ps-date-mismatch">--</span>
+                    <div class="grid grid-cols-4 gap-4 mb-6">
+                        <div class="p-4 rounded-lg" style="background: rgba(139, 92, 246, 0.1)">
+                            <div class="text-xs text-titanium uppercase tracking-wide mb-1">
+                                <span lang="en">Matched All Three</span>
+                                <span lang="th">ตรงกันทั้ง 3</span>
                             </div>
+                            <div class="text-2xl font-mono font-bold text-violet" id="three-way-matched">--</div>
                         </div>
-                        <div class="p-4 rounded border">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm text-titanium">
-                                    <span lang="en">Balance Mismatches</span>
-                                    <span lang="th">ยอดเงินไม่ตรง</span>
-                                </span>
-                                <span class="text-xl font-mono font-bold text-danger" id="ps-bal-mismatch">--</span>
+                        <div class="p-4 rounded-lg" style="background: rgba(16, 185, 129, 0.1)">
+                            <div class="text-xs text-titanium uppercase tracking-wide mb-1">
+                                <span lang="en">Perfect Matches</span>
+                                <span lang="th">ตรงกันสมบูรณ์</span>
                             </div>
+                            <div class="text-2xl font-mono font-bold text-success" id="three-way-perfect">--</div>
                         </div>
-                        <div class="p-4 rounded border">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm text-titanium">
-                                    <span lang="en">Perfect Matches</span>
-                                    <span lang="th">ตรงกันทั้งหมด</span>
-                                </span>
-                                <span class="text-xl font-mono font-bold text-success" id="ps-perfect">--</span>
+                        <div class="p-4 rounded-lg" style="background: rgba(245, 158, 11, 0.1)">
+                            <div class="text-xs text-titanium uppercase tracking-wide mb-1">
+                                <span lang="en">Date Mismatches</span>
+                                <span lang="th">วันที่ไม่ตรง</span>
                             </div>
+                            <div class="text-2xl font-mono font-bold text-warning" id="three-way-date">--</div>
                         </div>
+                        <div class="p-4 rounded-lg" style="background: rgba(239, 68, 68, 0.1)">
+                            <div class="text-xs text-titanium uppercase tracking-wide mb-1">
+                                <span lang="en">Balance Mismatches</span>
+                                <span lang="th">ยอดเงินไม่ตรง</span>
+                            </div>
+                            <div class="text-2xl font-mono font-bold text-danger" id="three-way-balance">--</div>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto max-h-500 overflow-y-auto">
+                        <table class="data-table" id="three-way-table">
+                            <thead>
+                                <tr>
+                                    <th>ACC_NO</th>
+                                    <th>DATE_DSL1</th>
+                                    <th>DATE_DSL2</th>
+                                    <th>DATE_PS</th>
+                                    <th>BAL_DSL1_PRE</th>
+                                    <th>BAL_DSL1_EXACT</th>
+                                    <th>BAL_DSL2</th>
+                                    <th>BAL_PS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="three-way-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- DSL2 Conflicts Tab -->
+                <div class="tab-content" id="tab-dsl2-conflicts">
+                    <div class="p-4 rounded-lg mb-6" style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3)">
+                        <h4 class="font-orbitron text-sm font-bold text-warning mb-2">
+                            <span lang="en">DSL2 Conflict Detection</span>
+                            <span lang="th">การตรวจจับข้อมูลขัดแย้งใน DSL2</span>
+                        </h4>
+                        <p class="text-sm text-titanium mb-4">
+                            <span lang="en">
+                                Accounts with the same เลขบัญชี but different วันที่เริ่มชำระหนี้ and/or ยอดหนี้เงินกู้ values across DSL2 files.
+                                These require manual investigation.
+                            </span>
+                            <span lang="th">
+                                บัญชีที่มี เลขบัญชี เดียวกัน แต่มี วันที่เริ่มชำระหนี้ และ/หรือ ยอดหนี้เงินกู้ ต่างกันในไฟล์ DSL2
+                                ต้องตรวจสอบด้วยตนเอง
+                            </span>
+                        </p>
+                        <div class="text-3xl font-mono font-bold text-warning" id="conflict-count">--</div>
+                        <div class="text-xs text-titanium mt-1">
+                            <span lang="en">conflict records found</span>
+                            <span lang="th">ระเบียนที่ขัดแย้ง</span>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto max-h-500 overflow-y-auto">
+                        <table class="data-table" id="conflict-table">
+                            <thead>
+                                <tr>
+                                    <th>เลขบัญชี</th>
+                                    <th>วันที่เริ่มชำระหนี้</th>
+                                    <th>ยอดหนี้เงินกู้</th>
+                                    <th>
+                                        <span lang="en">Source File</span>
+                                        <span lang="th">ไฟล์ต้นทาง</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="conflict-body"></tbody>
+                        </table>
                     </div>
                 </div>
                 
@@ -2626,11 +3268,11 @@ def generate_nexus_artifact(
                         <p class="text-sm text-titanium mb-4">
                             <span lang="en">
                                 Cases where PRE_BALANCE < EXACT_PRE_BALANCE indicate potential debt separation. 
-                                These accounts may have multiple ACC_NO for the same borrower and require manual investigation.
+                                These accounts may have multiple ACC_NO for the same borrower.
                             </span>
                             <span lang="th">
                                 กรณีที่ PRE_BALANCE < EXACT_PRE_BALANCE บ่งชี้ว่าอาจมีการแยกหนี้ 
-                                บัญชีเหล่านี้อาจมีหลาย ACC_NO สำหรับผู้กู้คนเดียวกัน และต้องตรวจสอบด้วยตนเอง
+                                บัญชีเหล่านี้อาจมีหลาย ACC_NO สำหรับผู้กู้คนเดียวกัน
                             </span>
                         </p>
                         <div class="text-3xl font-mono font-bold text-warning" id="debt-sep-count">--</div>
@@ -2801,6 +3443,7 @@ def generate_nexus_artifact(
             histogram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="6" width="4" height="15"/><rect x="17" y="9" width="4" height="12"/></svg>`,
             table: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>`,
             info: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`,
+            preprocess: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`,
         }};
 
         // 2. DATA AIRLOCK (Base64 Decryption)
@@ -2831,7 +3474,7 @@ def generate_nexus_artifact(
             lang: 'en',
             
             init: function() {{
-                console.log("[Nexus] Initializing v10.0...");
+                console.log("[Nexus] Initializing v4.0...");
                 
                 // Hide loading overlay
                 setTimeout(() => {{
@@ -2846,6 +3489,7 @@ def generate_nexus_artifact(
                 document.getElementById('icon-histogram').innerHTML = ICONS.histogram;
                 document.getElementById('icon-table').innerHTML = ICONS.table;
                 document.getElementById('icon-info').innerHTML = ICONS.info;
+                document.getElementById('icon-preprocess').innerHTML = ICONS.preprocess;
                 
                 this.hydrateUI();
                 this.initPhysics();
@@ -2867,13 +3511,22 @@ def generate_nexus_artifact(
                 const stats = DATA.stats || {{}};
                 const dsl1 = stats.dsl1_vs_dsl2 || {{}};
                 const ps = stats.ps_vs_dsl2 || {{}};
+                const threeWay = stats.three_way || {{}};
+                const preprocess = stats.dsl2_preprocessing || {{}};
                 
                 // Summary stats
                 document.getElementById('stat-total').innerText = this.formatNumber(stats.total_rows || 0);
                 document.getElementById('stat-matched').innerText = this.formatNumber((dsl1.matched_rows || 0) + (ps.matched_rows || 0));
                 document.getElementById('stat-errors').innerText = this.formatNumber(stats.error_count || 0);
-                document.getElementById('stat-debt-sep').innerText = this.formatNumber(dsl1.debt_separation_cases || 0);
+                document.getElementById('stat-conflicts').innerText = this.formatNumber(preprocess.conflict_accounts || 0);
+                document.getElementById('stat-three-way').innerText = this.formatNumber(threeWay.perfect_matches || 0);
                 document.getElementById('stat-accuracy').innerText = (dsl1.accuracy_rate_pct || 0).toFixed(1) + '%';
+                
+                // DSL2 Pre-processing stats
+                document.getElementById('dsl2-original').innerText = this.formatNumber(preprocess.original_rows || 0);
+                document.getElementById('dsl2-dedup').innerText = this.formatNumber(preprocess.deduplicated_rows || 0);
+                document.getElementById('dsl2-removed').innerText = this.formatNumber(preprocess.duplicates_removed || 0);
+                document.getElementById('dsl2-conflicts').innerText = this.formatNumber(preprocess.conflict_accounts || 0);
                 
                 // DSL1 vs DSL2 stats
                 document.getElementById('dsl1-rows').innerText = this.formatNumber(dsl1.total_dsl1_filtered_rows || 0);
@@ -2883,8 +3536,6 @@ def generate_nexus_artifact(
                 document.getElementById('dsl1-date-mismatch').innerText = this.formatNumber(dsl1.date_mismatches || 0);
                 document.getElementById('dsl1-bal-mismatch').innerText = this.formatNumber(dsl1.balance_mismatches || 0);
                 document.getElementById('dsl1-both-mismatch').innerText = this.formatNumber(dsl1.both_mismatches || 0);
-                document.getElementById('exact-vs-dsl2').innerText = this.formatNumber(dsl1.exact_vs_dsl2_mismatches || 0);
-                document.getElementById('exact-vs-pre').innerText = this.formatNumber(dsl1.exact_vs_pre_mismatches || 0);
                 
                 // Progress bars
                 const matched = dsl1.matched_rows || 1;
@@ -2897,9 +3548,15 @@ def generate_nexus_artifact(
                 document.getElementById('ps-dsl2-rows').innerText = this.formatNumber(ps.total_dsl2_rows || 0);
                 document.getElementById('ps-match-rate').innerText = (ps.match_rate_pct || 0).toFixed(1) + '%';
                 document.getElementById('ps-accuracy').innerText = (ps.accuracy_rate_pct || 0).toFixed(1) + '%';
-                document.getElementById('ps-date-mismatch').innerText = this.formatNumber(ps.date_mismatches || 0);
-                document.getElementById('ps-bal-mismatch').innerText = this.formatNumber(ps.balance_mismatches || 0);
-                document.getElementById('ps-perfect').innerText = this.formatNumber(ps.perfect_matches || 0);
+                
+                // Three-way stats
+                document.getElementById('three-way-matched').innerText = this.formatNumber(threeWay.matched_all_three || 0);
+                document.getElementById('three-way-perfect').innerText = this.formatNumber(threeWay.perfect_matches || 0);
+                document.getElementById('three-way-date').innerText = this.formatNumber(threeWay.date_mismatches || 0);
+                document.getElementById('three-way-balance').innerText = this.formatNumber(threeWay.balance_mismatches || 0);
+                
+                // Conflict count
+                document.getElementById('conflict-count').innerText = this.formatNumber(preprocess.conflict_records_count || 0);
                 
                 // Debt separation
                 document.getElementById('debt-sep-count').innerText = this.formatNumber(dsl1.debt_separation_cases || 0);
@@ -2908,73 +3565,15 @@ def generate_nexus_artifact(
                 document.getElementById('generated-time').innerText = DATA.generated_at || '';
                 document.getElementById('meta-duration').innerText = (dsl1.duration_seconds || 0).toFixed(2) + 's';
                 document.getElementById('meta-speed').innerText = this.formatNumber(Math.round((stats.total_rows || 0) / Math.max(dsl1.duration_seconds || 1, 0.001)));
-                document.getElementById('meta-version').innerText = DATA.version || '3.0.0';
+                document.getElementById('meta-version').innerText = DATA.version || '4.0.0';
                 document.getElementById('meta-ram').innerText = (DATA.system && DATA.system.ram) || 'N/A';
             }},
             
             initPhysics: function() {{
                 const canvas = document.getElementById('antigravity-canvas');
                 
-                // HYBRID ENGINE: Try Three.js, Fallback to Canvas 2D
-                if (typeof THREE !== 'undefined') {{
-                    try {{
-                        const scene = new THREE.Scene();
-                        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-                        const renderer = new THREE.WebGLRenderer({{ canvas, alpha: true, antialias: true }});
-                        renderer.setSize(window.innerWidth, window.innerHeight);
-                        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                        
-                        // Antigravity Ring (Torus with particles)
-                        const geometry = new THREE.TorusGeometry(15, 5, 16, 100);
-                        const material = new THREE.PointsMaterial({{
-                            color: 0x3b82f6,
-                            size: 0.08,
-                            transparent: true,
-                            opacity: 0.6,
-                            sizeAttenuation: true
-                        }});
-                        const torus = new THREE.Points(geometry, material);
-                        scene.add(torus);
-                        
-                        // Second ring
-                        const geometry2 = new THREE.TorusGeometry(20, 3, 16, 80);
-                        const material2 = new THREE.PointsMaterial({{
-                            color: 0x06b6d4,
-                            size: 0.06,
-                            transparent: true,
-                            opacity: 0.4
-                        }});
-                        const torus2 = new THREE.Points(geometry2, material2);
-                        torus2.rotation.x = Math.PI / 4;
-                        scene.add(torus2);
-                        
-                        camera.position.z = 50;
-
-                        function animate() {{
-                            requestAnimationFrame(animate);
-                            torus.rotation.x += 0.001;
-                            torus.rotation.y += 0.002;
-                            torus2.rotation.y -= 0.001;
-                            torus2.rotation.z += 0.001;
-                            renderer.render(scene, camera);
-                        }}
-                        animate();
-                        
-                        window.addEventListener('resize', () => {{
-                            camera.aspect = window.innerWidth / window.innerHeight;
-                            camera.updateProjectionMatrix();
-                            renderer.setSize(window.innerWidth, window.innerHeight);
-                        }});
-                        
-                        console.log("[Physics] WebGL Engine Active");
-                        return;
-                    }} catch(e) {{
-                        console.warn("[Physics] WebGL Init Failed, engaging fallback:", e);
-                    }}
-                }}
-                
                 // CANVAS 2D FALLBACK (Plexus Network)
-                console.log("[Physics] Engaging Canvas 2D Fallback");
+                console.log("[Physics] Engaging Canvas 2D");
                 const ctx = canvas.getContext('2d');
                 let w = canvas.width = window.innerWidth;
                 let h = canvas.height = window.innerHeight;
@@ -3006,7 +3605,6 @@ def generate_nexus_artifact(
                         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
                         ctx.fill();
                         
-                        // Draw connections
                         particles.slice(i + 1).forEach(p2 => {{
                             const dx = p.x - p2.x;
                             const dy = p.y - p2.y;
@@ -3045,12 +3643,13 @@ def generate_nexus_artifact(
                     peach: 'rgba(255, 190, 152, 0.8)',
                 }};
                 
-                // Radar Chart
+                // Radar Chart (4 metrics - NO velocity)
+                const radarLabels = DATA.viz.radar_labels || ['Data Integrity', 'Match Coverage', 'Date Accuracy', 'Balance Accuracy'];
                 ChartManager.render('radarChart', 'radar', {{
-                    labels: ['Data Integrity', 'Match Coverage', 'Date Accuracy', 'Balance Accuracy', 'Velocity'],
+                    labels: radarLabels,
                     datasets: [{{
                         label: 'Quality Score',
-                        data: DATA.viz.radar || [90, 90, 90, 90, 90],
+                        data: DATA.viz.radar || [90, 90, 90, 90],
                         backgroundColor: 'rgba(59, 130, 246, 0.2)',
                         borderColor: chartColors.neon,
                         borderWidth: 2,
@@ -3126,7 +3725,6 @@ def generate_nexus_artifact(
                 const hist = DATA.viz.histogram_dsl1 || {{}};
                 if (hist.edges && hist.edges.length > 1) {{
                     const labels = hist.edges.slice(0, -1).map((e, i) => {{
-                        const next = hist.edges[i + 1];
                         return `${{e.toFixed(0)}}`;
                     }});
                     
@@ -3155,6 +3753,9 @@ def generate_nexus_artifact(
                 const errors = DATA.errors || {{}};
                 const dsl1Errors = errors.dsl1_vs_dsl2 || [];
                 const debtSep = errors.debt_separation || [];
+                const conflicts = errors.dsl2_conflicts || [];
+                const threeWayDisc = errors.three_way_discrepancies || [];
+                const perfectMatches = (DATA.perfect_matches && DATA.perfect_matches.three_way) || [];
                 
                 // Main error table
                 if (dsl1Errors.length > 0) {{
@@ -3180,6 +3781,53 @@ def generate_nexus_artifact(
                         </tr>`;
                     }}).join('');
                 }}
+                
+                // DSL2 Conflicts table
+                if (conflicts.length > 0) {{
+                    const tbody = document.getElementById('conflict-body');
+                    tbody.innerHTML = conflicts.slice(0, 500).map(row => {{
+                        return `<tr class="warning-row">
+                            <td class="font-bold">${{row['เลขบัญชี'] || ''}}</td>
+                            <td>${{row['วันที่เริ่มชำระหนี้'] || ''}}</td>
+                            <td class="text-right">${{this.formatNumber(row['ยอดหนี้เงินกู้'] || 0)}}</td>
+                            <td><span class="badge badge-info">${{row._SOURCE_FILE || ''}}</span></td>
+                        </tr>`;
+                    }}).join('');
+                }}
+                
+                // Three-way table (show perfect matches first, then discrepancies)
+                const threeWayBody = document.getElementById('three-way-body');
+                let threeWayHtml = '';
+                
+                // Perfect matches
+                perfectMatches.slice(0, 200).forEach(row => {{
+                    threeWayHtml += `<tr class="success-row">
+                        <td class="font-bold">${{row.ACC_NO || ''}}</td>
+                        <td>${{row.DATE_DSL1 || ''}}</td>
+                        <td>${{row.DATE_DSL2 || ''}}</td>
+                        <td>${{row.DATE_PS || ''}}</td>
+                        <td class="text-right">${{this.formatNumber(row.BAL_DSL1_PRE || 0)}}</td>
+                        <td class="text-right">${{this.formatNumber(row.BAL_DSL1_EXACT || 0)}}</td>
+                        <td class="text-right">${{this.formatNumber(row.BAL_DSL2 || 0)}}</td>
+                        <td class="text-right">${{this.formatNumber(row.BAL_PS || 0)}}</td>
+                    </tr>`;
+                }});
+                
+                // Discrepancies
+                threeWayDisc.slice(0, 300).forEach(row => {{
+                    threeWayHtml += `<tr class="error-row">
+                        <td class="font-bold">${{row.ACC_NO || ''}}</td>
+                        <td>${{row.DATE_DSL1 || ''}}</td>
+                        <td>${{row.DATE_DSL2 || ''}}</td>
+                        <td>${{row.DATE_PS || ''}}</td>
+                        <td class="text-right">${{this.formatNumber(row.BAL_DSL1_PRE || 0)}}</td>
+                        <td class="text-right">${{this.formatNumber(row.BAL_DSL1_EXACT || 0)}}</td>
+                        <td class="text-right">${{this.formatNumber(row.BAL_DSL2 || 0)}}</td>
+                        <td class="text-right">${{this.formatNumber(row.BAL_PS || 0)}}</td>
+                    </tr>`;
+                }});
+                
+                threeWayBody.innerHTML = threeWayHtml;
             }},
             
             renderErrorRows: function(rows) {{
@@ -3300,26 +3948,6 @@ def generate_nexus_artifact(
                             </div>
                         </div>
                     </div>
-                    
-                    ${{record.IS_DEBT_SEPARATION ? `
-                    <div class="glass-panel p-4 mb-4" style="border-color: rgba(245, 158, 11, 0.4)">
-                        <h4 class="text-xs text-warning uppercase tracking-wide mb-2">⚠ Debt Separation Flag</h4>
-                        <p class="text-sm text-titanium">
-                            This account shows PRE_BALANCE < EXACT_PRE_BALANCE, indicating potential debt separation (แยกหนี้).
-                            This borrower may have multiple accounts that require manual investigation.
-                        </p>
-                        <div class="mt-3 grid grid-cols-2 gap-4">
-                            <div>
-                                <span class="text-xs text-titanium">EXACT_PRE_BALANCE</span>
-                                <p class="font-mono text-lg text-peach">${{this.formatNumber(record.EXACT_BAL)}}</p>
-                            </div>
-                            <div>
-                                <span class="text-xs text-titanium">Difference</span>
-                                <p class="font-mono text-lg text-warning">${{this.formatNumber(record.EXACT_VS_PRE_DIFF)}}</p>
-                            </div>
-                        </div>
-                    </div>
-                    ` : ''}}
                 `;
                 
                 panel.classList.add('open');
@@ -3345,32 +3973,18 @@ def generate_nexus_artifact(
                 setTimeout(() => waitForLibs(retries + 1), 100);
             }} else {{
                 console.error("[System] Critical Dependency Failure");
-                APP.init(); // Force load attempt
+                APP.init();
             }}
         }}
 
         document.addEventListener('DOMContentLoaded', () => waitForLibs());
         
-        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {{
             if (e.key === 'Escape') APP.closePanel();
         }});
     </script>
 </body>
 </html>'''
-    
-    if progress and task_id:
-        progress.update(task_id, completed=90)
-    
-    # Write artifact
-    log_write("Writing HTML file to disk...")
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(html_content)
-    
-    if progress and task_id:
-        progress.update(task_id, completed=100)
-    
-    log_secure(f"Nexus v10.0 Artifact generated: {output_path}", "generate_html")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -3407,6 +4021,9 @@ def generate_manifest(
             "csv_dsl1_errors": "dsl1_dsl2_discrepancies.csv",
             "csv_ps_errors": "ps_dsl2_discrepancies.csv",
             "csv_debt_separation": "debt_separation_cases.csv",
+            "csv_dsl2_conflicts": "dsl2_conflicts.csv",
+            "csv_three_way_perfect": "three_way_perfect_matches.csv",
+            "csv_three_way_discrepancies": "three_way_discrepancies.csv",
             "html_artifact": "nexus_report.html",
         },
         "statistics": combined_result.to_dict(),
@@ -3469,7 +4086,7 @@ def main():
     """Main execution entry point with full CLI interface."""
     
     parser = argparse.ArgumentParser(
-        description="RECALC TOOLKIT v3.0: DSL1 ↔ DSL2 ↔ Payment Schedule Reconciliation Engine",
+        description="RECALC TOOLKIT v4.0: DSL1 ↔ DSL2 ↔ Payment Schedule Reconciliation Engine",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -3493,7 +4110,7 @@ Examples:
     
     try:
         # Render header
-        render_header_panel("RECALC: DSL1 ↔ DSL2 ↔ PS RECONCILIATION", "3.0.0")
+        render_header_panel("RECALC: DSL1 ↔ DSL2 ↔ PS RECONCILIATION", "4.0.0")
         
         # Validate inputs
         if not args.dsl1.exists():
@@ -3514,7 +4131,9 @@ Examples:
         tmp_folder = args.output / "_tmp"
         tmp_folder.mkdir(exist_ok=True)
         
-        log_info(f"DSL1 Source: {args.dsl1}")
+        log_info(f"DSL1
+
+Source: {args.dsl1}")
         log_info(f"DSL2 Source: {args.dsl2}")
         if ps_folder:
             log_info(f"Payment Schedule Source: {ps_folder}")
@@ -3528,7 +4147,7 @@ Examples:
         
         combined_result = CombinedReconciliationResult()
         
-        # Load datasets with progress
+        # Load and preprocess datasets
         if RICH_AVAILABLE:
             with Progress(
                 SpinnerColumn(),
@@ -3566,30 +4185,13 @@ Examples:
                     else:
                         raise ImportError("Neither Polars nor Pandas available")
                 
-                # Load DSL2
-                task2 = progress.add_task(f"[cyan]Loading DSL2 ({dsl2_scan['total_size_gb']:.1f}GB)...", total=100)
+                # Load and preprocess DSL2 (with deduplication and conflict detection)
+                task2 = progress.add_task(f"[cyan]Loading & Pre-processing DSL2 ({dsl2_scan['total_size_gb']:.1f}GB)...", total=100)
                 
-                if POLARS_AVAILABLE:
-                    try:
-                        dsl2_lazy = load_dsl2_polars(args.dsl2)
-                        progress.update(task2, completed=50)
-                        log_flux("Materializing DSL2 LazyFrame...")
-                        dsl2_data = dsl2_lazy.collect()
-                        progress.update(task2, completed=100)
-                        log_secure(f"DSL2 loaded: {len(dsl2_data):,} rows")
-                    except Exception as e:
-                        log_warn(f"Polars failed for DSL2: {e}, falling back to pandas")
-                        if PANDAS_AVAILABLE:
-                            dsl2_data = pl.from_pandas(load_dsl2_pandas_fallback(args.dsl2))
-                            progress.update(task2, completed=100)
-                        else:
-                            raise
-                else:
-                    if PANDAS_AVAILABLE:
-                        dsl2_data = pl.from_pandas(load_dsl2_pandas_fallback(args.dsl2))
-                        progress.update(task2, completed=100)
-                    else:
-                        raise ImportError("Neither Polars nor Pandas available")
+                dsl2_data, dsl2_preprocess_result = preprocess_dsl2_with_source_tracking(args.dsl2)
+                combined_result.dsl2_preprocessing = dsl2_preprocess_result
+                progress.update(task2, completed=100)
+                log_secure(f"DSL2 loaded and preprocessed: {len(dsl2_data):,} rows (after dedup)")
                 
                 # Load Payment Schedule if provided
                 ps_data = None
@@ -3640,8 +4242,21 @@ Examples:
                         task_id=task5
                     )
                     progress.update(task5, completed=100)
+                    
+                    # Three-way reconciliation
+                    task6 = progress.add_task("[peach]Three-Way Reconciliation (DSL1 ↔ DSL2 ↔ PS)...", total=100)
+                    combined_result.three_way = reconcile_three_way(
+                        dsl1_data,
+                        dsl2_data,
+                        ps_data,
+                        balance_tolerance=args.balance_tolerance,
+                        max_records=args.max_errors,
+                        progress=progress,
+                        task_id=task6
+                    )
+                    progress.update(task6, completed=100)
         else:
-            # Non-rich fallback
+            # Non-rich fallback (simplified)
             print("Loading DSL1...")
             if POLARS_AVAILABLE:
                 dsl1_data = load_dsl1_polars(args.dsl1).collect()
@@ -3650,19 +4265,9 @@ Examples:
             else:
                 raise ImportError("Neither Polars nor Pandas available")
             
-            print("Loading DSL2...")
-            if POLARS_AVAILABLE:
-                try:
-                    dsl2_data = load_dsl2_polars(args.dsl2).collect()
-                except:
-                    if PANDAS_AVAILABLE:
-                        dsl2_data = pl.from_pandas(load_dsl2_pandas_fallback(args.dsl2))
-                    else:
-                        raise
-            elif PANDAS_AVAILABLE:
-                dsl2_data = pl.from_pandas(load_dsl2_pandas_fallback(args.dsl2))
-            else:
-                raise ImportError("Neither Polars nor Pandas available")
+            print("Loading and pre-processing DSL2...")
+            dsl2_data, dsl2_preprocess_result = preprocess_dsl2_with_source_tracking(args.dsl2)
+            combined_result.dsl2_preprocessing = dsl2_preprocess_result
             
             ps_data = None
             if ps_folder:
@@ -3682,29 +4287,32 @@ Examples:
             if ps_data is not None:
                 print("Reconciling Payment Schedule vs DSL2...")
                 combined_result.ps_vs_dsl2 = reconcile_ps_vs_dsl2(ps_data, dsl2_data)
+                
+                print("Three-Way Reconciliation...")
+                combined_result.three_way = reconcile_three_way(dsl1_data, dsl2_data, ps_data)
         
         # Display results summary
         dsl1_result = combined_result.dsl1_vs_dsl2
         ps_result = combined_result.ps_vs_dsl2
+        three_way_result = combined_result.three_way
+        dsl2_preprocess = combined_result.dsl2_preprocessing
         
         if console:
             summary_table = Table(title="Reconciliation Summary", box=box.ROUNDED)
             summary_table.add_column("Metric", style="cyan")
             summary_table.add_column("DSL1 vs DSL2", style="white")
             summary_table.add_column("PS vs DSL2", style="white")
+            summary_table.add_column("Three-Way", style="white")
             
-            summary_table.add_row("Source Rows", f"{dsl1_result.total_dsl1_rows:,}", f"{ps_result.total_ps_rows:,}")
-            summary_table.add_row("Filtered Rows (GROUP_FLAG=1)", f"{dsl1_result.total_dsl1_filtered_rows:,}", "N/A")
-            summary_table.add_row("DSL2 Rows", f"{dsl1_result.total_dsl2_rows:,}", f"{ps_result.total_dsl2_rows:,}")
-            summary_table.add_row("Matched Rows", f"{dsl1_result.matched_rows:,}", f"{ps_result.matched_rows:,}")
-            summary_table.add_row("Match Rate", f"{dsl1_result.match_rate:.2f}%", f"{ps_result.match_rate:.2f}%")
-            summary_table.add_row("Perfect Matches", f"{dsl1_result.perfect_matches:,}", f"{ps_result.perfect_matches:,}")
-            summary_table.add_row("Date Mismatches", f"{dsl1_result.date_mismatches:,}", f"{ps_result.date_mismatches:,}")
-            summary_table.add_row("Balance Mismatches", f"{dsl1_result.balance_mismatches:,}", f"{ps_result.balance_mismatches:,}")
-            summary_table.add_row("Both Mismatched", f"{dsl1_result.both_mismatches:,}", f"{ps_result.both_mismatches:,}")
-            summary_table.add_row("Accuracy Rate", f"{dsl1_result.accuracy_rate:.2f}%", f"{ps_result.accuracy_rate:.2f}%")
-            summary_table.add_row("Debt Separation Cases", f"{dsl1_result.debt_separation_cases:,}", "N/A")
-            summary_table.add_row("Duration", f"{dsl1_result.duration_seconds:.2f}s", f"{ps_result.duration_seconds:.2f}s")
+            summary_table.add_row("Source Rows", f"{dsl1_result.total_dsl1_rows:,}", f"{ps_result.total_ps_rows:,}", "-")
+            summary_table.add_row("Filtered/Dedup Rows", f"{dsl1_result.total_dsl1_filtered_rows:,}", "N/A", "-")
+            summary_table.add_row("DSL2 Rows (Dedup)", f"{dsl2_preprocess.deduplicated_rows:,}", f"{dsl2_preprocess.deduplicated_rows:,}", "-")
+            summary_table.add_row("Matched Rows", f"{dsl1_result.matched_rows:,}", f"{ps_result.matched_rows:,}", f"{three_way_result.matched_all_three:,}")
+            summary_table.add_row("Perfect Matches", f"{dsl1_result.perfect_matches:,}", f"{ps_result.perfect_matches:,}", f"{three_way_result.perfect_matches:,}")
+            summary_table.add_row("Date Mismatches", f"{dsl1_result.date_mismatches:,}", f"{ps_result.date_mismatches:,}", f"{three_way_result.date_mismatches:,}")
+            summary_table.add_row("Balance Mismatches", f"{dsl1_result.balance_mismatches:,}", f"{ps_result.balance_mismatches:,}", f"{three_way_result.balance_mismatches:,}")
+            summary_table.add_row("DSL2 Conflicts", f"{dsl2_preprocess.conflict_accounts:,}", "-", "-")
+            summary_table.add_row("Debt Separation", f"{dsl1_result.debt_separation_cases:,}", "-", "-")
             
             console.print(summary_table)
         
@@ -3712,7 +4320,7 @@ Examples:
             log_info("Dry run complete. No files written.")
             return
         
-        # Write outputs with progress bars
+        # Write outputs
         log_write("Writing output files...")
         
         if RICH_AVAILABLE:
@@ -3731,34 +4339,55 @@ Examples:
                 if dsl1_result.error_records:
                     csv_task = progress.add_task("[write]Writing dsl1_dsl2_discrepancies.csv...", total=100)
                     csv_path = tmp_folder / "dsl1_dsl2_discrepancies.csv"
-                    
-                    start_timer("write_csv_dsl1")
                     error_df = pd.DataFrame(dsl1_result.error_records)
                     error_df.to_csv(csv_path, index=False, encoding="utf-8-sig")
                     progress.update(csv_task, completed=100)
-                    log_secure(f"CSV written: {csv_path}", "write_csv_dsl1")
+                    log_secure(f"CSV written: {csv_path}")
                 
                 # CSV output for PS vs DSL2 errors
                 if ps_result.error_records:
                     csv_task2 = progress.add_task("[write]Writing ps_dsl2_discrepancies.csv...", total=100)
                     csv_path2 = tmp_folder / "ps_dsl2_discrepancies.csv"
-                    
-                    start_timer("write_csv_ps")
                     error_df2 = pd.DataFrame(ps_result.error_records)
                     error_df2.to_csv(csv_path2, index=False, encoding="utf-8-sig")
                     progress.update(csv_task2, completed=100)
-                    log_secure(f"CSV written: {csv_path2}", "write_csv_ps")
+                    log_secure(f"CSV written: {csv_path2}")
                 
                 # CSV output for Debt Separation cases
                 if dsl1_result.debt_separation_records:
                     csv_task3 = progress.add_task("[write]Writing debt_separation_cases.csv...", total=100)
                     csv_path3 = tmp_folder / "debt_separation_cases.csv"
-                    
-                    start_timer("write_csv_debt")
                     debt_df = pd.DataFrame(dsl1_result.debt_separation_records)
                     debt_df.to_csv(csv_path3, index=False, encoding="utf-8-sig")
                     progress.update(csv_task3, completed=100)
-                    log_secure(f"CSV written: {csv_path3}", "write_csv_debt")
+                    log_secure(f"CSV written: {csv_path3}")
+                
+                # CSV output for DSL2 Conflicts
+                if dsl2_preprocess.conflict_records:
+                    csv_task4 = progress.add_task("[write]Writing dsl2_conflicts.csv...", total=100)
+                    csv_path4 = tmp_folder / "dsl2_conflicts.csv"
+                    conflict_df = pd.DataFrame(dsl2_preprocess.conflict_records)
+                    conflict_df.to_csv(csv_path4, index=False, encoding="utf-8-sig")
+                    progress.update(csv_task4, completed=100)
+                    log_secure(f"CSV written: {csv_path4}")
+                
+                # CSV output for Three-Way Perfect Matches
+                if three_way_result.perfect_match_records:
+                    csv_task5 = progress.add_task("[write]Writing three_way_perfect_matches.csv...", total=100)
+                    csv_path5 = tmp_folder / "three_way_perfect_matches.csv"
+                    perfect_df = pd.DataFrame(three_way_result.perfect_match_records)
+                    perfect_df.to_csv(csv_path5, index=False, encoding="utf-8-sig")
+                    progress.update(csv_task5, completed=100)
+                    log_secure(f"CSV written: {csv_path5}")
+                
+                # CSV output for Three-Way Discrepancies
+                if three_way_result.discrepancy_records:
+                    csv_task6 = progress.add_task("[write]Writing three_way_discrepancies.csv...", total=100)
+                    csv_path6 = tmp_folder / "three_way_discrepancies.csv"
+                    disc_df = pd.DataFrame(three_way_result.discrepancy_records)
+                    disc_df.to_csv(csv_path6, index=False, encoding="utf-8-sig")
+                    progress.update(csv_task6, completed=100)
+                    log_secure(f"CSV written: {csv_path6}")
                 
                 # HTML Artifact
                 if args.web_report:
@@ -3771,29 +4400,34 @@ Examples:
                 manifest = generate_manifest(combined_result, args.dsl1, args.dsl2, ps_folder, args.output, progress, manifest_task)
                 manifest_path = tmp_folder / "manifest.json"
                 
-                start_timer("write_manifest")
                 with open(manifest_path, "w", encoding="utf-8") as f:
                     json.dump(manifest, f, indent=2, ensure_ascii=False, default=iso_converter)
-                log_secure(f"Manifest written: {manifest_path}", "write_manifest")
+                log_secure(f"Manifest written: {manifest_path}")
         else:
             # Non-rich fallback
             if dsl1_result.error_records:
                 csv_path = tmp_folder / "dsl1_dsl2_discrepancies.csv"
-                error_df = pd.DataFrame(dsl1_result.error_records)
-                error_df.to_csv(csv_path, index=False, encoding="utf-8-sig")
-                print(f"CSV written: {csv_path}")
+                pd.DataFrame(dsl1_result.error_records).to_csv(csv_path, index=False, encoding="utf-8-sig")
             
             if ps_result.error_records:
                 csv_path2 = tmp_folder / "ps_dsl2_discrepancies.csv"
-                error_df2 = pd.DataFrame(ps_result.error_records)
-                error_df2.to_csv(csv_path2, index=False, encoding="utf-8-sig")
-                print(f"CSV written: {csv_path2}")
+                pd.DataFrame(ps_result.error_records).to_csv(csv_path2, index=False, encoding="utf-8-sig")
             
             if dsl1_result.debt_separation_records:
                 csv_path3 = tmp_folder / "debt_separation_cases.csv"
-                debt_df = pd.DataFrame(dsl1_result.debt_separation_records)
-                debt_df.to_csv(csv_path3, index=False, encoding="utf-8-sig")
-                print(f"CSV written: {csv_path3}")
+                pd.DataFrame(dsl1_result.debt_separation_records).to_csv(csv_path3, index=False, encoding="utf-8-sig")
+            
+            if dsl2_preprocess.conflict_records:
+                csv_path4 = tmp_folder / "dsl2_conflicts.csv"
+                pd.DataFrame(dsl2_preprocess.conflict_records).to_csv(csv_path4, index=False, encoding="utf-8-sig")
+            
+            if three_way_result.perfect_match_records:
+                csv_path5 = tmp_folder / "three_way_perfect_matches.csv"
+                pd.DataFrame(three_way_result.perfect_match_records).to_csv(csv_path5, index=False, encoding="utf-8-sig")
+            
+            if three_way_result.discrepancy_records:
+                csv_path6 = tmp_folder / "three_way_discrepancies.csv"
+                pd.DataFrame(three_way_result.discrepancy_records).to_csv(csv_path6, index=False, encoding="utf-8-sig")
             
             if args.web_report:
                 html_path = tmp_folder / "nexus_report.html"
@@ -3803,10 +4437,8 @@ Examples:
             manifest_path = tmp_folder / "manifest.json"
             with open(manifest_path, "w", encoding="utf-8") as f:
                 json.dump(manifest, f, indent=2, ensure_ascii=False, default=iso_converter)
-            print(f"Manifest written: {manifest_path}")
         
         # Atomic move from tmp to final
-        start_timer("atomic_move")
         log_write("Moving files to final destination...")
         
         import shutil
@@ -3818,22 +4450,23 @@ Examples:
         
         tmp_folder.rmdir()
         
-        log_secure("Files moved to final destination", "atomic_move")
+        log_secure("Files moved to final destination")
         log_secure("✨ Reconciliation complete!")
         
         # Final stats panel
         if console:
-            total_rows = dsl1_result.total_dsl1_rows + dsl1_result.total_dsl2_rows + ps_result.total_ps_rows
-            total_duration = dsl1_result.duration_seconds + ps_result.duration_seconds
+            total_rows = dsl1_result.total_dsl1_rows + dsl2_preprocess.original_rows + ps_result.total_ps_rows
+            total_duration = dsl1_result.duration_seconds + ps_result.duration_seconds + three_way_result.duration_seconds
             
             console.print(Panel(
                 f"[bold green]EXECUTION COMPLETE[/bold green]\n\n"
                 f"📊 Processed {total_rows:,} total rows\n"
                 f"⚡ Speed: {total_rows / max(total_duration, 0.001):,.0f} rows/sec\n"
-                f"🔍 Debt Separation Cases: {dsl1_result.debt_separation_cases:,}\n"
+                f"🔍 DSL2 Conflicts: {dsl2_preprocess.conflict_accounts:,}\n"
+                f"✅ Three-Way Perfect Matches: {three_way_result.perfect_matches:,}\n"
                 f"📁 Output: {args.output}",
                 border_style="green",
-                title="NEXUS GRILL SUMMIT"
+                title="NEXUS GRILL SUMMIT v4.0"
             ))
         
     except Exception as e:
