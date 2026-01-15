@@ -1619,10 +1619,13 @@ def reconcile_ps_vs_dsl2(
     
     matched_pd["DATE_DIFF_DAYS"] = 0
     try:
-        matched_pd.loc[valid_dates_mask, "DATE_DIFF_DAYS"] = (
-            (matched_pd.loc[valid_dates_mask, "DATE_DSL2"] - matched_pd.loc[valid_dates_mask, "DATE_PS"])
-            .apply(lambda x: abs(x.days) if hasattr(x, 'days') else 0)
-        )
+        # Convert to datetime64 for vectorized operations (avoids PerformanceWarning)
+        date_ps_valid = pd.to_datetime(matched_pd.loc[valid_dates_mask, "DATE_PS"], errors='coerce')
+        date_dsl2_valid = pd.to_datetime(matched_pd.loc[valid_dates_mask, "DATE_DSL2"], errors='coerce')
+        
+        # Vectorized date difference calculation
+        date_diff = (date_dsl2_valid - date_ps_valid).dt.days.abs().fillna(0).astype(int)
+        matched_pd.loc[valid_dates_mask, "DATE_DIFF_DAYS"] = date_diff.values
     except Exception as e:
         log_warn(f"Date difference calculation error (likely out-of-range dates): {e}")
     
