@@ -696,7 +696,7 @@ def load_dsl2_polars(folder: Path, progress_callback=None) -> pl.LazyFrame:
                     encoding=encoding,
                     skiprows=header_row_idx,
                     dtype={"เลขบัญชี": str},
-                    low_memory=True,
+                    low_memory=False,
                     on_bad_lines="skip"
                 )
                 
@@ -1596,17 +1596,35 @@ def reconcile_ps_vs_dsl2(
     log_flux("Calculating discrepancies...")
     
     # Date comparison
-    valid_dates_mask = matched_pd["DATE_PS"].notna() & matched_pd["DATE_DSL2"].notna()
+    # Filter out dates with unreasonable years (data entry errors like year 2336)
+    def is_valid_date_range(dt):
+        if pd.isna(dt):
+            return False
+        try:
+            year = dt.year if hasattr(dt, 'year') else pd.Timestamp(dt).year
+            return 1900 <= year <= 2100
+        except:
+            return False
+    
+    valid_dates_mask = (
+        matched_pd["DATE_PS"].notna() & 
+        matched_pd["DATE_DSL2"].notna() &
+        matched_pd["DATE_PS"].apply(is_valid_date_range) &
+        matched_pd["DATE_DSL2"].apply(is_valid_date_range)
+    )
     matched_pd["DATE_MATCH"] = False
     matched_pd.loc[valid_dates_mask, "DATE_MATCH"] = (
         matched_pd.loc[valid_dates_mask, "DATE_PS"] == matched_pd.loc[valid_dates_mask, "DATE_DSL2"]
     )
     
     matched_pd["DATE_DIFF_DAYS"] = 0
-    matched_pd.loc[valid_dates_mask, "DATE_DIFF_DAYS"] = (
-        (matched_pd.loc[valid_dates_mask, "DATE_DSL2"] - matched_pd.loc[valid_dates_mask, "DATE_PS"])
-        .apply(lambda x: abs(x.days) if x else 0)
-    )
+    try:
+        matched_pd.loc[valid_dates_mask, "DATE_DIFF_DAYS"] = (
+            (matched_pd.loc[valid_dates_mask, "DATE_DSL2"] - matched_pd.loc[valid_dates_mask, "DATE_PS"])
+            .apply(lambda x: abs(x.days) if hasattr(x, 'days') else 0)
+        )
+    except Exception as e:
+        log_warn(f"Date difference calculation error (likely out-of-range dates): {e}")
     
     # Balance comparison
     matched_pd["BAL_DIFF"] = matched_pd["BAL_DSL2"] - matched_pd["BAL_PS"]
@@ -3493,9 +3511,7 @@ Examples:
         tmp_folder = args.output / "_tmp"
         tmp_folder.mkdir(exist_ok=True)
         
-        log_info(f"DSL1
-
-Source: {args.dsl1}")
+        log_info(f"DSL1 Source: {args.dsl1}")
         log_info(f"DSL2 Source: {args.dsl2}")
         if ps_folder:
             log_info(f"Payment Schedule Source: {ps_folder}")
