@@ -19,13 +19,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" type="image/png" href="https://www.isc2.org/-/media/ISC2/Certifications/Icons/CISSP-Logo.ashx" />
     <link rel="apple-touch-icon" href="https://www.isc2.org/-/media/ISC2/Certifications/Icons/CISSP-Logo.ashx" />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Cinzel:wght@700;900&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Cinzel:wght@700;900&family=Sarabun:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         /* ============================================
            ENHANCED CSS CUSTOM PROPERTIES & DESIGN TOKENS
            ============================================ */
         :root {
+            /* Pantone Colors of the Year */
+            --pantone-mocha: #A47764;
+            --pantone-peach: #FFBE98;
+            --pantone-magenta: #BB2649;
+            --pantone-peri: #6667AB;
+
             /* Space Theme Colors */
             --space-void: #0a0a1a;
             --space-deep: #0d1025;
@@ -376,6 +382,66 @@
             opacity: 1;
         }
 
+        /* Cosmic Fog Effect */
+        .cosmic-fog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        body.dark .cosmic-fog {
+            opacity: 0.6;
+        }
+
+        .cosmic-fog::before,
+        .cosmic-fog::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .cosmic-fog::before {
+            background: radial-gradient(ellipse at 30% 20%, rgba(164, 119, 100, 0.15) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(102, 103, 171, 0.15) 0%, transparent 50%);
+            animation: fogDrift 20s ease-in-out infinite;
+        }
+
+        .cosmic-fog::after {
+            background: radial-gradient(ellipse at 60% 50%, rgba(187, 38, 73, 0.1) 0%, transparent 40%),
+                        radial-gradient(ellipse at 20% 70%, rgba(255, 190, 152, 0.1) 0%, transparent 40%);
+            animation: fogDrift 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes fogDrift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(2%, -1%) scale(1.02); }
+            66% { transform: translate(-1%, 2%) scale(0.98); }
+        }
+
+        /* Three.js Canvas */
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        body.dark #three-canvas {
+            opacity: 1;
+        }
+
         /* ============================================
            GLASSMORPHISM COMPONENTS
            ============================================ */
@@ -603,56 +669,107 @@
             background: rgba(14, 165, 233, 0.2);
         }
 
-        /* Enhanced Theme Toggle */
+        /* Enhanced Theme Toggle - Pill Design */
         .theme-toggle {
-            width: 44px;
-            height: 44px;
-            border-radius: var(--radius-lg);
+            width: 64px;
+            height: 32px;
+            border-radius: var(--radius-full);
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: all var(--animation-fast) ease;
+            padding: 3px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             color: var(--text-light);
             position: relative;
             overflow: hidden;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         body.dark .theme-toggle {
             color: var(--text-dark);
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-color: rgba(59, 130, 246, 0.3);
         }
 
+        /* Toggle Track Animation */
         .theme-toggle::before {
             content: '';
             position: absolute;
-            inset: 0;
-            background: var(--gradient-cyber);
-            opacity: 0;
-            transition: opacity var(--animation-fast) ease;
-            border-radius: var(--radius-lg);
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            background: linear-gradient(90deg,
+                rgba(251, 191, 36, 0.2) 0%,
+                rgba(245, 158, 11, 0.1) 50%,
+                transparent 100%);
+            opacity: 1;
+            transition: all 0.4s ease;
+            border-radius: var(--radius-full);
         }
 
-        .theme-toggle:hover::before {
-            opacity: 0.1;
+        body.dark .theme-toggle::before {
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(59, 130, 246, 0.1) 50%,
+                rgba(139, 92, 246, 0.2) 100%);
         }
 
         .theme-toggle:hover {
             transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+        }
+
+        body.dark .theme-toggle:hover {
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Toggle Knob */
+        .toggle-knob {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fff 0%, #f1f5f9 100%);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 2;
+        }
+
+        body.dark .toggle-knob {
+            transform: translateX(32px);
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4), 0 0 20px rgba(59, 130, 246, 0.2);
         }
 
         .theme-toggle svg {
-            width: 22px;
-            height: 22px;
-            transition: transform var(--animation-normal) ease;
+            width: 14px;
+            height: 14px;
+            transition: all var(--animation-normal) ease;
             position: relative;
             z-index: 1;
         }
 
-        .theme-toggle:hover svg {
-            transform: rotate(15deg);
+        .theme-toggle:hover .toggle-knob {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
-        .sun { display: block; }
-        .moon { display: none; }
+        body.dark .theme-toggle:hover .toggle-knob {
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.5), 0 0 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .sun {
+            display: block;
+            color: #f59e0b;
+        }
+        .moon {
+            display: none;
+            color: #60a5fa;
+        }
         body.dark .sun { display: none; }
         body.dark .moon { display: block; }
 
@@ -2882,6 +2999,243 @@
         }
 
         /* ============================================
+           SKILL PROGRESS BARS
+           ============================================ */
+        .skill-bars-container {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .skill-bar-item {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--radius-xl);
+            padding: 1.25rem 1.5rem;
+            border: 1px solid rgba(14, 165, 233, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        body.dark .skill-bar-item {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: var(--glass-border);
+        }
+
+        .skill-bar-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.15);
+        }
+
+        body.dark .skill-bar-item:hover {
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .skill-bar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .skill-bar-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .skill-bar-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-cyber);
+            border-radius: var(--radius-md);
+            font-size: 0.8rem;
+        }
+
+        .skill-bar-percentage {
+            font-family: 'JetBrains Mono', 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .skill-bar-track {
+            height: 8px;
+            background: rgba(14, 165, 233, 0.1);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            position: relative;
+        }
+
+        body.dark .skill-bar-track {
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        .skill-bar-fill {
+            height: 100%;
+            border-radius: var(--radius-full);
+            background: var(--gradient-cyber);
+            width: 0;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .skill-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Skill bar color variants */
+        .skill-bar-fill.pantone-mocha { background: linear-gradient(90deg, var(--pantone-mocha), var(--pantone-peach)); }
+        .skill-bar-fill.pantone-magenta { background: linear-gradient(90deg, var(--pantone-magenta), var(--pantone-peri)); }
+        .skill-bar-fill.pantone-peri { background: linear-gradient(90deg, var(--pantone-peri), var(--neon-core)); }
+
+        /* ============================================
+           KPI CARDS WITH TRENDS
+           ============================================ */
+        .kpi-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            border: 1px solid rgba(14, 165, 233, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark .kpi-card {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: var(--glass-border);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-cyber);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(14, 165, 233, 0.2);
+        }
+
+        body.dark .kpi-card:hover {
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.25);
+        }
+
+        .kpi-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .kpi-card-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-cyber);
+            border-radius: var(--radius-lg);
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+
+        .kpi-card-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .kpi-card-trend.up {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .kpi-card-trend.down {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .kpi-card-value {
+            font-family: 'Orbitron', 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient-cyber);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .kpi-card-label {
+            font-size: 0.85rem;
+            color: var(--text-muted-light);
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        body.dark .kpi-card-label {
+            color: var(--text-muted-dark);
+        }
+
+        .kpi-card-sparkline {
+            height: 40px;
+            margin-top: 1rem;
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+        }
+
+        .sparkline-bar {
+            flex: 1;
+            background: rgba(14, 165, 233, 0.3);
+            border-radius: 2px 2px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        body.dark .sparkline-bar {
+            background: rgba(59, 130, 246, 0.4);
+        }
+
+        .kpi-card:hover .sparkline-bar {
+            background: var(--primary);
+        }
+
+        /* ============================================
            RESPONSIVE DESIGN
            ============================================ */
         @media (max-width: 1200px) {
@@ -3118,7 +3472,9 @@
     <div class="bg-animation"></div>
     <canvas id="starfield-canvas" aria-hidden="true"></canvas>
     <canvas id="particle-canvas" aria-hidden="true"></canvas>
+    <canvas id="three-canvas" aria-hidden="true"></canvas>
     <div class="cosmic-overlay"></div>
+    <div class="cosmic-fog"></div>
 
     <!-- Slide-Over Detail Panel -->
     <div class="slide-panel-overlay" id="slide-panel-overlay"></div>
@@ -3184,20 +3540,22 @@
                 </div>
                 
                 <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
-                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
+                    <div class="toggle-knob">
+                        <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </div>
                 </button>
 
                 <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
@@ -3573,6 +3931,90 @@
                 </p>
             </div>
 
+            <!-- KPI Cards with Trends -->
+            <div class="kpi-cards-grid">
+                <div class="kpi-card glass-card">
+                    <div class="kpi-card-header">
+                        <div class="kpi-card-icon">🛡️</div>
+                        <div class="kpi-card-trend up">↑ 23%</div>
+                    </div>
+                    <div class="kpi-card-value">93%</div>
+                    <div class="kpi-card-label">
+                        <span lang="en">Threat Detection Rate</span>
+                        <span lang="th">อัตราการตรวจจับภัยคุกคาม</span>
+                    </div>
+                    <div class="kpi-card-sparkline">
+                        <div class="sparkline-bar" style="height: 40%"></div>
+                        <div class="sparkline-bar" style="height: 55%"></div>
+                        <div class="sparkline-bar" style="height: 45%"></div>
+                        <div class="sparkline-bar" style="height: 70%"></div>
+                        <div class="sparkline-bar" style="height: 65%"></div>
+                        <div class="sparkline-bar" style="height: 80%"></div>
+                        <div class="sparkline-bar" style="height: 93%"></div>
+                    </div>
+                </div>
+                <div class="kpi-card glass-card">
+                    <div class="kpi-card-header">
+                        <div class="kpi-card-icon">⚡</div>
+                        <div class="kpi-card-trend up">↑ 85%</div>
+                    </div>
+                    <div class="kpi-card-value">&lt;10ms</div>
+                    <div class="kpi-card-label">
+                        <span lang="en">Vector Query Latency</span>
+                        <span lang="th">ความหน่วงการค้นหาเวกเตอร์</span>
+                    </div>
+                    <div class="kpi-card-sparkline">
+                        <div class="sparkline-bar" style="height: 90%"></div>
+                        <div class="sparkline-bar" style="height: 75%"></div>
+                        <div class="sparkline-bar" style="height: 60%"></div>
+                        <div class="sparkline-bar" style="height: 45%"></div>
+                        <div class="sparkline-bar" style="height: 30%"></div>
+                        <div class="sparkline-bar" style="height: 20%"></div>
+                        <div class="sparkline-bar" style="height: 10%"></div>
+                    </div>
+                </div>
+                <div class="kpi-card glass-card">
+                    <div class="kpi-card-header">
+                        <div class="kpi-card-icon">🎯</div>
+                        <div class="kpi-card-trend up">↑ 47%</div>
+                    </div>
+                    <div class="kpi-card-value">30s</div>
+                    <div class="kpi-card-label">
+                        <span lang="en">Zero-Day Response</span>
+                        <span lang="th">การตอบสนอง Zero-Day</span>
+                    </div>
+                    <div class="kpi-card-sparkline">
+                        <div class="sparkline-bar" style="height: 95%"></div>
+                        <div class="sparkline-bar" style="height: 80%"></div>
+                        <div class="sparkline-bar" style="height: 65%"></div>
+                        <div class="sparkline-bar" style="height: 50%"></div>
+                        <div class="sparkline-bar" style="height: 40%"></div>
+                        <div class="sparkline-bar" style="height: 35%"></div>
+                        <div class="sparkline-bar" style="height: 30%"></div>
+                    </div>
+                </div>
+                <div class="kpi-card glass-card">
+                    <div class="kpi-card-header">
+                        <div class="kpi-card-icon">📊</div>
+                        <div class="kpi-card-trend up">↑ 12%</div>
+                    </div>
+                    <div class="kpi-card-value">10M+</div>
+                    <div class="kpi-card-label">
+                        <span lang="en">Records Processed</span>
+                        <span lang="th">รายการที่ประมวลผล</span>
+                    </div>
+                    <div class="kpi-card-sparkline">
+                        <div class="sparkline-bar" style="height: 30%"></div>
+                        <div class="sparkline-bar" style="height: 45%"></div>
+                        <div class="sparkline-bar" style="height: 55%"></div>
+                        <div class="sparkline-bar" style="height: 70%"></div>
+                        <div class="sparkline-bar" style="height: 80%"></div>
+                        <div class="sparkline-bar" style="height: 90%"></div>
+                        <div class="sparkline-bar" style="height: 100%"></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Skills Radar Chart -->
             <div class="viz-container glass-panel">
                 <div class="viz-header">
@@ -3582,6 +4024,63 @@
                     </h3>
                 </div>
                 <div id="skills-radar"></div>
+            </div>
+
+            <!-- Skill Progress Bars -->
+            <div class="viz-container glass-panel">
+                <div class="viz-header">
+                    <h3 class="viz-title">
+                        <span lang="en">Core Competencies</span>
+                        <span lang="th">ความสามารถหลัก</span>
+                    </h3>
+                </div>
+                <div class="skill-bars-container" id="skill-bars">
+                    <div class="skill-bar-item">
+                        <div class="skill-bar-header">
+                            <span class="skill-bar-name"><span class="skill-bar-icon">🧠</span> Case-Based Reasoning</span>
+                            <span class="skill-bar-percentage">95%</span>
+                        </div>
+                        <div class="skill-bar-track">
+                            <div class="skill-bar-fill pantone-mocha" data-width="95"></div>
+                        </div>
+                    </div>
+                    <div class="skill-bar-item">
+                        <div class="skill-bar-header">
+                            <span class="skill-bar-name"><span class="skill-bar-icon">🤖</span> AI/ML Engineering</span>
+                            <span class="skill-bar-percentage">92%</span>
+                        </div>
+                        <div class="skill-bar-track">
+                            <div class="skill-bar-fill" data-width="92"></div>
+                        </div>
+                    </div>
+                    <div class="skill-bar-item">
+                        <div class="skill-bar-header">
+                            <span class="skill-bar-name"><span class="skill-bar-icon">🛡️</span> Cybersecurity</span>
+                            <span class="skill-bar-percentage">93%</span>
+                        </div>
+                        <div class="skill-bar-track">
+                            <div class="skill-bar-fill pantone-magenta" data-width="93"></div>
+                        </div>
+                    </div>
+                    <div class="skill-bar-item">
+                        <div class="skill-bar-header">
+                            <span class="skill-bar-name"><span class="skill-bar-icon">📊</span> Data Engineering</span>
+                            <span class="skill-bar-percentage">90%</span>
+                        </div>
+                        <div class="skill-bar-track">
+                            <div class="skill-bar-fill pantone-peri" data-width="90"></div>
+                        </div>
+                    </div>
+                    <div class="skill-bar-item">
+                        <div class="skill-bar-header">
+                            <span class="skill-bar-name"><span class="skill-bar-icon">🔢</span> Vector Embeddings</span>
+                            <span class="skill-bar-percentage">88%</span>
+                        </div>
+                        <div class="skill-bar-track">
+                            <div class="skill-bar-fill" data-width="88"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Network Graph -->
@@ -4164,7 +4663,9 @@
 
     <!-- D3.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    
+    <!-- Three.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
     <script>
         // ============================================
         // ENHANCED CONFIGURATION & DATA
@@ -4639,6 +5140,23 @@
             }, observerOptions);
             
             revealElements.forEach(el => revealObserver.observe(el));
+
+            // Animate skill bars when they come into view
+            const skillBars = document.querySelectorAll('.skill-bar-fill');
+            const skillBarObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const bar = entry.target;
+                        const width = bar.dataset.width;
+                        setTimeout(() => {
+                            bar.style.width = width + '%';
+                        }, 200);
+                        skillBarObserver.unobserve(bar);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            skillBars.forEach(bar => skillBarObserver.observe(bar));
         }
 
         // ============================================
@@ -6499,6 +7017,170 @@
         }
 
         // ============================================
+        // THREE.JS ANTIGRAVITY PARTICLE SYSTEM
+        // ============================================
+        class AntigravityParticles {
+            constructor() {
+                this.canvas = document.getElementById('three-canvas');
+                if (!this.canvas || typeof THREE === 'undefined') return;
+
+                this.scene = new THREE.Scene();
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.renderer = new THREE.WebGLRenderer({
+                    canvas: this.canvas,
+                    alpha: true,
+                    antialias: true
+                });
+
+                this.particles = null;
+                this.particleCount = 2000;
+                this.mouse = { x: 0, y: 0 };
+                this.time = 0;
+
+                this.init();
+            }
+
+            init() {
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                this.camera.position.z = 50;
+
+                this.createParticles();
+                this.addEventListeners();
+                this.animate();
+            }
+
+            createParticles() {
+                const geometry = new THREE.BufferGeometry();
+                const positions = new Float32Array(this.particleCount * 3);
+                const velocities = new Float32Array(this.particleCount * 3);
+                const colors = new Float32Array(this.particleCount * 3);
+                const sizes = new Float32Array(this.particleCount);
+
+                // Pantone-inspired colors for particles
+                const colorPalette = [
+                    new THREE.Color('#A47764'), // Mocha Mousse
+                    new THREE.Color('#FFBE98'), // Peach Fuzz
+                    new THREE.Color('#BB2649'), // Viva Magenta
+                    new THREE.Color('#6667AB'), // Very Peri
+                    new THREE.Color('#3b82f6'), // Blue
+                    new THREE.Color('#8b5cf6'), // Purple
+                    new THREE.Color('#06b6d4')  // Cyan
+                ];
+
+                for (let i = 0; i < this.particleCount; i++) {
+                    const i3 = i * 3;
+
+                    // Spread particles in a 3D space
+                    positions[i3] = (Math.random() - 0.5) * 100;
+                    positions[i3 + 1] = (Math.random() - 0.5) * 100;
+                    positions[i3 + 2] = (Math.random() - 0.5) * 50;
+
+                    // Random initial velocities for floating effect
+                    velocities[i3] = (Math.random() - 0.5) * 0.02;
+                    velocities[i3 + 1] = (Math.random() - 0.5) * 0.02;
+                    velocities[i3 + 2] = (Math.random() - 0.5) * 0.02;
+
+                    // Assign random colors from palette
+                    const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+                    colors[i3] = color.r;
+                    colors[i3 + 1] = color.g;
+                    colors[i3 + 2] = color.b;
+
+                    // Varying sizes
+                    sizes[i] = Math.random() * 2 + 0.5;
+                }
+
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+                geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+                const material = new THREE.PointsMaterial({
+                    size: 1.5,
+                    vertexColors: true,
+                    transparent: true,
+                    opacity: 0.8,
+                    blending: THREE.AdditiveBlending,
+                    sizeAttenuation: true
+                });
+
+                this.particles = new THREE.Points(geometry, material);
+                this.scene.add(this.particles);
+            }
+
+            addEventListeners() {
+                window.addEventListener('resize', () => this.onResize());
+                window.addEventListener('mousemove', (e) => this.onMouseMove(e));
+            }
+
+            onResize() {
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            onMouseMove(event) {
+                this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                this.time += 0.01;
+
+                if (this.particles) {
+                    const positions = this.particles.geometry.attributes.position.array;
+                    const velocities = this.particles.geometry.attributes.velocity.array;
+
+                    for (let i = 0; i < this.particleCount; i++) {
+                        const i3 = i * 3;
+
+                        // Antigravity floating effect
+                        positions[i3] += velocities[i3];
+                        positions[i3 + 1] += velocities[i3 + 1] + Math.sin(this.time + i * 0.01) * 0.01;
+                        positions[i3 + 2] += velocities[i3 + 2];
+
+                        // Mouse repulsion effect
+                        const dx = positions[i3] - this.mouse.x * 30;
+                        const dy = positions[i3 + 1] - this.mouse.y * 30;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < 15) {
+                            const force = (15 - dist) / 15 * 0.1;
+                            positions[i3] += dx * force * 0.05;
+                            positions[i3 + 1] += dy * force * 0.05;
+                        }
+
+                        // Boundary wrapping
+                        if (positions[i3] > 50) positions[i3] = -50;
+                        if (positions[i3] < -50) positions[i3] = 50;
+                        if (positions[i3 + 1] > 50) positions[i3 + 1] = -50;
+                        if (positions[i3 + 1] < -50) positions[i3 + 1] = 50;
+                        if (positions[i3 + 2] > 25) positions[i3 + 2] = -25;
+                        if (positions[i3 + 2] < -25) positions[i3 + 2] = 25;
+                    }
+
+                    this.particles.geometry.attributes.position.needsUpdate = true;
+
+                    // Gentle rotation
+                    this.particles.rotation.y = this.time * 0.05;
+                    this.particles.rotation.x = Math.sin(this.time * 0.3) * 0.05;
+                }
+
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        // Initialize Three.js particles
+        let antigravityParticles = null;
+        function initThreeParticles() {
+            if (typeof THREE !== 'undefined') {
+                antigravityParticles = new AntigravityParticles();
+            }
+        }
+
+        // ============================================
         // RESIZE HANDLER
         // ============================================
         function initResizeHandler() {
@@ -6527,6 +7209,7 @@
             initCounterAnimation();
             initStarfieldCanvas();
             initParticleCanvas();
+            initThreeParticles();
             initSlidePanel();
             
             // Populate vertical timeline
