@@ -23,6 +23,63 @@
     
     <style>
         /* ============================================
+           CSS LAYERS FOR PROGRESSIVE ENHANCEMENT
+           ============================================ */
+        @layer reset, tokens, themes, components, utilities, moderncss;
+
+        /* ============================================
+           CSS HOUDINI @PROPERTY DEFINITIONS
+           Antigravity Motion System Variables
+           ============================================ */
+        @property --animation-tick {
+            syntax: '<number>';
+            inherits: false;
+            initial-value: 0;
+        }
+
+        @property --ring-radius {
+            syntax: '<length>';
+            inherits: false;
+            initial-value: 150px;
+        }
+
+        @property --ring-x {
+            syntax: '<number>';
+            inherits: false;
+            initial-value: 50;
+        }
+
+        @property --ring-y {
+            syntax: '<number>';
+            inherits: false;
+            initial-value: 50;
+        }
+
+        @property --particle-alpha {
+            syntax: '<number>';
+            inherits: false;
+            initial-value: 0.6;
+        }
+
+        @property --scroll-progress {
+            syntax: '<number>';
+            inherits: false;
+            initial-value: 0;
+        }
+
+        @property --typewriter-progress {
+            syntax: '<percentage>';
+            inherits: false;
+            initial-value: 0%;
+        }
+
+        @property --card-scale {
+            syntax: '<number>';
+            inherits: false;
+            initial-value: 0.85;
+        }
+
+        /* ============================================
            ENHANCED CSS CUSTOM PROPERTIES & DESIGN TOKENS
            ============================================ */
         :root {
@@ -440,6 +497,386 @@
 
         body.dark #three-canvas {
             opacity: 1;
+        }
+
+        /* ============================================
+           ANTIGRAVITY MOTION SYSTEM
+           "Agentic Weightlessness" - Fluid, GPU-friendly animations
+           ============================================ */
+
+        /* Particle Ring Hero Background */
+        .particle-ring-hero {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle-ring-container {
+            position: absolute;
+            inset: 0;
+            /* Fallback: Tier C - Static radial gradient */
+            background:
+                radial-gradient(ellipse at calc(var(--ring-x) * 1%) calc(var(--ring-y) * 1%),
+                    rgba(59, 130, 246, 0.15) 0%,
+                    transparent var(--ring-radius)),
+                radial-gradient(ellipse at 30% 20%, rgba(164, 119, 100, 0.1) 0%, transparent 40%),
+                radial-gradient(ellipse at 70% 80%, rgba(102, 103, 171, 0.1) 0%, transparent 40%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        body.dark .particle-ring-container {
+            opacity: 1;
+        }
+
+        /* Ring breathing animation */
+        @keyframes ringBreathing {
+            0%, 100% { --ring-radius: 150px; --particle-alpha: 0.5; }
+            50% { --ring-radius: 250px; --particle-alpha: 0.8; }
+        }
+
+        @keyframes rippleTick {
+            0% { --animation-tick: 0; }
+            100% { --animation-tick: 1; }
+        }
+
+        .particle-ring-container {
+            animation:
+                ringBreathing 6s ease-in-out infinite alternate,
+                rippleTick 6s linear infinite;
+        }
+
+        /* CSS-only Particle Rings (Tier B) */
+        .particle-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(59, 130, 246, calc(var(--particle-alpha) * 0.3));
+            pointer-events: none;
+            animation: particleFloat var(--float-duration, 8s) ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+                opacity: calc(var(--particle-alpha) * 0.6);
+            }
+            25% {
+                transform: translate(calc(var(--drift-x, 10px)), calc(var(--drift-y, -15px))) scale(1.05) rotate(90deg);
+                opacity: calc(var(--particle-alpha) * 0.8);
+            }
+            50% {
+                transform: translate(calc(var(--drift-x, 10px) * -0.5), calc(var(--drift-y, -15px) * 1.5)) scale(0.95) rotate(180deg);
+                opacity: var(--particle-alpha);
+            }
+            75% {
+                transform: translate(calc(var(--drift-x, 10px) * -1), calc(var(--drift-y, -15px) * 0.5)) scale(1.02) rotate(270deg);
+                opacity: calc(var(--particle-alpha) * 0.7);
+            }
+        }
+
+        /* Generate 80 particle rings with CSS */
+        .particle-ring:nth-child(1) { --float-duration: 7s; --drift-x: 20px; --drift-y: -25px; left: 10%; top: 15%; width: 60px; height: 60px; }
+        .particle-ring:nth-child(2) { --float-duration: 9s; --drift-x: -15px; --drift-y: 20px; left: 25%; top: 30%; width: 80px; height: 80px; animation-delay: -1s; }
+        .particle-ring:nth-child(3) { --float-duration: 11s; --drift-x: 25px; --drift-y: -10px; left: 40%; top: 10%; width: 50px; height: 50px; animation-delay: -2s; }
+        .particle-ring:nth-child(4) { --float-duration: 8s; --drift-x: -20px; --drift-y: 30px; left: 60%; top: 25%; width: 70px; height: 70px; animation-delay: -3s; }
+        .particle-ring:nth-child(5) { --float-duration: 10s; --drift-x: 15px; --drift-y: -35px; left: 75%; top: 40%; width: 90px; height: 90px; animation-delay: -4s; }
+        .particle-ring:nth-child(6) { --float-duration: 12s; --drift-x: -25px; --drift-y: 15px; left: 85%; top: 15%; width: 55px; height: 55px; animation-delay: -0.5s; }
+        .particle-ring:nth-child(7) { --float-duration: 7.5s; --drift-x: 30px; --drift-y: -20px; left: 15%; top: 60%; width: 75px; height: 75px; animation-delay: -1.5s; }
+        .particle-ring:nth-child(8) { --float-duration: 9.5s; --drift-x: -10px; --drift-y: 25px; left: 30%; top: 75%; width: 65px; height: 65px; animation-delay: -2.5s; }
+        .particle-ring:nth-child(9) { --float-duration: 8.5s; --drift-x: 20px; --drift-y: -15px; left: 50%; top: 55%; width: 85px; height: 85px; animation-delay: -3.5s; }
+        .particle-ring:nth-child(10) { --float-duration: 11.5s; --drift-x: -30px; --drift-y: 10px; left: 70%; top: 70%; width: 45px; height: 45px; animation-delay: -4.5s; }
+        .particle-ring:nth-child(11) { --float-duration: 6.5s; --drift-x: 10px; --drift-y: -30px; left: 5%; top: 45%; width: 100px; height: 100px; animation-delay: -0.8s; }
+        .particle-ring:nth-child(12) { --float-duration: 13s; --drift-x: -35px; --drift-y: 5px; left: 90%; top: 55%; width: 40px; height: 40px; animation-delay: -1.8s; }
+        .particle-ring:nth-child(13) { --float-duration: 8.2s; --drift-x: 5px; --drift-y: -40px; left: 20%; top: 85%; width: 55px; height: 55px; animation-delay: -2.8s; }
+        .particle-ring:nth-child(14) { --float-duration: 10.2s; --drift-x: -5px; --drift-y: 35px; left: 45%; top: 5%; width: 95px; height: 95px; animation-delay: -3.8s; }
+        .particle-ring:nth-child(15) { --float-duration: 7.8s; --drift-x: 35px; --drift-y: -5px; left: 65%; top: 90%; width: 50px; height: 50px; animation-delay: -4.8s; }
+        .particle-ring:nth-child(16) { --float-duration: 9.8s; --drift-x: -40px; --drift-y: 40px; left: 80%; top: 35%; width: 72px; height: 72px; animation-delay: -0.3s; }
+
+        /* Cursor Gravity Effect */
+        .cursor-gravity-field {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle,
+                rgba(59, 130, 246, 0.1) 0%,
+                rgba(139, 92, 246, 0.05) 40%,
+                transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            mix-blend-mode: screen;
+        }
+
+        body.dark .cursor-gravity-field {
+            opacity: 1;
+        }
+
+        /* ============================================
+           HIDEY BAR - Scroll-State Header
+           ============================================ */
+        .header-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: var(--z-fixed);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+
+        .header-wrapper.header-hidden {
+            transform: translateY(-100%);
+        }
+
+        /* Keep header visible when mobile menu is open */
+        .header-wrapper.menu-active {
+            transform: translateY(0) !important;
+        }
+
+        /* ============================================
+           TYPEWRITER REVEAL EFFECT
+           Scroll-triggered text animation
+           ============================================ */
+        .typewriter-reveal {
+            --typewriter-progress: 0%;
+            background: linear-gradient(90deg,
+                currentColor var(--typewriter-progress),
+                transparent var(--typewriter-progress));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .typewriter-reveal::after {
+            content: '|';
+            position: absolute;
+            right: 0;
+            animation: cursorBlink 0.8s step-end infinite;
+            opacity: 0;
+        }
+
+        .typewriter-reveal.typing::after {
+            opacity: 1;
+        }
+
+        .typewriter-reveal.typed {
+            --typewriter-progress: 100%;
+            -webkit-text-fill-color: currentColor;
+            background: none;
+        }
+
+        .typewriter-reveal.typed::after {
+            opacity: 0;
+        }
+
+        @keyframes cursorBlink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        @keyframes typewriterReveal {
+            from { --typewriter-progress: 0%; }
+            to { --typewriter-progress: 100%; }
+        }
+
+        /* Scroll-driven typewriter (modern browsers) */
+        @supports (animation-timeline: view()) {
+            .typewriter-scroll {
+                animation: typewriterReveal linear forwards;
+                animation-timeline: view();
+                animation-range: entry 20% entry 80%;
+            }
+        }
+
+        /* ============================================
+           SCROLL-DRIVEN SCALE (CTA Cards)
+           ============================================ */
+        .scroll-scale-card {
+            --card-scale: 0.85;
+            transform: scale(var(--card-scale));
+            opacity: calc(0.4 + (var(--card-scale) - 0.85) * 4);
+            transition: transform 0.1s, opacity 0.1s;
+            will-change: transform, opacity;
+        }
+
+        @keyframes scaleOnScroll {
+            from { --card-scale: 0.85; }
+            to { --card-scale: 1; }
+        }
+
+        @supports (animation-timeline: view()) {
+            .scroll-scale-card {
+                animation: scaleOnScroll linear forwards;
+                animation-timeline: view();
+                animation-range: entry 50% entry 100%;
+            }
+        }
+
+        /* Fallback for browsers without scroll-timeline */
+        .scroll-scale-card.in-view {
+            --card-scale: 1;
+        }
+
+        /* ============================================
+           SNAPPED CAROUSEL
+           Native CSS scroll snapping with state-aware transitions
+           ============================================ */
+        .snapped-carousel {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding: 2rem;
+            margin: -2rem;
+            anchor-name: --carousel;
+        }
+
+        .snapped-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .carousel-item {
+            flex: 0 0 min(350px, 85vw);
+            scroll-snap-align: center;
+            scroll-snap-stop: always;
+            opacity: 0.4;
+            transform: scale(0.9);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            container-type: inline-size;
+        }
+
+        .carousel-item.snapped {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .carousel-item .carousel-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease 0.1s;
+        }
+
+        .carousel-item.snapped .carousel-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Carousel Navigation Buttons with Anchor Positioning */
+        @supports (anchor-name: --carousel) {
+            .carousel-nav-btn {
+                position: fixed;
+                position-anchor: --carousel;
+                position-visibility: always;
+            }
+
+            .carousel-nav-btn.prev {
+                left: anchor(left);
+                top: anchor(center);
+                transform: translateX(-120%) translateY(-50%);
+            }
+
+            .carousel-nav-btn.next {
+                right: anchor(right);
+                top: anchor(center);
+                transform: translateX(120%) translateY(-50%);
+            }
+        }
+
+        /* Fallback positioning */
+        @supports not (anchor-name: --carousel) {
+            .carousel-nav-btn {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .carousel-nav-btn.prev { left: -3rem; }
+            .carousel-nav-btn.next { right: -3rem; }
+        }
+
+        .carousel-nav-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--glass-panel);
+            border: 1px solid var(--glass-border);
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .carousel-nav-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: scale(1.1);
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* ============================================
+           REDUCED MOTION ACCESSIBILITY
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            .particle-ring-container {
+                animation: none !important;
+            }
+
+            .particle-ring {
+                animation: none !important;
+            }
+
+            .typewriter-reveal {
+                --typewriter-progress: 100% !important;
+                -webkit-text-fill-color: currentColor !important;
+                background: none !important;
+            }
+
+            .typewriter-reveal::after {
+                display: none !important;
+            }
+
+            .scroll-scale-card {
+                animation: none !important;
+                --card-scale: 1 !important;
+                opacity: 1 !important;
+            }
+
+            .carousel-item {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+
+            .cursor-gravity-field {
+                display: none !important;
+            }
+
+            .cosmic-fog::before,
+            .cosmic-fog::after {
+                animation: none !important;
+            }
+
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
 
         /* ============================================
@@ -3476,6 +3913,31 @@
     <div class="cosmic-overlay"></div>
     <div class="cosmic-fog"></div>
 
+    <!-- Antigravity Particle Ring System (Tier B: CSS) -->
+    <div class="particle-ring-hero" aria-hidden="true">
+        <div class="particle-ring-container">
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+            <div class="particle-ring"></div>
+        </div>
+    </div>
+
+    <!-- Cursor Gravity Field -->
+    <div class="cursor-gravity-field" id="cursor-gravity-field" aria-hidden="true"></div>
+
     <!-- Slide-Over Detail Panel -->
     <div class="slide-panel-overlay" id="slide-panel-overlay"></div>
     <div class="slide-panel" id="slide-panel">
@@ -3502,6 +3964,8 @@
     </div>
 
     <!-- Header -->
+    <!-- Header with Hidey Bar behavior -->
+    <div class="header-wrapper" id="header-wrapper">
     <header id="header">
         <nav>
             <div class="nav-brand">TANAT</div>
@@ -3566,6 +4030,7 @@
             </div>
         </nav>
     </header>
+    </div><!-- /.header-wrapper -->
 
     <main>
         <!-- Hero Section -->
@@ -3933,7 +4398,7 @@
 
             <!-- KPI Cards with Trends -->
             <div class="kpi-cards-grid">
-                <div class="kpi-card glass-card">
+                <div class="kpi-card glass-card scroll-scale-card">
                     <div class="kpi-card-header">
                         <div class="kpi-card-icon">🛡️</div>
                         <div class="kpi-card-trend up">↑ 23%</div>
@@ -3953,7 +4418,7 @@
                         <div class="sparkline-bar" style="height: 93%"></div>
                     </div>
                 </div>
-                <div class="kpi-card glass-card">
+                <div class="kpi-card glass-card scroll-scale-card">
                     <div class="kpi-card-header">
                         <div class="kpi-card-icon">⚡</div>
                         <div class="kpi-card-trend up">↑ 85%</div>
@@ -3973,7 +4438,7 @@
                         <div class="sparkline-bar" style="height: 10%"></div>
                     </div>
                 </div>
-                <div class="kpi-card glass-card">
+                <div class="kpi-card glass-card scroll-scale-card">
                     <div class="kpi-card-header">
                         <div class="kpi-card-icon">🎯</div>
                         <div class="kpi-card-trend up">↑ 47%</div>
@@ -3993,7 +4458,7 @@
                         <div class="sparkline-bar" style="height: 30%"></div>
                     </div>
                 </div>
-                <div class="kpi-card glass-card">
+                <div class="kpi-card glass-card scroll-scale-card">
                     <div class="kpi-card-header">
                         <div class="kpi-card-icon">📊</div>
                         <div class="kpi-card-trend up">↑ 12%</div>
@@ -4363,7 +4828,7 @@
                     <span lang="en">Recognition</span>
                     <span lang="th">การยอมรับ</span>
                 </span>
-                <h2 class="section-title">
+                <h2 class="section-title typewriter-reveal">
                     <span lang="en">Recognition & Impact</span>
                     <span lang="th">การยอมรับและผลกระทบ</span>
                 </h2>
@@ -4371,6 +4836,79 @@
                     <span lang="en">Validated expertise through competitive innovation, strategic advisory, and thought leadership</span>
                     <span lang="th">ความเชี่ยวชาญที่ได้รับการรับรองผ่านนวัตกรรม การให้คำปรึกษาเชิงกลยุทธ์ และภาวะผู้นำทางความคิด</span>
                 </p>
+            </div>
+
+            <!-- Featured Projects Carousel (Snapped) -->
+            <div class="carousel-wrapper" style="position: relative; margin-bottom: 3rem;">
+                <div class="snapped-carousel" role="region" aria-label="Featured Projects">
+                    <article class="carousel-item glass-card">
+                        <div class="carousel-content">
+                            <div class="kpi-card-icon" style="margin-bottom: 1rem;">🧠</div>
+                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">
+                                <span lang="en">C-SOAR Framework</span>
+                                <span lang="th">กรอบงาน C-SOAR</span>
+                            </h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted-light);">
+                                <span lang="en">Cognitive SOAR architecture with sub-10ms retrieval</span>
+                                <span lang="th">สถาปัตยกรรม Cognitive SOAR ด้วยการดึงข้อมูลต่ำกว่า 10ms</span>
+                            </p>
+                        </div>
+                    </article>
+                    <article class="carousel-item glass-card">
+                        <div class="carousel-content">
+                            <div class="kpi-card-icon" style="margin-bottom: 1rem;">🏆</div>
+                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">
+                                <span lang="en">Siam RegTech</span>
+                                <span lang="th">Siam RegTech</span>
+                            </h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted-light);">
+                                <span lang="en">Top 10 Finalist - SEC/BOT/OIC AML Challenge</span>
+                                <span lang="th">ผู้เข้ารอบ 10 อันดับแรก - การแข่งขัน AML ก.ล.ต./ธปท./คปภ.</span>
+                            </p>
+                        </div>
+                    </article>
+                    <article class="carousel-item glass-card">
+                        <div class="carousel-content">
+                            <div class="kpi-card-icon" style="margin-bottom: 1rem;">🎓</div>
+                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">
+                                <span lang="en">Learn Sabai</span>
+                                <span lang="th">Learn Sabai</span>
+                            </h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted-light);">
+                                <span lang="en">Top 100 SIPA - Swarm Intelligence Learning</span>
+                                <span lang="th">100 อันดับแรก SIPA - การเรียนรู้ Swarm Intelligence</span>
+                            </p>
+                        </div>
+                    </article>
+                    <article class="carousel-item glass-card">
+                        <div class="carousel-content">
+                            <div class="kpi-card-icon" style="margin-bottom: 1rem;">🛡️</div>
+                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">
+                                <span lang="en">CISSP Certified</span>
+                                <span lang="th">ได้รับการรับรอง CISSP</span>
+                            </h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted-light);">
+                                <span lang="en">Elite cybersecurity professional certification</span>
+                                <span lang="th">ใบรับรองความปลอดภัยไซเบอร์ระดับสูง</span>
+                            </p>
+                        </div>
+                    </article>
+                    <article class="carousel-item glass-card">
+                        <div class="carousel-content">
+                            <div class="kpi-card-icon" style="margin-bottom: 1rem;">📊</div>
+                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">
+                                <span lang="en">Vector Search</span>
+                                <span lang="th">การค้นหาเวกเตอร์</span>
+                            </h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted-light);">
+                                <span lang="en">Optimized 10M+ record processing pipeline</span>
+                                <span lang="th">ท่อส่งข้อมูล 10M+ รายการที่ปรับปรุงแล้ว</span>
+                            </p>
+                        </div>
+                    </article>
+                </div>
+                <button class="carousel-nav-btn prev" aria-label="Previous">‹</button>
+                <button class="carousel-nav-btn next" aria-label="Next">›</button>
             </div>
 
             <div class="cards-grid stagger-children" id="achievements-cards">
@@ -7181,6 +7719,275 @@
         }
 
         // ============================================
+        // ANTIGRAVITY MOTION SYSTEM
+        // "Agentic Weightlessness" - GPU-friendly interactions
+        // ============================================
+
+        // Cursor Gravity Field - follows mouse with smooth interpolation
+        function initCursorGravityField() {
+            const gravityField = document.getElementById('cursor-gravity-field');
+            const particleContainer = document.querySelector('.particle-ring-container');
+            if (!gravityField) return;
+
+            let currentX = window.innerWidth / 2;
+            let currentY = window.innerHeight / 2;
+            let targetX = currentX;
+            let targetY = currentY;
+            const lerp = 0.08; // Smooth interpolation factor
+
+            // Throttled mouse move handler
+            let ticking = false;
+            document.addEventListener('pointermove', (e) => {
+                targetX = e.clientX;
+                targetY = e.clientY;
+
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        // Update CSS custom properties for particle ring center
+                        const ringX = (targetX / window.innerWidth) * 100;
+                        const ringY = (targetY / window.innerHeight) * 100;
+
+                        if (particleContainer) {
+                            particleContainer.style.setProperty('--ring-x', ringX);
+                            particleContainer.style.setProperty('--ring-y', ringY);
+                        }
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+
+            // Smooth animation loop for gravity field
+            function animateGravityField() {
+                currentX += (targetX - currentX) * lerp;
+                currentY += (targetY - currentY) * lerp;
+
+                gravityField.style.left = currentX + 'px';
+                gravityField.style.top = currentY + 'px';
+
+                requestAnimationFrame(animateGravityField);
+            }
+
+            animateGravityField();
+        }
+
+        // Hidey Bar - Header hides on scroll down, shows on scroll up
+        function initHideyBar() {
+            const headerWrapper = document.getElementById('header-wrapper');
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            if (!headerWrapper) return;
+
+            let lastScrollY = window.scrollY;
+            let ticking = false;
+            const threshold = 10; // Minimum scroll amount to trigger
+
+            // Check if mobile menu is open
+            const isMenuOpen = () => {
+                return document.body.classList.contains('menu-open') ||
+                       headerWrapper.classList.contains('menu-active');
+            };
+
+            const updateHeader = () => {
+                const currentScrollY = window.scrollY;
+                const scrollDelta = currentScrollY - lastScrollY;
+
+                // Don't hide if menu is open or at top of page
+                if (isMenuOpen() || currentScrollY < 100) {
+                    headerWrapper.classList.remove('header-hidden');
+                } else if (scrollDelta > threshold) {
+                    // Scrolling down - hide header
+                    headerWrapper.classList.add('header-hidden');
+                } else if (scrollDelta < -threshold) {
+                    // Scrolling up - show header
+                    headerWrapper.classList.remove('header-hidden');
+                }
+
+                lastScrollY = currentScrollY;
+                ticking = false;
+            };
+
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(updateHeader);
+                    ticking = true;
+                }
+            }, { passive: true });
+
+            // Keep header visible when mobile menu is toggled
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', () => {
+                    headerWrapper.classList.toggle('menu-active');
+                });
+            }
+        }
+
+        // Typewriter Reveal - Animate text on scroll into view
+        function initTypewriterReveal() {
+            const typewriterElements = document.querySelectorAll('.typewriter-reveal');
+            if (typewriterElements.length === 0) return;
+
+            // Check for native scroll-driven animation support
+            const supportsScrollTimeline = CSS.supports('animation-timeline', 'view()');
+
+            if (!supportsScrollTimeline) {
+                // Fallback: Use Intersection Observer
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const el = entry.target;
+                            el.classList.add('typing');
+
+                            // Animate typewriter progress
+                            let progress = 0;
+                            const duration = 1500; // ms
+                            const startTime = performance.now();
+
+                            const animate = (currentTime) => {
+                                const elapsed = currentTime - startTime;
+                                progress = Math.min(elapsed / duration, 1);
+                                el.style.setProperty('--typewriter-progress', (progress * 100) + '%');
+
+                                if (progress < 1) {
+                                    requestAnimationFrame(animate);
+                                } else {
+                                    el.classList.remove('typing');
+                                    el.classList.add('typed');
+                                }
+                            };
+
+                            requestAnimationFrame(animate);
+                            observer.unobserve(el);
+                        }
+                    });
+                }, { threshold: 0.3 });
+
+                typewriterElements.forEach(el => observer.observe(el));
+            }
+        }
+
+        // Scroll-Driven Scale - Scale cards as they enter viewport
+        function initScrollDrivenScale() {
+            const scaleCards = document.querySelectorAll('.scroll-scale-card');
+            if (scaleCards.length === 0) return;
+
+            // Check for native scroll-driven animation support
+            const supportsScrollTimeline = CSS.supports('animation-timeline', 'view()');
+
+            if (!supportsScrollTimeline) {
+                // Fallback: Use Intersection Observer
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const ratio = entry.intersectionRatio;
+                            const scale = 0.85 + (ratio * 0.15); // Scale from 0.85 to 1.0
+                            entry.target.style.setProperty('--card-scale', scale);
+
+                            if (ratio > 0.9) {
+                                entry.target.classList.add('in-view');
+                            }
+                        } else {
+                            entry.target.classList.remove('in-view');
+                        }
+                    });
+                }, {
+                    threshold: [0, 0.25, 0.5, 0.75, 1]
+                });
+
+                scaleCards.forEach(card => observer.observe(card));
+            }
+        }
+
+        // Snapped Carousel - Detect snapped items and apply state
+        function initSnappedCarousel() {
+            const carousels = document.querySelectorAll('.snapped-carousel');
+
+            carousels.forEach(carousel => {
+                const items = carousel.querySelectorAll('.carousel-item');
+                const prevBtn = carousel.parentElement.querySelector('.carousel-nav-btn.prev');
+                const nextBtn = carousel.parentElement.querySelector('.carousel-nav-btn.next');
+
+                // Detect snapped item
+                const updateSnappedState = () => {
+                    const carouselRect = carousel.getBoundingClientRect();
+                    const carouselCenter = carouselRect.left + carouselRect.width / 2;
+
+                    let closestItem = null;
+                    let closestDistance = Infinity;
+
+                    items.forEach(item => {
+                        const itemRect = item.getBoundingClientRect();
+                        const itemCenter = itemRect.left + itemRect.width / 2;
+                        const distance = Math.abs(itemCenter - carouselCenter);
+
+                        if (distance < closestDistance) {
+                            closestDistance = distance;
+                            closestItem = item;
+                        }
+
+                        item.classList.remove('snapped');
+                    });
+
+                    if (closestItem && closestDistance < 100) {
+                        closestItem.classList.add('snapped');
+                    }
+                };
+
+                // Scroll event listener with debounce
+                let scrollTimeout;
+                carousel.addEventListener('scroll', () => {
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(updateSnappedState, 50);
+                }, { passive: true });
+
+                // Navigation buttons
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', () => {
+                        const itemWidth = items[0]?.offsetWidth || 350;
+                        carousel.scrollBy({ left: -itemWidth - 24, behavior: 'smooth' });
+                    });
+                }
+
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', () => {
+                        const itemWidth = items[0]?.offsetWidth || 350;
+                        carousel.scrollBy({ left: itemWidth + 24, behavior: 'smooth' });
+                    });
+                }
+
+                // Initial state
+                updateSnappedState();
+
+                // Keyboard navigation
+                carousel.setAttribute('tabindex', '0');
+                carousel.addEventListener('keydown', (e) => {
+                    const itemWidth = items[0]?.offsetWidth || 350;
+                    if (e.key === 'ArrowLeft') {
+                        carousel.scrollBy({ left: -itemWidth - 24, behavior: 'smooth' });
+                    } else if (e.key === 'ArrowRight') {
+                        carousel.scrollBy({ left: itemWidth + 24, behavior: 'smooth' });
+                    }
+                });
+            });
+        }
+
+        // Initialize Antigravity Motion System
+        function initAntigravityMotion() {
+            // Check for reduced motion preference
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            if (!prefersReducedMotion) {
+                initCursorGravityField();
+            }
+
+            initHideyBar();
+            initTypewriterReveal();
+            initScrollDrivenScale();
+            initSnappedCarousel();
+
+            console.log('🌌 Antigravity Motion System initialized');
+        }
+
+        // ============================================
         // RESIZE HANDLER
         // ============================================
         function initResizeHandler() {
@@ -7210,6 +8017,7 @@
             initStarfieldCanvas();
             initParticleCanvas();
             initThreeParticles();
+            initAntigravityMotion();
             initSlidePanel();
             
             // Populate vertical timeline
