@@ -461,18 +461,24 @@ def format_date_iso(date_obj: Any) -> str:
     """
     if date_obj is None:
         return ""
-    if isinstance(date_obj, datetime):
-        return date_obj.strftime("%Y-%m-%d")
-    if isinstance(date_obj, date):
-        return date_obj.strftime("%Y-%m-%d")
-    if isinstance(date_obj, str):
-        # Remove time portion if present
-        if " 00:00:00" in date_obj:
-            return date_obj.replace(" 00:00:00", "")
-        if " " in date_obj:
-            return date_obj.split(" ")[0]
-        return date_obj
-    return str(date_obj)
+    # Handle pandas NaT (Not a Time) values
+    if pd.isna(date_obj):
+        return ""
+    try:
+        if isinstance(date_obj, datetime):
+            return date_obj.strftime("%Y-%m-%d")
+        if isinstance(date_obj, date):
+            return date_obj.strftime("%Y-%m-%d")
+        if isinstance(date_obj, str):
+            # Remove time portion if present
+            if " 00:00:00" in date_obj:
+                return date_obj.replace(" 00:00:00", "")
+            if " " in date_obj:
+                return date_obj.split(" ")[0]
+            return date_obj
+        return str(date_obj)
+    except Exception:
+        return ""
 
 
 def parse_date_dsl2_buddhist(date_str: Any) -> Optional[datetime]:
@@ -4131,9 +4137,7 @@ Examples:
         tmp_folder = args.output / "_tmp"
         tmp_folder.mkdir(exist_ok=True)
         
-        log_info(f"DSL1
-
-Source: {args.dsl1}")
+        log_info(f"DSL1 Source: {args.dsl1}")
         log_info(f"DSL2 Source: {args.dsl2}")
         if ps_folder:
             log_info(f"Payment Schedule Source: {ps_folder}")
