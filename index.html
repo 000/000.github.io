@@ -443,6 +443,7 @@
         }
 
         /* Cosmic Gradient Overlay */
+        /* Cosmic Overlay - visible in both modes */
         .cosmic-overlay {
             position: fixed;
             top: 0;
@@ -451,16 +452,17 @@
             height: 100%;
             z-index: -1;
             pointer-events: none;
-            background: var(--gradient-cosmic);
-            opacity: 0;
-            transition: opacity 0.5s ease;
+            /* Light mode: very subtle */
+            background: radial-gradient(ellipse at center, rgba(14, 165, 233, 0.03) 0%, transparent 70%);
+            opacity: 1;
+            transition: background 0.5s ease;
         }
 
         body.dark .cosmic-overlay {
-            opacity: 1;
+            background: var(--gradient-cosmic);
         }
 
-        /* Cosmic Fog Effect */
+        /* Cosmic Fog Effect - visible in both modes */
         .cosmic-fog {
             position: fixed;
             top: 0;
@@ -469,7 +471,7 @@
             height: 100%;
             z-index: -1;
             pointer-events: none;
-            opacity: 0;
+            opacity: 0.3;
             transition: opacity 0.5s ease;
         }
 
@@ -485,16 +487,28 @@
             height: 100%;
         }
 
+        /* Light mode: warm, subtle tones */
         .cosmic-fog::before {
-            background: radial-gradient(ellipse at 30% 20%, rgba(164, 119, 100, 0.15) 0%, transparent 50%),
-                        radial-gradient(ellipse at 70% 80%, rgba(102, 103, 171, 0.15) 0%, transparent 50%);
+            background: radial-gradient(ellipse at 30% 20%, rgba(164, 119, 100, 0.06) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(102, 103, 171, 0.05) 0%, transparent 50%);
             animation: fogDrift 20s ease-in-out infinite;
         }
 
         .cosmic-fog::after {
+            background: radial-gradient(ellipse at 60% 50%, rgba(187, 38, 73, 0.04) 0%, transparent 40%),
+                        radial-gradient(ellipse at 20% 70%, rgba(255, 190, 152, 0.04) 0%, transparent 40%);
+            animation: fogDrift 25s ease-in-out infinite reverse;
+        }
+
+        /* Dark mode: richer fog colors */
+        body.dark .cosmic-fog::before {
+            background: radial-gradient(ellipse at 30% 20%, rgba(164, 119, 100, 0.15) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(102, 103, 171, 0.15) 0%, transparent 50%);
+        }
+
+        body.dark .cosmic-fog::after {
             background: radial-gradient(ellipse at 60% 50%, rgba(187, 38, 73, 0.1) 0%, transparent 40%),
                         radial-gradient(ellipse at 20% 70%, rgba(255, 190, 152, 0.1) 0%, transparent 40%);
-            animation: fogDrift 25s ease-in-out infinite reverse;
         }
 
         @keyframes fogDrift {
@@ -522,7 +536,8 @@
 
         /* ============================================
            ANTIGRAVITY MOTION SYSTEM
-           "Agentic Weightlessness" - Fluid, GPU-friendly animations
+           "Agentic Weightlessness" - Inspired by antigravity.google
+           Fluid, GPU-friendly animations visible in both modes
            ============================================ */
 
         /* Particle Ring Hero Background */
@@ -537,28 +552,49 @@
             overflow: hidden;
         }
 
+        /* Ambient Glow Layer - Always visible */
         .particle-ring-container {
             position: absolute;
             inset: 0;
-            /* Fallback: Tier C - Static radial gradient */
+            /* Light mode: Warm, subtle gradients */
             background:
-                radial-gradient(ellipse at calc(var(--ring-x) * 1%) calc(var(--ring-y) * 1%),
-                    rgba(59, 130, 246, 0.15) 0%,
-                    transparent var(--ring-radius)),
-                radial-gradient(ellipse at 30% 20%, rgba(164, 119, 100, 0.1) 0%, transparent 40%),
-                radial-gradient(ellipse at 70% 80%, rgba(102, 103, 171, 0.1) 0%, transparent 40%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
+                radial-gradient(ellipse 80% 60% at calc(var(--ring-x, 50) * 1%) calc(var(--ring-y, 50) * 1%),
+                    rgba(14, 165, 233, 0.08) 0%,
+                    transparent calc(var(--ring-radius, 150px) + 100px)),
+                radial-gradient(ellipse 120% 100% at 20% 80%,
+                    rgba(164, 119, 100, 0.06) 0%,
+                    transparent 50%),
+                radial-gradient(ellipse 100% 80% at 80% 20%,
+                    rgba(139, 92, 246, 0.05) 0%,
+                    transparent 45%),
+                radial-gradient(ellipse 60% 60% at 60% 60%,
+                    rgba(236, 72, 153, 0.04) 0%,
+                    transparent 40%);
+            opacity: 1;
+            transition: background 0.5s ease, opacity 0.5s ease;
         }
 
+        /* Dark mode: Richer, more vibrant gradients */
         body.dark .particle-ring-container {
-            opacity: 1;
+            background:
+                radial-gradient(ellipse 80% 60% at calc(var(--ring-x, 50) * 1%) calc(var(--ring-y, 50) * 1%),
+                    rgba(59, 130, 246, 0.2) 0%,
+                    transparent calc(var(--ring-radius, 150px) + 100px)),
+                radial-gradient(ellipse 120% 100% at 20% 80%,
+                    rgba(164, 119, 100, 0.15) 0%,
+                    transparent 50%),
+                radial-gradient(ellipse 100% 80% at 80% 20%,
+                    rgba(102, 103, 171, 0.18) 0%,
+                    transparent 45%),
+                radial-gradient(ellipse 60% 60% at 60% 60%,
+                    rgba(187, 38, 73, 0.12) 0%,
+                    transparent 40%);
         }
 
         /* Ring breathing animation */
         @keyframes ringBreathing {
-            0%, 100% { --ring-radius: 150px; --particle-alpha: 0.5; }
-            50% { --ring-radius: 250px; --particle-alpha: 0.8; }
+            0%, 100% { --ring-radius: 120px; --particle-alpha: 0.4; }
+            50% { --ring-radius: 220px; --particle-alpha: 0.7; }
         }
 
         @keyframes rippleTick {
@@ -568,77 +604,211 @@
 
         .particle-ring-container {
             animation:
-                ringBreathing 6s ease-in-out infinite alternate,
-                rippleTick 6s linear infinite;
+                ringBreathing 8s ease-in-out infinite alternate,
+                rippleTick 8s linear infinite;
         }
 
-        /* CSS-only Particle Rings (Tier B) */
+        /* CSS-only Particle Rings (Tier B) - Floating Orbs */
         .particle-ring {
             position: absolute;
             border-radius: 50%;
-            border: 1px solid rgba(59, 130, 246, calc(var(--particle-alpha) * 0.3));
             pointer-events: none;
             animation: particleFloat var(--float-duration, 8s) ease-in-out infinite;
             transform-origin: center;
+            /* Light mode: subtle warm tones */
+            background: radial-gradient(circle at 30% 30%,
+                rgba(14, 165, 233, 0.12) 0%,
+                rgba(139, 92, 246, 0.08) 40%,
+                transparent 70%);
+            border: 1px solid rgba(14, 165, 233, 0.15);
+            box-shadow:
+                0 0 20px rgba(14, 165, 233, 0.05),
+                inset 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark .particle-ring {
+            /* Dark mode: glowing neon orbs */
+            background: radial-gradient(circle at 30% 30%,
+                rgba(59, 130, 246, 0.25) 0%,
+                rgba(139, 92, 246, 0.15) 40%,
+                transparent 70%);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow:
+                0 0 30px rgba(59, 130, 246, 0.15),
+                0 0 60px rgba(139, 92, 246, 0.08),
+                inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Varied particle colors */
+        .particle-ring:nth-child(3n) {
+            background: radial-gradient(circle at 30% 30%,
+                rgba(164, 119, 100, 0.1) 0%,
+                rgba(255, 190, 152, 0.06) 40%,
+                transparent 70%);
+            border-color: rgba(164, 119, 100, 0.12);
+        }
+
+        body.dark .particle-ring:nth-child(3n) {
+            background: radial-gradient(circle at 30% 30%,
+                rgba(164, 119, 100, 0.22) 0%,
+                rgba(255, 190, 152, 0.12) 40%,
+                transparent 70%);
+            border-color: rgba(164, 119, 100, 0.25);
+            box-shadow:
+                0 0 25px rgba(164, 119, 100, 0.12),
+                inset 0 0 15px rgba(255, 190, 152, 0.05);
+        }
+
+        .particle-ring:nth-child(3n+1) {
+            background: radial-gradient(circle at 30% 30%,
+                rgba(102, 103, 171, 0.1) 0%,
+                rgba(187, 38, 73, 0.05) 40%,
+                transparent 70%);
+            border-color: rgba(102, 103, 171, 0.12);
+        }
+
+        body.dark .particle-ring:nth-child(3n+1) {
+            background: radial-gradient(circle at 30% 30%,
+                rgba(102, 103, 171, 0.22) 0%,
+                rgba(187, 38, 73, 0.1) 40%,
+                transparent 70%);
+            border-color: rgba(102, 103, 171, 0.25);
+            box-shadow:
+                0 0 25px rgba(102, 103, 171, 0.12),
+                inset 0 0 15px rgba(187, 38, 73, 0.05);
         }
 
         @keyframes particleFloat {
             0%, 100% {
                 transform: translate(0, 0) scale(1) rotate(0deg);
-                opacity: calc(var(--particle-alpha) * 0.6);
+                opacity: 0.4;
             }
             25% {
-                transform: translate(calc(var(--drift-x, 10px)), calc(var(--drift-y, -15px))) scale(1.05) rotate(90deg);
-                opacity: calc(var(--particle-alpha) * 0.8);
+                transform: translate(var(--drift-x, 10px), var(--drift-y, -15px)) scale(1.08) rotate(90deg);
+                opacity: 0.6;
             }
             50% {
-                transform: translate(calc(var(--drift-x, 10px) * -0.5), calc(var(--drift-y, -15px) * 1.5)) scale(0.95) rotate(180deg);
-                opacity: var(--particle-alpha);
+                transform: translate(calc(var(--drift-x, 10px) * -0.5), calc(var(--drift-y, -15px) * 1.5)) scale(0.92) rotate(180deg);
+                opacity: 0.75;
             }
             75% {
-                transform: translate(calc(var(--drift-x, 10px) * -1), calc(var(--drift-y, -15px) * 0.5)) scale(1.02) rotate(270deg);
-                opacity: calc(var(--particle-alpha) * 0.7);
+                transform: translate(calc(var(--drift-x, 10px) * -1), calc(var(--drift-y, -15px) * 0.5)) scale(1.04) rotate(270deg);
+                opacity: 0.55;
             }
         }
 
-        /* Generate 80 particle rings with CSS */
-        .particle-ring:nth-child(1) { --float-duration: 7s; --drift-x: 20px; --drift-y: -25px; left: 10%; top: 15%; width: 60px; height: 60px; }
-        .particle-ring:nth-child(2) { --float-duration: 9s; --drift-x: -15px; --drift-y: 20px; left: 25%; top: 30%; width: 80px; height: 80px; animation-delay: -1s; }
-        .particle-ring:nth-child(3) { --float-duration: 11s; --drift-x: 25px; --drift-y: -10px; left: 40%; top: 10%; width: 50px; height: 50px; animation-delay: -2s; }
-        .particle-ring:nth-child(4) { --float-duration: 8s; --drift-x: -20px; --drift-y: 30px; left: 60%; top: 25%; width: 70px; height: 70px; animation-delay: -3s; }
-        .particle-ring:nth-child(5) { --float-duration: 10s; --drift-x: 15px; --drift-y: -35px; left: 75%; top: 40%; width: 90px; height: 90px; animation-delay: -4s; }
-        .particle-ring:nth-child(6) { --float-duration: 12s; --drift-x: -25px; --drift-y: 15px; left: 85%; top: 15%; width: 55px; height: 55px; animation-delay: -0.5s; }
-        .particle-ring:nth-child(7) { --float-duration: 7.5s; --drift-x: 30px; --drift-y: -20px; left: 15%; top: 60%; width: 75px; height: 75px; animation-delay: -1.5s; }
-        .particle-ring:nth-child(8) { --float-duration: 9.5s; --drift-x: -10px; --drift-y: 25px; left: 30%; top: 75%; width: 65px; height: 65px; animation-delay: -2.5s; }
-        .particle-ring:nth-child(9) { --float-duration: 8.5s; --drift-x: 20px; --drift-y: -15px; left: 50%; top: 55%; width: 85px; height: 85px; animation-delay: -3.5s; }
-        .particle-ring:nth-child(10) { --float-duration: 11.5s; --drift-x: -30px; --drift-y: 10px; left: 70%; top: 70%; width: 45px; height: 45px; animation-delay: -4.5s; }
-        .particle-ring:nth-child(11) { --float-duration: 6.5s; --drift-x: 10px; --drift-y: -30px; left: 5%; top: 45%; width: 100px; height: 100px; animation-delay: -0.8s; }
-        .particle-ring:nth-child(12) { --float-duration: 13s; --drift-x: -35px; --drift-y: 5px; left: 90%; top: 55%; width: 40px; height: 40px; animation-delay: -1.8s; }
-        .particle-ring:nth-child(13) { --float-duration: 8.2s; --drift-x: 5px; --drift-y: -40px; left: 20%; top: 85%; width: 55px; height: 55px; animation-delay: -2.8s; }
-        .particle-ring:nth-child(14) { --float-duration: 10.2s; --drift-x: -5px; --drift-y: 35px; left: 45%; top: 5%; width: 95px; height: 95px; animation-delay: -3.8s; }
-        .particle-ring:nth-child(15) { --float-duration: 7.8s; --drift-x: 35px; --drift-y: -5px; left: 65%; top: 90%; width: 50px; height: 50px; animation-delay: -4.8s; }
-        .particle-ring:nth-child(16) { --float-duration: 9.8s; --drift-x: -40px; --drift-y: 40px; left: 80%; top: 35%; width: 72px; height: 72px; animation-delay: -0.3s; }
+        body.dark .particle-ring {
+            animation-name: particleFloatDark;
+        }
 
-        /* Cursor Gravity Effect */
+        @keyframes particleFloatDark {
+            0%, 100% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+                opacity: 0.5;
+            }
+            25% {
+                transform: translate(var(--drift-x, 10px), var(--drift-y, -15px)) scale(1.1) rotate(90deg);
+                opacity: 0.75;
+            }
+            50% {
+                transform: translate(calc(var(--drift-x, 10px) * -0.5), calc(var(--drift-y, -15px) * 1.5)) scale(0.9) rotate(180deg);
+                opacity: 0.9;
+            }
+            75% {
+                transform: translate(calc(var(--drift-x, 10px) * -1), calc(var(--drift-y, -15px) * 0.5)) scale(1.05) rotate(270deg);
+                opacity: 0.65;
+            }
+        }
+
+        /* Particle positions - more particles for richer effect */
+        .particle-ring:nth-child(1) { --float-duration: 12s; --drift-x: 25px; --drift-y: -30px; left: 8%; top: 12%; width: 80px; height: 80px; }
+        .particle-ring:nth-child(2) { --float-duration: 15s; --drift-x: -20px; --drift-y: 25px; left: 22%; top: 28%; width: 120px; height: 120px; animation-delay: -2s; }
+        .particle-ring:nth-child(3) { --float-duration: 18s; --drift-x: 30px; --drift-y: -15px; left: 38%; top: 8%; width: 70px; height: 70px; animation-delay: -4s; }
+        .particle-ring:nth-child(4) { --float-duration: 14s; --drift-x: -25px; --drift-y: 35px; left: 55%; top: 22%; width: 100px; height: 100px; animation-delay: -6s; }
+        .particle-ring:nth-child(5) { --float-duration: 16s; --drift-x: 20px; --drift-y: -40px; left: 72%; top: 35%; width: 130px; height: 130px; animation-delay: -8s; }
+        .particle-ring:nth-child(6) { --float-duration: 20s; --drift-x: -30px; --drift-y: 20px; left: 88%; top: 12%; width: 75px; height: 75px; animation-delay: -1s; }
+        .particle-ring:nth-child(7) { --float-duration: 13s; --drift-x: 35px; --drift-y: -25px; left: 12%; top: 55%; width: 110px; height: 110px; animation-delay: -3s; }
+        .particle-ring:nth-child(8) { --float-duration: 17s; --drift-x: -15px; --drift-y: 30px; left: 28%; top: 72%; width: 90px; height: 90px; animation-delay: -5s; }
+        .particle-ring:nth-child(9) { --float-duration: 15s; --drift-x: 25px; --drift-y: -20px; left: 48%; top: 52%; width: 140px; height: 140px; animation-delay: -7s; }
+        .particle-ring:nth-child(10) { --float-duration: 19s; --drift-x: -35px; --drift-y: 15px; left: 68%; top: 68%; width: 65px; height: 65px; animation-delay: -9s; }
+        .particle-ring:nth-child(11) { --float-duration: 11s; --drift-x: 15px; --drift-y: -35px; left: 3%; top: 42%; width: 150px; height: 150px; animation-delay: -1.5s; }
+        .particle-ring:nth-child(12) { --float-duration: 21s; --drift-x: -40px; --drift-y: 10px; left: 92%; top: 52%; width: 55px; height: 55px; animation-delay: -3.5s; }
+        .particle-ring:nth-child(13) { --float-duration: 14s; --drift-x: 10px; --drift-y: -45px; left: 18%; top: 88%; width: 85px; height: 85px; animation-delay: -5.5s; }
+        .particle-ring:nth-child(14) { --float-duration: 16s; --drift-x: -10px; --drift-y: 40px; left: 42%; top: 3%; width: 125px; height: 125px; animation-delay: -7.5s; }
+        .particle-ring:nth-child(15) { --float-duration: 13s; --drift-x: 40px; --drift-y: -10px; left: 62%; top: 92%; width: 70px; height: 70px; animation-delay: -9.5s; }
+        .particle-ring:nth-child(16) { --float-duration: 17s; --drift-x: -45px; --drift-y: 45px; left: 82%; top: 32%; width: 95px; height: 95px; animation-delay: -0.5s; }
+
+        /* Secondary floating layer - smaller, faster particles */
+        .particle-ring-secondary {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particleFloatFast var(--float-duration, 6s) ease-in-out infinite;
+            background: radial-gradient(circle,
+                rgba(14, 165, 233, 0.08) 0%,
+                transparent 70%);
+            border: none;
+        }
+
+        body.dark .particle-ring-secondary {
+            background: radial-gradient(circle,
+                rgba(59, 130, 246, 0.15) 0%,
+                transparent 70%);
+        }
+
+        @keyframes particleFloatFast {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(var(--drift-x, 5px), var(--drift-y, -8px)) scale(1.15);
+                opacity: 0.6;
+            }
+        }
+
+        /* Secondary container styling */
+        .particle-ring-secondary-container {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .particle-ring-secondary:nth-child(1) { --float-duration: 5s; --drift-x: 12px; --drift-y: -18px; left: 15%; top: 20%; width: 30px; height: 30px; }
+        .particle-ring-secondary:nth-child(2) { --float-duration: 7s; --drift-x: -10px; --drift-y: 15px; left: 35%; top: 45%; width: 25px; height: 25px; animation-delay: -1s; }
+        .particle-ring-secondary:nth-child(3) { --float-duration: 6s; --drift-x: 15px; --drift-y: -12px; left: 55%; top: 15%; width: 35px; height: 35px; animation-delay: -2s; }
+        .particle-ring-secondary:nth-child(4) { --float-duration: 8s; --drift-x: -8px; --drift-y: 20px; left: 75%; top: 55%; width: 28px; height: 28px; animation-delay: -3s; }
+        .particle-ring-secondary:nth-child(5) { --float-duration: 5.5s; --drift-x: 18px; --drift-y: -15px; left: 25%; top: 70%; width: 32px; height: 32px; animation-delay: -0.5s; }
+        .particle-ring-secondary:nth-child(6) { --float-duration: 7.5s; --drift-x: -15px; --drift-y: 12px; left: 85%; top: 25%; width: 22px; height: 22px; animation-delay: -1.5s; }
+        .particle-ring-secondary:nth-child(7) { --float-duration: 6.5s; --drift-x: 10px; --drift-y: -22px; left: 5%; top: 65%; width: 38px; height: 38px; animation-delay: -2.5s; }
+        .particle-ring-secondary:nth-child(8) { --float-duration: 4.5s; --drift-x: -18px; --drift-y: 10px; left: 65%; top: 80%; width: 26px; height: 26px; animation-delay: -3.5s; }
+
+        /* Cursor Gravity Effect - Works in both modes */
         .cursor-gravity-field {
             position: fixed;
-            width: 300px;
-            height: 300px;
+            width: 350px;
+            height: 350px;
             border-radius: 50%;
             pointer-events: none;
             z-index: 1;
             transform: translate(-50%, -50%);
+            /* Light mode: subtle warm glow */
             background: radial-gradient(circle,
-                rgba(59, 130, 246, 0.1) 0%,
-                rgba(139, 92, 246, 0.05) 40%,
+                rgba(14, 165, 233, 0.06) 0%,
+                rgba(139, 92, 246, 0.03) 40%,
                 transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            mix-blend-mode: screen;
+            opacity: 1;
+            transition: opacity 0.3s ease, background 0.3s ease;
+            mix-blend-mode: multiply;
         }
 
         body.dark .cursor-gravity-field {
-            opacity: 1;
+            /* Dark mode: vibrant glow */
+            background: radial-gradient(circle,
+                rgba(59, 130, 246, 0.12) 0%,
+                rgba(139, 92, 246, 0.06) 40%,
+                transparent 70%);
+            mix-blend-mode: screen;
         }
 
         /* ============================================
@@ -3937,6 +4107,7 @@
     <!-- Antigravity Particle Ring System (Tier B: CSS) -->
     <div class="particle-ring-hero" aria-hidden="true">
         <div class="particle-ring-container">
+            <!-- Primary floating orbs - larger, slower -->
             <div class="particle-ring"></div>
             <div class="particle-ring"></div>
             <div class="particle-ring"></div>
@@ -3953,6 +4124,17 @@
             <div class="particle-ring"></div>
             <div class="particle-ring"></div>
             <div class="particle-ring"></div>
+        </div>
+        <!-- Secondary layer - smaller, faster particles -->
+        <div class="particle-ring-secondary-container">
+            <div class="particle-ring-secondary"></div>
+            <div class="particle-ring-secondary"></div>
+            <div class="particle-ring-secondary"></div>
+            <div class="particle-ring-secondary"></div>
+            <div class="particle-ring-secondary"></div>
+            <div class="particle-ring-secondary"></div>
+            <div class="particle-ring-secondary"></div>
+            <div class="particle-ring-secondary"></div>
         </div>
     </div>
 
