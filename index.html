@@ -909,9 +909,8 @@
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
-            padding: 2rem;
-            margin: -2rem;
-            anchor-name: --carousel;
+            padding: 1.5rem 0.5rem;
+            margin: 0;
         }
 
         .snapped-carousel::-webkit-scrollbar {
@@ -919,13 +918,14 @@
         }
 
         .carousel-item {
-            flex: 0 0 min(350px, 85vw);
+            flex: 0 0 min(320px, 80vw);
             scroll-snap-align: center;
             scroll-snap-stop: always;
-            opacity: 0.4;
-            transform: scale(0.9);
+            opacity: 0.7;
+            transform: scale(0.95);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            container-type: inline-size;
+            padding: 1.5rem;
+            min-height: 180px;
         }
 
         .carousel-item.snapped {
@@ -934,8 +934,8 @@
         }
 
         .carousel-item .carousel-content {
-            opacity: 0;
-            transform: translateY(20px);
+            opacity: 1;
+            transform: translateY(0);
             transition: all 0.3s ease 0.1s;
         }
 
@@ -944,60 +944,94 @@
             transform: translateY(0);
         }
 
-        /* Carousel Navigation Buttons with Anchor Positioning */
-        @supports (anchor-name: --carousel) {
-            .carousel-nav-btn {
-                position: fixed;
-                position-anchor: --carousel;
-                position-visibility: always;
-            }
-
-            .carousel-nav-btn.prev {
-                left: anchor(left);
-                top: anchor(center);
-                transform: translateX(-120%) translateY(-50%);
-            }
-
-            .carousel-nav-btn.next {
-                right: anchor(right);
-                top: anchor(center);
-                transform: translateX(120%) translateY(-50%);
-            }
+        /* Carousel wrapper for proper button positioning */
+        .carousel-wrapper {
+            position: relative;
+            padding: 0 3.5rem;
         }
 
-        /* Fallback positioning */
-        @supports not (anchor-name: --carousel) {
-            .carousel-nav-btn {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-            }
-
-            .carousel-nav-btn.prev { left: -3rem; }
-            .carousel-nav-btn.next { right: -3rem; }
-        }
-
+        /* Carousel Navigation Buttons - Fixed positioning */
         .carousel-nav-btn {
-            width: 48px;
-            height: 48px;
+            position: absolute;
+            top: 50%;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            background: var(--glass-panel);
-            border: 1px solid var(--glass-border);
-            color: var(--text-dark);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            color: var(--text-light);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
             backdrop-filter: blur(10px);
             z-index: 10;
+            font-size: 1.5rem;
+            font-weight: 300;
+            line-height: 1;
+        }
+
+        body.dark .carousel-nav-btn {
+            background: rgba(15, 23, 42, 0.95);
+            border-color: var(--glass-border);
+            color: var(--text-dark);
+        }
+
+        .carousel-nav-btn.prev {
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .carousel-nav-btn.next {
+            right: 0;
+            transform: translateY(-50%);
         }
 
         .carousel-nav-btn:hover {
             background: var(--primary);
             border-color: var(--primary);
-            transform: scale(1.1);
-            box-shadow: var(--shadow-glow);
+            color: white;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+        }
+
+        .carousel-nav-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        /* Carousel item text styling */
+        .carousel-item h4 {
+            color: var(--text-light);
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        body.dark .carousel-item h4 {
+            color: var(--text-dark);
+        }
+
+        .carousel-item p {
+            color: var(--text-muted-light);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        body.dark .carousel-item p {
+            color: var(--text-muted-dark);
+        }
+
+        .carousel-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-cyber);
+            border-radius: var(--radius-lg);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
         }
 
         /* ============================================
@@ -5021,16 +5055,17 @@
             </div>
 
             <!-- Featured Projects Carousel (Snapped) -->
-            <div class="carousel-wrapper" style="position: relative; margin-bottom: 3rem;">
+            <div class="carousel-wrapper">
+                <button class="carousel-nav-btn prev" aria-label="Previous" type="button">‹</button>
                 <div class="snapped-carousel" role="region" aria-label="Featured Projects">
-                    <article class="carousel-item glass-card">
+                    <article class="carousel-item glass-card snapped">
                         <div class="carousel-content">
-                            <div class="kpi-card-icon" style="margin-bottom: 1rem;">🧠</div>
-                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            <div class="carousel-icon">🧠</div>
+                            <h4>
                                 <span lang="en">C-SOAR Framework</span>
                                 <span lang="th">กรอบงาน C-SOAR</span>
                             </h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted-light);">
+                            <p>
                                 <span lang="en">Cognitive SOAR architecture with sub-10ms retrieval</span>
                                 <span lang="th">สถาปัตยกรรม Cognitive SOAR ด้วยการดึงข้อมูลต่ำกว่า 10ms</span>
                             </p>
@@ -5038,12 +5073,12 @@
                     </article>
                     <article class="carousel-item glass-card">
                         <div class="carousel-content">
-                            <div class="kpi-card-icon" style="margin-bottom: 1rem;">🏆</div>
-                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            <div class="carousel-icon">🏆</div>
+                            <h4>
                                 <span lang="en">Siam RegTech</span>
                                 <span lang="th">Siam RegTech</span>
                             </h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted-light);">
+                            <p>
                                 <span lang="en">Top 10 Finalist - SEC/BOT/OIC AML Challenge</span>
                                 <span lang="th">ผู้เข้ารอบ 10 อันดับแรก - การแข่งขัน AML ก.ล.ต./ธปท./คปภ.</span>
                             </p>
@@ -5051,12 +5086,12 @@
                     </article>
                     <article class="carousel-item glass-card">
                         <div class="carousel-content">
-                            <div class="kpi-card-icon" style="margin-bottom: 1rem;">🎓</div>
-                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            <div class="carousel-icon">🎓</div>
+                            <h4>
                                 <span lang="en">Learn Sabai</span>
                                 <span lang="th">Learn Sabai</span>
                             </h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted-light);">
+                            <p>
                                 <span lang="en">Top 100 SIPA - Swarm Intelligence Learning</span>
                                 <span lang="th">100 อันดับแรก SIPA - การเรียนรู้ Swarm Intelligence</span>
                             </p>
@@ -5064,12 +5099,12 @@
                     </article>
                     <article class="carousel-item glass-card">
                         <div class="carousel-content">
-                            <div class="kpi-card-icon" style="margin-bottom: 1rem;">🛡️</div>
-                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            <div class="carousel-icon">🛡️</div>
+                            <h4>
                                 <span lang="en">CISSP Certified</span>
                                 <span lang="th">ได้รับการรับรอง CISSP</span>
                             </h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted-light);">
+                            <p>
                                 <span lang="en">Elite cybersecurity professional certification</span>
                                 <span lang="th">ใบรับรองความปลอดภัยไซเบอร์ระดับสูง</span>
                             </p>
@@ -5077,20 +5112,19 @@
                     </article>
                     <article class="carousel-item glass-card">
                         <div class="carousel-content">
-                            <div class="kpi-card-icon" style="margin-bottom: 1rem;">📊</div>
-                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            <div class="carousel-icon">📊</div>
+                            <h4>
                                 <span lang="en">Vector Search</span>
                                 <span lang="th">การค้นหาเวกเตอร์</span>
                             </h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted-light);">
+                            <p>
                                 <span lang="en">Optimized 10M+ record processing pipeline</span>
                                 <span lang="th">ท่อส่งข้อมูล 10M+ รายการที่ปรับปรุงแล้ว</span>
                             </p>
                         </div>
                     </article>
                 </div>
-                <button class="carousel-nav-btn prev" aria-label="Previous">‹</button>
-                <button class="carousel-nav-btn next" aria-label="Next">›</button>
+                <button class="carousel-nav-btn next" aria-label="Next" type="button">›</button>
             </div>
 
             <div class="cards-grid stagger-children" id="achievements-cards">
@@ -8085,8 +8119,12 @@
 
             carousels.forEach(carousel => {
                 const items = carousel.querySelectorAll('.carousel-item');
-                const prevBtn = carousel.parentElement.querySelector('.carousel-nav-btn.prev');
-                const nextBtn = carousel.parentElement.querySelector('.carousel-nav-btn.next');
+                const wrapper = carousel.closest('.carousel-wrapper');
+                const prevBtn = wrapper ? wrapper.querySelector('.carousel-nav-btn.prev') : null;
+                const nextBtn = wrapper ? wrapper.querySelector('.carousel-nav-btn.next') : null;
+
+                // Get the gap between items
+                const gap = 24; // 1.5rem = 24px
 
                 // Detect snapped item
                 const updateSnappedState = () => {
@@ -8109,7 +8147,7 @@
                         item.classList.remove('snapped');
                     });
 
-                    if (closestItem && closestDistance < 100) {
+                    if (closestItem) {
                         closestItem.classList.add('snapped');
                     }
                 };
@@ -8121,32 +8159,44 @@
                     scrollTimeout = setTimeout(updateSnappedState, 50);
                 }, { passive: true });
 
+                // Calculate scroll amount
+                const getScrollAmount = () => {
+                    const firstItem = items[0];
+                    if (firstItem) {
+                        return firstItem.offsetWidth + gap;
+                    }
+                    return 340; // fallback
+                };
+
                 // Navigation buttons
                 if (prevBtn) {
-                    prevBtn.addEventListener('click', () => {
-                        const itemWidth = items[0]?.offsetWidth || 350;
-                        carousel.scrollBy({ left: -itemWidth - 24, behavior: 'smooth' });
+                    prevBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        carousel.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
                     });
                 }
 
                 if (nextBtn) {
-                    nextBtn.addEventListener('click', () => {
-                        const itemWidth = items[0]?.offsetWidth || 350;
-                        carousel.scrollBy({ left: itemWidth + 24, behavior: 'smooth' });
+                    nextBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        carousel.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
                     });
                 }
 
-                // Initial state
-                updateSnappedState();
+                // Initial state - ensure first item is snapped
+                setTimeout(updateSnappedState, 100);
 
                 // Keyboard navigation
                 carousel.setAttribute('tabindex', '0');
                 carousel.addEventListener('keydown', (e) => {
-                    const itemWidth = items[0]?.offsetWidth || 350;
                     if (e.key === 'ArrowLeft') {
-                        carousel.scrollBy({ left: -itemWidth - 24, behavior: 'smooth' });
+                        e.preventDefault();
+                        carousel.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
                     } else if (e.key === 'ArrowRight') {
-                        carousel.scrollBy({ left: itemWidth + 24, behavior: 'smooth' });
+                        e.preventDefault();
+                        carousel.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
                     }
                 });
             });
