@@ -1,0 +1,1839 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>The Mystical Properties of Rhinoceros Horn in Thai Tradition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --savannah-beige: #f5f1e8;
+            --ancient-ivory: #f8f5f0;
+            --mystical-gold: #d4af37;
+            --sacred-brown: #8b7355;
+            --text-primary: #2d2d2d;
+            --text-secondary: #6b7280;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--savannah-beige);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        
+        .serif-display {
+            font-family: 'Crimson Text', serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, 
+                var(--ancient-ivory) 0%, 
+                var(--savannah-beige) 50%, 
+                rgba(212, 175, 55, 0.1) 100%);
+        }
+        
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: rgba(248, 245, 240, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(139, 115, 85, 0.2);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+        
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, var(--mystical-gold), transparent);
+            margin: 3rem 0;
+        }
+        
+        .pull-quote {
+            border-left: 4px solid var(--mystical-gold);
+            background: rgba(212, 175, 55, 0.05);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+        
+        .citation-link {
+            color: var(--mystical-gold);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .citation-link:hover {
+            text-decoration: underline;
+        }
+        
+        .power-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .power-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(139, 115, 85, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .power-card:hover {
+            transform: translateY(-4px);
+        }
+        
+        .toc-link {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .toc-link:hover, .toc-link.active {
+            color: var(--mystical-gold);
+            border-bottom-color: var(--mystical-gold);
+        }
+        
+        .hero-bento {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .hero-main {
+            grid-row: 1 / 3;
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+        
+        .hero-accent {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        /* Mermaid diagram styling */
+        .mermaid-container {
+            display: flex;
+            justify-content: center;
+            min-height: 300px;
+            max-height: 800px;
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mermaid-container .mermaid {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            cursor: grab;
+            transition: transform 0.3s ease;
+            transform-origin: center center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .mermaid-container .mermaid svg {
+            max-width: 100%;
+            height: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .mermaid-container .mermaid:active {
+            cursor: grabbing;
+        }
+
+        .mermaid-container.zoomed .mermaid {
+            height: 100%;
+            width: 100%;
+            cursor: grab;
+        }
+
+        .mermaid-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mermaid-control-btn {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #374151;
+            font-size: 14px;
+            min-width: 36px;
+            height: 36px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mermaid-control-btn:hover {
+            background: #f8fafc;
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        .mermaid-control-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Custom mermaid theme for better contrast and unified styling */
+        .mermaid {
+            font-family: 'Inter', sans-serif !important;
+        }
+        
+        /* Node styling with better contrast */
+        .mermaid .node rect,
+        .mermaid .node circle,
+        .mermaid .node ellipse,
+        .mermaid .node polygon {
+            fill: var(--ancient-ivory) !important;
+            stroke: var(--mystical-gold) !important;
+            stroke-width: 2px !important;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+        
+        /* Special styling for different node types */
+        .mermaid .node.thonnasit rect,
+        .mermaid .node.thonnasit circle,
+        .mermaid .node.thonnasit ellipse,
+        .mermaid .node.thonnasit polygon {
+            fill: var(--mystical-gold) !important;
+            stroke: var(--sacred-brown) !important;
+            stroke-width: 3px !important;
+        }
+        
+        .mermaid .node.deity rect,
+        .mermaid .node.deity circle,
+        .mermaid .node.deity ellipse,
+        .mermaid .node.deity polygon {
+            fill: var(--sacred-brown) !important;
+            stroke: var(--mystical-gold) !important;
+            stroke-width: 3px !important;
+        }
+        
+        .mermaid .node.power rect,
+        .mermaid .node.power circle,
+        .mermaid .node.power ellipse,
+        .mermaid .node.power polygon {
+            fill: #ffffff !important;
+            stroke: var(--mystical-gold) !important;
+            stroke-width: 2px !important;
+        }
+        
+        /* Text styling with high contrast */
+        .mermaid .node .label,
+        .mermaid .nodeLabel {
+            color: var(--text-primary) !important;
+            fill: var(--text-primary) !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+        
+        /* Special text colors for different node types */
+        .mermaid .node.thonnasit .label,
+        .mermaid .node.thonnasit .nodeLabel {
+            color: white !important;
+            fill: white !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .mermaid .node.deity .label,
+        .mermaid .node.deity .nodeLabel {
+            color: white !important;
+            fill: white !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Edge styling */
+        .mermaid .edgePath .path {
+            stroke: var(--sacred-brown) !important;
+            stroke-width: 2px !important;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+        }
+        
+        .mermaid .edgeLabel {
+            background-color: white !important;
+            color: var(--text-primary) !important;
+            font-weight: 500 !important;
+            font-size: 12px !important;
+            padding: 4px 8px !important;
+            border-radius: 4px !important;
+            border: 1px solid var(--mystical-gold) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        /* Timeline specific styling */
+        .mermaid .timeline-section {
+            fill: var(--ancient-ivory) !important;
+            stroke: var(--mystical-gold) !important;
+            stroke-width: 2px !important;
+        }
+        
+        .mermaid .timeline-section-title {
+            fill: var(--sacred-brown) !important;
+            font-weight: 700 !important;
+            font-size: 16px !important;
+        }
+        
+        .mermaid .timeline-task {
+            fill: var(--sacred-brown) !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+        }
+        
+        .mermaid .timeline-title {
+            fill: var(--mystical-gold) !important;
+            font-weight: 700 !important;
+            font-size: 18px !important;
+        }
+        
+        /* Enhanced contrast for different node colors */
+        .mermaid .node[style*="fill:#e1f5fe"] .label,
+        .mermaid .node[style*="fill:#f3e5f5"] .label,
+        .mermaid .node[style*="fill:#fff3e0"] .label,
+        .mermaid .node[style*="fill:#e8f5e8"] .label,
+        .mermaid .node[style*="fill:#fce4ec"] .label {
+            fill: var(--text-primary) !important;
+            color: var(--text-primary) !important;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9) !important;
+        }
+        
+        .mermaid .node[style*="fill:#2e7d32"] .label,
+        .mermaid .node[style*="fill:#6a1b9a"] .label,
+        .mermaid .node[style*="fill:#c62828"] .label {
+            fill: white !important;
+            color: white !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+        }
+        
+        @media (max-width: 1024px) {
+            .toc-fixed {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .toc-fixed.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .hero-bento {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-main {
+                grid-row: auto;
+            }
+            
+            /* Mermaid controls for mobile */
+            .mermaid-control-btn:not(.reset-zoom) {
+                display: none;
+            }
+            .mermaid-controls {
+                top: auto;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-gradient h1 {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            .hero-gradient p {
+                font-size: 1rem;
+            }
+            .hero-gradient {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body>
+    <!-- Table of Contents -->
+    <nav class="toc-fixed">
+      <div class="mb-8">
+        <h3 class="serif-display text-xl font-semibold mb-4" style="color: var(--sacred-brown);">Contents</h3>
+      </div>
+
+      <div class="space-y-2">
+        <a href="#introduction" class="toc-link text-sm">Introduction</a>
+        <a href="#core-beliefs" class="toc-link text-sm">Core Beliefs: Thonnasit</a>
+        <div class="ml-4 space-y-1">
+          <a href="#thonnasit-concept" class="toc-link text-xs">Inherent Magical Power</a>
+          <a href="#rarity-value" class="toc-link text-xs">Rarity and Value</a>
+          <a href="#historical-records" class="toc-link text-xs">Historical Records</a>
+          <a href="#deity-residence" class="toc-link text-xs">Residence of Deities</a>
+          <a href="#auspicious-animal" class="toc-link text-xs">Auspicious Animal</a>
+        </div>
+        <a href="#mystical-effects" class="toc-link text-sm">Primary Mystical Effects</a>
+        <div class="ml-4 space-y-1">
+          <a href="#fortune-prosperity" class="toc-link text-xs">Fortune &amp; Prosperity</a>
+          <a href="#charm-popularity" class="toc-link text-xs">Charm &amp; Popularity</a>
+          <a href="#authority-power" class="toc-link text-xs">Authority &amp; Power</a>
+          <a href="#spiritual-protection" class="toc-link text-xs">Spiritual Protection</a>
+          <a href="#divine-communication" class="toc-link text-xs">Divine Communication</a>
+        </div>
+        <a href="#traditional-medicine" class="toc-link text-sm">Traditional Medicine &amp; Amulets</a>
+        <div class="ml-4 space-y-1">
+          <a href="#jindamanee" class="toc-link text-xs">Ya Wasana Jindamanee</a>
+          <a href="#amulets-talismans" class="toc-link text-xs">Amulets &amp; Talismans</a>
+        </div>
+        <a href="#synthesis" class="toc-link text-sm">Synthesis of Effects</a>
+        <div class="ml-4 space-y-1">
+          <a href="#all-around-benefits" class="toc-link text-xs">All-Around Benefits</a>
+          <a href="#status-symbol" class="toc-link text-xs">Status Symbol</a>
+          <a href="#cultural-significance" class="toc-link text-xs">Cultural Significance</a>
+        </div>
+        <a href="#conclusion" class="toc-link text-sm">Conclusion</a>
+      </div>
+
+      <div class="mt-8 pt-8 border-t border-gray-200">
+        <p class="text-xs text-gray-500">Navigate through the mystical properties of นอแรด</p>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Hero Section -->
+      <section class="hero-gradient px-8 py-12">
+        <div class="max-w-6xl mx-auto">
+          <div class="hero-bento">
+            <div class="hero-main relative">
+              <img src="https://kimi-web-img.moonshot.cn/img/i.ebayimg.com/f46f958dab34669858a2d2ce62ff1c386f8f1ce1.png" alt="Traditional Thai rhinoceros horn artifact with ornate gold details" class="w-full h-96 object-cover rounded-16" size="large" aspect="wide" style="photo" query="thai rhinoceros horn artifact gold details" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+              <div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent rounded-16"></div>
+              <div class="absolute bottom-8 left-8 text-white">
+                <h1 class="serif-display text-5xl font-semibold mb-4 leading-tight">
+                  <em>The Mystical Properties of</em>
+                  <br/>
+                  <span class="text-6xl">นอแรด</span>
+                  <br/>
+                  <em>in Thai Tradition</em>
+                </h1>
+                <p class="text-xl opacity-90 max-w-md">
+                  Exploring the spiritual powers of rhinoceros horn as Thonnasit—
+                  a substance of inherent magical properties without consecration
+                </p>
+              </div>
+            </div>
+
+            <div class="hero-accent">
+              <h3 class="serif-display text-xl font-semibold mb-4" style="color: var(--sacred-brown);">Key Insights</h3>
+              <ul class="space-y-3 text-sm">
+                <li class="flex items-start">
+                  <i class="fas fa-star text-yellow-500 mr-3 mt-1"></i>
+                  <span>Classified as <strong>Thonnasit</strong>—possessing inherent magical power</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-shield-alt text-blue-500 mr-3 mt-1"></i>
+                  <span>Provides comprehensive spiritual protection against black magic</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-coins text-green-500 mr-3 mt-1"></i>
+                  <span>Attracts fortune and prosperity through celestial connection</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-crown text-purple-500 mr-3 mt-1"></i>
+                  <span>Believed to bestow authority and leadership qualities</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="hero-accent">
+              <h3 class="serif-display text-xl font-semibold mb-4" style="color: var(--sacred-brown);">Cultural Context</h3>
+              <p class="text-sm text-gray-600 mb-3">
+                Deeply rooted in Lanna traditions and recorded in ancient palm-leaf manuscripts,
+                the reverence for rhino horn spans generations of Thai spiritual practice.
+              </p>
+              <div class="text-xs text-gray-500">
+                Historical value: <span class="font-semibold">1 million+ THB per horn</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Introduction -->
+      <section id="introduction" class="px-8 py-16">
+        <div class="max-w-4xl mx-auto">
+          <h2 class="serif-display text-4xl font-semibold mb-8" style="color: var(--sacred-brown);">Introduction</h2>
+
+          <div class="prose prose-lg max-w-none">
+            <p class="text-xl leading-relaxed mb-6">
+              In the rich tapestry of Thai mystical tradition, few substances command as much reverence and awe as the rhinoceros horn,
+              known in Thai as <strong>นอแรด</strong> (Naw Raet). This extraordinary material occupies a unique position in the realm
+              of spiritual objects, classified as a <strong>Thonnasit</strong> (ทนสิทธิ์)—a substance possessing inherent magical
+              properties that require no consecration or ritual empowerment.
+            </p>
+
+            <div class="pull-quote">
+              &#34;The horn&#39;s spiritual efficacy is a natural, intrinsic quality derived from the animal itself, its life force,
+              and its connection to the spiritual world.&#34;
+              <footer class="text-sm mt-2">
+                — <a href="https://www.lannaamulet.in.th/item/detail/19326" class="citation-link">Traditional Thai Amulet Studies [144]</a>
+              </footer>
+            </div>
+
+            <p>
+              Unlike most amulets that depend on the blessings of monks or spiritual practitioners, a piece of rhino horn is believed
+              to be potent in its raw, unaltered state. This inherent power, combined with the rhinoceros&#39;s status as an auspicious
+              animal capable of communicating with celestial forces, elevates the horn from a mere material to a vessel of profound
+              spiritual energy.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Core Beliefs Section -->
+      <section id="core-beliefs" class="px-8 py-16">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="serif-display text-4xl font-semibold mb-12" style="color: var(--sacred-brown);">
+            Core Beliefs: The Inherent Power of Rhino Horn
+          </h2>
+
+          <!-- Thonnasit Concept -->
+          <div id="thonnasit-concept" class="mb-16">
+            <h3 class="serif-display text-3xl font-semibold mb-6">The Concept of Thonnasit (ทนสิทธิ์)</h3>
+
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+              <div>
+                <h4 class="font-semibold text-xl mb-4">Inherent Magical Power Without Consecration</h4>
+                <p class="mb-4">
+                  In the intricate tapestry of Thai mystical and amulet culture, the concept of <strong>Thonnasit</strong> holds
+                  paramount importance. This classification refers to objects possessing pre-existing magical power that requires
+                  no formal consecration or ritual empowerment.
+                </p>
+                <p>
+                  Rhinoceros horn stands as a prime example of this phenomenon. The belief posits that the horn&#39;s spiritual
+                  efficacy emerges naturally from the animal&#39;s essence, its life force, and its profound connection to the
+                  spiritual realm. <a href="https://www.lannaamulet.in.th/item/detail/19326" class="citation-link">[144]</a>
+                  <a href="http://pralanna.com/pramoolpage.php?pramoolid=29642" class="citation-link">[145]</a>
+                </p>
+              </div>
+              <div>
+                <img src="https://kimi-web-img.moonshot.cn/img/upload.wikimedia.org/2326ddec41745981ae3ccd4f2c613e462acf9ea3.png" alt="Traditional Thai amulet with rhinoceros horn" class="w-full h-64 object-cover rounded-lg shadow-lg" size="medium" aspect="wide" color="brown" style="photo" query="thai rhinoceros horn amulet" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+              </div>
+            </div>
+
+            <div class="power-grid">
+              <div class="power-card">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-magic text-yellow-600 text-2xl mr-3"></i>
+                  <h5 class="font-semibold">Ready to Use</h5>
+                </div>
+                <p class="text-sm">
+                  Unlike most amulets requiring <em>&#34;pluk sek&#34;</em> (ปลุกเสก) rituals,
+                  rhino horn is believed to be immediately potent upon acquisition.
+                </p>
+              </div>
+
+              <div class="power-card">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-crown text-purple-600 text-2xl mr-3"></i>
+                  <h5 class="font-semibold">Natural Authority</h5>
+                </div>
+                <p class="text-sm">
+                  The horn&#39;s power derives from the rhinoceros&#39;s status as an auspicious
+                  animal capable of communicating with positive universal energies.
+                </p>
+              </div>
+
+              <div class="power-card">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-gem text-green-600 text-2xl mr-3"></i>
+                  <h5 class="font-semibold">Supreme Value</h5>
+                </div>
+                <p class="text-sm">
+                  This inherent spiritual power places rhino horn in a category of its own,
+                  commanding prices that surpass many precious gems and metals.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rarity and Value -->
+          <div id="rarity-value" class="mb-16">
+            <h4 class="font-semibold text-2xl mb-6">Rarity and Value Surpassing Precious Gems</h4>
+
+            <div class="bg-white rounded-lg p-8 mb-8 shadow-lg border border-yellow-200">
+              <div class="flex items-center mb-4">
+                <i class="fas fa-chart-line text-yellow-600 text-3xl mr-4"></i>
+                <h5 class="font-semibold text-xl">Market Value Analysis</h5>
+              </div>
+              <p class="mb-4">
+                The mystical properties of rhinoceros horn are inextricably linked to its extreme rarity and exorbitant cost.
+                In the formulation of the legendary <strong>&#34;Ya Wasana Jindamanee,&#34;</strong> rhino horn is listed as one of
+                the three most difficult and expensive ingredients to acquire.
+                <a href="https://www.taifudo.com/jindamanee-medicinal-powder/" class="citation-link">[791]</a>
+              </p>
+              <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+                <p class="font-semibold">Current Market Price:</p>
+                <p class="text-2xl font-bold text-yellow-600">1,000,000+ THB per horn</p>
+                <p class="text-sm text-gray-600 mt-2">
+                  This valuation places it far beyond the cost of many precious gems and metals,
+                  reinforcing its perceived spiritual efficacy through economic exclusivity.
+                </p>
+              </div>
+            </div>
+
+            <p>
+              The sourcing challenges further enhance its legendary status. The horn must be procured from foreign countries,
+              adding layers of difficulty, risk, and expense to its acquisition. This international trade, often illicit,
+              imbues the horn with an air of danger and adventure, making it even more appealing to collectors of rare mystical objects.
+            </p>
+          </div>
+
+          <!-- Historical Records -->
+          <div id="historical-records" class="mb-16">
+            <h4 class="font-semibold text-2xl mb-6">Historical Records in Thai and Lao Palm-Leaf Manuscripts</h4>
+
+            <div class="grid lg:grid-cols-3 gap-6 mb-8">
+              <div class="lg:col-span-2">
+                <p class="mb-4">
+                  The mystical properties and high value of rhinoceros horn are substantiated by historical records found in
+                  ancient <strong>palm-leaf manuscripts</strong> (ใบลาน) of both Thailand and Laos. These revered documents,
+                  known as <em>bai lan</em>, serve as crucial repositories of traditional knowledge encompassing religious doctrine,
+                  historical chronicles, medical treatises, and magical formulas.
+                  <a href="http://www.pralanna.com/boardpage.php?topicid=97716" class="citation-link">[697]</a>
+                </p>
+                <p>
+                  The inclusion of rhino horn in these texts places it within a formalized system of knowledge, elevating it
+                  from folk belief to a subject of serious study and application. The mention of records in both Thai and
+                  Lao manuscripts highlights the shared cultural heritage across the Tai peoples.
+                </p>
+              </div>
+              <div>
+                <img src="https://kimi-web-img.moonshot.cn/img/images.prismic.io/0d9dcb86fea8edf05f8f12add658931e094b2e15.jpg" alt="Traditional Thai palm-leaf manuscript" class="w-full h-48 object-cover rounded-lg shadow-lg" size="medium" aspect="wide" style="photo" query="Thai palm-leaf manuscript" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+              </div>
+            </div>
+          </div>
+
+          <!-- Deity Residence -->
+          <div id="deity-residence" class="mb-16">
+            <h4 class="font-semibold text-2xl mb-6">Residence of Deities (เทพสถิตย์)</h4>
+
+            <div class="pull-quote">
+              &#34;The horn serves as a dwelling place for divine spirits or deities, elevating it from a mere object of power
+              to a sacred vessel, a conduit through which the divine can interact with the mortal world.&#34;
+              <footer class="text-sm mt-2">
+                — <a href="https://www.lannaamulet.in.th/item/detail/19326" class="citation-link">Traditional Thai Spiritual Texts [144, 145]</a>
+              </footer>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8 mt-8">
+              <div>
+                <h5 class="font-semibold text-lg mb-4">Belief in Divine Spirits Inhabiting the Horn</h5>
+                <p class="mb-4">
+                  A central tenet of Thai mystical tradition holds that rhinoceros horn serves as a dwelling place for
+                  divine spirits—a concept known as <strong>เทพสถิตย์</strong> (Thep Sadit). This belief transforms
+                  the horn from a mere tool into a sacred entity deserving reverence and respect.
+                </p>
+                <p>
+                  The presence of a deity within the horn is believed to exponentially enhance its spiritual significance
+                  and power, amplifying all other mystical effects and providing a direct link to the divine realm.
+                </p>
+              </div>
+              <div>
+                <h5 class="font-semibold text-lg mb-4">Enhancement of Spiritual Power</h5>
+                <p class="mb-4">
+                  The concept of Thep Sadit transforms the horn into a &#34;spiritual battery&#34;—a source of divine energy
+                  that can be drawn upon to overcome obstacles, purify the mind, and cultivate positive qualities
+                  such as compassion and wisdom.
+                </p>
+                <p>
+                  This spiritual dimension makes the horn particularly appealing to those on a spiritual path,
+                  offering a tangible way to deepen their practice and accelerate their progress toward enlightenment.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Auspicious Animal -->
+          <div id="auspicious-animal">
+            <h4 class="font-semibold text-2xl mb-6">The Rhino as an Auspicious Animal</h4>
+
+            <div class="bg-gradient-to-r from-yellow-50 to-orange-50 p-8 rounded-lg mb-8">
+              <h5 class="font-semibold text-xl mb-4">Connection to Positive Celestial Energy</h5>
+              <p class="mb-4">
+                In Thai cosmology, the rhinoceros transcends its physical form to become a revered creature with
+                profound connections to positive cosmic energies. Ancient traditions hold that the rhino possesses
+                an innate ability to communicate with benevolent forces of Heaven and Earth.
+                <a href="https://www.jinbodhi.org/en/psychic_treasure__rhino_horn/" class="citation-link">[776]</a>
+              </p>
+              <p>
+                This spiritual connection allows the rhino to ward off disasters, protect against malevolent spirits,
+                and ensure household safety. The horn serves as the focal point of this celestial energy—a &#34;psychic treasure&#34;
+                that bridges the physical and spiritual realms.
+              </p>
+            </div>
+
+            <div class="power-grid">
+              <div class="power-card">
+                <h6 class="font-semibold mb-3">Spiritual Guardian</h6>
+                <p class="text-sm">
+                  The rhino&#39;s perceived ability to predict dangers from kilometers away is metaphorically
+                  linked to its horn, granting owners spiritual foresight and protection.
+                </p>
+              </div>
+
+              <div class="power-card">
+                <h6 class="font-semibold mb-3">Vehicle for Divine Beings</h6>
+                <p class="text-sm">
+                  Associated with <strong>Jao Pa</strong> (เจ้าป่า) - Lord of the Forest, and
+                  <strong>Jao Khon</strong> (เจ้าคนนายคน) - figures of great authority.
+                </p>
+              </div>
+
+              <div class="power-card">
+                <h6 class="font-semibold mb-3">Celestial Conduit</h6>
+                <p class="text-sm">
+                  The horn channels auspicious energies, making it one of the eight immortal power tools
+                  in Chinese mythology, revered by Taoists for protection and blessings.
+                  <a href="https://www.aspinallfoundation.org/media/3936/rhinos-of-kruger-for-online-for-amos-1.pdf" class="citation-link">[781]</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Mystical Effects Section -->
+      <section id="mystical-effects" class="px-8 py-16">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="serif-display text-4xl font-semibold mb-12" style="color: var(--sacred-brown);">
+            Primary Mystical Effects and Powers (อานุภาพลี้ลับ)
+          </h2>
+
+          <!-- Fortune and Prosperity -->
+          <div id="fortune-prosperity" class="mb-16">
+            <h3 class="serif-display text-3xl font-semibold mb-8">Fortune and Prosperity (โชคลาภ)</h3>
+
+            <div class="grid lg:grid-cols-3 gap-8 mb-8">
+              <div class="lg:col-span-2">
+                <h4 class="font-semibold text-xl mb-4">Attraction of Wealth and Business Success</h4>
+                <p class="mb-4">
+                  One of the most celebrated mystical properties of rhinoceros horn is its powerful ability to attract
+                  fortune and prosperity. This belief is deeply embedded in Thai cultural and spiritual traditions,
+                  where the horn serves as a potent charm for wealth and business success.
+                </p>
+                <p>
+                  In the context of the legendary <strong>&#34;Ya Wasana Jindamanee&#34;</strong> (ยาวาสนาจินดามณี)—a medicine
+                  renowned for enhancing fortune—rhino horn serves as a key ingredient precisely because of its
+                  wealth-attracting power.
+                  <a href="https://www.taifudo.com/jindamanee-medicinal-powder/" class="citation-link">[791]</a>
+                </p>
+              </div>
+              <div>
+                <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                  <h5 class="font-semibold mb-3">Laotian Practice</h5>
+                  <p class="text-sm">
+                    Small rhino horns were traditionally mounted on silver stands and placed on family altars
+                    to induce prosperity through a practice known as <em>&#34;kham khoum.&#34;</em>
+                    <a href="https://www.aspinallfoundation.org/media/3936/rhinos-of-kruger-for-online-for-amos-1.pdf" class="citation-link">[781]</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+              <h5 class="font-semibold text-lg mb-4 flex items-center">
+                <i class="fas fa-dice text-yellow-600 mr-3"></i>
+                Multiplier of Luck (ค้ำคูณ)
+              </h5>
+              <p class="mb-4">
+                The horn&#39;s fortune-attracting ability is described using the term <strong>&#34;ค้ำคูณ&#34;</strong> (kham kun),
+                meaning to multiply or augment. This suggests the horn doesn&#39;t merely bring good luck but actively
+                amplifies the existing fortune of its owner, serving as a powerful catalyst for positive outcomes.
+              </p>
+              <p class="text-sm text-gray-600">
+                This &#34;luck multiplication&#34; creates a continuous process where good luck begets more good luck,
+                establishing a virtuous cycle of prosperity across all life aspects.
+              </p>
+            </div>
+
+            <div class="pull-quote">
+              &#34;The horn&#39;s association with &#39;black gold&#39; (ทองคำดำ) encapsulates its dual nature as both a symbol of
+              immense material wealth and a substance of profound mystical power.&#34;
+              <footer class="text-sm mt-2">
+                — <a href="http://www.pralanna.com/boardpage.php?topicid=97716" class="citation-link">Traditional Thai Economic Spirituality [697]</a>
+              </footer>
+            </div>
+          </div>
+
+          <!-- Charm and Popularity -->
+          <div id="charm-popularity" class="mb-16">
+            <h3 class="serif-display text-3xl font-semibold mb-8">Charm and Popularity (เมตตา มหานิยม)</h3>
+
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+              <div>
+                <h4 class="font-semibold text-xl mb-4">Enhancement of Loving-Kindness (เมตตา)</h4>
+                <p class="mb-4">
+                  A central mystical effect of rhinoceros horn is its profound ability to enhance <strong>Metta</strong>
+                  (เมตตา)—loving-kindness, benevolence, and goodwill. This highly valued quality in Thai society
+                  creates genuine, heart-based connections with others.
+                </p>
+                <p>
+                  The horn is believed to radiate energy that makes its owner more likable, approachable, and magnetic,
+                  drawing people with warmth and affection. This spiritual influence can smooth conflicts and win hearts.
+                </p>
+              </div>
+              <div>
+                <h4 class="font-semibold text-xl mb-4">Increase in Social Influence (มหานิยม)</h4>
+                <p class="mb-4">
+                  Closely related to Metta is the horn&#39;s ability to bestow <strong>Mahaniyom</strong> (มหานิยม)—
+                  great popularity or widespread affection. This property extends beyond individual relationships
+                  to one&#39;s standing in the broader community.
+                </p>
+                <p>
+                  An individual blessed with Mahaniyom becomes a person of influence, well-liked, respected,
+                  and admired by many—a highly desirable quality for leaders, public figures, and business professionals.
+                </p>
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-pink-50 to-purple-50 p-8 rounded-lg">
+              <h5 class="font-semibold text-lg mb-4">Fostering Affection and Goodwill</h5>
+              <p>
+                The combined effects of enhanced loving-kindness (metta) and increased popularity (mahaniyom)
+                create a powerful ability to foster genuine affection and goodwill from others. This crucial aspect
+                addresses the heart of human relationships, helping to create positive and harmonious social environments
+                where the owner is surrounded by people who genuinely like, respect, and support them.
+              </p>
+            </div>
+          </div>
+
+          <!-- Authority and Power -->
+          <div id="authority-power" class="mb-16">
+            <h3 class="serif-display text-3xl font-semibold mb-8">Authority and Power (มหาอำนาจ)</h3>
+
+            <div class="power-grid">
+              <div class="power-card">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-crown text-purple-600 text-2xl mr-3"></i>
+                  <h5 class="font-semibold">Bestowal of Leadership Qualities</h5>
+                </div>
+                <p class="text-sm mb-3">
+                  Rhino horn is revered for its ability to bestow <strong>Maha Amnat</strong> (มหาอำนาจ)—
+                  great authority and power. This property is particularly sought after by business executives,
+                  military officers, and political figures.
+                </p>
+                <p class="text-xs text-gray-600">
+                  The horn imbues owners with commanding presence, self-confidence, and natural leadership abilities.
+                </p>
+              </div>
+
+              <div class="power-card">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-fist-raised text-red-600 text-2xl mr-3"></i>
+                  <h5 class="font-semibold">Enhancement of Dominance</h5>
+                </div>
+                <p class="text-sm mb-3">
+                  Beyond leadership, the horn enhances the owner&#39;s ability to dominate and command others—
+                  crucial for <em>maha amnat</em> in traditional hierarchical societies.
+                </p>
+                <p class="text-xs text-gray-600">
+                  This sympathetic magic transfers the rhino&#39;s formidable qualities to the owner.
+                  <a href="https://www.lannaamulet.in.th/item/detail/19326" class="citation-link">[144, 145]</a>
+                </p>
+              </div>
+
+              <div class="power-card">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-king text-blue-600 text-2xl mr-3"></i>
+                  <h5 class="font-semibold">Support for Jao Khon Status</h5>
+                </div>
+                <p class="text-sm mb-3">
+                  The ultimate expression of power bestowal is support for achieving
+                  <strong>Jao Khon</strong> (เจ้าคนนายคน) status—a person of the highest power and influence.
+                </p>
+                <p class="text-xs text-gray-600">
+                  The horn becomes a &#34;crown&#34; for aspiring leaders, symbolizing authority and divine mandate.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spiritual Protection -->
+          <div id="spiritual-protection" class="mb-16">
+            <h3 class="serif-display text-3xl font-semibold mb-8">Spiritual Protection (แคล้วคลาด)</h3>
+
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+              <div>
+                <h4 class="font-semibold text-xl mb-4">Comprehensive Spiritual Defense</h4>
+                <p class="mb-4">
+                  A fundamental mystical property of rhinoceros horn is its role as a powerful protective talisman
+                  offering <strong>Klaew Klaad</strong> (แคล้วคลาด)—comprehensive protection from all forms of harm,
+                  danger, and misfortune.
+                </p>
+                <p>
+                  The horn serves as a spiritual shield that can deflect negative energies and avert potential disasters,
+                  ensuring the safety and well-being of its possessor. This protective quality stems from the perception
+                  of the rhinoceros as a formidable and resilient animal.
+                </p>
+              </div>
+              <div>
+                <img src="https://kimi-web-img.moonshot.cn/img/www.dharmashop.com/10295d651ca069381736ab364e3e3fc971630743.jpg" alt="Traditional Thai protective amulet" class="w-full h-64 object-cover rounded-lg shadow-lg" size="medium" aspect="wide" style="photo" query="Thai protective amulet" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+              </div>
+            </div>
+
+            <div class="space-y-6">
+              <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500">
+                <h5 class="font-semibold mb-3">Warding Off Evil Spirits (กันภูตผี)</h5>
+                <p class="text-sm mb-2">
+                  Rhino horn is specifically believed to be a potent ward against malevolent spirits and negative energies—
+                  <strong>Kan Phut Phi</strong> (กันภูตผี). The horn&#39;s strong, auspicious energy creates a protective
+                  barrier that harmful supernatural entities cannot penetrate.
+                </p>
+                <p class="text-xs text-gray-600">
+                  <a href="https://www.jinbodhi.org/en/psychic_treasure__rhino_horn/" class="citation-link">Traditional Thai Spiritual Defense [776]</a>
+                </p>
+              </div>
+
+              <div class="bg-gray-100 p-6 rounded-lg border-l-4 border-gray-600">
+                <h5 class="font-semibold mb-3">Protection Against Black Magic (กันคุณไสย)</h5>
+                <p class="text-sm mb-2">
+                  The horn is highly regarded for its ability to protect against black magic and sorcery—
+                  <strong>Kan Khun Sai</strong> (กันคุณไสย). It creates an impenetrable spiritual barrier
+                  against curses, hexes, and harmful spells.
+                </p>
+                <p class="text-xs text-gray-600">
+                  <a href="https://www.lannaamulet.in.th/item/detail/19326" class="citation-link">Traditional Thai Magical Defense [144, 145]</a>
+                </p>
+              </div>
+
+              <div class="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-500">
+                <h5 class="font-semibold mb-3">Protection Against Fire (กันไฟ)</h5>
+                <p class="text-sm mb-2">
+                  While not explicitly detailed in Thai sources, this property can be inferred from Lao traditions
+                  where rhino horn was historically used to <strong>save houses from catching fire</strong>.
+                  Given the close cultural ties between Thailand and Laos, this elemental protection likely
+                  extends to Thai belief systems.
+                </p>
+                <p class="text-xs text-gray-600">
+                  <a href="https://www.aspinallfoundation.org/media/3936/rhinos-of-kruger-for-online-for-amos-1.pdf" class="citation-link">Lao Traditional Beliefs [781]</a>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Divine Communication -->
+          <div id="divine-communication">
+            <h3 class="serif-display text-3xl font-semibold mb-8">Communication with the Divine</h3>
+
+            <div class="bg-gradient-to-r from-indigo-50 to-purple-50 p-8 rounded-lg mb-8">
+              <h4 class="font-semibold text-xl mb-4">Use as a Medium for Spiritual Communication</h4>
+              <p class="mb-4">
+                Beyond its protective and fortune-enhancing properties, rhinoceros horn serves as a powerful medium
+                for spiritual communication. This esoteric property is particularly valued by spiritual practitioners,
+                shamans, and those seeking to deepen their divine connection.
+                <a href="https://www.jinbodhi.org/en/psychic_treasure__rhino_horn/" class="citation-link">[279, 280]</a>
+              </p>
+              <p>
+                The horn acts as a conduit, facilitating communication with gods, deities, and other spiritual beings.
+                This ability stems from the horn&#39;s inherent spiritual power and its connection to the celestial realm,
+                enhanced by the divine being said to reside within it.
+              </p>
+            </div>
+
+            <div class="power-grid">
+              <div class="power-card">
+                <h5 class="font-semibold mb-3">Meditation Enhancement</h5>
+                <p class="text-sm">
+                  Used to achieve deeper states of consciousness and receive divine guidance and inspiration
+                  during meditation practices.
+                </p>
+              </div>
+
+              <div class="power-card">
+                <h5 class="font-semibold mb-3">Ritual Conduit</h5>
+                <p class="text-sm">
+                  Employed in ceremonies to invoke deity presence and make offerings,
+                  enhancing the power of spiritual rituals.
+                </p>
+              </div>
+
+              <div class="power-card">
+                <h5 class="font-semibold mb-3">Divination Tool</h5>
+                <p class="text-sm">
+                  Used to seek answers to important questions and gain insight into the future
+                  through enhanced psychic abilities.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Traditional Medicine Section -->
+      <section id="traditional-medicine" class="px-8 py-16">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="serif-display text-4xl font-semibold mb-12" style="color: var(--sacred-brown);">
+            Role in Traditional Thai Medicine and Amulets
+          </h2>
+
+          <!-- Ya Wasana Jindamanee -->
+          <div id="jindamanee" class="mb-16">
+            <h3 class="serif-display text-3xl font-semibold mb-8">Ingredient in &#34;Ya Wasana Jindamanee&#34; (ยาวาสนาจินดามณี)</h3>
+
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+              <div>
+                <h4 class="font-semibold text-xl mb-4">Confirmation as a Rare and Valuable Ingredient</h4>
+                <p class="mb-4">
+                  Rhinoceros horn holds extraordinary prestige as an ingredient in the legendary
+                  <strong>&#34;Ya Wasana Jindamanee&#34;</strong> (ยาวาสนาจินดามณี), an ancient Thai medicinal formula
+                  renowned for its powerful spiritual and physical benefits.
+                  <a href="https://www.taifudo.com/jindamanee-medicinal-powder/" class="citation-link">[791]</a>
+                </p>
+                <p>
+                  The horn is explicitly identified as one of the three most rare and valuable components,
+                  alongside ambergris from a whale (อำพันปลาวาฬ) and the milk of a tigress (น้ำนมเสือหย่า).
+                  This elite grouping highlights its perceived potency and central role in the medicine&#39;s mystical efficacy.
+                </p>
+              </div>
+              <div>
+                <img src="https://kimi-web-img.moonshot.cn/img/www.who.int/bf3e17abc39246d6297bd188172d938fdb12fdbd.jpg" alt="Traditional Thai medicine ingredients including herbs and natural substances" class="w-full h-64 object-cover rounded-lg shadow-lg" size="medium" aspect="wide" style="photo" query="Traditional Thai medicine ingredients" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+              </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+              <h5 class="font-semibold text-lg mb-4 flex items-center">
+                <i class="fas fa-flask text-green-600 mr-3"></i>
+                Believed Enhancement of Magical Efficacy
+              </h5>
+              <p class="mb-4">
+                The inclusion of rhinoceros horn in the Jindamanee formula is primarily for its profound ability
+                to enhance the medicine&#39;s magical efficacy. The Jindamanee is not merely a physical remedy but a
+                <strong>Wasana</strong> (วาสนา) medicine—a substance with power to influence fate, fortune, and spiritual well-being.
+              </p>
+              <p class="text-sm text-gray-600">
+                The horn&#39;s presence elevates the medicine from a simple herbal concoction to a potent magical elixir,
+                capable of bestowing great fortune, protecting against harm, and enhancing personal charm and influence.
+              </p>
+            </div>
+
+            <div class="pull-quote">
+              &#34;The rhino horn&#39;s connection to the spiritual realm is transferred to the person who consumes the medicine,
+              aligning their personal energy with the forces of good fortune and success.&#34;
+              <footer class="text-sm mt-2">
+                — <a href="https://www.taifudo.com/jindamanee-medicinal-powder/" class="citation-link">Jindamanee Formula Analysis [791]</a>
+              </footer>
+            </div>
+
+            <div class="power-grid">
+              <div class="power-card">
+                <h6 class="font-semibold mb-3">Synergistic Effects</h6>
+                <p class="text-sm">
+                  The horn&#39;s powerful energy interacts with other Thonnasit materials, creating effects
+                  greater than the sum of their parts.
+                </p>
+              </div>
+
+              <div class="power-card">
+                <h6 class="font-semibold mb-3">Ambergris Connection</h6>
+                <p class="text-sm">
+                  Combined with ambergris from whales, known for powerful Metta (loving-kindness)
+                  and protective properties.
+                </p>
+              </div>
+
+              <div class="power-card">
+                <h6 class="font-semibold mb-3">Tiger&#39;s Milk Enhancement</h6>
+                <p class="text-sm">
+                  Paired with tigress milk, associated with immense strength, courage,
+                  and authority in traditional beliefs.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amulets and Talismans -->
+          <div id="amulets-talismans">
+            <h3 class="serif-display text-3xl font-semibold mb-8">Use in Amulets and Talismans</h3>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+              <div>
+                <img src="https://kimi-web-img.moonshot.cn/img/i.pinimg.com/5a04444b4f14b2ff1d9fa6ca40fc6e263e97302e.jpg" alt="Carved rhinoceros horn Buddhist figurine from Northern Thailand" class="w-full h-48 object-cover rounded-lg shadow-lg mb-4" size="medium" aspect="tall" color="brown" style="photo" query="carved rhinoceros horn buddha thailand" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+                <h4 class="font-semibold text-lg mb-3">Carved Buddhist Images</h4>
+                <p class="text-sm">
+                  Due to its rarity, durability, and spiritual power, rhino horn has been historically carved
+                  into Buddhist images and devotional objects, particularly in Northern Thailand and Laos.
+                  <a href="https://www.finch-and-co.co.uk/artwork-detail/813375/18663/northern-thailand-or-laotian-carved" class="citation-link">[797]</a>
+                </p>
+              </div>
+
+              <div>
+                <img src="https://kimi-web-img.moonshot.cn/img/c.files.bbci.co.uk/fb83285838f2fb390125d05d9d79f077e6ee2688.jpg" alt="Traditional Thai rhinoceros horn jewelry" class="w-full h-48 object-cover rounded-lg shadow-lg mb-4" size="medium" aspect="wide" style="photo" query="thai rhinoceros horn jewelry" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+                <h4 class="font-semibold text-lg mb-3">Personal Jewelry</h4>
+                <p class="text-sm">
+                  Small pieces of horn are commonly worn as jewelry for continuous personal protection
+                  and fortune attraction. This practice allows owners to carry the horn&#39;s protective
+                  and auspicious energy wherever they go.
+                </p>
+              </div>
+
+              <div>
+                <img src="https://kimi-web-img.moonshot.cn/img/www.michaelbackmanltd.com/924e0c6f676e9bf7fd7fb61f78597e41b75a8677.jpg" alt="Traditional Thai household shrine with rhinoceros horn" class="w-full h-48 object-cover rounded-lg shadow-lg mb-4" size="medium" aspect="wide" style="photo" query="thai household shrine rhinoceros horn" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+                <h4 class="font-semibold text-lg mb-3">Household Shrine Placement</h4>
+                <p class="text-sm">
+                  Small horns or carved pieces are often placed in household shrines to attract prosperity
+                  and blessings for the entire family, creating a positive and auspicious environment
+                  conducive to wealth and happiness.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Synthesis Section -->
+      <section id="synthesis" class="px-8 py-16">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="serif-display text-4xl font-semibold mb-12" style="color: var(--sacred-brown);">
+            Synthesis of Non-Medical, Mystical Effects
+          </h2>
+
+          <!-- All-Around Benefits -->
+          <div id="all-around-benefits" class="mb-16">
+            <h3 class="serif-display text-3xl font-semibold mb-8">All-Around Benefits (ครอบคลุมทุกๆด้าน)</h3>
+
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg mb-8">
+              <h4 class="font-semibold text-xl mb-4">Holistic Enhancement of Life Aspects</h4>
+              <p class="mb-4">
+                The mystical properties of rhinoceros horn are not viewed as isolated effects but as part of a holistic
+                system of enhancement touching all aspects of life. The horn&#39;s powerful energy creates positive feedback
+                loops where success in one area leads to success in others.
+              </p>
+              <p>
+                This comprehensive approach addresses the interconnected nature of human experience—enhancing wealth
+                through improved relationships, supporting authority through enhanced protection, and creating
+                balanced, fulfilling lives across all dimensions.
+              </p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+              <div class="power-card">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-star text-yellow-600 text-2xl mr-3"></i>
+                  <h5 class="font-semibold">Elevation of Personal Fortune (หนุนดวง)</h5>
+                </div>
+                <p class="text-sm">
+                  A key concept in Thai mysticism, <strong>nun duang</strong> (หนุนดวง) refers to elevating
+                  personal fortune or destiny. The horn&#39;s spiritual energy helps improve astrological charts
+                  and overcome negative planetary influences, fundamentally altering life&#39;s course for the better.
+                </p>
+              </div>
+
+              <div class="power-card">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-dharmachakra text-green-600 text-2xl mr-3"></i>
+                  <h5 class="font-semibold">Support for Merit Accumulation (เสริมบุญยาธิการ)</h5>
+                </div>
+                <p class="text-sm">
+                  The horn supports <strong>seim bun ya thi kan</strong> (เสริมบุญยาธิการ)—enhancing
+                  the power of one&#39;s merit. By creating conditions for more effective merit-making,
+                  it helps owners accumulate the vast store of positive karma needed for spiritual goals.
+                </p>
+              </div>
+            </div>
+
+            <!-- Mermaid Diagram: Holistic Benefits Flow -->
+            <div class="bg-white p-8 rounded-lg shadow-lg border border-gray-200 mb-8">
+              <h5 class="font-semibold text-lg mb-6 text-center">Holistic Enhancement Flow</h5>
+              <div class="mermaid-container">
+                <div class="mermaid-controls">
+                  <button class="mermaid-control-btn zoom-in" title="放大">
+                    <i class="fas fa-search-plus"></i>
+                  </button>
+                  <button class="mermaid-control-btn zoom-out" title="缩小">
+                    <i class="fas fa-search-minus"></i>
+                  </button>
+                  <button class="mermaid-control-btn reset-zoom" title="重置">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                  </button>
+                  <button class="mermaid-control-btn fullscreen" title="全屏查看">
+                    <i class="fas fa-expand"></i>
+                  </button>
+                </div>
+                <div class="mermaid">
+                  graph TD
+                  A[&#34;Rhinoceros Horn
+                  <br/>ทนสิทธิ์ Power&#34;] --&gt; B[&#34;Fortune &amp; Prosperity
+                  <br/>โชคลาภ&#34;]
+                  A --&gt; C[&#34;Charm &amp; Popularity
+                  <br/>เมตตา มหานิยม&#34;]
+                  A --&gt; D[&#34;Authority &amp; Power
+                  <br/>มหาอำนาจ&#34;]
+                  A --&gt; E[&#34;Spiritual Protection
+                  <br/>แคล้วคลาด&#34;]
+
+                  B --&gt; F[&#34;Business Success&#34;]
+                  B --&gt; G[&#34;Wealth Attraction&#34;]
+
+                  C --&gt; H[&#34;Social Harmony&#34;]
+                  C --&gt; I[&#34;Leadership Support&#34;]
+
+                  D --&gt; J[&#34;Command Respect&#34;]
+                  D --&gt; K[&#34;Influence Others&#34;]
+
+                  E --&gt; L[&#34;Safety &amp; Security&#34;]
+                  E --&gt; M[&#34;Magical Defense&#34;]
+
+                  F --&gt; N[&#34;Holistic Success&#34;]
+                  G --&gt; N
+                  H --&gt; N
+                  I --&gt; N
+                  J --&gt; N
+                  K --&gt; N
+                  L --&gt; N
+                  M --&gt; N
+
+                  N --&gt; O[&#34;Merit Accumulation
+                  <br/>เสริมบุญยาธิการ&#34;]
+                  N --&gt; P[&#34;Fortune Elevation
+                  <br/>หนุนดวง&#34;]
+
+                  classDef thonnasit fill:#d4af37,stroke:#8b7355,stroke-width:3px,color:#fff
+                  classDef power fill:#f8f5f0,stroke:#d4af37,stroke-width:2px,color:#2d2d2d
+                  classDef outcome fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#2d2d2d
+                  classDef spiritual fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#2d2d2d
+
+                  class A thonnasit
+                  class B,C,D,E power
+                  class F,G,H,I,J,K,L,M outcome
+                  class N,O,P spiritual
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status Symbol -->
+          <div id="status-symbol" class="mb-16">
+            <h3 class="serif-display text-3xl font-semibold mb-8">Status Symbol and Aphrodisiac Use</h3>
+
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+              <div>
+                <h4 class="font-semibold text-xl mb-4">Perception as a Luxury Item Among Elites</h4>
+                <p class="mb-4">
+                  Beyond spiritual uses, rhinoceros horn has gained reputation as a luxury item and status symbol,
+                  particularly among wealthy elites. This perception is driven by extreme rarity, high cost, and
+                  long history of association with power and prestige.
+                  <a href="https://www.scientificamerican.com/article/the-hard-truth-about-the-rhino-horn-aphrodisiac-market/" class="citation-link">[777]</a>
+                </p>
+                <p>
+                  In Vietnam, rhino horn has become a &#34;fad&#34; among business elites who consume it not for health benefits
+                  but as a display of wealth and social standing. The illegal nature adds to its allure as a symbol
+                  of exclusivity and privilege.
+                </p>
+              </div>
+              <div>
+                <h4 class="font-semibold text-xl mb-4">Non-Medical Use for Sexual Enhancement</h4>
+                <p class="mb-4">
+                  While often dismissed as Western media myth, evidence suggests aphrodisiac use in parts of Asia,
+                  including Northern Thailand. This belief, though lacking scientific basis, has gained traction
+                  among wealthy consumers.
+                </p>
+                <p>
+                  The perpetuation of this modern myth has contributed to destructive demand, fueling the illegal
+                  wildlife trade and devastating rhinoceros populations across their natural ranges.
+                </p>
+              </div>
+            </div>
+
+            <div class="bg-red-50 p-8 rounded-lg border-l-4 border-red-500">
+              <h5 class="font-semibold text-lg mb-4 flex items-center">
+                <i class="fas fa-exclamation-triangle text-red-600 mr-3"></i>
+                Conservation Concern
+              </h5>
+              <p class="mb-4">
+                The combination of traditional spiritual beliefs, luxury status perception, and modern myths about
+                rhinoceros horn has created a perfect storm of demand that threatens the very survival of these
+                magnificent creatures.
+              </p>
+              <p class="text-sm text-gray-600">
+                The challenge lies in preserving cultural heritage while protecting endangered species—
+                a balance requiring education, sustainable alternatives, and respect for both tradition and conservation.
+              </p>
+            </div>
+          </div>
+
+          <!-- Cultural and Historical Significance -->
+          <div id="cultural-significance">
+            <h3 class="serif-display text-3xl font-semibold mb-8">Cultural and Historical Significance</h3>
+
+            <div class="space-y-8">
+              <div>
+                <h4 class="font-semibold text-xl mb-4">Folklore and Legends from the Lanna Region</h4>
+                <p class="mb-4">
+                  The mystical properties of rhinoceros horn are deeply rooted in the folklore and legends of the
+                  Lanna region of Northern Thailand, an area with rich cultural heritage. The legends speak of the
+                  rhinoceros as a powerful and mysterious &#34;secret animal,&#34; rarely seen and difficult to track.
+                </p>
+                <p>
+                  These stories often feature heroes using rhino horn to overcome great challenges, defeat enemies,
+                  and achieve their heart&#39;s desires. The horn is depicted as a &#34;magic bullet&#34;—a powerful tool
+                  that can solve any problem and grant any wish, passed down through generations of oral tradition.
+                </p>
+              </div>
+
+              <div>
+                <h4 class="font-semibold text-xl mb-4">Beliefs Passed Down Through Generations</h4>
+                <p class="mb-4">
+                  The beliefs surrounding rhinoceros horn are not recent inventions but part of a long, continuous
+                  tradition passed down through generations of Thai and Lao people. These living values and practices
+                  are deeply ingrained in the collective consciousness, transmitted through oral tradition,
+                  religious texts, and traditional healer practices.
+                </p>
+                <p>
+                  Even in the face of scientific skepticism and growing awareness of rhinoceros conservation needs,
+                  these beliefs persist—a testament to their deep cultural and psychological significance and
+                  their role in shaping worldview and spiritual understanding.
+                </p>
+              </div>
+
+              <div class="bg-gray-100 p-8 rounded-lg">
+                <h4 class="font-semibold text-xl mb-4">Modern-Day Relevance in Amulet and Mystical Object Markets</h4>
+                <p class="mb-4">
+                  Despite legal and ethical concerns, beliefs in rhinoceros horn&#39;s mystical properties continue
+                  to impact modern markets for amulets and mystical objects. Demand remains high, particularly
+                  among those seeking enhanced fortune, power, and protection.
+                </p>
+                <p class="text-sm text-gray-600">
+                  This modern relevance presents a complex challenge: balancing the preservation of cultural
+                  heritage with the urgent need for wildlife conservation and the protection of endangered species.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Conclusion -->
+      <section id="conclusion" class="px-8 py-16">
+        <div class="max-w-4xl mx-auto">
+          <h2 class="serif-display text-4xl font-semibold mb-8" style="color: var(--sacred-brown);">Conclusion</h2>
+
+          <div class="prose prose-lg max-w-none">
+            <p class="text-xl leading-relaxed mb-6">
+              The mystical properties of rhinoceros horn (นอแรด) in Thai tradition represent a profound intersection
+              of spirituality, culture, and belief. Classified as a <strong>Thonnasit</strong> (ทนสิทธิ์) substance,
+              the horn possesses inherent magical power that transcends the need for ritual consecration, making it
+              one of the most revered spiritual materials in Thai mystical tradition.
+            </p>
+
+            <div class="bg-gradient-to-r from-yellow-50 to-orange-50 p-8 rounded-lg mb-8">
+              <h3 class="font-semibold text-xl mb-4">Key Mystical Properties Synthesized</h3>
+              <ul class="space-y-3">
+                <li class="flex items-start">
+                  <i class="fas fa-coins text-yellow-600 mr-3 mt-1"></i>
+                  <span><strong>Fortune and Prosperity (โชคลาภ):</strong> Acts as a &#34;luck multiplier&#34; (ค้ำคูณ) and wealth attractor</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-heart text-pink-600 mr-3 mt-1"></i>
+                  <span><strong>Charm and Popularity (เมตตา มหานิยม):</strong> Enhances loving-kindness and social influence</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-crown text-purple-600 mr-3 mt-1"></i>
+                  <span><strong>Authority and Power (มหาอำนาจ):</strong> Bestows leadership qualities and commanding presence</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-shield-alt text-blue-600 mr-3 mt-1"></i>
+                  <span><strong>Spiritual Protection (แคล้วคลาด):</strong> Provides comprehensive defense against harm, spirits, and black magic</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-praying-hands text-green-600 mr-3 mt-1"></i>
+                  <span><strong>Divine Communication:</strong> Serves as a medium for spiritual connection and celestial guidance</span>
+                </li>
+              </ul>
+            </div>
+
+            <p class="mb-6">
+              These powers are believed to stem from the horn&#39;s status as a <strong>dwelling place for deities</strong>
+              (เทพสถิตย์) and its connection to the auspicious rhinoceros, an animal revered as a vehicle for powerful
+              spirits and a conduit for positive celestial energy. The horn&#39;s role in traditional medicines like
+              <em>Ya Wasana Jindamanee</em> and its use in carved devotional objects further solidifies its position
+              as a premier spiritual material.
+            </p>
+
+            <div class="pull-quote">
+              &#34;The beliefs surrounding rhinoceros horn are not just about the horn itself; they are about a way of seeing the world,
+              a worldview that is rich in magic, mystery, and spiritual power—a precious and irreplaceable part of the cultural
+              heritage of Thailand and Laos.&#34;
+            </div>
+
+            <p class="mb-6">
+              However, the enduring power of these beliefs presents modern challenges. The high value placed on rhinoceros horn—
+              with prices exceeding one million Thai Baht per horn—has contributed to devastating impacts on wild rhinoceros
+              populations. The intersection of traditional spiritual value, luxury status perception, and modern myths about
+              aphrodisiac properties has created unsustainable demand that threatens the very animals that form the foundation
+              of these beliefs.
+            </p>
+
+            <p>
+              Moving forward, the preservation of cultural heritage must be balanced with wildlife conservation.
+              This requires thoughtful approaches that honor traditional beliefs while protecting endangered species—
+              perhaps through sustainable alternatives, education about conservation needs, and respectful dialogue
+              between traditional practitioners and conservationists. The mystical properties of rhinoceros horn,
+              as documented in ancient palm-leaf manuscripts and passed down through generations, represent a profound
+              spiritual tradition that deserves preservation, even as we work to ensure the survival of the magnificent
+              creatures that have inspired such reverence.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-gray-900 text-white px-8 py-12">
+        <div class="max-w-6xl mx-auto">
+          <div class="grid lg:grid-cols-3 gap-8">
+            <div>
+              <h3 class="serif-display text-xl font-semibold mb-4">Sources &amp; Citations</h3>
+              <div class="space-y-2 text-sm">
+                <a href="https://www.lannaamulet.in.th/item/detail/19326" class="block text-gray-300 hover:text-yellow-400">[144] Lanna Amulet Studies</a>
+                <a href="http://pralanna.com/pramoolpage.php?pramoolid=29642" class="block text-gray-300 hover:text-yellow-400">[145] Traditional Thai Mysticism</a>
+                <a href="http://www.pralanna.com/boardpage.php?topicid=97716" class="block text-gray-300 hover:text-yellow-400">[697] Thai-Lao Cultural Heritage</a>
+                <a href="https://www.scientificamerican.com/article/the-hard-truth-about-the-rhino-horn-aphrodisiac-market/" class="block text-gray-300 hover:text-yellow-400">[777] Scientific American - Rhino Horn Market</a>
+                <a href="https://www.jinbodhi.org/en/psychic_treasure__rhino_horn/" class="block text-gray-300 hover:text-yellow-400">[776] Jin Bodhi - Psychic Treasure</a>
+                <a href="https://www.taifudo.com/jindamanee-medicinal-powder/" class="block text-gray-300 hover:text-yellow-400">[791] Jindamanee Medicinal Formula</a>
+                <a href="https://www.aspinallfoundation.org/media/3936/rhinos-of-kruger-for-online-for-amos-1.pdf" class="block text-gray-300 hover:text-yellow-400">[781] Aspinall Foundation - Rhino Conservation</a>
+                <a href="https://www.finch-and-co.co.uk/artwork-detail/813375/18663/northern-thailand-or-laotian-carved" class="block text-gray-300 hover:text-yellow-400">[797] Finch &amp; Co. - Thai/Lao Carvings</a>
+              </div>
+            </div>
+            <div>
+              <h3 class="serif-display text-xl font-semibold mb-4">Cultural Context</h3>
+              <p class="text-sm text-gray-300">
+                This research synthesizes traditional Thai beliefs about rhinoceros horn from both historical and modern sources,
+                focusing on spiritual properties rather than medical claims. The information is presented for cultural and
+                educational purposes, with awareness of conservation concerns regarding rhinoceros populations.
+              </p>
+            </div>
+            <div>
+              <h3 class="serif-display text-xl font-semibold mb-4">Traditional Thai Terms</h3>
+              <div class="space-y-1 text-sm text-gray-300">
+                <div><strong>นอแรด</strong> (Naw Raet) - Rhinoceros horn</div>
+                <div><strong>ทนสิทธิ์</strong> (Thonnasit) - Inherent magical power</div>
+                <div><strong>เทพสถิตย์</strong> (Thep Sadit) - Residence of deities</div>
+                <div><strong>โชคลาภ</strong> (Chok Lap) - Fortune and prosperity</div>
+                <div><strong>เมตตา</strong> (Metta) - Loving-kindness</div>
+                <div><strong>มหานิยม</strong> (Mahaniyom) - Great popularity</div>
+                <div><strong>มหาอำนาจ</strong> (Maha Amnat) - Great authority</div>
+                <div><strong>แคล้วคลาด</strong> (Klaew Klaad) - Protection from harm</div>
+              </div>
+            </div>
+          </div>
+          <div class="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-400">
+            <p>Research compiled from traditional Thai and Lao sources • January 2026</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Mobile TOC Toggle -->
+    <button id="mobile-toc-toggle" class="lg:hidden fixed top-4 left-4 z-50 bg-white p-3 rounded-full shadow-lg">
+      <i class="fas fa-bars text-gray-600"></i>
+    </button>
+
+    <script>
+        // Initialize Mermaid with custom theme
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#f8f5f0',
+                primaryTextColor: '#2d2d2d',
+                primaryBorderColor: '#d4af37',
+                lineColor: '#8b7355',
+                secondaryColor: '#f5f1e8',
+                tertiaryColor: '#ffffff',
+                background: '#ffffff',
+                mainBkg: '#f8f5f0',
+                secondBkg: '#f5f1e8',
+                tertiaryBkg: '#ffffff'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            fontFamily: 'Inter, sans-serif',
+            fontSize: 14
+        });
+
+        // Initialize Mermaid Controls for zoom and pan
+        function initializeMermaidControls() {
+            const containers = document.querySelectorAll('.mermaid-container');
+
+            containers.forEach(container => {
+            const mermaidElement = container.querySelector('.mermaid');
+            let scale = 1;
+            let isDragging = false;
+            let startX, startY, translateX = 0, translateY = 0;
+
+            // 触摸相关状态
+            let isTouch = false;
+            let touchStartTime = 0;
+            let initialDistance = 0;
+            let initialScale = 1;
+            let isPinching = false;
+
+            // Zoom controls
+            const zoomInBtn = container.querySelector('.zoom-in');
+            const zoomOutBtn = container.querySelector('.zoom-out');
+            const resetBtn = container.querySelector('.reset-zoom');
+            const fullscreenBtn = container.querySelector('.fullscreen');
+
+            function updateTransform() {
+                mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+                if (scale > 1) {
+                container.classList.add('zoomed');
+                } else {
+                container.classList.remove('zoomed');
+                }
+
+                mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+            }
+
+            if (zoomInBtn) {
+                zoomInBtn.addEventListener('click', () => {
+                scale = Math.min(scale * 1.25, 4);
+                updateTransform();
+                });
+            }
+
+            if (zoomOutBtn) {
+                zoomOutBtn.addEventListener('click', () => {
+                scale = Math.max(scale / 1.25, 0.3);
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+                updateTransform();
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+                });
+            }
+
+            if (fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', () => {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
+                }
+                });
+            }
+
+            // Mouse Events
+            mermaidElement.addEventListener('mousedown', (e) => {
+                if (isTouch) return; // 如果是触摸设备，忽略鼠标事件
+
+                isDragging = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+                mermaidElement.style.cursor = 'grabbing';
+                updateTransform();
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging && !isTouch) {
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseleave', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            // 获取两点之间的距离
+            function getTouchDistance(touch1, touch2) {
+                return Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+                );
+            }
+
+            // Touch Events - 触摸事件处理
+            mermaidElement.addEventListener('touchstart', (e) => {
+                isTouch = true;
+                touchStartTime = Date.now();
+
+                if (e.touches.length === 1) {
+                // 单指拖动
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+
+                } else if (e.touches.length === 2) {
+                // 双指缩放
+                isPinching = true;
+                isDragging = false;
+
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialDistance = getTouchDistance(touch1, touch2);
+                initialScale = scale;
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isDragging && !isPinching) {
+                // 单指拖动
+                const touch = e.touches[0];
+                translateX = touch.clientX - startX;
+                translateY = touch.clientY - startY;
+                updateTransform();
+
+                } else if (e.touches.length === 2 && isPinching) {
+                // 双指缩放
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = getTouchDistance(touch1, touch2);
+
+                if (initialDistance > 0) {
+                    const newScale = Math.min(Math.max(
+                    initialScale * (currentDistance / initialDistance),
+                    0.3
+                    ), 4);
+                    scale = newScale;
+                    updateTransform();
+                }
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchend', (e) => {
+                // 重置状态
+                if (e.touches.length === 0) {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                // 延迟重置isTouch，避免鼠标事件立即触发
+                setTimeout(() => {
+                    isTouch = false;
+                }, 100);
+                } else if (e.touches.length === 1 && isPinching) {
+                // 从双指变为单指，切换为拖动模式
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+                }
+
+                updateTransform();
+            });
+
+            mermaidElement.addEventListener('touchcancel', (e) => {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                setTimeout(() => {
+                isTouch = false;
+                }, 100);
+
+                updateTransform();
+            });
+
+            // Enhanced wheel zoom with better center point handling
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+                // Adjust translation to zoom towards center
+                if (newScale !== scale) {
+                const scaleDiff = newScale / scale;
+                translateX = translateX * scaleDiff;
+                translateY = translateY * scaleDiff;
+                scale = newScale;
+
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+
+                updateTransform();
+                }
+            });
+
+            // Initialize display
+            updateTransform();
+            });
+        }
+
+        // Initialize the mermaid controls
+        initializeMermaidControls();
+
+        // Mobile TOC toggle
+        const mobileToggle = document.getElementById('mobile-toc-toggle');
+        const toc = document.querySelector('.toc-fixed');
+
+        if (mobileToggle) {
+            mobileToggle.addEventListener('click', () => {
+                toc.classList.toggle('mobile-open');
+            });
+        }
+
+        // Smooth scrolling for TOC links
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Close mobile TOC
+                    toc.classList.remove('mobile-open');
+                }
+            });
+        });
+
+        // Active section highlighting
+        const sections = document.querySelectorAll('section[id]');
+        const tocLinks = document.querySelectorAll('.toc-link');
+
+        function updateActiveTocLink() {
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (window.scrollY >= sectionTop - 200) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveTocLink);
+        updateActiveTocLink(); // Initial call
+
+        // Close mobile TOC when clicking outside
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth < 1024 && 
+                !toc.contains(e.target) && 
+                !mobileToggle.contains(e.target)) {
+                toc.classList.remove('mobile-open');
+            }
+        });
+    </script>
+  
+
+</body></html>
