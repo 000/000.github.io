@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS | THONNASIT ARCHIVE: RHINO HORN</title>
+    
+    <!-- External Libraries (CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400&family=Orbitron:wght@400;700;900&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* 
+         * NEXUS CSS MICRO-FRAMEWORK 
+         * Protocol: No External CSS. Layered Architecture.
+         */
+        @layer base, layout, components, utilities, animations;
+
+        :root {
+            /* Palette: Titanium & Neon */
+            --void-black: #050505;
+            --space-gray: #1a1a1e;
+            --neon-core: #00f3ff;
+            --accent-gold: #ffd700;
+            --signal-danger: #ff2a6d;
+            --signal-success: #05ffa1;
+            --glass-bg: rgba(20, 20, 20, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --font-display: 'Orbitron', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-data: 'JetBrains Mono', monospace;
+            --font-thai: 'Sarabun', sans-serif;
+        }
+
+        @layer base {
+            body {
+                background-color: var(--void-black);
+                color: #e0e0e0;
+                font-family: var(--font-body);
+                margin: 0;
+                overflow-x: hidden;
+                -webkit-font-smoothing: antialiased;
+            }
+            h1, h2, h3 { font-family: var(--font-display); text-transform: uppercase; margin: 0; }
+            a { color: var(--neon-core); text-decoration: none; }
+        }
+
+        @layer layout {
+            .container { max-width: 1440px; margin: 0 auto; padding: 0 1rem; }
+            .grid { display: grid; }
+            .flex { display: flex; }
+            .h-screen { height: 100vh; }
+            .w-full { width: 100%; }
+            .relative { position: relative; }
+            .absolute { position: absolute; }
+            .z-10 { z-index: 10; }
+            .overflow-hidden { overflow: hidden; }
+        }
+
+        @layer components {
+            /* Glass Panel System */
+            .glass-panel {
+                background: var(--glass-bg);
+                backdrop-filter: blur(20px);
+                border: 1px solid var(--glass-border);
+                box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+                border-radius: 4px;
+            }
+
+            /* Titanium Headers */
+            .header-titanium {
+                border-left: 4px solid var(--neon-core);
+                padding-left: 1rem;
+                background: linear-gradient(90deg, rgba(0,243,255,0.1) 0%, transparent 100%);
+            }
+
+            /* Data Tables */
+            .data-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-family: var(--font-thai);
+                font-size: 0.9rem;
+            }
+            .data-table th {
+                text-align: left;
+                padding: 12px;
+                background: rgba(255,255,255,0.05);
+                color: var(--accent-gold);
+                font-family: var(--font-display);
+                position: sticky;
+                top: 0;
+            }
+            .data-table td {
+                padding: 12px;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+            }
+            .data-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+            .data-table tr:hover { background: rgba(0, 243, 255, 0.05); }
+
+            /* Sentiment Badges */
+            .badge {
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                display: inline-block;
+            }
+            .badge-high { background: rgba(5, 255, 161, 0.15); color: var(--signal-success); border: 1px solid var(--signal-success); }
+            .badge-med { background: rgba(255, 215, 0, 0.15); color: var(--accent-gold); border: 1px solid var(--accent-gold); }
+            .badge-crit { background: rgba(255, 42, 109, 0.15); color: var(--signal-danger); border: 1px solid var(--signal-danger); }
+        }
+
+        @layer utilities {
+            .p-4 { padding: 1rem; }
+            .p-8 { padding: 2rem; }
+            .m-4 { margin: 1rem; }
+            .mb-8 { margin-bottom: 2rem; }
+            .gap-4 { gap: 1rem; }
+            .gap-8 { gap: 2rem; }
+            
+            .text-xl { font-size: 1.25rem; }
+            .text-3xl { font-size: 2rem; }
+            .text-sm { font-size: 0.875rem; }
+            .text-muted { color: rgba(255,255,255,0.6); }
+            .text-neon { color: var(--neon-core); }
+            .text-gold { color: var(--accent-gold); }
+            
+            .col-span-1 { grid-column: span 1; }
+            .col-span-2 { grid-column: span 2; }
+            .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+            .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            
+            @media (max-width: 1024px) {
+                .lg-grid-cols-3 { grid-template-columns: 1fr; }
+                .col-span-2 { grid-column: span 1; }
+            }
+        }
+
+        @layer animations {
+            @keyframes drift {
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-10px); }
+                100% { transform: translateY(0px); }
+            }
+            .animate-drift { animation: drift 6s ease-in-out infinite; }
+            
+            /* Cosmic Fog Overlay */
+            .cosmic-fog {
+                position: absolute;
+                top: 0; left: 0; width: 100%; height: 100%;
+                background: radial-gradient(circle at 50% 50%, transparent 0%, var(--void-black) 90%);
+                pointer-events: none;
+                z-index: 1;
+            }
+        }
+
+        /* Chart Canvas Size Fix */
+        canvas { width: 100% !important; height: 100% !important; }
+    </style>
+</head>
+<body>
+
+    <!-- ATMOSPHERE ENGINE: WebGL/Canvas Background -->
+    <div id="atmosphere" class="absolute w-full h-screen overflow-hidden" style="position: fixed; top: 0; left: 0; z-index: -1;">
+        <div class="cosmic-fog"></div>
+    </div>
+
+    <!-- MAIN INTERFACE -->
+    <div class="container relative z-10 p-8">
+        
+        <!-- Header Section -->
+        <header class="mb-8 animate-drift">
+            <h1 class="text-3xl text-neon" style="letter-spacing: 4px;">NEXUS <span class="text-gold">THONNASIT</span> ARCHIVE</h1>
+            <p class="text-muted font-display" style="font-size: 0.9rem; letter-spacing: 2px;">Subject: Rhinoceros Horn (นอแรด) - Portable Mysticism & Power</p>
+        </header>
+
+        <!-- DASHBOARD GRID -->
+        <div class="grid grid-cols-1 lg-grid-cols-3 gap-8">
+
+            <!-- 1. EXECUTIVE SUMMARY & ORIGIN (Top Left) -->
+            <div class="glass-panel p-4 col-span-1">
+                <div class="header-titanium mb-4">
+                    <h2 class="text-xl">Core Doctrine: Thonnasit</h2>
+                </div>
+                <p class="text-sm text-muted mb-4" style="line-height: 1.6;">
+                    <strong>Definition:</strong> In Thai spiritual taxonomy, Rhino Horn is classified as <span class="text-neon">"Thonnasit"</span> (ทนสิทธิ์)—an object possessing inherent magical power (ฤทธิ์ในตัวเอง) without the need for ritual consecration (Pluk Sek).
+                </p>
+                <p class="text-sm text-muted" style="line-height: 1.6;">
+                    It is believed to house a <strong>Resident Deity (Thep Sadit)</strong>, acting as a passive "always-on" transmitter of luck and protection. Unlike medicinal grinding (which destroys the form), preserving the horn in its natural portable state (Portable Talisman) maximizes its function as a <span class="text-gold">"Luck Multiplier" (Kham Khun)</span>.
+                </p>
+            </div>
+
+            <!-- 2. RADAR CHART: TYPOLOGY ANALYSIS (Top Center) -->
+            <div class="glass-panel p-4 col-span-1" style="min-height: 350px;">
+                <div class="header-titanium mb-2">
+                    <h2 class="text-xl">Spectral Analysis: Horn Types</h2>
+                </div>
+                <div class="relative w-full h-full" style="height: 280px;">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                <div class="text-center text-xs text-muted mt-2 font-data">Comparative Potency: Black vs. Honey vs. White</div>
+            </div>
+
+            <!-- 3. SCATTER PLOT: VALUE MATRIX (Top Right) -->
+            <div class="glass-panel p-4 col-span-1" style="min-height: 350px;">
+                <div class="header-titanium mb-2">
+                    <h2 class="text-xl">Market Intelligence: Value/Rarity</h2>
+                </div>
+                <div class="relative w-full h-full" style="height: 280px;">
+                    <canvas id="scatterChart"></canvas>
+                </div>
+                <div class="text-center text-xs text-muted mt-2 font-data">Y: Mystical Potency | X: Rarity Index</div>
+            </div>
+
+            <!-- 4. NETWORK GRAPH: MYSTICAL TOPOLOGY (Bottom Left/Center) -->
+            <div class="glass-panel p-4 col-span-2" style="min-height: 500px;">
+                <div class="header-titanium mb-4 flex justify-between items-center">
+                    <h2 class="text-xl">The 11 Mystical Domains</h2>
+                    <span class="badge badge-high">Interactive Topology</span>
+                </div>
+                <div id="d3-network" class="w-full h-full relative" style="height: 400px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);"></div>
+                <p class="text-xs text-muted mt-2">
+                    <strong>Instructions:</strong> Drag nodes to reorganize the mystical field. 
+                    <br>Key nodes: <span class="text-gold">Metta (Charm)</span>, <span class="text-neon">Amnaj (Power)</span>, <span class="text-signal-danger">Gae Aathan (Anti-Magic)</span>.
+                </p>
+            </div>
+
+            <!-- 5. DATA TABLE: ATTRIBUTE CATALOG (Bottom Right) -->
+            <div class="glass-panel p-4 col-span-1" style="overflow-y: auto; max-height: 500px;">
+                <div class="header-titanium mb-4">
+                    <h2 class="text-xl">Attribute Database</h2>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Attribute (Thai)</th>
+                            <th>Function</th>
+                            <th>Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Metta Mahaniyom</td>
+                            <td>Social Magnetism & Trade</td>
+                            <td><span class="badge badge-high">Elite</span></td>
+                        </tr>
+                        <tr>
+                            <td>Maha Amnaj</td>
+                            <td>Authority & Command</td>
+                            <td><span class="badge badge-high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td>Gae Aathan</td>
+                            <td>Anti-Black Magic</td>
+                            <td><span class="badge badge-high">Elite</span></td>
+                        </tr>
+                        <tr>
+                            <td>Kan Fai</td>
+                            <td>Fire Protection</td>
+                            <td><span class="badge badge-med">Rare</span></td>
+                        </tr>
+                        <tr>
+                            <td>Choke Lap</td>
+                            <td>Luck Attraction</td>
+                            <td><span class="badge badge-high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td>Ud Sap</td>
+                            <td>Wealth Containment</td>
+                            <td><span class="badge badge-med">Med</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="mt-4 p-4 border border-dashed border-gray-700 rounded">
+                    <h3 class="text-sm text-gold font-display mb-2">Note on Medicinal Use</h3>
+                    <p class="text-xs text-muted">
+                        While portable use is primary for Thonnasit, the horn is marginally referenced as a "Core Ingredient" in <em>Ya Wasana Jindamanee</em>, acting as a spiritual amplifier rather than a chemical cure. This destruction of the artifact is considered a "sacrifice" of the portable power.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC CORE -->
+    <script>
+        /**
+         * NEXUS CORE V10.0
+         * Modules: Atmosphere, ChartManager, D3Topology
+         */
+
+        // --- 1. ATMOSPHERE ENGINE (Hybrid WebGL/Canvas) ---
+        class AtmosphereEngine {
+            constructor() {
+                this.container = document.getElementById('atmosphere');
+                this.initWebGL();
+            }
+
+            initWebGL() {
+                try {
+                    if (!window.THREE) throw new Error("Three.js missing");
+                    
+                    const scene = new THREE.Scene();
+                    // Fog for depth
+                    scene.fog = new THREE.FogExp2(0x050505, 0.002);
+
+                    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                    camera.position.z = 50;
+
+                    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                    this.container.appendChild(renderer.domElement);
+
+                    // Particle Cloud (Floating Dust/Magic)
+                    const geometry = new THREE.BufferGeometry();
+                    const particles = 2000;
+                    const positions = new Float32Array(particles * 3);
+                    const colors = new Float32Array(particles * 3);
+                    const color1 = new THREE.Color(0x00f3ff); // Neon Core
+                    const color2 = new THREE.Color(0xffd700); // Accent Gold
+
+                    for (let i = 0; i < particles; i++) {
+                        positions[i * 3] = (Math.random() - 0.5) * 200;
+                        positions[i * 3 + 1] = (Math.random() - 0.5) * 200;
+                        positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+
+                        const mixedColor = Math.random() > 0.5 ? color1 : color2;
+                        colors[i * 3] = mixedColor.r;
+                        colors[i * 3 + 1] = mixedColor.g;
+                        colors[i * 3 + 2] = mixedColor.b;
+                    }
+
+                    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+                    const material = new THREE.PointsMaterial({
+                        size: 0.5,
+                        vertexColors: true,
+                        transparent: true,
+                        opacity: 0.8
+                    });
+
+                    const starField = new THREE.Points(geometry, material);
+                    scene.add(starField);
+
+                    // Animation Loop
+                    const animate = () => {
+                        requestAnimationFrame(animate);
+                        starField.rotation.x += 0.0005;
+                        starField.rotation.y += 0.0005;
+                        renderer.render(scene, camera);
+                    };
+                    animate();
+
+                    // Resize Handler
+                    window.addEventListener('resize', () => {
+                        camera.aspect = window.innerWidth / window.innerHeight;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(window.innerWidth, window.innerHeight);
+                    });
+
+                } catch (e) {
+                    console.warn("WebGL Failed, activating Canvas Fallback:", e);
+                    this.initCanvasFallback();
+                }
+            }
+
+            initCanvasFallback() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                this.container.innerHTML = '';
+                this.container.appendChild(canvas);
+                
+                // Simple Starfield Logic for Canvas
+                const resize = () => {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                };
+                window.addEventListener('resize', resize);
+                resize();
+
+                const stars = Array.from({length: 100}).map(() => ({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2,
+                    speed: Math.random() * 0.5
+                }));
+
+                const draw = () => {
+                    ctx.fillStyle = '#050505';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = '#00f3ff';
+                    stars.forEach(star => {
+                        ctx.beginPath();
+                        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                        ctx.fill();
+                        star.y -= star.speed;
+                        if(star.y < 0) star.y = canvas.height;
+                    });
+                    requestAnimationFrame(draw);
+                };
+                draw();
+            }
+        }
+
+        // --- 2. CHART MANAGER (Chart.js) ---
+        class ChartManager {
+            constructor() {
+                this.charts = {};
+                this.waitForLibs(this.initCharts.bind(this));
+            }
+
+            waitForLibs(callback, attempt = 0) {
+                if (window.Chart) {
+                    callback();
+                } else if (attempt < 10) {
+                    setTimeout(() => this.waitForLibs(callback, attempt + 1), 500);
+                }
+            }
+
+            initCharts() {
+                // Common Style Config
+                Chart.defaults.color = '#e0e0e0';
+                Chart.defaults.font.family = 'JetBrains Mono';
+                
+                // 2.1 Radar Chart: Typology Comparison
+                // Data Source:, (Honey vs Black vs General)
+                const ctxRadar = document.getElementById('radarChart').getContext('2d');
+                this.charts.radar = new Chart(ctxRadar, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Metta (Charm)', 'Amnaj (Authority)', 'Gae Aathan (Protection)', 'Choke Lap (Luck)', 'Rarity'],
+                        datasets: [
+                            {
+                                label: 'Honey Horn (Nor Nam Phueng)',
+                                data:, //: "Highest for luck"
+                                borderColor: '#ffd700', // Gold
+                                backgroundColor: 'rgba(255, 215, 0, 0.2)',
+                                borderWidth: 2
+                            },
+                            {
+                                label: 'Black Horn (Nor Nin)',
+                                data:, //: "Highest for protection/authority"
+                                borderColor: '#00f3ff', // Neon
+                                backgroundColor: 'rgba(0, 243, 255, 0.2)',
+                                borderWidth: 2
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                grid: { color: 'rgba(255,255,255,0.1)' },
+                                angleLines: { color: 'rgba(255,255,255,0.1)' },
+                                pointLabels: { color: '#e0e0e0', font: { size: 10 } },
+                                suggestedMin: 0,
+                                suggestedMax: 100
+                            }
+                        },
+                        plugins: { legend: { position: 'bottom', labels: { padding: 20 } } }
+                    }
+                });
+
+                // 2.2 Scatter Plot: Value vs Rarity
+                // Data Source: (Historical pricing), (Vietnamese demand)
+                const ctxScatter = document.getElementById('scatterChart').getContext('2d');
+                this.charts.scatter = new Chart(ctxScatter, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Horn Variations',
+                            data: [
+                                { x: 95, y: 98, name: 'Honey Horn (Ancient)' }, // High Rarity, High Value
+                                { x: 80, y: 90, name: 'Black Horn' },
+                                { x: 50, y: 40, name: 'White/Bone Imitation' }, // Low Rarity, Low Value
+                                { x: 70, y: 75, name: 'Khnay (Tip Fragment)' },
+                                { x: 99, y: 100, name: 'Jindamanee Powder (Processed)' } // Medicinal Sacrifice
+                            ],
+                            backgroundColor: (ctx) => {
+                                const val = ctx.raw?.y;
+                                return val > 80 ? '#ffd700' : (val > 50 ? '#00f3ff' : '#ff2a6d');
+                            }
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { 
+                                title: { display: true, text: 'Rarity / Scarcity Index' },
+                                grid: { color: 'rgba(255,255,255,0.05)' }
+                            },
+                            y: { 
+                                title: { display: true, text: 'Mystical Potency / Value' },
+                                grid: { color: 'rgba(255,255,255,0.05)' }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: (context) => `${context.raw.name} (R:${context.raw.x}, V:${context.raw.y})`
+                                }
+                            },
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+        }
+
+        // --- 3. D3 NETWORK VISUALIZATION (Alpine-Walkr) ---
+        class TopologyEngine {
+            constructor() {
+                this.waitForD3(this.initGraph.bind(this));
+            }
+
+            waitForD3(callback, attempt = 0) {
+                if (window.d3) callback();
+                else if (attempt < 10) setTimeout(() => this.waitForD3(callback, attempt + 1), 500);
+            }
+
+            initGraph() {
+                const container = document.getElementById('d3-network');
+                const width = container.clientWidth;
+                const height = container.clientHeight;
+
+                // Data: Mystical Properties relationships
+                const nodes = [
+                    { id: "Rhino Horn", group: 1, r: 30 },
+                    { id: "Metta (Charm)", group: 2, r: 20 },
+                    { id: "Amnaj (Power)", group: 2, r: 20 },
+                    { id: "Protection", group: 2, r: 20 },
+                    { id: "Wealth", group: 2, r: 20 },
+                    { id: "Fire (Kan Fai)", group: 3, r: 10 },
+                    { id: "Ghosts (Kan Phi)", group: 3, r: 10 },
+                    { id: "Black Magic", group: 3, r: 10 },
+                    { id: "Business", group: 3, r: 10 },
+                    { id: "Negotiation", group: 3, r: 10 }
+                ];
+
+                const links = [
+                    { source: "Rhino Horn", target: "Metta (Charm)" },
+                    { source: "Rhino Horn", target: "Amnaj (Power)" },
+                    { source: "Rhino Horn", target: "Protection" },
+                    { source: "Rhino Horn", target: "Wealth" },
+                    { source: "Protection", target: "Fire (Kan Fai)" },
+                    { source: "Protection", target: "Ghosts (Kan Phi)" },
+                    { source: "Protection", target: "Black Magic" },
+                    { source: "Metta (Charm)", target: "Negotiation" },
+                    { source: "Wealth", target: "Business" },
+                    { source: "Amnaj (Power)", target: "Negotiation" }
+                ];
+
+                const svg = d3.select("#d3-network").append("svg")
+                    .attr("width", width)
+                    .attr("height", height);
+
+                const simulation = d3.forceSimulation(nodes)
+                    .force("link", d3.forceLink(links).id(d => d.id).distance(70))
+                    .force("charge", d3.forceManyBody().strength(-200))
+                    .force("center", d3.forceCenter(width / 2, height / 2));
+
+                const link = svg.append("g")
+                    .attr("stroke", "rgba(255,255,255,0.2)")
+                    .selectAll("line")
+                    .data(links)
+                    .join("line");
+
+                const node = svg.append("g")
+                    .attr("stroke", "#fff")
+                    .attr("stroke-width", 1.5)
+                    .selectAll("circle")
+                    .data(nodes)
+                    .join("circle")
+                    .attr("r", d => d.r)
+                    .attr("fill", d => d.group === 1 ? "#00f3ff" : (d.group === 2 ? "#ffd700" : "#333"))
+                    .attr("fill-opacity", 0.7)
+                    .call(drag(simulation));
+
+                // Labels
+                const text = svg.append("g")
+                    .selectAll("text")
+                    .data(nodes)
+                    .join("text")
+                    .text(d => d.id)
+                    .attr("x", 12)
+                    .attr("y", 3)
+                    .attr("font-family", "Orbitron")
+                    .attr("font-size", "10px")
+                    .attr("fill", "#e0e0e0");
+
+                simulation.on("tick", () => {
+                    link
+                        .attr("x1", d => d.source.x)
+                        .attr("y1", d => d.source.y)
+                        .attr("x2", d => d.target.x)
+                        .attr("y2", d => d.target.y);
+
+                    node
+                        .attr("cx", d => d.x)
+                        .attr("cy", d => d.y);
+
+                    text
+                        .attr("x", d => d.x + d.r + 2)
+                        .attr("y", d => d.y);
+                });
+
+                function drag(simulation) {
+                    function dragstarted(event) {
+                        if (!event.active) simulation.alphaTarget(0.3).restart();
+                        event.subject.fx = event.subject.x;
+                        event.subject.fy = event.subject.y;
+                    }
+                    function dragged(event) {
+                        event.subject.fx = event.x;
+                        event.subject.fy = event.y;
+                    }
+                    function dragended(event) {
+                        if (!event.active) simulation.alphaTarget(0);
+                        event.subject.fx = null;
+                        event.subject.fy = null;
+                    }
+                    return d3.drag()
+                        .on("start", dragstarted)
+                        .on("drag", dragged)
+                        .on("end", dragended);
+                }
+            }
+        }
+
+        // --- 4. INITIALIZATION SEQUENCE ---
+        document.addEventListener('DOMContentLoaded', () => {
+            new AtmosphereEngine();
+            new ChartManager();
+            new TopologyEngine();
+        });
+
+    </script>
+</body>
+</html>
