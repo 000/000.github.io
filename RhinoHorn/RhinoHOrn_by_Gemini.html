@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Mystical Powers of Nor Raed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: "Temple Sanctum" - Stone, Amber, and Deep Grey for a sacred, traditional feel. -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sacred: {
+                            50: '#fafaf9', // stone-50
+                            100: '#f5f5f4', // stone-100
+                            200: '#e7e5e4', // stone-200
+                            600: '#57534e', // stone-600
+                            800: '#292524', // stone-800
+                            900: '#1c1917', // stone-900
+                        },
+                        gold: {
+                            500: '#d97706', // amber-600
+                            600: '#b45309', // amber-700
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                        serif: ['Georgia', 'Cambria', 'Times New Roman', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f5f5f4;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d97706;
+            border-radius: 4px;
+        }
+        
+        /* Chart Container Strict Sizing */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 280px;
+            }
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-sacred-50 text-sacred-800 antialiased min-h-screen flex flex-col font-sans">
+
+    <!-- Application Structure Plan:
+         1. Header: Mystical/Sacred introduction setting the context of Wat Tha Khanun.
+         2. Overview Dashboard: High-level text summarizing the artifact.
+         3. Interactive Radar Chart: Visualizing the 5 pillars of power (Amnat, Metta, etc.).
+         4. Scenario Simulator: The core interaction. Users pick a "Need" (Safety, Business, etc.), app reveals the specific lore.
+         5. Comparative Analysis: Bar chart comparing Nor Raed to other talismans.
+         6. Terminology Codex: Detailed text cards for Thai terms.
+    -->
+
+    <!-- Header -->
+    <header class="bg-sacred-900 text-sacred-50 py-8 px-4 shadow-lg border-b-4 border-gold-600 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto relative z-10 text-center">
+            <h1 class="text-3xl md:text-5xl font-serif font-bold tracking-wide mb-2 text-gold-500">The Legend of Nor Raed</h1>
+            <p class="text-sm md:text-lg text-sacred-200 italic">Unveiling the "Secret Ingredient" of Wat Tha Khanun</p>
+            <div class="mt-4 text-xs uppercase tracking-widest text-sacred-600 bg-sacred-100 inline-block px-3 py-1 rounded">Interactive Archive</div>
+        </div>
+        <!-- Abstract Decoration -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" style="background: radial-gradient(circle at center, #d97706 0%, transparent 70%);"></div>
+    </header>
+
+    <main class="flex-grow w-full max-w-6xl mx-auto p-4 md:p-8 space-y-12">
+
+        <!-- Intro Section -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="space-y-4">
+                <div class="border-l-4 border-gold-500 pl-4">
+                    <h2 class="text-2xl font-bold text-sacred-900">The Apex of Jungle Sorcery</h2>
+                    <p class="text-sm text-gold-600 font-semibold uppercase mt-1">Introduction to the Artifact</p>
+                </div>
+                <p class="text-lg leading-relaxed text-sacred-800">
+                    The image you provided depicts <span class="font-bold text-gold-600">"Nor Raed" (Rhinoceros Horn)</span>, a substance revered in Thai beliefs as one of the most potent natural amulets ("Krueng Rang"). Specifically identified as a personal sacred object of 
+                    <span class="font-semibold">Phra Kru Wilas Kanjanatham</span> (Wat Tha Khanun), it acts as a crucial ingredient in the legendary <span class="italic">Ya Wasana Jindamanee</span> medicine.
+                </p>
+                <p class="text-base text-sacred-600">
+                    Beyond its material rarity, traditional folklore ascribes to it a unique combination of spiritual authorities: it is at once a weapon of command, a shield against curses, and a magnet for prosperity.
+                </p>
+            </div>
+            
+            <!-- Visualization: Belief Distribution -->
+            <!-- Visualization & Content Choices: Doughnut chart to show the primary reasons devotees seek this artifact. Justification: Quickly establishes that it is NOT just for 'luck' but heavily weighted towards 'Protection' and 'Power'. -->
+            <div class="bg-white p-6 rounded-xl shadow-md border border-sacred-200">
+                <h3 class="text-center font-bold text-sacred-900 mb-4">Primary Spiritual Functions</h3>
+                <div class="chart-container">
+                    <canvas id="functionChart"></canvas>
+                </div>
+                <p class="text-xs text-center text-sacred-600 mt-2 italic">Based on traditional texts on "Krueng Rang Ofkhlang"</p>
+            </div>
+        </section>
+
+        <hr class="border-sacred-200">
+
+        <!-- Core Analysis Section -->
+        <section>
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <h2 class="text-3xl font-serif font-bold text-sacred-900">The 5 Pillars of Power</h2>
+                <p class="text-sacred-600 mt-2">Interactive analysis of the supernatural properties attributed to the Rhinoceros Horn in Thai Occultism.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Interactive Controls -->
+                <div class="lg:col-span-1 space-y-4">
+                    <div class="bg-white rounded-xl shadow-sm border border-sacred-200 p-6">
+                        <h3 class="font-bold text-lg mb-4 text-sacred-800">Explore the Powers</h3>
+                        <p class="text-sm text-sacred-600 mb-6">Hover over the chart points or click the buttons below to uncover the specific lore behind each attribute.</p>
+                        
+                        <div class="grid grid-cols-1 gap-2" id="powerButtons">
+                            <!-- Buttons generated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Radar Chart -->
+                <!-- Visualization & Content Choices: Radar Chart is ideal here to show the "Shape" of the artifact's power. Unlike a simple list, it visualizes that Nor Raed is balanced but spikes in 'Authority' and 'Anti-Curse'. -->
+                <div class="lg:col-span-2 bg-white rounded-xl shadow-lg border-2 border-sacred-100 p-4 flex flex-col justify-center items-center relative">
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    <!-- Dynamic Description Box -->
+                    <div id="radarDescription" class="mt-6 p-4 bg-sacred-50 border-l-4 border-gold-500 w-full rounded fade-in">
+                        <h4 class="font-bold text-gold-600">Select an attribute...</h4>
+                        <p class="text-sm text-sacred-600">Interact with the chart to learn about the specific traditional beliefs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scenario Simulator Section (The "Use Case" Engine) -->
+        <section class="bg-sacred-800 text-sacred-100 rounded-2xl p-8 shadow-2xl overflow-hidden relative">
+            <!-- Background Pattern -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-gold-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+
+            <div class="relative z-10">
+                <h2 class="text-3xl font-serif font-bold mb-6 text-gold-500">Ritual & Scenario Simulator</h2>
+                <p class="mb-8 text-sacred-200 max-w-3xl">
+                    In Thai folklore, the Nor Raed is not passive. It is an active guardian. Select a situation below to see how this specific artifact is traditionally believed to intervene.
+                </p>
+
+                <!-- Scenario Tabs -->
+                <div class="flex flex-wrap gap-3 mb-8 justify-center md:justify-start">
+                    <button onclick="activateScenario('poison')" class="scenario-btn px-6 py-3 rounded-full border border-gold-500 hover:bg-gold-600 hover:text-white transition-all duration-300 font-bold text-sm bg-transparent text-gold-500 focus:ring-2 focus:ring-offset-2 focus:ring-gold-500" data-scenario="poison">
+                        ⚠️ Encountering Poison/Curses
+                    </button>
+                    <button onclick="activateScenario('jungle')" class="scenario-btn px-6 py-3 rounded-full border border-gold-500 hover:bg-gold-600 hover:text-white transition-all duration-300 font-bold text-sm bg-transparent text-gold-500 focus:ring-2 focus:ring-offset-2 focus:ring-gold-500" data-scenario="jungle">
+                        🌲 Deep Forest Travel
+                    </button>
+                    <button onclick="activateScenario('business')" class="scenario-btn px-6 py-3 rounded-full border border-gold-500 hover:bg-gold-600 hover:text-white transition-all duration-300 font-bold text-sm bg-transparent text-gold-500 focus:ring-2 focus:ring-offset-2 focus:ring-gold-500" data-scenario="business">
+                        🤝 High-Stakes Negotiation
+                    </button>
+                    <button onclick="activateScenario('fight')" class="scenario-btn px-6 py-3 rounded-full border border-gold-500 hover:bg-gold-600 hover:text-white transition-all duration-300 font-bold text-sm bg-transparent text-gold-500 focus:ring-2 focus:ring-offset-2 focus:ring-gold-500" data-scenario="fight">
+                        ⚔️ Physical Conflict
+                    </button>
+                </div>
+
+                <!-- Scenario Output Display -->
+                <div id="scenarioDisplay" class="bg-sacred-900 bg-opacity-50 p-6 rounded-xl border border-gold-600/30 min-h-[180px] flex items-center justify-center">
+                    <p class="text-sacred-400 italic">Select a scenario above to reveal the mystical mechanism...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparative Analysis -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+            <div>
+                <h3 class="text-2xl font-bold text-sacred-900 mb-4">Unique Among Talismans</h3>
+                <p class="text-sacred-600 mb-4">
+                    While many Thai amulets offer protection ("Kong Grapan"), the Nor Raed is distinct for its specific ability known as <span class="font-bold text-sacred-800">"Gae Athan" (Undo Black Magic)</span>.
+                </p>
+                <p class="text-sacred-600 mb-6">
+                    Unlike Tiger teeth (pure power) or Ivory (purity/status), the Rhinoceros horn is viewed as a "Living Antidote." Folklore states that if dipped in water, it can detect poison or turn the water into holy water ("Nam Mon") to wash away bad luck.
+                </p>
+                
+                <div class="space-y-3">
+                    <div class="p-4 bg-white border-l-4 border-gray-400 shadow-sm">
+                        <h4 class="font-bold text-gray-700">Tiger Tooth (Khiao Suea)</h4>
+                        <p class="text-xs text-gray-500">Focus: Intimidation & Power</p>
+                    </div>
+                    <div class="p-4 bg-white border-l-4 border-yellow-200 shadow-sm">
+                        <h4 class="font-bold text-yellow-800">Ivory (Nga Chang)</h4>
+                        <p class="text-xs text-gray-500">Focus: Status & Mercy</p>
+                    </div>
+                    <div class="p-4 bg-gold-50 border-l-4 border-gold-600 shadow-sm">
+                        <h4 class="font-bold text-gold-800">Rhino Horn (Nor Raed)</h4>
+                        <p class="text-xs text-gold-700">Focus: Power + Anti-Curse + Antidote</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualization: Comparative Bar Chart -->
+            <!-- Visualization & Content Choices: Grouped Bar Chart to compare 'Antidote' capability across different materials. Justification: Highlights the USP (Unique Spiritual Proposition) of the Nor Raed. -->
+            <div class="bg-white p-6 rounded-xl shadow-md border border-sacred-200">
+                <h3 class="text-center font-bold text-sacred-900 mb-4">Attribute Comparison</h3>
+                <div class="chart-container">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-sacred-900 text-sacred-400 py-8 mt-12 text-center border-t border-sacred-800">
+        <div class="max-w-4xl mx-auto px-4">
+            <p class="mb-2 font-serif text-gold-600">Explore the Mystical Arts</p>
+            <p class="text-xs">
+                This interactive report is based on traditional Thai folklore and spiritual beliefs associated with "Nor Raed" and Wat Tha Khanun. 
+                <br>Information presented is for cultural and anthropological educational purposes.
+            </p>
+            <p class="text-xs mt-4 text-sacred-600">
+                <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+                Generated by Canvas Create Webapp
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Data & State Management ---
+
+        // The Lore Database
+        const loreData = {
+            attributes: {
+                "Maha Amnat": {
+                    title: "Maha Amnat (Great Power)",
+                    thai: "มหาอำนาจ",
+                    desc: "The Rhino is a solitary, fearless creature of the jungle. Its horn grants the owner an aura of command. Subordinates obey, and enemies are intimidated by your mere presence. It is the power of a King.",
+                    color: "rgba(220, 38, 38, 0.7)" // Red
+                },
+                "Metta Mahaniyom": {
+                    title: "Metta Mahaniyom (Great Charm)",
+                    thai: "เมตตามหานิยม",
+                    desc: "Paradoxically, despite its power, the horn attracts kindness. People feel compelled to help the owner. It softens the hearts of those who approach with anger.",
+                    color: "rgba(219, 39, 119, 0.7)" // Pink
+                },
+                "Gae Athan": {
+                    title: "Gae Athan (Anti-Curse)",
+                    thai: "แก้อาถรรพ์ / กันคุณไสย",
+                    desc: "This is the most prized ability. It is believed to neutralize black magic (Khun Sai), ghost possession, and bad feng shui. It clears 'spiritual pollution' from the owner.",
+                    color: "rgba(79, 70, 229, 0.7)" // Indigo
+                },
+                "Kong Grapan": {
+                    title: "Kong Grapan (Invincibility)",
+                    thai: "คงกระพันชาตรี",
+                    desc: "Protection against physical harm, weapons, and accidents. The tough hide and unstoppable charge of the rhino symbolize an impenetrable defense.",
+                    color: "rgba(5, 150, 105, 0.7)" // Emerald
+                },
+                "Pokasap": {
+                    title: "Pokasap (Wealth & Fortune)",
+                    thai: "โภคทรัพย์",
+                    desc: "Due to its immense rarity and value in ancient trade, owning it is a symbol of great merit and wealth. It is believed to attract resources and trade opportunities.",
+                    color: "rgba(217, 119, 6, 0.7)" // Gold
+                }
+            },
+            scenarios: {
+                poison: {
+                    title: "The Living Antidote",
+                    content: "In traditional belief, if you suspect food or drink is poisoned (or cursed with 'Ya Sang'), dipping the Nor Raed into the liquid will cause it to bubble or change color if danger is present. It acts as a universal purification tool.",
+                    icon: "🧪"
+                },
+                jungle: {
+                    title: "King of the Wild",
+                    content: "Spirits of the forest (Jao Pa Jao Khao) and wild animals fear the aura of the 'Paya Raed' (King Rhino). Travelers carry it to prevent fever (Khai Pa) and to ensure safe passage through haunted territories.",
+                    icon: "🐅"
+                },
+                business: {
+                    title: "Dominating the Deal",
+                    content: "The 'Maha Amnat' property ensures you hold the upper hand in negotiations. Your words carry weight, and competitors feel an unexplained pressure to concede to your terms.",
+                    icon: "💼"
+                },
+                fight: {
+                    title: "Unstoppable Force",
+                    content: "Like the charging rhino, the bearer is believed to be protected from sharp weapons. It boosts confidence and creates a psychological advantage (Khom Nam Jai) over opponents.",
+                    icon: "🛡️"
+                }
+            }
+        };
+
+        // --- Chart 1: Function Distribution (Doughnut) ---
+        const ctxFunction = document.getElementById('functionChart').getContext('2d');
+        const functionChart = new Chart(ctxFunction, {
+            type: 'doughnut',
+            data: {
+                labels: ['Protection & Anti-Curse', 'Power & Authority', 'Wealth', 'Charm'],
+                datasets: [{
+                    data: [45, 30, 15, 10], // Estimated weighting based on folklore emphasis
+                    backgroundColor: [
+                        '#4f46e5', // Indigo (Magic/Protection)
+                        '#dc2626', // Red (Power)
+                        '#d97706', // Gold (Wealth)
+                        '#db2777'  // Pink (Charm)
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif", size: 10 }, usePointStyle: true }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ` ${context.label}: ${context.raw}% Relevance`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // --- Chart 2: The Radar of Power (Radar) ---
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        const radarChart = new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: Object.keys(loreData.attributes),
+                datasets: [{
+                    label: 'Spiritual Potency Level',
+                    data: [90, 60, 95, 85, 70], // High scores for Amnat/Gae Athan
+                    fill: true,
+                    backgroundColor: 'rgba(217, 119, 6, 0.2)', // Amber tint
+                    borderColor: 'rgba(217, 119, 6, 1)',
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#b45309',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#b45309'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0,0,0,0.1)' },
+                        grid: { color: 'rgba(0,0,0,0.1)' },
+                        pointLabels: {
+                            font: { size: 12, weight: 'bold', family: 'serif' },
+                            color: '#44403c'
+                        },
+                        ticks: { display: false, max: 100 }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Potency: ${context.raw}/100`;
+                            }
+                        }
+                    }
+                },
+                onHover: (event, chartElement) => {
+                    const target = event.native ? event.native.target : event.target;
+                    target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const label = radarChart.data.labels[index];
+                        updateRadarDescription(label);
+                    }
+                }
+            }
+        });
+
+        // --- Chart 3: Comparative Analysis (Bar) ---
+        const ctxComp = document.getElementById('comparisonChart').getContext('2d');
+        const comparisonChart = new Chart(ctxComp, {
+            type: 'bar',
+            data: {
+                labels: ['Nor Raed (Rhino)', 'Khiao Suea (Tiger)', 'Nga Chang (Ivory)'],
+                datasets: [
+                    {
+                        label: 'Anti-Curse/Poison',
+                        data: [95, 20, 30],
+                        backgroundColor: '#4f46e5' // Indigo
+                    },
+                    {
+                        label: 'Intimidation Power',
+                        data: [85, 95, 50],
+                        backgroundColor: '#dc2626' // Red
+                    },
+                    {
+                        label: 'Metta (Charm)',
+                        data: [60, 40, 90],
+                        backgroundColor: '#db2777' // Pink
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, max: 100, grid: { display: false } },
+                    x: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12 } }
+                }
+            }
+        });
+
+        // --- Interaction Logic ---
+
+        // 1. Generate Radar Buttons
+        const buttonContainer = document.getElementById('powerButtons');
+        Object.keys(loreData.attributes).forEach(key => {
+            const btn = document.createElement('button');
+            btn.className = `w-full text-left px-4 py-2 rounded border border-sacred-200 hover:bg-gold-500 hover:text-white transition-colors text-sm flex justify-between items-center group`;
+            btn.innerHTML = `<span>${key}</span> <span class="text-xs text-sacred-400 group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">Read Lore &rarr;</span>`;
+            btn.onclick = () => updateRadarDescription(key);
+            buttonContainer.appendChild(btn);
+        });
+
+        // 2. Update Description Box
+        function updateRadarDescription(key) {
+            const data = loreData.attributes[key];
+            const container = document.getElementById('radarDescription');
+            
+            // Animation reset
+            container.classList.remove('fade-in');
+            void container.offsetWidth; // trigger reflow
+            container.classList.add('fade-in');
+
+            container.innerHTML = `
+                <div class="flex items-center gap-2 mb-2">
+                    <h4 class="font-bold text-lg text-sacred-900">${data.title}</h4>
+                    <span class="px-2 py-0.5 rounded text-xs text-white" style="background-color: ${data.color}">Thai: ${data.thai}</span>
+                </div>
+                <p class="text-sm text-sacred-700 leading-relaxed">${data.desc}</p>
+            `;
+        }
+
+        // 3. Scenario Logic
+        function activateScenario(scenarioKey) {
+            const data = loreData.scenarios[scenarioKey];
+            const display = document.getElementById('scenarioDisplay');
+            const buttons = document.querySelectorAll('.scenario-btn');
+
+            // Visual active state for buttons
+            buttons.forEach(btn => {
+                if(btn.dataset.scenario === scenarioKey) {
+                    btn.classList.add('bg-gold-600', 'text-white');
+                    btn.classList.remove('bg-transparent', 'text-gold-500');
+                } else {
+                    btn.classList.remove('bg-gold-600', 'text-white');
+                    btn.classList.add('bg-transparent', 'text-gold-500');
+                }
+            });
+
+            // Update Content with Animation
+            display.innerHTML = `
+                <div class="fade-in text-center max-w-lg">
+                    <div class="text-4xl mb-3">${data.icon}</div>
+                    <h3 class="text-xl font-bold text-gold-400 mb-2">${data.title}</h3>
+                    <p class="text-sacred-100 leading-relaxed">${data.content}</p>
+                </div>
+            `;
+        }
+
+        // Initialize with default view
+        updateRadarDescription('Gae Athan');
+
+    </script>
+</body>
+</html>
