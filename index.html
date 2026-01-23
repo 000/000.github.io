@@ -6056,144 +6056,475 @@
         }
 
         // ============================================
-        // INTERACTIVE PARTICLE CANVAS
+        // ANTIGRAVITY-STYLE INTERACTIVE PARTICLE CANVAS
+        // Sophisticated flowing particles with mouse interactivity
         // ============================================
-        function initParticleCanvas() {
-            const canvas = document.getElementById('particle-canvas');
-            if (!canvas) return;
-            
-            const ctx = canvas.getContext('2d');
-            let particles = [];
-            let mouse = { x: null, y: null, radius: 150 };
-            let animationId;
-            
-            function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                init();
+
+        // Simplex Noise for organic movement
+        class SimplexNoise {
+            constructor(seed = Math.random()) {
+                this.p = new Uint8Array(256);
+                for (let i = 0; i < 256; i++) this.p[i] = i;
+                for (let i = 255; i > 0; i--) {
+                    seed = (seed * 16807) % 2147483647;
+                    const j = seed % (i + 1);
+                    [this.p[i], this.p[j]] = [this.p[j], this.p[i]];
+                }
+                this.perm = new Uint8Array(512);
+                for (let i = 0; i < 512; i++) this.perm[i] = this.p[i & 255];
             }
-            
-            class Particle {
-                constructor(x, y) {
-                    this.x = x;
-                    this.y = y;
-                    this.size = Math.random() * 2 + 1;
-                    this.baseX = this.x;
-                    this.baseY = this.y;
-                    this.density = (Math.random() * 30) + 1;
-                    this.vx = (Math.random() - 0.5) * 0.5;
-                    this.vy = (Math.random() - 0.5) * 0.5;
-                    
-                    const colors = [
-                        `rgba(14, 165, 233, ${Math.random() * 0.3 + 0.1})`,
-                        `rgba(139, 92, 246, ${Math.random() * 0.3 + 0.1})`,
-                        `rgba(236, 72, 153, ${Math.random() * 0.2 + 0.05})`
-                    ];
-                    this.color = colors[Math.floor(Math.random() * colors.length)];
+
+            noise2D(x, y) {
+                const F2 = 0.5 * (Math.sqrt(3) - 1);
+                const G2 = (3 - Math.sqrt(3)) / 6;
+                const s = (x + y) * F2;
+                const i = Math.floor(x + s);
+                const j = Math.floor(y + s);
+                const t = (i + j) * G2;
+                const X0 = i - t, Y0 = j - t;
+                const x0 = x - X0, y0 = y - Y0;
+                const [i1, j1] = x0 > y0 ? [1, 0] : [0, 1];
+                const x1 = x0 - i1 + G2, y1 = y0 - j1 + G2;
+                const x2 = x0 - 1 + 2 * G2, y2 = y0 - 1 + 2 * G2;
+                const ii = i & 255, jj = j & 255;
+                const grad = [[1,1],[-1,1],[1,-1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1]];
+                const dot = (g, x, y) => g[0] * x + g[1] * y;
+                const gi0 = this.perm[ii + this.perm[jj]] % 8;
+                const gi1 = this.perm[ii + i1 + this.perm[jj + j1]] % 8;
+                const gi2 = this.perm[ii + 1 + this.perm[jj + 1]] % 8;
+                let n0 = 0, n1 = 0, n2 = 0;
+                let t0 = 0.5 - x0*x0 - y0*y0;
+                if (t0 >= 0) { t0 *= t0; n0 = t0 * t0 * dot(grad[gi0], x0, y0); }
+                let t1 = 0.5 - x1*x1 - y1*y1;
+                if (t1 >= 0) { t1 *= t1; n1 = t1 * t1 * dot(grad[gi1], x1, y1); }
+                let t2 = 0.5 - x2*x2 - y2*y2;
+                if (t2 >= 0) { t2 *= t2; n2 = t2 * t2 * dot(grad[gi2], x2, y2); }
+                return 70 * (n0 + n1 + n2);
+            }
+        }
+
+        // Antigravity Canvas - Sophisticated particle system
+        class AntigravityCanvas {
+            constructor() {
+                this.canvas = document.getElementById('particle-canvas');
+                if (!this.canvas) return;
+
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.orbs = [];
+                this.mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2, vx: 0, vy: 0 };
+                this.targetMouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+                this.time = 0;
+                this.noise = new SimplexNoise();
+                this.dpr = Math.min(window.devicePixelRatio, 2);
+                this.isDark = document.body.classList.contains('dark');
+
+                // Color palette - Pantone-inspired
+                this.colors = {
+                    blue: { r: 59, g: 130, b: 246 },      // neon-core
+                    cyan: { r: 6, g: 182, b: 212 },       // neon-accent
+                    purple: { r: 168, g: 85, b: 247 },    // neon-purple
+                    pink: { r: 236, g: 72, b: 153 },      // neon-pink
+                    mocha: { r: 164, g: 119, b: 100 },    // pantone-mocha
+                    peach: { r: 255, g: 190, b: 152 },    // pantone-peach
+                    peri: { r: 102, g: 103, b: 171 }      // pantone-peri
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                this.createParticles();
+                this.createOrbs();
+
+                window.addEventListener('resize', debounce(() => this.resize(), CONFIG.debounceDelay));
+                window.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+                window.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: true });
+
+                // Watch for theme changes
+                const observer = new MutationObserver(() => {
+                    this.isDark = document.body.classList.contains('dark');
+                });
+                observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+                this.animate();
+            }
+
+            resize() {
+                this.width = window.innerWidth;
+                this.height = window.innerHeight;
+                this.canvas.width = this.width * this.dpr;
+                this.canvas.height = this.height * this.dpr;
+                this.canvas.style.width = this.width + 'px';
+                this.canvas.style.height = this.height + 'px';
+                this.ctx.scale(this.dpr, this.dpr);
+                this.createParticles();
+                this.createOrbs();
+            }
+
+            handleMouseMove(e) {
+                this.targetMouse.x = e.clientX;
+                this.targetMouse.y = e.clientY;
+            }
+
+            handleTouchMove(e) {
+                if (e.touches.length > 0) {
+                    this.targetMouse.x = e.touches[0].clientX;
+                    this.targetMouse.y = e.touches[0].clientY;
                 }
-                
-                draw() {
-                    ctx.fillStyle = this.color;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.closePath();
-                    ctx.fill();
+            }
+
+            createParticles() {
+                const count = Math.min(180, Math.floor((this.width * this.height) / 12000));
+                this.particles = [];
+
+                const colorKeys = Object.keys(this.colors);
+
+                for (let i = 0; i < count; i++) {
+                    const colorKey = colorKeys[Math.floor(Math.random() * colorKeys.length)];
+                    const color = this.colors[colorKey];
+                    const layer = Math.floor(Math.random() * 3); // 0=back, 1=mid, 2=front
+
+                    this.particles.push({
+                        x: Math.random() * this.width,
+                        y: Math.random() * this.height,
+                        baseX: Math.random() * this.width,
+                        baseY: Math.random() * this.height,
+                        vx: 0,
+                        vy: 0,
+                        size: (Math.random() * 4 + 2) * (layer * 0.3 + 0.7),
+                        color: color,
+                        alpha: Math.random() * 0.5 + 0.3,
+                        layer: layer,
+                        noiseOffsetX: Math.random() * 1000,
+                        noiseOffsetY: Math.random() * 1000,
+                        speed: Math.random() * 0.5 + 0.2,
+                        pulsePhase: Math.random() * Math.PI * 2
+                    });
                 }
-                
-                update() {
+            }
+
+            createOrbs() {
+                const orbCount = 8;
+                this.orbs = [];
+                const colorKeys = Object.keys(this.colors);
+
+                for (let i = 0; i < orbCount; i++) {
+                    const colorKey = colorKeys[Math.floor(Math.random() * colorKeys.length)];
+
+                    this.orbs.push({
+                        x: Math.random() * this.width,
+                        y: Math.random() * this.height,
+                        baseX: Math.random() * this.width,
+                        baseY: Math.random() * this.height,
+                        radius: Math.random() * 80 + 40,
+                        color: this.colors[colorKey],
+                        alpha: Math.random() * 0.06 + 0.02,
+                        noiseOffset: Math.random() * 1000,
+                        speed: Math.random() * 0.3 + 0.1,
+                        morphPhase: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+
+            updateMouse() {
+                const ease = 0.08;
+                const prevX = this.mouse.x;
+                const prevY = this.mouse.y;
+
+                this.mouse.x += (this.targetMouse.x - this.mouse.x) * ease;
+                this.mouse.y += (this.targetMouse.y - this.mouse.y) * ease;
+                this.mouse.vx = this.mouse.x - prevX;
+                this.mouse.vy = this.mouse.y - prevY;
+            }
+
+            updateParticles() {
+                const mouseInfluenceRadius = 200;
+                const mouseForce = 0.15;
+
+                for (const p of this.particles) {
+                    // Noise-based organic movement
+                    const noiseX = this.noise.noise2D(
+                        p.noiseOffsetX + this.time * p.speed * 0.0003,
+                        this.time * 0.0001
+                    );
+                    const noiseY = this.noise.noise2D(
+                        p.noiseOffsetY + this.time * p.speed * 0.0003,
+                        this.time * 0.0001 + 100
+                    );
+
+                    const amplitude = 100 + p.layer * 30;
+                    const targetX = p.baseX + noiseX * amplitude;
+                    const targetY = p.baseY + noiseY * amplitude;
+
                     // Mouse interaction
-                    if (mouse.x !== null && mouse.y !== null) {
-                        let dx = mouse.x - this.x;
-                        let dy = mouse.y - this.y;
-                        let distance = Math.sqrt(dx * dx + dy * dy);
-                        
-                        if (distance < mouse.radius) {
-                            let forceDirectionX = dx / distance;
-                            let forceDirectionY = dy / distance;
-                            let force = (mouse.radius - distance) / mouse.radius;
-                            this.x -= forceDirectionX * force * this.density * 0.5;
-                            this.y -= forceDirectionY * force * this.density * 0.5;
+                    const dx = p.x - this.mouse.x;
+                    const dy = p.y - this.mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < mouseInfluenceRadius && dist > 0) {
+                        const force = (1 - dist / mouseInfluenceRadius) * mouseForce;
+                        const angle = Math.atan2(dy, dx);
+
+                        // Front layer attracts, others repel
+                        const direction = p.layer === 2 ? -1 : 1;
+                        p.vx += Math.cos(angle) * force * direction * 3;
+                        p.vy += Math.sin(angle) * force * direction * 3;
+
+                        // Inherit mouse velocity
+                        p.vx += this.mouse.vx * 0.05 * (1 - dist / mouseInfluenceRadius);
+                        p.vy += this.mouse.vy * 0.05 * (1 - dist / mouseInfluenceRadius);
+                    }
+
+                    // Move towards target
+                    p.vx += (targetX - p.x) * 0.01;
+                    p.vy += (targetY - p.y) * 0.01;
+
+                    // Apply velocity with damping
+                    p.vx *= 0.95;
+                    p.vy *= 0.95;
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    // Wrap around edges
+                    if (p.x < -50) { p.x = this.width + 50; p.baseX = p.x; }
+                    if (p.x > this.width + 50) { p.x = -50; p.baseX = p.x; }
+                    if (p.y < -50) { p.y = this.height + 50; p.baseY = p.y; }
+                    if (p.y > this.height + 50) { p.y = -50; p.baseY = p.y; }
+                }
+            }
+
+            updateOrbs() {
+                for (const orb of this.orbs) {
+                    const noiseX = this.noise.noise2D(
+                        orb.noiseOffset + this.time * 0.00008,
+                        this.time * 0.00005
+                    );
+                    const noiseY = this.noise.noise2D(
+                        orb.noiseOffset + 500 + this.time * 0.00008,
+                        this.time * 0.00005 + 500
+                    );
+
+                    orb.x = orb.baseX + noiseX * 200;
+                    orb.y = orb.baseY + noiseY * 200;
+
+                    orb.morphPhase += 0.005;
+                    orb.currentRadius = orb.radius + Math.sin(orb.morphPhase) * 20;
+
+                    // Mouse influence on orbs
+                    const dx = orb.x - this.mouse.x;
+                    const dy = orb.y - this.mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 400 && dist > 0) {
+                        const push = (1 - dist / 400) * 30;
+                        orb.x += (dx / dist) * push;
+                        orb.y += (dy / dist) * push;
+                    }
+                }
+            }
+
+            drawOrbs() {
+                const alphaMultiplier = this.isDark ? 1 : 0.5;
+
+                for (const orb of this.orbs) {
+                    const gradient = this.ctx.createRadialGradient(
+                        orb.x, orb.y, 0,
+                        orb.x, orb.y, orb.currentRadius
+                    );
+                    const alpha = orb.alpha * alphaMultiplier;
+                    gradient.addColorStop(0, `rgba(${orb.color.r}, ${orb.color.g}, ${orb.color.b}, ${alpha})`);
+                    gradient.addColorStop(0.5, `rgba(${orb.color.r}, ${orb.color.g}, ${orb.color.b}, ${alpha * 0.5})`);
+                    gradient.addColorStop(1, `rgba(${orb.color.r}, ${orb.color.g}, ${orb.color.b}, 0)`);
+
+                    this.ctx.fillStyle = gradient;
+                    this.ctx.beginPath();
+                    this.ctx.arc(orb.x, orb.y, orb.currentRadius, 0, Math.PI * 2);
+                    this.ctx.fill();
+                }
+            }
+
+            drawConnections() {
+                const connectionRadius = 150;
+                const maxConnections = 3;
+                const alphaMultiplier = this.isDark ? 1 : 0.6;
+
+                this.ctx.lineWidth = 1;
+
+                for (let i = 0; i < this.particles.length; i++) {
+                    const p1 = this.particles[i];
+                    let connections = 0;
+
+                    for (let j = i + 1; j < this.particles.length && connections < maxConnections; j++) {
+                        const p2 = this.particles[j];
+
+                        if (Math.abs(p1.layer - p2.layer) > 1) continue;
+
+                        const dx = p1.x - p2.x;
+                        const dy = p1.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < connectionRadius) {
+                            const alpha = (1 - dist / connectionRadius) * 0.3 * Math.min(p1.alpha, p2.alpha) * alphaMultiplier;
+
+                            const r = Math.floor((p1.color.r + p2.color.r) / 2);
+                            const g = Math.floor((p1.color.g + p2.color.g) / 2);
+                            const b = Math.floor((p1.color.b + p2.color.b) / 2);
+
+                            this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(p1.x, p1.y);
+                            this.ctx.lineTo(p2.x, p2.y);
+                            this.ctx.stroke();
+
+                            connections++;
                         }
                     }
-                    
-                    // Return to base position
-                    if (this.x !== this.baseX) {
-                        let dx = this.x - this.baseX;
-                        this.x -= dx / 20;
-                    }
-                    if (this.y !== this.baseY) {
-                        let dy = this.y - this.baseY;
-                        this.y -= dy / 20;
-                    }
-                    
-                    // Subtle drift
-                    this.baseX += this.vx * 0.1;
-                    this.baseY += this.vy * 0.1;
-                    
-                    // Wrap around
-                    if (this.baseX < 0) this.baseX = canvas.width;
-                    if (this.baseX > canvas.width) this.baseX = 0;
-                    if (this.baseY < 0) this.baseY = canvas.height;
-                    if (this.baseY > canvas.height) this.baseY = 0;
                 }
             }
-            
-            function init() {
-                particles = [];
-                const numberOfParticles = Math.min((canvas.width * canvas.height) / 12000, CONFIG.particleCount);
-                for (let i = 0; i < numberOfParticles; i++) {
-                    let x = Math.random() * canvas.width;
-                    let y = Math.random() * canvas.height;
-                    particles.push(new Particle(x, y));
+
+            drawMouseGlow() {
+                const alphaMultiplier = this.isDark ? 1 : 0.4;
+
+                const gradient = this.ctx.createRadialGradient(
+                    this.mouse.x, this.mouse.y, 0,
+                    this.mouse.x, this.mouse.y, 250
+                );
+                gradient.addColorStop(0, `rgba(59, 130, 246, ${0.08 * alphaMultiplier})`);
+                gradient.addColorStop(0.4, `rgba(168, 85, 247, ${0.04 * alphaMultiplier})`);
+                gradient.addColorStop(1, 'rgba(168, 85, 247, 0)');
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.fillRect(0, 0, this.width, this.height);
+            }
+
+            drawParticles() {
+                const sorted = [...this.particles].sort((a, b) => a.layer - b.layer);
+                const alphaMultiplier = this.isDark ? 1 : 0.7;
+
+                for (const p of sorted) {
+                    const pulse = Math.sin(this.time * 0.002 + p.pulsePhase) * 0.2 + 0.8;
+                    const alpha = p.alpha * pulse * alphaMultiplier;
+
+                    // Glow effect
+                    const gradient = this.ctx.createRadialGradient(
+                        p.x, p.y, 0,
+                        p.x, p.y, p.size * 3
+                    );
+                    gradient.addColorStop(0, `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${alpha})`);
+                    gradient.addColorStop(0.3, `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${alpha * 0.5})`);
+                    gradient.addColorStop(1, `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, 0)`);
+
+                    this.ctx.fillStyle = gradient;
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+                    this.ctx.fill();
+
+                    // Core particle
+                    this.ctx.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${alpha})`;
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fill();
                 }
             }
-            
-            function drawConnections() {
-                for (let i = 0; i < particles.length; i++) {
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x;
-                        const dy = particles[i].y - particles[j].y;
-                        const distance = Math.sqrt(dx * dx + dy * dy);
-                        
-                        if (distance < 120) {
-                            ctx.beginPath();
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = `rgba(59, 130, 246, ${0.15 * (1 - distance / 120)})`;
-                            ctx.lineWidth = 0.5;
-                            ctx.stroke();
-                        }
-                    }
-                }
+
+            drawCentralAura() {
+                const centerX = this.width / 2;
+                const centerY = this.height / 2;
+                const baseRadius = Math.min(this.width, this.height) * 0.25;
+                const alphaMultiplier = this.isDark ? 1 : 0.3;
+
+                const morph1 = Math.sin(this.time * 0.001) * 30;
+
+                const mouseDist = Math.sqrt(
+                    Math.pow(this.mouse.x - centerX, 2) +
+                    Math.pow(this.mouse.y - centerY, 2)
+                );
+                const mouseInfluence = Math.max(0, 1 - mouseDist / 400) * 0.03;
+
+                const gradient = this.ctx.createRadialGradient(
+                    centerX, centerY, 0,
+                    centerX, centerY, baseRadius + morph1
+                );
+                gradient.addColorStop(0, `rgba(59, 130, 246, ${(0.05 + mouseInfluence) * alphaMultiplier})`);
+                gradient.addColorStop(0.5, `rgba(168, 85, 247, ${(0.03 + mouseInfluence * 0.5) * alphaMultiplier})`);
+                gradient.addColorStop(1, 'rgba(168, 85, 247, 0)');
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.beginPath();
+                this.ctx.arc(centerX, centerY, baseRadius + morph1, 0, Math.PI * 2);
+                this.ctx.fill();
             }
-            
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                for (let i = 0; i < particles.length; i++) {
-                    particles[i].draw();
-                    particles[i].update();
+
+            drawRings() {
+                const centerX = this.width / 2;
+                const centerY = this.height / 2;
+                const ringCount = 5;
+                const alphaMultiplier = this.isDark ? 1 : 0.4;
+
+                const mouseDist = Math.sqrt(
+                    Math.pow(this.mouse.x - centerX, 2) +
+                    Math.pow(this.mouse.y - centerY, 2)
+                );
+
+                for (let i = 0; i < ringCount; i++) {
+                    const baseRadius = 80 + i * 60;
+                    const rotation = this.time * 0.0002 * (i % 2 === 0 ? 1 : -1);
+                    const pulse = Math.sin(this.time * 0.001 + i * 0.5) * 10;
+                    const radius = baseRadius + pulse;
+
+                    const mouseAlpha = Math.max(0, 1 - mouseDist / 500) * 0.05;
+                    const alpha = (0.05 + i * 0.02 + mouseAlpha) * alphaMultiplier;
+
+                    this.ctx.save();
+                    this.ctx.translate(centerX, centerY);
+                    this.ctx.rotate(rotation);
+
+                    this.ctx.strokeStyle = `rgba(59, 130, 246, ${alpha})`;
+                    this.ctx.lineWidth = 1;
+                    this.ctx.setLineDash([20, 30]);
+                    this.ctx.lineDashOffset = this.time * 0.02 * (i % 2 === 0 ? 1 : -1);
+
+                    this.ctx.beginPath();
+                    this.ctx.arc(0, 0, radius, 0, Math.PI * 2);
+                    this.ctx.stroke();
+
+                    this.ctx.restore();
                 }
-                
-                drawConnections();
-                
-                animationId = requestAnimationFrame(animate);
+
+                this.ctx.setLineDash([]);
             }
-            
-            window.addEventListener('resize', debounce(resize, CONFIG.debounceDelay));
-            
-            window.addEventListener('mousemove', (e) => {
-                mouse.x = e.x;
-                mouse.y = e.y;
-            });
-            
-            window.addEventListener('mouseout', () => {
-                mouse.x = null;
-                mouse.y = null;
-            });
-            
-            resize();
-            animate();
+
+            animate() {
+                this.time++;
+
+                // Clear with trail effect (dark mode) or full clear (light mode)
+                if (this.isDark) {
+                    this.ctx.fillStyle = 'rgba(10, 10, 26, 0.15)';
+                    this.ctx.fillRect(0, 0, this.width, this.height);
+                } else {
+                    this.ctx.clearRect(0, 0, this.width, this.height);
+                }
+
+                // Update
+                this.updateMouse();
+                this.updateOrbs();
+                this.updateParticles();
+
+                // Draw layers (back to front)
+                this.drawOrbs();
+                this.drawCentralAura();
+                this.drawRings();
+                this.drawConnections();
+                this.drawMouseGlow();
+                this.drawParticles();
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        function initParticleCanvas() {
+            new AntigravityCanvas();
         }
 
         // ============================================
