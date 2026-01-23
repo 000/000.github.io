@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>อานุภาพของนอแรด | จักรพรรดิแห่งเครื่องรางทนสิทธิ์</title>
+    
+    <!-- Favicon: SVG Rhino Horn -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='hornGrad' x1='0%25' y1='100%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%23654321'/%3E%3Cstop offset='50%25' style='stop-color:%23D4A574'/%3E%3Cstop offset='100%25' style='stop-color:%23F5DEB3'/%3E%3C/linearGradient%3E%3Cfilter id='glow'%3E%3CfeGaussianBlur stdDeviation='2' result='coloredBlur'/%3E%3CfeMerge%3E%3CfeMergeNode in='coloredBlur'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/defs%3E%3Cellipse cx='32' cy='58' rx='18' ry='4' fill='%23FFD700' opacity='0.3'/%3E%3Cpath d='M32 8 C28 8 24 20 22 35 C20 50 24 58 32 58 C40 58 44 50 42 35 C40 20 36 8 32 8 Z' fill='url(%23hornGrad)' stroke='%23FFD700' stroke-width='1' filter='url(%23glow)'/%3E%3Cellipse cx='32' cy='10' rx='4' ry='2' fill='%23F5DEB3' opacity='0.8'/%3E%3Cpath d='M26 25 Q32 22 38 25' stroke='%23654321' stroke-width='0.5' fill='none' opacity='0.4'/%3E%3Cpath d='M25 35 Q32 32 39 35' stroke='%23654321' stroke-width='0.5' fill='none' opacity='0.3'/%3E%3Cpath d='M24 45 Q32 42 40 45' stroke='%23654321' stroke-width='0.5' fill='none' opacity='0.2'/%3E%3C/svg%3E">
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Sarabun:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        @layer base, layout, components, utilities, animations;
+
+        :root {
+            /* Pantone 2024-2025 Inspired: Peach Fuzz, Mocha Mousse, Mystical Gold */
+            --peach-fuzz: #FFBE98;
+            --mocha-mousse: #A47764;
+            --mystical-gold: #C9A227;
+            --sacred-amber: #D4A574;
+            --deep-burgundy: #722F37;
+            --temple-bronze: #8B4513;
+            --void-black: #0A0A0F;
+            --space-deep: #12121A;
+            --incense-smoke: rgba(255, 190, 152, 0.1);
+            --lotus-pink: #E8B4B8;
+            --jade-green: #00A86B;
+            --silver-mist: #C0C0C0;
+            
+            /* Glass Effects */
+            --glass-bg: rgba(18, 18, 26, 0.85);
+            --glass-border: rgba(201, 162, 39, 0.2);
+            --glass-glow: rgba(255, 190, 152, 0.15);
+            
+            /* Typography */
+            --font-thai: 'Sarabun', 'Noto Serif Thai', sans-serif;
+            --font-display: 'Cinzel', serif;
+            --font-body: 'Inter', sans-serif;
+            
+            /* Transitions */
+            --ease-sacred: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @layer base {
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            
+            html { scroll-behavior: smooth; }
+            
+            body {
+                background: var(--void-black);
+                color: var(--peach-fuzz);
+                font-family: var(--font-thai);
+                line-height: 1.8;
+                overflow-x: hidden;
+                min-height: 100vh;
+            }
+            
+            /* i18n Toggle System */
+            [lang="en"] { display: none; }
+            body[data-lang="en"] [lang="th"] { display: none; }
+            body[data-lang="en"] [lang="en"] { display: block; }
+            body[data-lang="en"] span[lang="en"],
+            body[data-lang="en"] p[lang="en"],
+            body[data-lang="en"] h1[lang="en"],
+            body[data-lang="en"] h2[lang="en"],
+            body[data-lang="en"] h3[lang="en"] { display: inline; }
+            
+            h1, h2, h3, h4 { 
+                font-family: var(--font-thai);
+                font-weight: 600;
+                letter-spacing: 0.02em;
+            }
+            
+            a { color: var(--mystical-gold); text-decoration: none; transition: color 0.3s; }
+            a:hover { color: var(--peach-fuzz); }
+            
+            ::selection {
+                background: var(--mystical-gold);
+                color: var(--void-black);
+            }
+            
+            ::-webkit-scrollbar { width: 8px; }
+            ::-webkit-scrollbar-track { background: var(--space-deep); }
+            ::-webkit-scrollbar-thumb { 
+                background: linear-gradient(180deg, var(--mystical-gold), var(--mocha-mousse));
+                border-radius: 4px;
+            }
+        }
+
+        @layer layout {
+            .container { max-width: 1440px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+            .grid { display: grid; gap: 1.5rem; }
+            .flex { display: flex; }
+            .flex-col { flex-direction: column; }
+            .items-center { align-items: center; }
+            .justify-center { justify-content: center; }
+            .justify-between { justify-content: space-between; }
+            .text-center { text-align: center; }
+            .relative { position: relative; }
+            .absolute { position: absolute; }
+            .fixed { position: fixed; }
+            .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+            .w-full { width: 100%; }
+            .h-screen { height: 100vh; }
+            .min-h-screen { min-height: 100vh; }
+            .overflow-hidden { overflow: hidden; }
+            .z-0 { z-index: 0; }
+            .z-10 { z-index: 10; }
+            .z-50 { z-index: 50; }
+            
+            .grid-cols-1 { grid-template-columns: 1fr; }
+            .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+            .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+            .col-span-2 { grid-column: span 2; }
+            
+            @media (max-width: 1024px) {
+                .lg-grid-cols-1 { grid-template-columns: 1fr; }
+                .lg-col-span-1 { grid-column: span 1; }
+            }
+            
+            @media (max-width: 768px) {
+                .md-grid-cols-1 { grid-template-columns: 1fr; }
+            }
+        }
+
+        @layer components {
+            /* Sacred Glass Panels */
+            .glass-panel {
+                background: var(--glass-bg);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid var(--glass-border);
+                border-radius: 16px;
+                box-shadow: 
+                    0 8px 32px rgba(0, 0, 0, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+                transition: all 0.4s var(--ease-sacred);
+            }
+            
+            .glass-panel:hover {
+                border-color: var(--mystical-gold);
+                box-shadow: 
+                    0 12px 48px rgba(201, 162, 39, 0.15),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                transform: translateY(-4px);
+            }
+            
+            /* Sacred Header Style */
+            .header-sacred {
+                border-left: 4px solid var(--mystical-gold);
+                padding-left: 1.5rem;
+                background: linear-gradient(90deg, var(--glass-glow) 0%, transparent 100%);
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+            }
+            
+            /* Mystical Buttons */
+            .btn-sacred {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.75rem 1.5rem;
+                background: linear-gradient(135deg, var(--mocha-mousse), var(--temple-bronze));
+                color: var(--peach-fuzz);
+                border: 1px solid var(--mystical-gold);
+                border-radius: 8px;
+                font-family: var(--font-thai);
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s var(--ease-sacred);
+            }
+            
+            .btn-sacred:hover {
+                background: linear-gradient(135deg, var(--mystical-gold), var(--sacred-amber));
+                color: var(--void-black);
+                box-shadow: 0 0 30px rgba(201, 162, 39, 0.4);
+                transform: translateY(-2px);
+            }
+            
+            /* Data Tables */
+            .data-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 0.95rem;
+            }
+            
+            .data-table th {
+                text-align: left;
+                padding: 1rem;
+                background: rgba(201, 162, 39, 0.1);
+                color: var(--mystical-gold);
+                font-weight: 600;
+                border-bottom: 2px solid var(--glass-border);
+                position: sticky;
+                top: 0;
+            }
+            
+            .data-table td {
+                padding: 1rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                vertical-align: top;
+            }
+            
+            .data-table tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
+            .data-table tr:hover { background: rgba(201, 162, 39, 0.05); }
+            
+            /* Sentiment Badges */
+            .badge {
+                display: inline-block;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 0.75rem;
+                font-weight: 600;
+            }
+            
+            .badge-elite { 
+                background: rgba(201, 162, 39, 0.2); 
+                color: var(--mystical-gold); 
+                border: 1px solid var(--mystical-gold); 
+            }
+            .badge-high { 
+                background: rgba(0, 168, 107, 0.2); 
+                color: var(--jade-green); 
+                border: 1px solid var(--jade-green); 
+            }
+            .badge-rare { 
+                background: rgba(232, 180, 184, 0.2); 
+                color: var(--lotus-pink); 
+                border: 1px solid var(--lotus-pink); 
+            }
+            
+            /* Hero Artifact Display */
+            .artifact-showcase {
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+            }
+            
+            .artifact-image {
+                max-width: 300px;
+                height: auto;
+                border-radius: 16px;
+                box-shadow: 
+                    0 0 60px rgba(201, 162, 39, 0.3),
+                    0 0 120px rgba(255, 190, 152, 0.1);
+                transition: all 0.5s var(--ease-sacred);
+            }
+            
+            .artifact-image:hover {
+                transform: scale(1.05) rotate(2deg);
+                box-shadow: 
+                    0 0 80px rgba(201, 162, 39, 0.5),
+                    0 0 160px rgba(255, 190, 152, 0.2);
+            }
+            
+            /* Aura Ring Effect */
+            .aura-ring {
+                position: absolute;
+                border-radius: 50%;
+                border: 2px solid var(--mystical-gold);
+                opacity: 0.3;
+                animation: pulse-ring 3s ease-out infinite;
+            }
+            
+            @keyframes pulse-ring {
+                0% { transform: scale(0.8); opacity: 0.5; }
+                100% { transform: scale(2); opacity: 0; }
+            }
+            
+            /* Loading Overlay */
+            .loading-overlay {
+                position: fixed;
+                inset: 0;
+                background: var(--void-black);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                transition: opacity 0.8s, visibility 0.8s;
+            }
+            
+            .loading-overlay.hidden {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
+            
+            .lotus-spinner {
+                width: 80px;
+                height: 80px;
+                animation: lotus-bloom 2s ease-in-out infinite;
+            }
+            
+            @keyframes lotus-bloom {
+                0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+                50% { transform: scale(1.2) rotate(180deg); opacity: 0.7; }
+            }
+        }
+
+        @layer utilities {
+            .p-4 { padding: 1rem; }
+            .p-6 { padding: 1.5rem; }
+            .p-8 { padding: 2rem; }
+            .px-4 { padding-left: 1rem; padding-right: 1rem; }
+            .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+            .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+            .py-16 { padding-top: 4rem; padding-bottom: 4rem; }
+            .m-4 { margin: 1rem; }
+            .mb-2 { margin-bottom: 0.5rem; }
+            .mb-4 { margin-bottom: 1rem; }
+            .mb-6 { margin-bottom: 1.5rem; }
+            .mb-8 { margin-bottom: 2rem; }
+            .mt-4 { margin-top: 1rem; }
+            .mt-8 { margin-top: 2rem; }
+            .gap-4 { gap: 1rem; }
+            .gap-6 { gap: 1.5rem; }
+            .gap-8 { gap: 2rem; }
+            
+            .text-xs { font-size: 0.75rem; }
+            .text-sm { font-size: 0.875rem; }
+            .text-base { font-size: 1rem; }
+            .text-lg { font-size: 1.125rem; }
+            .text-xl { font-size: 1.25rem; }
+            .text-2xl { font-size: 1.5rem; }
+            .text-3xl { font-size: 2rem; }
+            .text-4xl { font-size: 2.5rem; }
+            .text-5xl { font-size: 3rem; }
+            
+            .font-light { font-weight: 300; }
+            .font-normal { font-weight: 400; }
+            .font-medium { font-weight: 500; }
+            .font-semibold { font-weight: 600; }
+            .font-bold { font-weight: 700; }
+            
+            .text-gold { color: var(--mystical-gold); }
+            .text-peach { color: var(--peach-fuzz); }
+            .text-mocha { color: var(--mocha-mousse); }
+            .text-muted { color: rgba(255, 190, 152, 0.6); }
+            .text-jade { color: var(--jade-green); }
+            
+            .leading-relaxed { line-height: 1.8; }
+            .tracking-wide { letter-spacing: 0.05em; }
+            
+            .rounded { border-radius: 8px; }
+            .rounded-lg { border-radius: 12px; }
+            .rounded-xl { border-radius: 16px; }
+            .rounded-full { border-radius: 9999px; }
+            
+            .opacity-50 { opacity: 0.5; }
+            .opacity-70 { opacity: 0.7; }
+            
+            .pointer-events-none { pointer-events: none; }
+            .cursor-pointer { cursor: pointer; }
+            
+            .transition-all { transition: all 0.3s var(--ease-sacred); }
+        }
+
+        @layer animations {
+            .reveal {
+                opacity: 0;
+                transform: translateY(40px);
+                transition: all 0.8s var(--ease-sacred);
+            }
+            
+            .reveal.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            
+            .float {
+                animation: float 6s ease-in-out infinite;
+            }
+            
+            @keyframes float {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-20px); }
+            }
+            
+            .glow-pulse {
+                animation: glow-pulse 3s ease-in-out infinite;
+            }
+            
+            @keyframes glow-pulse {
+                0%, 100% { filter: drop-shadow(0 0 20px rgba(201, 162, 39, 0.3)); }
+                50% { filter: drop-shadow(0 0 40px rgba(201, 162, 39, 0.6)); }
+            }
+            
+            .incense-drift {
+                animation: incense-drift 8s ease-in-out infinite;
+            }
+            
+            @keyframes incense-drift {
+                0%, 100% { transform: translateX(0) translateY(0); opacity: 0.3; }
+                25% { transform: translateX(10px) translateY(-20px); opacity: 0.5; }
+                50% { transform: translateX(-5px) translateY(-40px); opacity: 0.3; }
+                75% { transform: translateX(15px) translateY(-60px); opacity: 0.1; }
+            }
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+        }
+        
+        .chart-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        /* D3 Network Container */
+        #d3-network {
+            width: 100%;
+            height: 450px;
+            background: radial-gradient(ellipse at center, rgba(201, 162, 39, 0.05) 0%, transparent 70%);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        #d3-network svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Three.js Canvas */
+        #sacred-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        /* Cosmic Fog Overlay */
+        .cosmic-fog {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, transparent 0%, var(--void-black) 85%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .text-5xl { font-size: 2rem; }
+            .text-4xl { font-size: 1.75rem; }
+            .text-3xl { font-size: 1.5rem; }
+            .p-8 { padding: 1rem; }
+            .py-16 { padding-top: 2rem; padding-bottom: 2rem; }
+            .artifact-image { max-width: 200px; }
+            .grid-cols-2, .grid-cols-3 { grid-template-columns: 1fr; }
+            .col-span-2 { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body data-lang="th">
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <svg class="lotus-spinner" viewBox="0 0 100 100">
+            <defs>
+                <linearGradient id="lotusGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#C9A227"/>
+                    <stop offset="100%" style="stop-color:#FFBE98"/>
+                </linearGradient>
+            </defs>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="url(#lotusGrad)" stroke-width="3" stroke-dasharray="60 200" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="25" fill="none" stroke="url(#lotusGrad)" stroke-width="2" stroke-dasharray="40 160" stroke-linecap="round" transform="rotate(60 50 50)"/>
+            <circle cx="50" cy="50" r="10" fill="url(#lotusGrad)"/>
+        </svg>
+        <p class="mt-4 text-gold tracking-wide" style="font-family: var(--font-thai);">
+            <span lang="th">กำลังเปิดประตูสู่โลกแห่งทนสิทธิ์...</span>
+            <span lang="en">Opening the gates to the Thonnasit realm...</span>
+        </p>
+    </div>
+
+    <!-- Three.js Sacred Background -->
+    <canvas id="sacred-canvas"></canvas>
+    <div class="cosmic-fog"></div>
+
+    <!-- Main Content -->
+    <div class="relative z-10">
+        
+        <!-- Navigation Header -->
+        <header class="fixed w-full z-50 p-4">
+            <nav class="container glass-panel p-4 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <svg width="40" height="40" viewBox="0 0 64 64" class="glow-pulse">
+                        <defs>
+                            <linearGradient id="navHornGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#654321"/>
+                                <stop offset="50%" style="stop-color:#D4A574"/>
+                                <stop offset="100%" style="stop-color:#F5DEB3"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M32 8 C28 8 24 20 22 35 C20 50 24 58 32 58 C40 58 44 50 42 35 C40 20 36 8 32 8 Z" fill="url(#navHornGrad)" stroke="#C9A227" stroke-width="1"/>
+                    </svg>
+                    <div>
+                        <h1 class="text-lg font-semibold text-gold" lang="th">นอแรดทนสิทธิ์</h1>
+                        <h1 class="text-lg font-semibold text-gold" lang="en">Thonnasit Rhino Horn</h1>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="lang-toggle" class="btn-sacred text-sm">
+                        <span lang="th">EN</span>
+                        <span lang="en">ไทย</span>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="min-h-screen flex items-center justify-center py-16" style="padding-top: 120px;">
+            <div class="container">
+                <div class="grid grid-cols-2 md-grid-cols-1 gap-8 items-center">
+                    
+                    <!-- Hero Text -->
+                    <div class="reveal">
+                        <p class="text-mocha mb-4 tracking-wide">
+                            <span lang="th">จักรพรรดิแห่งเครื่องรางทนสิทธิ์</span>
+                            <span lang="en">The Emperor of Thonnasit Amulets</span>
+                        </p>
+                        <h1 class="text-5xl font-bold text-gold mb-6 leading-relaxed">
+                            <span lang="th">อานุภาพของนอแรด</span>
+                            <span lang="en">The Mystical Powers of Rhinoceros Horn</span>
+                        </h1>
+                        <p class="text-lg text-peach leading-relaxed mb-8">
+                            <span lang="th">
+                                นอแรดจัดเป็น <strong class="text-gold">"ทนสิทธิ์"</strong> (ทน-สิด) หมายถึงวัตถุที่มีฤทธิ์ในตัวเอง 
+                                มีเทพสถิตอยู่ภายใน ไม่ต้องผ่านพิธีปลุกเสกจากพระสงฆ์ก็สามารถใช้งานได้ทันที 
+                                เป็นสุดยอดเครื่องรางที่หายากและทรงพลังที่สุดในโลกแห่งไสยเวทย์ไทย
+                            </span>
+                            <span lang="en">
+                                Rhinoceros horn is classified as <strong class="text-gold">"Thonnasit"</strong> (Ton-Sit)—an object possessing inherent magical power 
+                                with a resident deity dwelling within. It requires no consecration ritual from monks and is immediately potent upon acquisition, 
+                                making it the supreme talisman in Thai occult tradition.
+                            </span>
+                        </p>
+                        <div class="flex gap-4">
+                            <a href="#powers" class="btn-sacred">
+                                <span lang="th">สำรวจอานุภาพ</span>
+                                <span lang="en">Explore Powers</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Artifact Display -->
+                    <div class="artifact-showcase reveal">
+                        <div class="aura-ring" style="width: 200px; height: 200px; animation-delay: 0s;"></div>
+                        <div class="aura-ring" style="width: 280px; height: 280px; animation-delay: 1s;"></div>
+                        <div class="aura-ring" style="width: 360px; height: 360px; animation-delay: 2s;"></div>
+                        <img 
+                            src="https://defense.engineer/RhinoHorn/RhinoHorn.jpg" 
+                            alt="นอแรดทนสิทธิ์ - Sacred Rhinoceros Horn Artifact" 
+                            class="artifact-image float"
+                            loading="eager"
+                        >
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Taxonomy Section -->
+        <section id="taxonomy" class="py-16">
+            <div class="container">
+                <div class="text-center mb-8 reveal">
+                    <h2 class="text-3xl font-bold text-gold mb-4">
+                        <span lang="th">การจำแนกประเภทนอแรด</span>
+                        <span lang="en">Taxonomy of Rhinoceros Horns</span>
+                    </h2>
+                    <p class="text-muted">
+                        <span lang="th">แต่ละประเภทมีคุณสมบัติและอานุภาพเฉพาะตัว</span>
+                        <span lang="en">Each variety possesses unique properties and powers</span>
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-2 md-grid-cols-1 gap-8">
+                    <!-- Radar Chart -->
+                    <div class="glass-panel p-6 reveal">
+                        <div class="header-sacred mb-4">
+                            <h3 class="text-xl font-semibold text-gold">
+                                <span lang="th">การวิเคราะห์เปรียบเทียบ</span>
+                                <span lang="en">Comparative Analysis</span>
+                            </h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="radarChart"></canvas>
+                        </div>
+                        <p class="text-xs text-muted text-center mt-4">
+                            <span lang="th">เปรียบเทียบพลังระหว่างนอนิล (ดำ) และนอน้ำผึ้ง (ทอง)</span>
+                            <span lang="en">Comparing powers between Black Horn and Honey Horn</span>
+                        </p>
+                    </div>
+                    
+                    <!-- Type Cards -->
+                    <div class="flex flex-col gap-4 reveal">
+                        <!-- Nor Nin -->
+                        <div class="glass-panel p-4">
+                            <div class="flex items-center gap-4 mb-2">
+                                <div class="w-12 h-12 rounded-full" style="background: linear-gradient(135deg, #1a1a1a, #333);"></div>
+                                <div>
+                                    <h4 class="font-semibold text-gold">
+                                        <span lang="th">นอนิล (นอดำ)</span>
+                                        <span lang="en">Nor Nin (Black Horn)</span>
+                                    </h4>
+                                    <span class="badge badge-elite">
+                                        <span lang="th">มหาอำนาจ</span>
+                                        <span lang="en">Authority</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-muted">
+                                <span lang="th">เน้นด้านอำนาจบารมี การปกป้องคุ้มครอง และการกันคุณไสย เหมาะสำหรับผู้นำและผู้มีตำแหน่งสูง</span>
+                                <span lang="en">Focuses on authority, protection, and anti-black magic. Ideal for leaders and those in high positions.</span>
+                            </p>
+                        </div>
+                        
+                        <!-- Nor Nam Phueng -->
+                        <div class="glass-panel p-4">
+                            <div class="flex items-center gap-4 mb-2">
+                                <div class="w-12 h-12 rounded-full" style="background: linear-gradient(135deg, #D4A574, #FFD700);"></div>
+                                <div>
+                                    <h4 class="font-semibold text-gold">
+                                        <span lang="th">นอน้ำผึ้ง (นอทอง)</span>
+                                        <span lang="en">Nor Nam Phueng (Honey Horn)</span>
+                                    </h4>
+                                    <span class="badge badge-high">
+                                        <span lang="th">เมตตา/โชคลาภ</span>
+                                        <span lang="en">Charm/Fortune</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-muted">
+                                <span lang="th">เน้นด้านเมตตามหานิยม โชคลาภ และการค้าขาย สีใสเหมือนน้ำผึ้ง มองทะลุได้ ช่วยให้มองเห็นอุปสรรคล่วงหน้า</span>
+                                <span lang="en">Focuses on charm, fortune, and trade. Honey-colored and translucent, helps foresee obstacles.</span>
+                            </p>
+                        </div>
+                        
+                        <!-- Nor Men -->
+                        <div class="glass-panel p-4">
+                            <div class="flex items-center gap-4 mb-2">
+                                <div class="w-12 h-12 rounded-full" style="background: linear-gradient(135deg, #4a4a4a, #666); border: 2px dashed var(--lotus-pink);"></div>
+                                <div>
+                                    <h4 class="font-semibold text-gold">
+                                        <span lang="th">นอเหม็น</span>
+                                        <span lang="en">Nor Men (Foul-Smelling Horn)</span>
+                                    </h4>
+                                    <span class="badge badge-rare">
+                                        <span lang="th">หายากมาก</span>
+                                        <span lang="en">Extremely Rare</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-muted">
+                                <span lang="th">หายากที่สุด มีกลิ่นเฉพาะตัว ทรงพลังในการป้องกันคุณไสยและเสน่ห์ร้าย กลิ่นนั้นเองเป็นตัวส่งผ่านพลัง</span>
+                                <span lang="en">Rarest variety with distinctive scent. Powerful protection against black magic. The scent itself transmits blessings.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11 Powers Section -->
+        <section id="powers" class="py-16">
+            <div class="container">
+                <div class="text-center mb-8 reveal">
+                    <h2 class="text-3xl font-bold text-gold mb-4">
+                        <span lang="th">อานุภาพ ๑๑ ประการ</span>
+                        <span lang="en">The 11 Mystical Powers</span>
+                    </h2>
+                    <p class="text-muted">
+                        <span lang="th">แผนผังความสัมพันธ์ของพลังแห่งนอแรด - คลิกลากเพื่อสำรวจ</span>
+                        <span lang="en">Interactive topology of Rhino Horn powers - Click and drag to explore</span>
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-3 md-grid-cols-1 gap-6">
+                    <!-- D3 Network Graph -->
+                    <div class="glass-panel p-4 col-span-2 lg-col-span-1 reveal">
+                        <div class="header-sacred mb-4">
+                            <h3 class="text-xl font-semibold text-gold">
+                                <span lang="th">แผนผังพลังทนสิทธิ์</span>
+                                <span lang="en">Thonnasit Power Network</span>
+                            </h3>
+                        </div>
+                        <div id="d3-network"></div>
+                    </div>
+                    
+                    <!-- Powers Table -->
+                    <div class="glass-panel p-4 reveal" style="max-height: 550px; overflow-y: auto;">
+                        <div class="header-sacred mb-4">
+                            <h3 class="text-xl font-semibold text-gold">
+                                <span lang="th">รายละเอียดอานุภาพ</span>
+                                <span lang="en">Power Details</span>
+                            </h3>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <span lang="th">อานุภาพ</span>
+                                        <span lang="en">Power</span>
+                                    </th>
+                                    <th>
+                                        <span lang="th">ระดับ</span>
+                                        <span lang="en">Level</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong class="text-gold">
+                                            <span lang="th">มหาอำนาจ</span>
+                                            <span lang="en">Maha Amnaj</span>
+                                        </strong>
+                                        <p class="text-xs text-muted mt-1">
+                                            <span lang="th">สร้างบารมี เป็นเจ้าคนนายคน</span>
+                                            <span lang="en">Authority & Leadership</span>
+                                        </p>
+                                    </td>
+                                    <td><span class="badge badge-elite">Elite</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong class="text-gold">
+                                            <span lang="th">เมตตามหานิยม</span>
+                                            <span lang="en">Metta Mahaniyom</span>
+                                        </strong>
+                                        <p class="text-xs text-muted mt-1">
+                                            <span lang="th">เสน่ห์ดึงดูด การค้าขาย</span>
+                                            <span lang="en">Charm & Trade Success</span>
+                                        </p>
+                                    </td>
+                                    <td><span class="badge badge-elite">Elite</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong class="text-gold">
+                                            <span lang="th">แก้อาถรรพ์/กันคุณไสย</span>
+                                            <span lang="en">Gae Aathan</span>
+                                        </strong>
+                                        <p class="text-xs text-muted mt-1">
+                                            <span lang="th">ป้องกันและสะท้อนคุณไสย</span>
+                                            <span lang="en">Anti-Black Magic</span>
+                                        </p>
+                                    </td>
+                                    <td><span class="badge badge-elite">Elite</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong class="text-gold">
+                                            <span lang="th">โชคลาภ/ค้ำคูณ</span>
+                                            <span lang="en">Choke Lap</span>
+                                        </strong>
+                                        <p class="text-xs text-muted mt-1">
+                                            <span lang="th">ทวีคูณโชคลาภ กันความจน</span>
+                                            <span lang="en">Luck Multiplier</span>
+                                        </p>
+                                    </td>
+                                    <td><span class="badge badge-high">High</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong class="text-gold">
+                                            <span lang="th">กันภูตผี</span>
+                                            <span lang="en">Kan Phut Phi</span>
+                                        </strong>
+                                        <p class="text-xs text-muted mt-1">
+                                            <span lang="th">ป้องกันวิญญาณร้าย</span>
+                                            <span lang="en">Spirit Protection</span>
+                                        </p>
+                                    </td>
+                                    <td><span class="badge badge-high">High</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong class="text-gold">
+                                            <span lang="th">กันไฟ</span>
+                                            <span lang="en">Kan Fai</span>
+                                        </strong>
+                                        <p class="text-xs text-muted mt-1">
+                                            <span lang="th">ป้องกันอัคคีภัยและฟ้าผ่า</span>
+                                            <span lang="en">Fire & Lightning Protection</span>
+                                        </p>
+                                    </td>
+                                    <td><span class="badge badge-rare">Rare</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong class="text-gold">
+                                            <span lang="th">แคล้วคลาด</span>
+                                            <span lang="en">Klaew Klaad</span>
+                                        </strong>
+                                        <p class="text-xs text-muted mt-1">
+                                            <span lang="th">หลบหลีกอันตราย อุบัติเหตุ</span>
+                                            <span lang="en">Danger Evasion</span>
+                                        </p>
+                                    </td>
+                                    <td><span class="badge badge-high">High</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong class="text-gold">
+                                            <span lang="th">มหาอุด</span>
+                                            <span lang="en">Maha Ud</span>
+                                        </strong>
+                                        <p class="text-xs text-muted mt-1">
+                                            <span lang="th">อุดทรัพย์ กันอาวุธ</span>
+                                            <span lang="en">Wealth Containment</span>
+                                        </p>
+                                    </td>
+                                    <td><span class="badge badge-high">High</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Market Intelligence Section -->
+        <section id="market" class="py-16">
+            <div class="container">
+                <div class="text-center mb-8 reveal">
+                    <h2 class="text-3xl font-bold text-gold mb-4">
+                        <span lang="th">การวิเคราะห์มูลค่าและความหายาก</span>
+                        <span lang="en">Value & Rarity Analysis</span>
+                    </h2>
+                    <p class="text-muted">
+                        <span lang="th">เปรียบเทียบกับ "ทองคำดำ" และอัญมณีล้ำค่า</span>
+                        <span lang="en">Compared to "Black Gold" and precious gems</span>
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-2 md-grid-cols-1 gap-8">
+                    <!-- Scatter Plot -->
+                    <div class="glass-panel p-6 reveal">
+                        <div class="header-sacred mb-4">
+                            <h3 class="text-xl font-semibold text-gold">
+                                <span lang="th">แผนภูมิมูลค่า vs ความหายาก</span>
+                                <span lang="en">Value vs Rarity Matrix</span>
+                            </h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="scatterChart"></canvas>
+                        </div>
+                        <p class="text-xs text-muted text-center mt-4">
+                            <span lang="th">แกน Y: พลังทางจิตวิญญาณ | แกน X: ดัชนีความหายาก</span>
+                            <span lang="en">Y: Mystical Potency | X: Rarity Index</span>
+                        </p>
+                    </div>
+                    
+                    <!-- Comparative Info -->
+                    <div class="glass-panel p-6 reveal">
+                        <div class="header-sacred mb-4">
+                            <h3 class="text-xl font-semibold text-gold">
+                                <span lang="th">เปรียบเทียบกับวัตถุมงคลอื่น</span>
+                                <span lang="en">Comparison with Other Talismans</span>
+                            </h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                        <div class="mt-4 p-4 rounded" style="background: rgba(201, 162, 39, 0.1); border: 1px dashed var(--mystical-gold);">
+                            <h4 class="text-sm font-semibold text-gold mb-2">
+                                <span lang="th">เกร็ดความรู้: ยาวาสนาจินดามณี</span>
+                                <span lang="en">Note: Ya Wasana Jindamanee</span>
+                            </h4>
+                            <p class="text-xs text-muted">
+                                <span lang="th">
+                                    แม้ตำราโบราณจะกล่าวถึงการบดนอแรดเพื่อทำยาวาสนาจินดามณี แต่นักสะสมที่แท้จริงนิยมเก็บรักษานอแรดไว้ในสภาพเดิม 
+                                    เพื่อรักษา "เทพสถิต" ที่สถิตอยู่ภายใน เพราะการบดทำลายจะทำให้สูญเสียรูปแบบทนสิทธิ์
+                                </span>
+                                <span lang="en">
+                                    While ancient texts mention grinding horn for Ya Wasana Jindamanee medicine, true collectors prefer keeping the horn intact 
+                                    to preserve the "Living Deity" (Thep Sadit) inside, as grinding destroys the Thonnasit form.
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Environmental Blessings Section -->
+        <section id="blessings" class="py-16">
+            <div class="container">
+                <div class="glass-panel p-8 reveal">
+                    <div class="grid grid-cols-2 md-grid-cols-1 gap-8 items-center">
+                        <div>
+                            <div class="header-sacred mb-6">
+                                <h2 class="text-2xl font-bold text-gold">
+                                    <span lang="th">พรจากสิ่งแวดล้อม</span>
+                                    <span lang="en">Environmental Blessings</span>
+                                </h2>
+                            </div>
+                            <p class="text-peach leading-relaxed mb-4">
+                                <span lang="th">
+                                    ความเชื่อโบราณกล่าวว่า <strong class="text-gold">น้ำฝนที่ชะชายคา</strong> ของบ้านที่มีนอแรดประดิษฐาน 
+                                    จะนำความเจริญรุ่งเรืองมาสู่ผืนดินและผู้อยู่อาศัย พลังของนอแรดจะแผ่ซ่านไปทั่วทั้งบริเวณ 
+                                    สร้างสนามพลังบวกที่ปกป้องและอำนวยพรแก่ทุกสิ่งที่อยู่ภายใน
+                                </span>
+                                <span lang="en">
+                                    Ancient belief states that <strong class="text-gold">rainwater dripping from the eaves</strong> of a home housing a rhino horn 
+                                    brings prosperity to the land and its inhabitants. The horn's power radiates throughout the area, 
+                                    creating a positive energy field that protects and blesses everything within.
+                                </span>
+                            </p>
+                            <ul class="space-y-2 text-sm text-muted">
+                                <li class="flex items-center gap-2">
+                                    <span class="text-jade">✦</span>
+                                    <span lang="th">ป้องกันอัคคีภัยและฟ้าผ่า</span>
+                                    <span lang="en">Protection from fire and lightning</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-jade">✦</span>
+                                    <span lang="th">ขับไล่วิญญาณร้ายและพลังลบ</span>
+                                    <span lang="en">Repels evil spirits and negative energy</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-jade">✦</span>
+                                    <span lang="th">ดึงดูดความมั่งคั่งและโชคลาภ</span>
+                                    <span lang="en">Attracts wealth and fortune</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="text-center">
+                            <img 
+                                src="https://defense.engineer/RhinoHorn/RhinoHorn.jpg" 
+                                alt="นอแรดศักดิ์สิทธิ์" 
+                                class="artifact-image mx-auto glow-pulse"
+                                style="max-width: 250px;"
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-8 mt-8" style="background: rgba(0,0,0,0.5);">
+            <div class="container text-center">
+                <p class="text-muted text-sm mb-2">
+                    <span lang="th">ข้อมูลจากตำราโบราณและความเชื่อพื้นบ้านไทย-ลาว</span>
+                    <span lang="en">Information from ancient texts and Thai-Lao folk beliefs</span>
+                </p>
+                <p class="text-xs text-muted opacity-50">
+                    <span lang="th">สร้างด้วย Three.js, D3.js และ Chart.js | มกราคม ๒๕๖๙</span>
+                    <span lang="en">Built with Three.js, D3.js & Chart.js | January 2026</span>
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JavaScript Core -->
+    <script>
+        /**
+         * NEXUS THONNASIT ARCHIVE
+         * Sacred Visualization Engine
+         */
+
+        // ============================================
+        // 1. SACRED ATMOSPHERE ENGINE (Three.js)
+        // ============================================
+        class SacredAtmosphere {
+            constructor() {
+                this.canvas = document.getElementById('sacred-canvas');
+                this.scene = null;
+                this.camera = null;
+                this.renderer = null;
+                this.particles = null;
+                this.lotusRings = [];
+                this.incenseSmoke = [];
+                this.clock = new THREE.Clock();
+                
+                this.init();
+            }
+            
+            init() {
+                try {
+                    if (!window.THREE) throw new Error('Three.js not loaded');
+                    
+                    // Scene Setup
+                    this.scene = new THREE.Scene();
+                    this.scene.fog = new THREE.FogExp2(0x0A0A0F, 0.002);
+                    
+                    // Camera
+                    this.camera = new THREE.PerspectiveCamera(
+                        60, 
+                        window.innerWidth / window.innerHeight, 
+                        0.1, 
+                        1000
+                    );
+                    this.camera.position.z = 100;
+                    
+                    // Renderer
+                    this.renderer = new THREE.WebGLRenderer({
+                        canvas: this.canvas,
+                        alpha: true,
+                        antialias: true
+                    });
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                    
+                    // Create Sacred Elements
+                    this.createParticleField();
+                    this.createLotusRings();
+                    this.createIncenseSmoke();
+                    this.createAuraGlow();
+                    
+                    // Start Animation
+                    this.animate();
+                    
+                    // Resize Handler
+                    window.addEventListener('resize', () => this.onResize());
+                    
+                } catch (e) {
+                    console.warn('WebGL failed, using CSS fallback:', e);
+                    this.canvas.style.display = 'none';
+                }
+            }
+            
+            createParticleField() {
+                const geometry = new THREE.BufferGeometry();
+                const count = 3000;
+                const positions = new Float32Array(count * 3);
+                const colors = new Float32Array(count * 3);
+                const sizes = new Float32Array(count);
+                
+                // Color palette: Peach Fuzz, Mystical Gold, Mocha
+                const colorPalette = [
+                    new THREE.Color(0xFFBE98), // Peach Fuzz
+                    new THREE.Color(0xC9A227), // Mystical Gold
+                    new THREE.Color(0xA47764), // Mocha Mousse
+                    new THREE.Color(0xD4A574), // Sacred Amber
+                    new THREE.Color(0xFFD700)  // Pure Gold
+                ];
+                
+                for (let i = 0; i < count; i++) {
+                    // Spherical distribution
+                    const radius = 50 + Math.random() * 100;
+                    const theta = Math.random() * Math.PI * 2;
+                    const phi = Math.acos(2 * Math.random() - 1);
+                    
+                    positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+                    positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+                    positions[i * 3 + 2] = radius * Math.cos(phi);
+                    
+                    const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+                    colors[i * 3] = color.r;
+                    colors[i * 3 + 1] = color.g;
+                    colors[i * 3 + 2] = color.b;
+                    
+                    sizes[i] = Math.random() * 2 + 0.5;
+                }
+                
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+                geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+                
+                const material = new THREE.PointsMaterial({
+                    size: 1.5,
+                    vertexColors: true,
+                    transparent: true,
+                    opacity: 0.6,
+                    blending: THREE.AdditiveBlending,
+                    sizeAttenuation: true
+                });
+                
+                this.particles = new THREE.Points(geometry, material);
+                this.scene.add(this.particles);
+            }
+            
+            createLotusRings() {
+                // Create concentric rings representing lotus petals / mandala
+                const ringCount = 5;
+                
+                for (let i = 0; i < ringCount; i++) {
+                    const radius = 20 + i * 15;
+                    const geometry = new THREE.RingGeometry(radius, radius + 0.5, 64);
+                    const material = new THREE.MeshBasicMaterial({
+                        color: new THREE.Color(0xC9A227),
+                        transparent: true,
+                        opacity: 0.1 + (i * 0.05),
+                        side: THREE.DoubleSide
+                    });
+                    
+                    const ring = new THREE.Mesh(geometry, material);
+                    ring.rotation.x = Math.PI / 2;
+                    ring.position.y = -30;
+                    ring.userData = { 
+                        baseRotation: 0, 
+                        speed: 0.001 * (i % 2 === 0 ? 1 : -1),
+                        pulsePhase: i * 0.5
+                    };
+                    
+                    this.lotusRings.push(ring);
+                    this.scene.add(ring);
+                }
+            }
+            
+            createIncenseSmoke() {
+                // Vertical smoke particles rising
+                const smokeCount = 200;
+                const geometry = new THREE.BufferGeometry();
+                const positions = new Float32Array(smokeCount * 3);
+                const velocities = [];
+                
+                for (let i = 0; i < smokeCount; i++) {
+                    positions[i * 3] = (Math.random() - 0.5) * 10;
+                    positions[i * 3 + 1] = Math.random() * 100 - 50;
+                    positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+                    
+                    velocities.push({
+                        x: (Math.random() - 0.5) * 0.02,
+                        y: Math.random() * 0.1 + 0.05,
+                        z: (Math.random() - 0.5) * 0.02
+                    });
+                }
+                
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                
+                const material = new THREE.PointsMaterial({
+                    color: 0xFFBE98,
+                    size: 3,
+                    transparent: true,
+                    opacity: 0.3,
+                    blending: THREE.AdditiveBlending
+                });
+                
+                const smoke = new THREE.Points(geometry, material);
+                smoke.userData.velocities = velocities;
+                this.incenseSmoke.push(smoke);
+                this.scene.add(smoke);
+            }
+            
+            createAuraGlow() {
+                // Central glowing sphere representing the horn's aura
+                const geometry = new THREE.SphereGeometry(15, 32, 32);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0xC9A227,
+                    transparent: true,
+                    opacity: 0.05
+                });
+                
+                const aura = new THREE.Mesh(geometry, material);
+                aura.position.set(0, 0, 0);
+                this.aura = aura;
+                this.scene.add(aura);
+                
+                // Outer glow
+                const outerGeometry = new THREE.SphereGeometry(25, 32, 32);
+                const outerMaterial = new THREE.MeshBasicMaterial({
+                    color: 0xFFBE98,
+                    transparent: true,
+                    opacity: 0.02
+                });
+                
+                const outerAura = new THREE.Mesh(outerGeometry, outerMaterial);
+                this.outerAura = outerAura;
+                this.scene.add(outerAura);
+            }
+            
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                const elapsed = this.clock.getElapsedTime();
+                
+                // Rotate particle field slowly
+                if (this.particles) {
+                    this.particles.rotation.y += 0.0003;
+                    this.particles.rotation.x = Math.sin(elapsed * 0.1) * 0.1;
+                }
+                
+                // Animate lotus rings
+                this.lotusRings.forEach((ring, i) => {
+                    ring.rotation.z += ring.userData.speed;
+                    ring.material.opacity = 0.1 + Math.sin(elapsed + ring.userData.pulsePhase) * 0.05;
+                });
+                
+                // Animate incense smoke
+                this.incenseSmoke.forEach(smoke => {
+                    const positions = smoke.geometry.attributes.position.array;
+                    const velocities = smoke.userData.velocities;
+                    
+                    for (let i = 0; i < velocities.length; i++) {
+                        positions[i * 3] += velocities[i].x + Math.sin(elapsed + i) * 0.01;
+                        positions[i * 3 + 1] += velocities[i].y;
+                        positions[i * 3 + 2] += velocities[i].z;
+                        
+                        // Reset if too high
+                        if (positions[i * 3 + 1] > 60) {
+                            positions[i * 3 + 1] = -50;
+                            positions[i * 3] = (Math.random() - 0.5) * 10;
+                            positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+                        }
+                    }
+                    smoke.geometry.attributes.position.needsUpdate = true;
+                });
+                
+                // Pulse aura
+                if (this.aura) {
+                    const scale = 1 + Math.sin(elapsed * 0.5) * 0.1;
+                    this.aura.scale.set(scale, scale, scale);
+                    this.outerAura.scale.set(scale * 1.2, scale * 1.2, scale * 1.2);
+                }
+                
+                this.renderer.render(this.scene, this.camera);
+            }
+            
+            onResize() {
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+
+        // ============================================
+        // 2. CHART MANAGER (Chart.js)
+        // ============================================
+        class ChartManager {
+            constructor() {
+                this.charts = {};
+                this.colors = {
+                    gold: '#C9A227',
+                    peach: '#FFBE98',
+                    mocha: '#A47764',
+                    jade: '#00A86B',
+                    lotus: '#E8B4B8',
+                    amber: '#D4A574'
+                };
+            }
+            
+            init() {
+                Chart.defaults.color = '#FFBE98';
+                Chart.defaults.font.family = "'Sarabun', sans-serif";
+                
+                this.createRadarChart();
+                this.createScatterChart();
+                this.createComparisonChart();
+            }
+            
+            createRadarChart() {
+                const ctx = document.getElementById('radarChart');
+                if (!ctx) return;
+                
+                this.charts.radar = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['เมตตา (Charm)', 'อำนาจ (Authority)', 'กันคุณไสย (Protection)', 'โชคลาภ (Luck)', 'ความหายาก (Rarity)'],
+                        datasets: [
+                            {
+                                label: 'นอน้ำผึ้ง (Honey Horn)',
+                                data: [95, 70, 75, 98, 90],
+                                borderColor: this.colors.gold,
+                                backgroundColor: 'rgba(201, 162, 39, 0.2)',
+                                borderWidth: 2,
+                                pointBackgroundColor: this.colors.gold
+                            },
+                            {
+                                label: 'นอนิล (Black Horn)',
+                                data: [65, 95, 98, 75, 85],
+                                borderColor: this.colors.peach,
+                                backgroundColor: 'rgba(255, 190, 152, 0.2)',
+                                borderWidth: 2,
+                                pointBackgroundColor: this.colors.peach
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                grid: { color: 'rgba(255, 190, 152, 0.1)' },
+                                angleLines: { color: 'rgba(255, 190, 152, 0.1)' },
+                                pointLabels: { 
+                                    color: this.colors.peach,
+                                    font: { size: 11 }
+                                },
+                                ticks: { display: false },
+                                suggestedMin: 0,
+                                suggestedMax: 100
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { 
+                                    padding: 20,
+                                    usePointStyle: true
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            createScatterChart() {
+                const ctx = document.getElementById('scatterChart');
+                if (!ctx) return;
+                
+                this.charts.scatter = new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'วัตถุมงคล',
+                            data: [
+                                { x: 95, y: 98, label: 'นอน้ำผึ้งโบราณ' },
+                                { x: 85, y: 92, label: 'นอนิล' },
+                                { x: 75, y: 80, label: 'ขนาย (ปลายนอ)' },
+                                { x: 60, y: 70, label: 'งาช้าง' },
+                                { x: 70, y: 85, label: 'เขี้ยวเสือ' },
+                                { x: 40, y: 30, label: 'กระดูกเลียนแบบ' }
+                            ],
+                            backgroundColor: (ctx) => {
+                                const val = ctx.raw?.y || 0;
+                                if (val > 90) return this.colors.gold;
+                                if (val > 70) return this.colors.peach;
+                                return this.colors.mocha;
+                            },
+                            pointRadius: 10,
+                            pointHoverRadius: 14
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: { 
+                                    display: true, 
+                                    text: 'ความหายาก (Rarity)',
+                                    color: this.colors.peach
+                                },
+                                grid: { color: 'rgba(255, 190, 152, 0.05)' },
+                                min: 0,
+                                max: 100
+                            },
+                            y: {
+                                title: { 
+                                    display: true, 
+                                    text: 'พลังทางจิตวิญญาณ (Potency)',
+                                    color: this.colors.peach
+                                },
+                                grid: { color: 'rgba(255, 190, 152, 0.05)' },
+                                min: 0,
+                                max: 100
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => `${ctx.raw.label}: พลัง ${ctx.raw.y}, หายาก ${ctx.raw.x}`
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            createComparisonChart() {
+                const ctx = document.getElementById('comparisonChart');
+                if (!ctx) return;
+                
+                this.charts.comparison = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['นอแรด', 'เขี้ยวเสือ', 'งาช้าง'],
+                        datasets: [
+                            {
+                                label: 'แก้คุณไสย',
+                                data: [95, 30, 40],
+                                backgroundColor: this.colors.gold
+                            },
+                            {
+                                label: 'อำนาจ',
+                                data: [85, 95, 50],
+                                backgroundColor: this.colors.peach
+                            },
+                            {
+                                label: 'เมตตา',
+                                data: [75, 40, 90],
+                                backgroundColor: this.colors.lotus
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { 
+                                grid: { display: false },
+                                ticks: { color: this.colors.peach }
+                            },
+                            y: { 
+                                grid: { color: 'rgba(255, 190, 152, 0.05)' },
+                                max: 100,
+                                ticks: { color: this.colors.peach }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { 
+                                    padding: 15,
+                                    usePointStyle: true
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // ============================================
+        // 3. D3 NETWORK TOPOLOGY
+        // ============================================
+        class TopologyEngine {
+            constructor() {
+                this.container = document.getElementById('d3-network');
+                this.width = 0;
+                this.height = 0;
+                this.simulation = null;
+            }
+            
+            init() {
+                if (!this.container || !window.d3) return;
+                
+                this.width = this.container.clientWidth;
+                this.height = this.container.clientHeight;
+                
+                // Node Data: The 11 Powers
+                const nodes = [
+                    { id: 'นอแรด', group: 0, r: 35, label: 'Rhino Horn' },
+                    { id: 'มหาอำนาจ', group: 1, r: 22, label: 'Authority' },
+                    { id: 'เมตตามหานิยม', group: 1, r: 22, label: 'Charm' },
+                    { id: 'แก้อาถรรพ์', group: 1, r: 22, label: 'Anti-Curse' },
+                    { id: 'โชคลาภ', group: 1, r: 20, label: 'Fortune' },
+                    { id: 'กันภูตผี', group: 2, r: 16, label: 'Spirit Ward' },
+                    { id: 'กันไฟ', group: 2, r: 14, label: 'Fire Protection' },
+                    { id: 'แคล้วคลาด', group: 2, r: 16, label: 'Evasion' },
+                    { id: 'มหาอุด', group: 2, r: 16, label: 'Wealth Lock' },
+                    { id: 'ค้ำคูณ', group: 2, r: 14, label: 'Multiplier' },
+                    { id: 'เทพสถิต', group: 3, r: 18, label: 'Deity' }
+                ];
+                
+                const links = [
+                    { source: 'นอแรด', target: 'มหาอำนาจ' },
+                    { source: 'นอแรด', target: 'เมตตามหานิยม' },
+                    { source: 'นอแรด', target: 'แก้อาถรรพ์' },
+                    { source: 'นอแรด', target: 'โชคลาภ' },
+                    { source: 'นอแรด', target: 'เทพสถิต' },
+                    { source: 'แก้อาถรรพ์', target: 'กันภูตผี' },
+                    { source: 'แก้อาถรรพ์', target: 'กันไฟ' },
+                    { source: 'มหาอำนาจ', target: 'แคล้วคลาด' },
+                    { source: 'โชคลาภ', target: 'มหาอุด' },
+                    { source: 'โชคลาภ', target: 'ค้ำคูณ' },
+                    { source: 'เมตตามหานิยม', target: 'ค้ำคูณ' }
+                ];
+                
+                // Color Scale
+                const colorScale = d3.scaleOrdinal()
+                    .domain([0, 1, 2, 3])
+                    .range(['#C9A227', '#FFBE98', '#A47764', '#00A86B']);
+                
+                // Create SVG
+                const svg = d3.select(this.container)
+                    .append('svg')
+                    .attr('width', this.width)
+                    .attr('height', this.height);
+                
+                // Gradient Definitions
+                const defs = svg.append('defs');
+                
+                // Glow Filter
+                const filter = defs.append('filter')
+                    .attr('id', 'glow')
+                    .attr('x', '-50%')
+                    .attr('y', '-50%')
+                    .attr('width', '200%')
+                    .attr('height', '200%');
+                
+                filter.append('feGaussianBlur')
+                    .attr('stdDeviation', '3')
+                    .attr('result', 'coloredBlur');
+                
+                const feMerge = filter.append('feMerge');
+                feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+                feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+                
+                // Force Simulation
+                this.simulation = d3.forceSimulation(nodes)
+                    .force('link', d3.forceLink(links).id(d => d.id).distance(80))
+                    .force('charge', d3.forceManyBody().strength(-300))
+                    .force('center', d3.forceCenter(this.width / 2, this.height / 2))
+                    .force('collision', d3.forceCollide().radius(d => d.r + 10));
+                
+                // Links
+                const link = svg.append('g')
+                    .selectAll('line')
+                    .data(links)
+                    .join('line')
+                    .attr('stroke', 'rgba(201, 162, 39, 0.3)')
+                    .attr('stroke-width', 2);
+                
+                // Nodes
+                const node = svg.append('g')
+                    .selectAll('circle')
+                    .data(nodes)
+                    .join('circle')
+                    .attr('r', d => d.r)
+                    .attr('fill', d => colorScale(d.group))
+                    .attr('fill-opacity', 0.8)
+                    .attr('stroke', '#C9A227')
+                    .attr('stroke-width', 2)
+                    .attr('filter', 'url(#glow)')
+                    .style('cursor', 'grab')
+                    .call(this.drag(this.simulation));
+                
+                // Labels
+                const labels = svg.append('g')
+                    .selectAll('text')
+                    .data(nodes)
+                    .join('text')
+                    .text(d => d.id)
+                    .attr('font-family', 'Sarabun, sans-serif')
+                    .attr('font-size', d => d.group === 0 ? '12px' : '10px')
+                    .attr('fill', '#FFBE98')
+                    .attr('text-anchor', 'middle')
+                    .attr('dy', d => d.r + 15)
+                    .style('pointer-events', 'none');
+                
+                // Tick Function
+                this.simulation.on('tick', () => {
+                    link
+                        .attr('x1', d => d.source.x)
+                        .attr('y1', d => d.source.y)
+                        .attr('x2', d => d.target.x)
+                        .attr('y2', d => d.target.y);
+                    
+                    node
+                        .attr('cx', d => d.x = Math.max(d.r, Math.min(this.width - d.r, d.x)))
+                        .attr('cy', d => d.y = Math.max(d.r, Math.min(this.height - d.r, d.y)));
+                    
+                    labels
+                        .attr('x', d => d.x)
+                        .attr('y', d => d.y);
+                });
+            }
+            
+            drag(simulation) {
+                function dragstarted(event) {
+                    if (!event.active) simulation.alphaTarget(0.3).restart();
+                    event.subject.fx = event.subject.x;
+                    event.subject.fy = event.subject.y;
+                }
+                
+                function dragged(event) {
+                    event.subject.fx = event.x;
+                    event.subject.fy = event.y;
+                }
+                
+                function dragended(event) {
+                    if (!event.active) simulation.alphaTarget(0);
+                    event.subject.fx = null;
+                    event.subject.fy = null;
+                }
+                
+                return d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended);
+            }
+        }
+
+        // ============================================
+        // 4. APPLICATION CORE
+        // ============================================
+        const APP = {
+            lang: 'th',
+            
+            init() {
+                // Hide loading overlay
+                setTimeout(() => {
+                    document.getElementById('loading-overlay').classList.add('hidden');
+                }, 1500);
+                
+                // Initialize modules
+                new SacredAtmosphere();
+                
+                const charts = new ChartManager();
+                charts.init();
+                
+                const topology = new TopologyEngine();
+                topology.init();
+                
+                // Setup observers
+                this.initScrollReveal();
+                this.initLanguageToggle();
+            },
+            
+            initScrollReveal() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+                
+                document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            },
+            
+            initLanguageToggle() {
+                const toggle = document.getElementById('lang-toggle');
+                if (toggle) {
+                    toggle.addEventListener('click', () => {
+                        this.lang = this.lang === 'th' ? 'en' : 'th';
+                        document.body.dataset.lang = this.lang;
+                    });
+                }
+            }
+        };
+
+        // ============================================
+        // 5. RESILIENT LOADER
+        // ============================================
+        function waitForLibs(retries = 0) {
+            const ready = typeof THREE !== 'undefined' && 
+                          typeof d3 !== 'undefined' && 
+                          typeof Chart !== 'undefined';
+            
+            if (ready) {
+                console.log(`[NEXUS] All libraries loaded (${retries * 100}ms)`);
+                APP.init();
+            } else if (retries < 50) {
+                setTimeout(() => waitForLibs(retries + 1), 100);
+            } else {
+                console.warn('[NEXUS] Some libraries failed to load, initializing anyway');
+                APP.init();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => waitForLibs());
+    </script>
+</body>
+</html>
