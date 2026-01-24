@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>อิติปิโส ๘ ทิศ | Nexus Zenith Artifact</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <style>
+        /* === NEXUS MICRO-FRAMEWORK v12.0 === */
+        @layer base, layout, components, utilities, animations;
+
+        @layer base {
+            :root {
+                --space-void: #050505;
+                --space-deep: #0a0a0f;
+                --titanium: #86868b;
+                --silver: #f5f5f7;
+                --text-main: #f8fafc;
+                --text-muted: #94a3b8;
+                --neon-core: #3b82f6;
+                --neon-violet: #a855f7;
+                --accent-gold: #f59e0b;
+                --peach-fuzz: #FFBE98;
+                --success: #10b981;
+                --danger: #ef4444;
+                --saffron: #FF9933;
+                --lotus-pink: #ff6b9d;
+                --glass-border: rgba(255, 255, 255, 0.08);
+                --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+                --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            
+            body { 
+                background: var(--space-void); 
+                color: var(--text-main); 
+                font-family: 'Sarabun', 'Inter', sans-serif; 
+                overflow-x: hidden;
+                line-height: 1.6;
+            }
+            
+            body[data-theme="light"] {
+                --space-void: #f8fafc;
+                --space-deep: #e2e8f0;
+                --text-main: #1e293b;
+                --text-muted: #64748b;
+                --glass-border: rgba(0, 0, 0, 0.1);
+            }
+            
+            /* Deep-State i18n */
+            [lang="en"] { display: none; }
+            body[data-lang="en"] [lang="th"] { display: none; }
+            body[data-lang="en"] [lang="en"] { display: block; }
+            body[data-lang="en"] [lang="en"].inline { display: inline; }
+            body[data-lang="th"] [lang="th"].inline { display: inline; }
+            
+            ::-webkit-scrollbar { width: 8px; }
+            ::-webkit-scrollbar-track { background: var(--space-deep); }
+            ::-webkit-scrollbar-thumb { background: var(--titanium); border-radius: 4px; }
+            ::-webkit-scrollbar-thumb:hover { background: var(--neon-core); }
+        }
+
+        @layer layout {
+            .container { max-width: 1440px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+            .grid { display: grid; gap: 1.5rem; }
+            .grid-cols-1 { grid-template-columns: 1fr; }
+            .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+            .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+            .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+            .flex { display: flex; }
+            .flex-col { flex-direction: column; }
+            .flex-wrap { flex-wrap: wrap; }
+            .justify-between { justify-content: space-between; }
+            .justify-center { justify-content: center; }
+            .items-center { align-items: center; }
+            .gap-2 { gap: 0.5rem; }
+            .gap-4 { gap: 1rem; }
+            .gap-6 { gap: 1.5rem; }
+            .w-full { width: 100%; }
+            .h-screen { height: 100vh; }
+            .relative { position: relative; }
+            .absolute { position: absolute; }
+            .fixed { position: fixed; }
+            .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+            .z-0 { z-index: 0; }
+            .z-10 { z-index: 10; }
+            .z-50 { z-index: 50; }
+            .p-2 { padding: 0.5rem; }
+            .p-4 { padding: 1rem; }
+            .p-6 { padding: 1.5rem; }
+            .p-8 { padding: 2rem; }
+            .px-4 { padding-left: 1rem; padding-right: 1rem; }
+            .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+            .py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+            .m-4 { margin: 1rem; }
+            .m-6 { margin: 1.5rem; }
+            .mb-2 { margin-bottom: 0.5rem; }
+            .mb-4 { margin-bottom: 1rem; }
+            .mb-6 { margin-bottom: 1.5rem; }
+            .mb-8 { margin-bottom: 2rem; }
+            .mt-4 { margin-top: 1rem; }
+            .mt-8 { margin-top: 2rem; }
+            .mx-auto { margin-left: auto; margin-right: auto; }
+            .overflow-hidden { overflow: hidden; }
+            .overflow-auto { overflow: auto; }
+            .text-center { text-align: center; }
+            .text-left { text-align: left; }
+            .hidden { display: none !important; }
+            
+            @media (max-width: 1024px) {
+                .grid-cols-3, .grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+            }
+            @media (max-width: 768px) {
+                .grid-cols-2, .grid-cols-3, .grid-cols-4 { grid-template-columns: 1fr; }
+                .container { padding: 0 1rem; }
+            }
+        }
+
+        @layer components {
+            .glass-panel {
+                background: rgba(20, 20, 20, 0.7);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid var(--glass-border);
+                border-radius: 16px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+                transition: transform 0.3s var(--ease-out), border-color 0.3s;
+            }
+            
+            body[data-theme="light"] .glass-panel {
+                background: rgba(255, 255, 255, 0.8);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            }
+            
+            .glass-panel:hover {
+                transform: translateY(-4px);
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+            
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.75rem 1.5rem;
+                background: linear-gradient(135deg, var(--neon-core), var(--neon-violet));
+                color: white;
+                border-radius: 8px;
+                font-weight: 600;
+                font-family: 'Orbitron', sans-serif;
+                cursor: pointer;
+                border: 1px solid transparent;
+                transition: all 0.3s var(--ease-out);
+                font-size: 0.875rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+            
+            .btn:hover {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+                transform: translateY(-2px);
+            }
+            
+            .btn-gold {
+                background: linear-gradient(135deg, var(--accent-gold), var(--peach-fuzz));
+            }
+            
+            .btn-saffron {
+                background: linear-gradient(135deg, var(--saffron), var(--accent-gold));
+            }
+            
+            .btn-sm {
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+            }
+            
+            /* Matrix Grid */
+            .matrix-container {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 1.5rem;
+            }
+            
+            .matrix-row {
+                display: flex;
+                gap: 0.5rem;
+                justify-content: center;
+            }
+            
+            .matrix-cell {
+                width: 48px;
+                height: 48px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: 'Sarabun', sans-serif;
+                font-size: 1.25rem;
+                font-weight: 600;
+                border-radius: 8px;
+                background: rgba(59, 130, 246, 0.1);
+                border: 1px solid rgba(59, 130, 246, 0.3);
+                transition: all 0.4s var(--ease-spring);
+                cursor: default;
+                position: relative;
+            }
+            
+            .matrix-cell.highlight {
+                background: rgba(59, 130, 246, 0.3);
+                border-color: var(--neon-core);
+                box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+                transform: scale(1.1);
+            }
+            
+            .matrix-cell.transforming {
+                animation: cellPulse 0.6s ease-out;
+            }
+            
+            /* Verse Cards */
+            .verse-card {
+                padding: 1.5rem;
+                border-radius: 12px;
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1));
+                border: 1px solid var(--glass-border);
+                cursor: pointer;
+                transition: all 0.4s var(--ease-out);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .verse-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, var(--neon-core), var(--neon-violet), var(--accent-gold));
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+            
+            .verse-card:hover::before,
+            .verse-card.active::before {
+                opacity: 1;
+            }
+            
+            .verse-card:hover {
+                transform: translateY(-4px) scale(1.02);
+                border-color: var(--neon-core);
+                box-shadow: 0 8px 30px rgba(59, 130, 246, 0.3);
+            }
+            
+            .verse-card.active {
+                border-color: var(--accent-gold);
+                box-shadow: 0 8px 30px rgba(245, 158, 11, 0.3);
+            }
+            
+            .verse-number {
+                position: absolute;
+                top: 0.75rem;
+                right: 0.75rem;
+                width: 28px;
+                height: 28px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--neon-core);
+                color: white;
+                font-family: 'Orbitron', sans-serif;
+                font-size: 0.75rem;
+                font-weight: 700;
+                border-radius: 50%;
+            }
+            
+            .verse-text {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--accent-gold);
+                letter-spacing: 0.3em;
+                margin-bottom: 0.5rem;
+                font-family: 'Sarabun', sans-serif;
+            }
+            
+            .verse-name {
+                font-size: 1rem;
+                font-weight: 600;
+                color: var(--neon-core);
+                margin-bottom: 0.5rem;
+            }
+            
+            .verse-desc {
+                font-size: 0.875rem;
+                color: var(--text-muted);
+                line-height: 1.7;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.5s var(--ease-out);
+            }
+            
+            .verse-card:hover .verse-desc,
+            .verse-card.active .verse-desc {
+                max-height: 300px;
+            }
+            
+            /* Mantra Section */
+            .mantra-section {
+                padding: 2rem;
+                border-radius: 16px;
+                background: linear-gradient(135deg, rgba(255, 153, 51, 0.1), rgba(255, 107, 157, 0.05));
+                border: 1px solid rgba(255, 153, 51, 0.3);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .mantra-section::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255, 153, 51, 0.1) 0%, transparent 50%);
+                animation: mantraGlow 8s ease-in-out infinite;
+            }
+            
+            .mantra-title {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 1.25rem;
+                font-weight: 700;
+                color: var(--saffron);
+                margin-bottom: 1.5rem;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                position: relative;
+            }
+            
+            .mantra-content {
+                font-family: 'Sarabun', sans-serif;
+                font-size: 1.125rem;
+                line-height: 2;
+                color: var(--text-main);
+                white-space: pre-line;
+                position: relative;
+            }
+            
+            .mantra-verse {
+                display: inline-block;
+                padding: 0.25rem 0.5rem;
+                margin: 0.25rem;
+                background: rgba(255, 153, 51, 0.2);
+                border-radius: 4px;
+                border: 1px solid rgba(255, 153, 51, 0.3);
+                transition: all 0.4s var(--ease-spring);
+                cursor: pointer;
+            }
+            
+            .mantra-verse:hover {
+                background: rgba(255, 153, 51, 0.4);
+                transform: scale(1.05);
+                box-shadow: 0 0 15px rgba(255, 153, 51, 0.4);
+            }
+            
+            .mantra-verse.highlight {
+                background: var(--saffron);
+                color: var(--space-void);
+                animation: verseGlow 1s ease-out;
+            }
+            
+            /* Tab System */
+            .tab-nav {
+                display: flex;
+                gap: 0.5rem;
+                margin-bottom: 1.5rem;
+                flex-wrap: wrap;
+            }
+            
+            .tab-btn {
+                padding: 0.75rem 1.5rem;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid var(--glass-border);
+                border-radius: 8px;
+                color: var(--text-muted);
+                font-family: 'Sarabun', sans-serif;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s var(--ease-out);
+            }
+            
+            .tab-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: var(--text-main);
+            }
+            
+            .tab-btn.active {
+                background: linear-gradient(135deg, var(--saffron), var(--accent-gold));
+                color: var(--space-void);
+                border-color: transparent;
+            }
+            
+            .tab-content {
+                display: none;
+            }
+            
+            .tab-content.active {
+                display: block;
+                animation: fadeIn 0.5s var(--ease-out);
+            }
+            
+            /* Tooltip */
+            .tooltip {
+                position: fixed;
+                padding: 1rem 1.5rem;
+                background: rgba(10, 10, 15, 0.95);
+                backdrop-filter: blur(10px);
+                border: 1px solid var(--neon-core);
+                border-radius: 12px;
+                max-width: 400px;
+                z-index: 1000;
+                pointer-events: none;
+                opacity: 0;
+                transform: translateY(10px);
+                transition: all 0.3s var(--ease-out);
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            }
+            
+            .tooltip.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            
+            /* Slide Panel */
+            .slide-panel {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 100%;
+                max-width: 520px;
+                height: 100%;
+                background: rgba(10, 10, 15, 0.98);
+                backdrop-filter: blur(20px);
+                border-left: 1px solid var(--glass-border);
+                transform: translateX(100%);
+                transition: transform 0.5s var(--ease-out);
+                z-index: 2000;
+                overflow-y: auto;
+            }
+            
+            .slide-panel.open {
+                transform: translateX(0);
+            }
+            
+            /* Loading */
+            .loading-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 9999;
+                background: var(--space-void);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: opacity 0.5s, visibility 0.5s;
+            }
+            
+            .loading-overlay.hidden {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
+            
+            .loading-spinner {
+                width: 60px;
+                height: 60px;
+                border: 3px solid rgba(255, 255, 255, 0.1);
+                border-top-color: var(--saffron);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin-bottom: 1.5rem;
+            }
+            
+            .loading-text {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 1rem;
+                color: var(--saffron);
+                letter-spacing: 0.2em;
+                animation: pulse 2s ease-in-out infinite;
+            }
+            
+            /* Section Headers */
+            .section-header {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--text-main);
+                margin-bottom: 1.5rem;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .section-header::before {
+                content: '';
+                width: 4px;
+                height: 1.5rem;
+                background: linear-gradient(180deg, var(--neon-core), var(--neon-violet));
+                border-radius: 2px;
+            }
+            
+            /* Reveal Animation */
+            .reveal {
+                opacity: 0;
+                transform: translateY(30px);
+                transition: all 0.6s var(--ease-out);
+            }
+            
+            .reveal.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            
+            /* Navigation arrows */
+            .nav-arrow {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 50px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(59, 130, 246, 0.2);
+                border: 1px solid var(--neon-core);
+                border-radius: 50%;
+                color: var(--neon-core);
+                cursor: pointer;
+                transition: all 0.3s var(--ease-out);
+                z-index: 20;
+            }
+            
+            .nav-arrow:hover {
+                background: var(--neon-core);
+                color: white;
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            }
+            
+            .nav-arrow.left { left: 1rem; }
+            .nav-arrow.right { right: 1rem; }
+        }
+
+        @layer utilities {
+            .font-display { font-family: 'Orbitron', sans-serif; }
+            .font-thai { font-family: 'Sarabun', sans-serif; }
+            .font-mono { font-family: 'JetBrains Mono', monospace; }
+            .text-xs { font-size: 0.75rem; }
+            .text-sm { font-size: 0.875rem; }
+            .text-base { font-size: 1rem; }
+            .text-lg { font-size: 1.125rem; }
+            .text-xl { font-size: 1.25rem; }
+            .text-2xl { font-size: 1.5rem; }
+            .text-3xl { font-size: 1.875rem; }
+            .text-4xl { font-size: 2.25rem; }
+            .font-bold { font-weight: 700; }
+            .font-semibold { font-weight: 600; }
+            .text-neon { color: var(--neon-core); }
+            .text-gold { color: var(--accent-gold); }
+            .text-saffron { color: var(--saffron); }
+            .text-muted { color: var(--text-muted); }
+            .text-success { color: var(--success); }
+            .text-danger { color: var(--danger); }
+            .tracking-wide { letter-spacing: 0.05em; }
+            .tracking-wider { letter-spacing: 0.1em; }
+            .tracking-widest { letter-spacing: 0.2em; }
+            .uppercase { text-transform: uppercase; }
+            .pointer-events-none { pointer-events: none; }
+            .select-none { user-select: none; }
+            .cursor-pointer { cursor: pointer; }
+            .opacity-0 { opacity: 0; }
+            .opacity-50 { opacity: 0.5; }
+            .opacity-100 { opacity: 1; }
+        }
+
+        @layer animations {
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+            
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.5; }
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            @keyframes cellPulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.2); background: rgba(245, 158, 11, 0.5); }
+                100% { transform: scale(1); }
+            }
+            
+            @keyframes verseGlow {
+                0% { box-shadow: 0 0 0 rgba(255, 153, 51, 0); }
+                50% { box-shadow: 0 0 30px rgba(255, 153, 51, 0.8); }
+                100% { box-shadow: 0 0 15px rgba(255, 153, 51, 0.4); }
+            }
+            
+            @keyframes mantraGlow {
+                0%, 100% { transform: rotate(0deg); }
+                50% { transform: rotate(180deg); }
+            }
+            
+            @keyframes float {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-10px); }
+            }
+            
+            .animate-spin { animation: spin 1s linear infinite; }
+            .animate-pulse { animation: pulse 2s ease-in-out infinite; }
+            .animate-float { animation: float 3s ease-in-out infinite; }
+        }
+    </style>
+</head>
+<body data-lang="th" data-theme="dark">
+    <!-- Antigravity Canvas -->
+    <canvas id="antigravity-canvas" class="fixed inset-0 z-0"></canvas>
+    
+    <!-- Cosmic Fog Overlay -->
+    <div class="fixed inset-0 z-0 pointer-events-none" style="background: radial-gradient(circle at 50% 50%, transparent 0%, var(--space-void) 85%);"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">
+            <span lang="th">กำลังเริ่มต้นระบบ...</span>
+            <span lang="en">INITIALIZING PHYSICS ENGINE...</span>
+        </div>
+    </div>
+
+    <!-- Tooltip -->
+    <div id="tooltip" class="tooltip"></div>
+
+    <!-- Main Content -->
+    <div class="relative z-10">
+        <!-- Header -->
+        <header class="glass-panel m-4 p-4 sticky top-4 z-50 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div id="logo-slot" class="text-saffron"></div>
+                <div>
+                    <h1 class="font-display text-xl font-bold tracking-wider">
+                        <span class="text-saffron">อิติปิโส</span> 
+                        <span class="text-gold">๘ ทิศ</span>
+                    </h1>
+                    <p class="text-xs text-muted tracking-wide">
+                        <span lang="th">พระคาถาเลขยันต์</span>
+                        <span lang="en">Sacred Transformation Matrix</span>
+                    </p>
+                </div>
+            </div>
+            <nav class="flex gap-2 flex-wrap">
+                <button class="btn btn-sm" onclick="APP.toggleLang()">
+                    <span lang="th">EN</span>
+                    <span lang="en">TH</span>
+                </button>
+                <button class="btn btn-sm btn-gold" onclick="APP.toggleTheme()">
+                    <span id="theme-icon"></span>
+                </button>
+            </nav>
+        </header>
+
+        <!-- Main Container -->
+        <main class="container py-12">
+            <!-- Introduction -->
+            <section class="glass-panel p-6 mb-8 reveal">
+                <h2 class="section-header">
+                    <span lang="th">การแปลงพระคาถาอิติปิโส</span>
+                    <span lang="en">Itipiso Transformation</span>
+                </h2>
+                <p class="text-muted mb-4 font-thai">
+                    <span lang="th">
+                        หลวงพ่อเล็ก สุธัมมปัญโญ ได้ศึกษาพระคาถาเลขยันต์ต่างๆ พระคาถาอิติปิโสฯ ๘ ทิศ 
+                        จะมีการแยกใช้งานแต่ละทิศไป โดยการอ่านจากแนวตั้ง (คอลัมน์) แทนแนวนอน (แถว)
+                    </span>
+                    <span lang="en">
+                        Luang Por Lek Suthamapañño studied various sacred yantra mantras. The Itipiso 8 Directions 
+                        prayer is read vertically (by columns) instead of horizontally (by rows) to reveal the 8 directional verses.
+                    </span>
+                </p>
+            </section>
+
+            <!-- Transformation Section -->
+            <section class="grid grid-cols-2 gap-6 mb-8">
+                <!-- Original Matrix -->
+                <div class="glass-panel p-4 reveal">
+                    <h3 class="font-display text-lg font-bold mb-4 text-center text-neon">
+                        <span lang="th">บทสวดดั้งเดิม (อ่านแนวนอน)</span>
+                        <span lang="en">Original Prayer (Read Horizontally)</span>
+                    </h3>
+                    <div id="original-matrix" class="matrix-container"></div>
+                    <p class="text-center text-xs text-muted mt-2">
+                        <span lang="th">คลิกที่คอลัมน์เพื่อดูการแปลง</span>
+                        <span lang="en">Click on a column to see transformation</span>
+                    </p>
+                </div>
+
+                <!-- Transformed Matrix -->
+                <div class="glass-panel p-4 reveal">
+                    <h3 class="font-display text-lg font-bold mb-4 text-center text-gold">
+                        <span lang="th">๘ ทิศ (อ่านจากคอลัมน์)</span>
+                        <span lang="en">8 Directions (Read from Columns)</span>
+                    </h3>
+                    <div id="transformed-matrix" class="matrix-container"></div>
+                    <div class="flex justify-center gap-2 mt-4">
+                        <button class="btn btn-sm btn-saffron" onclick="APP.playTransformation()">
+                            <span lang="th">▶ เล่นการแปลง</span>
+                            <span lang="en">▶ Play Transform</span>
+                        </button>
+                        <button class="btn btn-sm" onclick="APP.resetMatrices()">
+                            <span lang="th">↺ รีเซ็ต</span>
+                            <span lang="en">↺ Reset</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8 Verses with Legends -->
+            <section class="glass-panel p-6 mb-8 reveal">
+                <h2 class="section-header">
+                    <span lang="th">พระคาถา ๘ ทิศ และความหมาย</span>
+                    <span lang="en">The 8 Directional Verses & Their Meanings</span>
+                </h2>
+                <div class="grid grid-cols-2 gap-4" id="verses-grid"></div>
+            </section>
+
+            <!-- Tab Navigation for Mantras -->
+            <section class="glass-panel p-6 mb-8 reveal">
+                <div class="tab-nav">
+                    <button class="tab-btn active" data-tab="maha-rangap">
+                        <span lang="th">คาถามหาระงับพิสดาร</span>
+                        <span lang="en">Maha Rangap Mantra</span>
+                    </button>
+                    <button class="tab-btn" data-tab="sathon-klap">
+                        <span lang="th">คาถาสะท้อนกลับ</span>
+                        <span lang="en">Reflection Mantra</span>
+                    </button>
+                    <button class="tab-btn" data-tab="maha-sathon">
+                        <span lang="th">คาถามหาสะท้อน</span>
+                        <span lang="en">Great Reflection</span>
+                    </button>
+                </div>
+
+                <!-- Tab 1: Maha Rangap -->
+                <div class="tab-content active" id="tab-maha-rangap">
+                    <div class="mantra-section">
+                        <h3 class="mantra-title">
+                            <span lang="th">คาถาตะกรุดมหาระงับพิสดาร</span>
+                            <span lang="en">Takrut Maha Rangap Pisadan</span>
+                        </h3>
+                        <div class="mantra-content font-thai" id="maha-rangap-content"></div>
+                        <div class="flex justify-center mt-6">
+                            <button class="btn btn-saffron" onclick="APP.animateVersesToMantra()">
+                                <span lang="th">✨ เคลื่อนย้ายบทสวดเข้าคาถา</span>
+                                <span lang="en">✨ Animate Verses into Mantra</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Sathon Klap -->
+                <div class="tab-content" id="tab-sathon-klap">
+                    <div class="mantra-section">
+                        <h3 class="mantra-title">
+                            <span lang="th">คาถาสะท้อนกลับ ของหลวงพ่อเทศ วัดสระทะเล</span>
+                            <span lang="en">Reflection Mantra by Luang Por Tet, Wat Sa Talay</span>
+                        </h3>
+                        <p class="text-sm text-muted mb-4">
+                            <span lang="th">พระอาจารย์ของหลวงพ่อเดิม วัดหนองโพธิ์</span>
+                            <span lang="en">Teacher of Luang Por Derm, Wat Nong Pho</span>
+                        </p>
+                        <div class="mantra-content font-thai">
+                            <p class="text-gold mb-4">ตั้งนะโมฯ ๓ จบ</p>
+                            <p class="mb-4">
+                                <strong class="text-saffron">พุทโธ อะระหัง พุทธังรักษา</strong><br>
+                                ผู้คนทั้งหลายคิดร้ายตัวข้า อนัตตา สูญเปล่า
+                            </p>
+                            <p class="mb-4">
+                                <strong class="text-saffron">ธัมโม อะระหัง ธัมมังรักษา</strong><br>
+                                ฝูงสัตว์ทั้งหลายคิดร้ายตัวข้า อนัตตา สูญเปล่า
+                            </p>
+                            <p>
+                                <strong class="text-saffron">สังโฆ อะระหัง สังฆังรักษา</strong><br>
+                                ฝูงผีทั้งหลายคิดร้ายตัวข้า อนัตตาสูญเปล่า
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Maha Sathon -->
+                <div class="tab-content" id="tab-maha-sathon">
+                    <div class="mantra-section">
+                        <h3 class="mantra-title">
+                            <span lang="th">พระคาถามหาสะท้อน ของหลวงพ่อกวย</span>
+                            <span lang="en">Great Reflection Mantra by Luang Por Kuay</span>
+                        </h3>
+                        <p class="text-sm text-muted mb-4">
+                            <span lang="th">(พระคาถาบทนี้ได้รับการสอนถ่ายทอดจากพ่อครูผาด)</span>
+                            <span lang="en">(This mantra was transmitted from Por Kru Phad)</span>
+                        </p>
+                        <div class="mantra-content font-thai">
+                            <p class="text-gold mb-4">ตั้งนะโมฯ ๓ จบ</p>
+                            <p class="mb-4 text-lg">
+                                <strong class="text-saffron">นะกั้น โมกาง พุทขวางไว้ ธามามิได้ ยะหวนกลับ</strong>
+                            </p>
+                            <p class="mb-4">
+                                พระอะระหัง จุติปัด พุทธังปก ธัมมังปิด สังฆังมิด
+                            </p>
+                            <p class="mb-4">
+                                นะอะปัดสะ นะโมปัดวะ พุทธะปัดสะ
+                            </p>
+                            <p class="mb-4">
+                                <span class="text-neon">พุทธัง</span> พระอะระหังกันหะ<br>
+                                <span class="text-neon">ธัมมัง</span> พระอะระหังกันหะ<br>
+                                <span class="text-neon">สังฆัง</span> พระอะระหังกันหะ
+                            </p>
+                            <p class="text-gold text-lg">
+                                สัมมาทางไหน สัมไปทางนั้น
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Notes Section -->
+            <section class="glass-panel p-6 reveal">
+                <h2 class="section-header">
+                    <span lang="th">หมายเหตุเพิ่มเติม</span>
+                    <span lang="en">Additional Notes</span>
+                </h2>
+                <div class="text-muted font-thai text-sm" style="line-height: 2;">
+                    <p class="mb-4">
+                        <span lang="th">
+                            แต่พอมาภายหลัง ได้ศึกษากับพระเดชพระคุณหลวงพ่อฤๅษีฯ วัดท่าซุง ท่านให้ภาวนา 
+                            <strong class="text-gold">ภะ สัม สัม วิ สะ เท ภะ</strong> บอกว่าเป็นบทตวาดป่าหิมพานต์ 
+                            เอาไว้สำหรับใช้ขับไล่ไสยศาสตร์!
+                        </span>
+                        <span lang="en">
+                            Later, studying with Luang Por Ruesi at Wat Tha Sung, he taught to meditate on 
+                            <strong class="text-gold">Pha Sam Sam Wi Sa The Pha</strong> calling it the "Himaphan Forest Roar" 
+                            for driving away black magic!
+                        </span>
+                    </p>
+                    <p>
+                        <span lang="th">
+                            บ้างก็ว่า <strong class="text-neon">ติหังจะโตโรถินัง</strong> เป็นคาถากระทู้เจ็ดแบก 
+                            เกี่ยวกับการอยู่ยงคงกระพัน
+                        </span>
+                        <span lang="en">
+                            Some say <strong class="text-neon">Ti Hang Ja To Ro Thi Nang</strong> is the "Seven-Bearer Post" mantra 
+                            related to invulnerability.
+                        </span>
+                    </p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="container py-8 text-center text-muted text-xs">
+            <p class="font-display tracking-wider">
+                NEXUS ZENITH ARTIFACT v12.0 | 
+                <span lang="th">สร้างด้วยความศรัทธา</span>
+                <span lang="en">Created with Devotion</span>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Slide Panel for Verse Details -->
+    <aside id="slide-panel" class="slide-panel p-8">
+        <button id="close-panel" class="absolute top-4 right-4 text-xl cursor-pointer hover:text-neon transition-colors">&times;</button>
+        <div id="panel-content"></div>
+    </aside>
+
+    <script>
+        // ========================================
+        // 1. NATIVE SVG ICONS
+        // ========================================
+        const ICONS = {
+            logo: `<svg viewBox="0 0 100 100" fill="currentColor" style="width:40px;height:40px">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M50 15 L50 85 M15 50 L85 50 M25 25 L75 75 M75 25 L25 75" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <circle cx="50" cy="50" r="8" fill="currentColor"/>
+                <circle cx="50" cy="20" r="4" fill="currentColor"/>
+                <circle cx="50" cy="80" r="4" fill="currentColor"/>
+                <circle cx="20" cy="50" r="4" fill="currentColor"/>
+                <circle cx="80" cy="50" r="4" fill="currentColor"/>
+            </svg>`,
+            sun: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px">
+                <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>`,
+            moon: `<svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>`
+        };
+
+        // ========================================
+        // 2. DATA
+        // ========================================
+        const ORIGINAL_DATA = [
+            ['อิ','ติ','ปิ','โส','ภะ','คะ','วา','อะ'],
+            ['ระ','หัง','สัม','มา','สัม','พุท','โธ','วิช'],
+            ['ชา','จะ','ระ','ณะ','สัม','ปัน','โน','สุ'],
+            ['คะ','โต','โล','กะ','วิ','ทู','อะ','นุต'],
+            ['ตะ','โร','ปุ','ริ','สะ','ธัม','มะ','สา'],
+            ['ระ','ถิ','สัต','ถา','เท','วะ','มะ','นุส'],
+            ['สา','นัง','พุท','โธ','ภะ','คะ','วา','ติ']
+        ];
+
+        const TRANSFORMED_DATA = [
+            ['อิ','ระ','ชา','คะ','ตะ','ระ','สา'],
+            ['ติ','หัง','จะ','โต','โร','ถิ','นัง'],
+            ['ปิ','สัม','ระ','โล','ปุ','สัต','พุท'],
+            ['โส','มา','ณะ','กะ','ริ','ถา','โธ'],
+            ['ภะ','สัม','สัม','วิ','สะ','เท','ภะ'],
+            ['คะ','พุท','ปัน','ทู','ธัม','วะ','คะ'],
+            ['วา','โธ','โน','อะ','มะ','มะ','วา'],
+            ['อะ','วิช','สุ','นุต','สา','นุส','ติ']
+        ];
+
+        const VERSE_LEGENDS = [
+            {
+                verse: 'อิ ระ ชา คะ ตะ ระ สา',
+                name: 'กระทู้เจ็ดแบก',
+                nameEn: 'Seven-Bearer Post',
+                desc: 'เป็นบทที่ช่วยให้อยู่ยงคงกระพัน',
+                descEn: 'A verse for invulnerability and protection'
+            },
+            {
+                verse: 'ติ หัง จะ โต โร ถิ นัง',
+                name: 'ฝนแสนห่า',
+                nameEn: 'Ten Thousand Rains',
+                desc: 'ช่วยให้แคล้วคลาดปลอดภัย ประมาณว่าอยู่ท่ามกลางฝนตกหนัก เม็ดฝนก็ยังกระทบร่างกายไม่ได้',
+                descEn: 'For safety and evasion - like standing in heavy rain without being touched by a single drop'
+            },
+            {
+                verse: 'ปิ สัม ระ โล ปุ สัต พุท',
+                name: 'นารายณ์เคลื่อนสมุทร',
+                nameEn: 'Narayana Moves the Ocean',
+                desc: 'เอาไว้เสกน้ำมนต์ ถอนคุณ ถอนของต่างๆ บางทีก็เสกน้ำลายใต้ลิ้น ในการเกลื่อนหัวฝี สูญหัวฝีด้วย',
+                descEn: 'For blessing holy water, removing curses and hexes, can also bless saliva under the tongue to heal boils'
+            },
+            {
+                verse: 'โส มา ณะ กะ ริ ถา โธ',
+                name: 'นารายณ์ถอดจักร',
+                nameEn: 'Narayana Removes the Discus',
+                desc: 'เอาไว้ใช้ลักษณะคล้ายคลึงกับบทที่สามเช่นกัน',
+                descEn: 'Used similarly to the third verse for removal and cleansing'
+            },
+            {
+                verse: 'ภะ สัม สัม วิ สะ เท ภะ',
+                name: 'นารายณ์ขว้างจักรตรึงไตรภพ',
+                nameEn: 'Narayana Throws Discus Across Three Realms',
+                desc: 'เอาไว้เสกหวาย หรือเสกขมิ้น ตีผี จี้ผี ไล่ผีให้ออกจากร่างกาย',
+                descEn: 'For blessing rattan or turmeric, striking and driving spirits out of the body'
+            },
+            {
+                verse: 'คะ พุท ปัน ทู ธัม วะ คะ',
+                name: 'นารายณ์พลิกแผ่นดิน',
+                nameEn: 'Narayana Overturns the Earth',
+                desc: 'เอาไว้สำหรับใช้เวลาต้องคดีความ กลับจากร้ายให้กลายเป็นดี',
+                descEn: 'For legal matters - turning bad situations into good outcomes'
+            },
+            {
+                verse: 'วา โธ โน อะ มะ มะ วา',
+                name: 'ตวาดป่าหิมพานต์',
+                nameEn: 'Himaphan Forest Roar',
+                desc: 'ใช้ในทางมหาอำนาจ เป็นนะจังงัง',
+                descEn: 'For great authority and commanding power (Na Jang Ngang)'
+            },
+            {
+                verse: 'อะ วิช สุ นุต สา นุส ติ',
+                name: 'นารายณ์แปลงรูป',
+                nameEn: 'Narayana Shape-Shifter',
+                desc: 'ใช้สำหรับเวลาอยู่ท่ามกลางศัตรู ทำให้อีกฝ่ายหนึ่งจดจำไม่ได้ว่าเราเป็นใคร โดยเฉพาะถ้ามีความคล่องตัว สามารถหน่วงจิต นึกถึงภาพบุคคลอื่นมาทดแทนตัวเราได้ เรานึกถึงผู้หนึ่งผู้ใด ใบหน้าของเราก็จะคล้ายคลึงกับผู้นั้น',
+                descEn: 'For disguise among enemies - making others unable to recognize you. With mental focus, you can project another person\'s image, making your face appear like theirs even among many enemies.'
+            }
+        ];
+
+        const MAHA_RANGAP_MANTRA = `"โอมมหาระงับ หลับสิ้นทั้งบ้าน
+โอมชิดมหาชิด โอมปิดมหาปิด สิทธิสวาหับ"
+
+นะปิดตา โมปิดใจ พุทปิดปาก ธาปิดหู ยะหลับนิ่งอยู่
+
+อิติปาระมิตาติงสา ระงับอินทรา
+อิติสัพพัญญู มาคะตา ระงับพรัหมา
+อิติโพธิ มะนุปปัตโต ระงับมนุสสา
+อิติปิโส จะเตนะโม ระงับทิสา
+
+[VERSE:1]อิระชาคะตะระสา[/VERSE]
+[VERSE:5]ภะสัมสัมวิสะเทภะ[/VERSE]
+[VERSE:6]คะพุทปันทูธัมวะคะ[/VERSE]
+[VERSE:7]วาโธโนอะมะมะวา[/VERSE]
+[VERSE:8]อะวิชสุนุตสานุสติ[/VERSE]
+[VERSE:2]ติหังจะโตโรถินัง[/VERSE]
+[VERSE:3]ปิสัมระโลปุสัตพุท[/VERSE]
+[VERSE:4]โสมาณะกะริถาโธ[/VERSE]
+
+"พุทธัง ศัตรูร้าย นะจังงังถอย อย่านะละสัง
+พระพุทธังปิด พระธัมมังปิด พระสังฆังปิด
+พระพุทธเจ้าแผลงฤทธิ์ ปิดทวารทั้งเก้า"`;
+
+        // ========================================
+        // 3. SIMPLEX NOISE (Minified)
+        // ========================================
+        class SimplexNoise{constructor(){this.p=new Uint8Array(256);for(let i=0;i<256;i++)this.p[i]=Math.floor(256*Math.random());this.perm=new Uint8Array(512);for(let i=0;i<512;i++)this.perm[i]=this.p[i&255]}dot(g,x,y){return g[0]*x+g[1]*y}noise(xin,yin){const F2=.5*(Math.sqrt(3)-1),G2=(3-Math.sqrt(3))/6;let i=Math.floor(xin+((xin+yin)*F2)),j=Math.floor(yin+((xin+yin)*F2)),t=(i+j)*G2,X0=i-t,Y0=j-t,x0=xin-X0,y0=yin-Y0;let i1,j1;if(x0>y0){i1=1;j1=0}else{i1=0;j1=1}let x1=x0-i1+G2,y1=y0-j1+G2,x2=x0-1+2*G2,y2=y0-1+2*G2,ii=i&255,jj=j&255,gi0=this.perm[ii+this.perm[jj]]%12,gi1=this.perm[ii+i1+this.perm[jj+j1]]%12,gi2=this.perm[ii+1+this.perm[jj+1]]%12,t0=.5-x0*x0-y0*y0,n0=t0<0?0:Math.pow(t0,4)*this.dot([Math.cos(gi0),Math.sin(gi0)],x0,y0),t1=.5-x1*x1-y1*y1,n1=t1<0?0:Math.pow(t1,4)*this.dot([Math.cos(gi1),Math.sin(gi1)],x1,y1),t2=.5-x2*x2-y2*y2,n2=t2<0?0:Math.pow(t2,4)*this.dot([Math.cos(gi2),Math.sin(gi2)],x2,y2);return 70*(n0+n1+n2)}}
+
+        // ========================================
+        // 4. ANTIGRAVITY CANVAS ENGINE
+        // ========================================
+        class AntigravityCanvas {
+            constructor() {
+                this.canvas = document.getElementById('antigravity-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.simplex = new SimplexNoise();
+                this.particles = [];
+                this.orbs = [];
+                this.mouse = { x: -1000, y: -1000 };
+                this.time = 0;
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                window.addEventListener('mousemove', e => { 
+                    this.mouse.x = e.clientX; 
+                    this.mouse.y = e.clientY; 
+                });
+
+                // 3-Layer Depth System
+                const count = Math.min(180, Math.floor((this.width * this.height) / 12000));
+                for (let i = 0; i < count; i++) {
+                    const layer = Math.random() > 0.7 ? 2 : (Math.random() > 0.4 ? 1 : 0);
+                    this.particles.push({
+                        x: Math.random() * this.width,
+                        y: Math.random() * this.height,
+                        layer: layer,
+                        size: (Math.random() * 2 + 1) * (layer + 1),
+                        speed: (Math.random() * 0.5 + 0.2),
+                        noiseOffset: Math.random() * 1000
+                    });
+                }
+
+                // Ambient Orbs (Saffron/Gold theme for Buddhist content)
+                for (let i = 0; i < 5; i++) {
+                    this.orbs.push({
+                        x: Math.random() * this.width,
+                        y: Math.random() * this.height,
+                        r: Math.random() * 200 + 100,
+                        color: i % 3 === 0 ? '#FF9933' : (i % 3 === 1 ? '#f59e0b' : '#3b82f6')
+                    });
+                }
+
+                this.animate();
+            }
+
+            resize() {
+                this.width = this.canvas.width = window.innerWidth;
+                this.height = this.canvas.height = window.innerHeight;
+            }
+
+            animate() {
+                this.time += 0.001;
+                const isDark = document.body.dataset.theme === 'dark';
+
+                // Theme-aware trail effect
+                this.ctx.fillStyle = isDark ? 'rgba(5, 5, 5, 0.15)' : 'rgba(248, 250, 252, 0.5)';
+                this.ctx.fillRect(0, 0, this.width, this.height);
+
+                // Draw ambient orbs (dark mode only)
+                if (isDark) {
+                    this.orbs.forEach(o => {
+                        const g = this.ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+                        g.addColorStop(0, o.color + '11');
+                        g.addColorStop(1, 'transparent');
+                        this.ctx.fillStyle = g;
+                        this.ctx.beginPath();
+                        this.ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
+                        this.ctx.fill();
+
+                        // Slow drift
+                        o.x += Math.sin(this.time * 0.5 + o.r) * 0.3;
+                        o.y += Math.cos(this.time * 0.3 + o.r) * 0.3;
+                        if (o.x < -o.r) o.x = this.width + o.r;
+                        if (o.x > this.width + o.r) o.x = -o.r;
+                        if (o.y < -o.r) o.y = this.height + o.r;
+                        if (o.y > this.height + o.r) o.y = -o.r;
+                    });
+                }
+
+                // Draw and update particles
+                this.particles.forEach(p => {
+                    // Simplex noise flow
+                    const noise = this.simplex.noise(
+                        p.x * 0.001 + p.noiseOffset,
+                        p.y * 0.001 + this.time
+                    );
+                    p.x += Math.cos(noise * Math.PI * 2) * p.speed;
+                    p.y += Math.sin(noise * Math.PI * 2) * p.speed;
+
+                    // Mouse interaction: Front attracts, Back repels
+                    const dx = this.mouse.x - p.x;
+                    const dy = this.mouse.y - p.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 250) {
+                        const force = (250 - dist) / 250;
+                        const dir = p.layer === 2 ? 1 : -0.5;
+                        p.x += dx * force * 0.03 * dir;
+                        p.y += dy * force * 0.03 * dir;
+                    }
+
+                    // Wrap around edges
+                    if (p.x < -10) p.x = this.width + 10;
+                    if (p.x > this.width + 10) p.x = -10;
+                    if (p.y < -10) p.y = this.height + 10;
+                    if (p.y > this.height + 10) p.y = -10;
+
+                    // Render particle
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    
+                    // Saffron/Gold color scheme
+                    if (p.layer === 2) {
+                        this.ctx.fillStyle = isDark ? '#FF9933' : '#f59e0b';
+                        this.ctx.globalAlpha = 0.9;
+                    } else if (p.layer === 1) {
+                        this.ctx.fillStyle = isDark ? '#f59e0b' : '#fbbf24';
+                        this.ctx.globalAlpha = 0.6;
+                    } else {
+                        this.ctx.fillStyle = isDark ? '#86868b' : '#94a3b8';
+                        this.ctx.globalAlpha = 0.4;
+                    }
+                    this.ctx.fill();
+
+                    // Constellations (Front layer only)
+                    if (p.layer === 2) {
+                        this.particles.filter(n => n.layer === 2 && n !== p).forEach(n => {
+                            const ndx = p.x - n.x;
+                            const ndy = p.y - n.y;
+                            const ndist = Math.sqrt(ndx * ndx + ndy * ndy);
+                            if (ndist < 100) {
+                                this.ctx.beginPath();
+                                this.ctx.moveTo(p.x, p.y);
+                                this.ctx.lineTo(n.x, n.y);
+                                this.ctx.strokeStyle = isDark
+                                    ? `rgba(255, 153, 51, ${0.2 * (1 - ndist / 100)})`
+                                    : `rgba(245, 158, 11, ${0.3 * (1 - ndist / 100)})`;
+                                this.ctx.stroke();
+                            }
+                        });
+                    }
+                });
+
+                this.ctx.globalAlpha = 1;
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // ========================================
+        // 5. APP CORE
+        // ========================================
+        const APP = {
+            lang: 'th',
+            transformAnimating: false,
+            
+            init() {
+                // Hide loading
+                document.getElementById('loading-overlay').classList.add('hidden');
+                
+                // Setup logo
+                document.getElementById('logo-slot').innerHTML = ICONS.logo;
+                document.getElementById('theme-icon').innerHTML = ICONS.moon;
+                
+                // Initialize components
+                new AntigravityCanvas();
+                this.renderMatrices();
+                this.renderVerses();
+                this.renderMahaRangap();
+                this.initTabs();
+                this.initPanel();
+                this.initObservers();
+            },
+
+            toggleLang() {
+                this.lang = this.lang === 'th' ? 'en' : 'th';
+                document.body.dataset.lang = this.lang;
+            },
+
+            toggleTheme() {
+                const body = document.body;
+                const isDark = body.dataset.theme === 'dark';
+                body.dataset.theme = isDark ? 'light' : 'dark';
+                document.getElementById('theme-icon').innerHTML = isDark ? ICONS.sun : ICONS.moon;
+            },
+
+            renderMatrices() {
+                const origContainer = document.getElementById('original-matrix');
+                const transContainer = document.getElementById('transformed-matrix');
+
+                // Original matrix (7 rows x 8 cols)
+                ORIGINAL_DATA.forEach((row, ri) => {
+                    const rowEl = document.createElement('div');
+                    rowEl.className = 'matrix-row';
+                    row.forEach((cell, ci) => {
+                        const cellEl = document.createElement('div');
+                        cellEl.className = 'matrix-cell';
+                        cellEl.textContent = cell;
+                        cellEl.dataset.row = ri;
+                        cellEl.dataset.col = ci;
+                        cellEl.addEventListener('mouseenter', () => this.highlightColumn(ci));
+                        cellEl.addEventListener('mouseleave', () => this.clearHighlight());
+                        rowEl.appendChild(cellEl);
+                    });
+                    origContainer.appendChild(rowEl);
+                });
+
+                // Transformed matrix (8 rows x 7 cols)
+                TRANSFORMED_DATA.forEach((row, ri) => {
+                    const rowEl = document.createElement('div');
+                    rowEl.className = 'matrix-row';
+                    row.forEach((cell, ci) => {
+                        const cellEl = document.createElement('div');
+                        cellEl.className = 'matrix-cell';
+                        cellEl.textContent = cell;
+                        cellEl.dataset.row = ri;
+                        cellEl.dataset.col = ci;
+                        cellEl.addEventListener('mouseenter', () => this.highlightTransformedRow(ri));
+                        cellEl.addEventListener('mouseleave', () => this.clearHighlight());
+                        rowEl.appendChild(cellEl);
+                    });
+                    transContainer.appendChild(rowEl);
+                });
+            },
+
+            highlightColumn(colIndex) {
+                // Highlight column in original
+                document.querySelectorAll('#original-matrix .matrix-cell').forEach(cell => {
+                    if (parseInt(cell.dataset.col) === colIndex) {
+                        cell.classList.add('highlight');
+                    }
+                });
+                // Highlight corresponding row in transformed
+                document.querySelectorAll('#transformed-matrix .matrix-cell').forEach(cell => {
+                    if (parseInt(cell.dataset.row) === colIndex) {
+                        cell.classList.add('highlight');
+                    }
+                });
+            },
+
+            highlightTransformedRow(rowIndex) {
+                // Highlight row in transformed
+                document.querySelectorAll('#transformed-matrix .matrix-cell').forEach(cell => {
+                    if (parseInt(cell.dataset.row) === rowIndex) {
+                        cell.classList.add('highlight');
+                    }
+                });
+                // Highlight corresponding column in original
+                document.querySelectorAll('#original-matrix .matrix-cell').forEach(cell => {
+                    if (parseInt(cell.dataset.col) === rowIndex) {
+                        cell.classList.add('highlight');
+                    }
+                });
+            },
+
+            clearHighlight() {
+                document.querySelectorAll('.matrix-cell').forEach(cell => {
+                    cell.classList.remove('highlight');
+                });
+            },
+
+            async playTransformation() {
+                if (this.transformAnimating) return;
+                this.transformAnimating = true;
+
+                const origCells = document.querySelectorAll('#original-matrix .matrix-cell');
+                const transCells = document.querySelectorAll('#transformed-matrix .matrix-cell');
+
+                // Reset
+                origCells.forEach(c => c.classList.remove('highlight', 'transforming'));
+                transCells.forEach(c => c.classList.remove('highlight', 'transforming'));
+
+                // Animate column by column
+                for (let col = 0; col < 8; col++) {
+                    // Highlight column in original
+                    origCells.forEach(cell => {
+                        if (parseInt(cell.dataset.col) === col) {
+                            cell.classList.add('highlight', 'transforming');
+                        }
+                    });
+
+                    await this.delay(300);
+
+                    // Highlight row in transformed
+                    transCells.forEach(cell => {
+                        if (parseInt(cell.dataset.row) === col) {
+                            cell.classList.add('highlight', 'transforming');
+                        }
+                    });
+
+                    await this.delay(500);
+
+                    // Clear highlights
+                    origCells.forEach(c => c.classList.remove('highlight', 'transforming'));
+                }
+
+                this.transformAnimating = false;
+            },
+
+            resetMatrices() {
+                document.querySelectorAll('.matrix-cell').forEach(cell => {
+                    cell.classList.remove('highlight', 'transforming');
+                });
+            },
+
+            renderVerses() {
+                const grid = document.getElementById('verses-grid');
+                VERSE_LEGENDS.forEach((legend, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'verse-card';
+                    card.innerHTML = `
+                        <span class="verse-number">${index + 1}</span>
+                        <div class="verse-text">${legend.verse}</div>
+                        <div class="verse-name">
+                            <span lang="th">${legend.name}</span>
+                            <span lang="en">${legend.nameEn}</span>
+                        </div>
+                        <div class="verse-desc">
+                            <span lang="th">${legend.desc}</span>
+                            <span lang="en">${legend.descEn}</span>
+                        </div>
+                    `;
+                    card.addEventListener('click', () => this.showVerseDetail(index));
+                    grid.appendChild(card);
+                });
+            },
+
+            showVerseDetail(index) {
+                const legend = VERSE_LEGENDS[index];
+                const panel = document.getElementById('slide-panel');
+                const content = document.getElementById('panel-content');
+                
+                content.innerHTML = `
+                    <div class="mb-6">
+                        <span class="text-xs text-muted uppercase tracking-widest">
+                            <span lang="th">บทที่ ${index + 1}</span>
+                            <span lang="en">Verse ${index + 1}</span>
+                        </span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gold mb-4 tracking-wider font-thai">${legend.verse}</h2>
+                    <h3 class="text-xl font-semibold text-neon mb-6">
+                        <span lang="th">${legend.name}</span>
+                        <span lang="en">${legend.nameEn}</span>
+                    </h3>
+                    <div class="text-muted font-thai" style="line-height: 2;">
+                        <span lang="th">${legend.desc}</span>
+                        <span lang="en">${legend.descEn}</span>
+                    </div>
+                `;
+                
+                panel.classList.add('open');
+            },
+
+            renderMahaRangap() {
+                const container = document.getElementById('maha-rangap-content');
+                let html = MAHA_RANGAP_MANTRA;
+
+                // Replace verse markers with interactive spans
+                html = html.replace(/\[VERSE:(\d+)\]([^\[]+)\[\/VERSE\]/g, (match, num, text) => {
+                    return `<span class="mantra-verse" data-verse="${num}" onclick="APP.highlightVerse(${num})">${text}</span>`;
+                });
+
+                // Convert newlines to <br>
+                html = html.replace(/\n/g, '<br>');
+                
+                container.innerHTML = html;
+            },
+
+            highlightVerse(verseNum) {
+                // Highlight in verse cards
+                const cards = document.querySelectorAll('.verse-card');
+                cards.forEach((card, i) => {
+                    card.classList.toggle('active', i === verseNum - 1);
+                });
+
+                // Highlight in mantra
+                const verses = document.querySelectorAll('.mantra-verse');
+                verses.forEach(v => {
+                    v.classList.toggle('highlight', parseInt(v.dataset.verse) === verseNum);
+                });
+
+                // Scroll to verse card
+                if (cards[verseNum - 1]) {
+                    cards[verseNum - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            },
+
+            async animateVersesToMantra() {
+                const verseOrder = [1, 5, 6, 7, 8, 2, 3, 4]; // Order in mantra
+                const mantraVerses = document.querySelectorAll('.mantra-verse');
+                const verseCards = document.querySelectorAll('.verse-card');
+
+                // Reset
+                mantraVerses.forEach(v => v.classList.remove('highlight'));
+                verseCards.forEach(c => c.classList.remove('active'));
+
+                for (const verseNum of verseOrder) {
+                    // Highlight card
+                    verseCards.forEach((card, i) => {
+                        card.classList.toggle('active', i === verseNum - 1);
+                    });
+
+                    await this.delay(300);
+
+                    // Highlight in mantra
+                    mantraVerses.forEach(v => {
+                        if (parseInt(v.dataset.verse) === verseNum) {
+                            v.classList.add('highlight');
+                        }
+                    });
+
+                    await this.delay(700);
+                }
+
+                // Final cleanup after a moment
+                await this.delay(2000);
+                verseCards.forEach(c => c.classList.remove('active'));
+            },
+
+            initTabs() {
+                const tabBtns = document.querySelectorAll('.tab-btn');
+                tabBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const tabId = btn.dataset.tab;
+                        
+                        // Update buttons
+                        tabBtns.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        
+                        // Update content
+                        document.querySelectorAll('.tab-content').forEach(content => {
+                            content.classList.remove('active');
+                        });
+                        document.getElementById(`tab-${tabId}`).classList.add('active');
+                    });
+                });
+            },
+
+            initPanel() {
+                document.getElementById('close-panel').addEventListener('click', () => {
+                    document.getElementById('slide-panel').classList.remove('open');
+                });
+            },
+
+            initObservers() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            },
+
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        };
+
+        // ========================================
+        // 6. RESILIENT LOADER
+        // ========================================
+        function waitForLibs(retries = 0) {
+            // D3 and Chart.js are optional for this artifact (we don't use charts here)
+            // But we include the pattern for compliance
+            if (typeof d3 !== 'undefined' || retries > 30) {
+                console.log(`[System] Libraries loaded after ${retries * 100}ms`);
+                APP.init();
+            } else if (retries < 50) {
+                setTimeout(() => waitForLibs(retries + 1), 100);
+            } else {
+                console.warn('[System] Proceeding without optional libraries');
+                APP.init();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => waitForLibs());
+    </script>
+</body>
+</html>
