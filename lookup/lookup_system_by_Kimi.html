@@ -1,0 +1,1045 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Building a High-Performance PII Lookup System: A Practical Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=Tiempos+Headline:wght@400;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <style>
+        :root {
+            --primary: #1e293b;
+            --secondary: #475569;
+            --accent: #3b82f6;
+            --muted: #64748b;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-muted: #64748b;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--background);
+        }
+        
+        .font-serif {
+            font-family: 'Tiempos Headline', serif;
+        }
+        
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 320px;
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            z-index: 50;
+            padding: 2rem 1.5rem;
+        }
+        
+        .main-content {
+            margin-left: 320px;
+            min-height: 100vh;
+        }
+        
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            min-height: 60vh;
+        }
+        
+        .citation-link {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            margin-left: 0.25rem;
+            transition: all 0.2s ease;
+        }
+        
+        .citation-link:hover {
+            background: var(--primary);
+            transform: translateY(-1px);
+        }
+        
+        .diagram-container {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .toc-link {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            border-left: 2px solid transparent;
+            padding-left: 1rem;
+        }
+        
+        .toc-link:hover, .toc-link.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            padding-left: 1.25rem;
+        }
+        
+        .toc-link.level-2 {
+            padding-left: 2rem;
+            font-size: 0.8rem;
+        }
+        
+        .toc-link.level-3 {
+            padding-left: 3rem;
+            font-size: 0.75rem;
+        }
+        
+        @media (max-width: 1024px) {
+            .toc-fixed {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .toc-fixed.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-grid h1 {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .hero-grid p {
+                font-size: 1rem;
+            }
+            
+            .hero-grid img {
+                height: auto;
+                max-height: 300px;
+            }
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body>
+    <!-- Table of Contents -->
+    <nav class="toc-fixed">
+      <div class="mb-8">
+        <h3 class="font-serif font-bold text-lg mb-4">Contents</h3>
+        <div class="space-y-1">
+          <a href="#executive-summary" class="toc-link level-1">Executive Summary</a>
+          <a href="#architecture" class="toc-link level-1">1. Core System Architecture</a>
+          <a href="#data-storage" class="toc-link level-2">1.1 Data Storage Strategy</a>
+          <a href="#indexing" class="toc-link level-2">1.2 Indexing for Fast Lookups</a>
+          <a href="#data-ingestion" class="toc-link level-2">1.3 Data Ingestion</a>
+          <a href="#technology-stack" class="toc-link level-1">2. Technology Stack</a>
+          <a href="#python-development" class="toc-link level-2">2.1 Python Development</a>
+          <a href="#web-interface" class="toc-link level-2">2.2 Web Interface</a>
+          <a href="#rust-alternative" class="toc-link level-2">2.3 Rust Alternative</a>
+          <a href="#cloud-hosting" class="toc-link level-1">3. Cloud Hosting &amp; Costs</a>
+          <a href="#cloud-providers" class="toc-link level-2">3.1 Cloud Providers</a>
+          <a href="#managed-services" class="toc-link level-2">3.2 Managed Redis Services</a>
+          <a href="#cost-optimization" class="toc-link level-2">3.3 Cost Optimization</a>
+          <a href="#implementation" class="toc-link level-1">4. Implementation</a>
+          <a href="#local-development" class="toc-link level-2">4.1 Local Development</a>
+          <a href="#lookup-api" class="toc-link level-2">4.2 Building Lookup API</a>
+          <a href="#deployment" class="toc-link level-2">4.3 Cloud Deployment</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section class="bg-gradient-to-br from-slate-50 to-slate-100 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-6 py-16">
+          <div class="hero-grid">
+            <div class="space-y-6">
+              <div class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                Technical Implementation Guide
+              </div>
+              <h1 class="font-serif text-5xl lg:text-6xl font-bold leading-tight text-slate-900">
+                <em class="text-blue-600">High-Performance</em>
+                <br/>
+                PII Lookup System
+              </h1>
+              <p class="text-xl text-slate-600 max-w-2xl">
+                A comprehensive guide to building an efficient, cost-effective personal identifiable information lookup system for 6 million records using Python, Redis, and cloud infrastructure.
+              </p>
+              <div class="flex items-center space-x-6 text-sm text-slate-500">
+                <span><i class="fas fa-database mr-2"></i>6M+ Records</span>
+                <span><i class="fas fa-dollar-sign mr-2"></i>&lt; $1,000 Budget</span>
+                <span><i class="fas fa-clock mr-2"></i>Minimal Development Time</span>
+              </div>
+            </div>
+            <div class="relative">
+              <img src="https://kimi-web-img.moonshot.cn/img/images.presentationgo.com/f088c1cf3ddbc0ab5e4a42b3542987277099f5a8.jpg" alt="Abstract visualization of interconnected data nodes in a network" class="w-full h-80 object-cover rounded-2xl shadow-lg" size="medium" aspect="wide" query="abstract data network nodes" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Executive Summary -->
+      <section id="executive-summary" class="bg-white py-16">
+        <div class="max-w-4xl mx-auto px-6">
+          <div class="mb-12">
+            <h2 class="font-serif text-3xl font-bold mb-6">Executive Summary</h2>
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+              <p class="text-lg leading-relaxed">
+                To build an efficient and cost-effective PII lookup system for 6 million records, the best approach is to use <strong>Python</strong> for rapid development, leveraging its
+                <code class="bg-gray-100 px-2 py-1 rounded">redis-py</code> library to interact with a <strong>Redis</strong> database. Store each person&#39;s data in a <strong>Redis Hash</strong> for structured storage and create secondary indexes with <strong>Redis Sets and Sorted Sets</strong> for fast lookups by mobile number or email. For maximum speed, bulk import the data using a Python script to generate a Redis protocol file, which is then loaded with
+                <code class="bg-gray-100 px-2 py-1 rounded">redis-cli --pipe</code>. Host the system on a cloud provider with a regional presence in Thailand or Singapore, such as <strong>AWS</strong>, using a <strong>managed Redis service</strong> like ElastiCache to minimize operational effort. The entire project can be completed well within a <strong>USD 1,000</strong> budget.
+              </p>
+            </div>
+          </div>
+
+          <!-- Key Recommendations Grid -->
+          <div class="grid md:grid-cols-3 gap-6 mb-12">
+            <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+              <i class="fas fa-rocket text-blue-600 text-2xl mb-4"></i>
+              <h3 class="font-semibold mb-2">Rapid Development</h3>
+              <p class="text-sm text-slate-600">Python + Redis combination enables fast prototyping and deployment</p>
+            </div>
+            <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+              <i class="fas fa-bolt text-blue-600 text-2xl mb-4"></i>
+              <h3 class="font-semibold mb-2">Blazing Fast</h3>
+              <p class="text-sm text-slate-600">Redis in-memory storage with optimized indexing for sub-millisecond lookups</p>
+            </div>
+            <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+              <i class="fas fa-cloud text-blue-600 text-2xl mb-4"></i>
+              <h3 class="font-semibold mb-2">Cloud Ready</h3>
+              <p class="text-sm text-slate-600">Managed services reduce operational overhead and ensure regional availability</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Core System Architecture -->
+      <section id="architecture" class="bg-slate-50 py-16">
+        <div class="max-w-6xl mx-auto px-6">
+          <h2 class="font-serif text-4xl font-bold mb-12">1. Core System Architecture</h2>
+
+          <div class="mb-12">
+            <h3 class="font-serif text-2xl font-semibold mb-6">Leveraging Redis for Speed and Efficiency</h3>
+            <p class="text-lg leading-relaxed mb-6">
+              The foundational architecture centers on Redis, an in-memory data structure store renowned for exceptional performance and low latency. This choice directly addresses the project&#39;s primary requirements: rapid cross-referencing of millions of records while minimizing development and operational effort.
+            </p>
+
+            <!-- Architecture Diagram -->
+            <div class="diagram-container">
+              <h4 class="font-semibold mb-4">System Architecture Overview</h4>
+              <div class="bg-white p-6 rounded-lg border border-slate-200">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                  <div class="bg-blue-50 p-4 rounded-lg text-center">
+                    <i class="fas fa-file-csv text-blue-600 text-2xl mb-2"></i>
+                    <h5 class="font-medium">CSV Input</h5>
+                    <p class="text-sm text-slate-600">6M PII Records</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-arrow-right text-slate-400 text-xl"></i>
+                  </div>
+                  <div class="bg-green-50 p-4 rounded-lg text-center">
+                    <i class="fab fa-python text-green-600 text-2xl mb-2"></i>
+                    <h5 class="font-medium">Python Processor</h5>
+                    <p class="text-sm text-slate-600">Data Transformation</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-arrow-right text-slate-400 text-xl"></i>
+                  </div>
+                  <div class="bg-red-50 p-4 rounded-lg text-center">
+                    <i class="fas fa-database text-red-600 text-2xl mb-2"></i>
+                    <h5 class="font-medium">Redis Database</h5>
+                    <p class="text-sm text-slate-600">In-Memory Storage</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-arrow-right text-slate-400 text-xl"></i>
+                  </div>
+                  <div class="bg-purple-50 p-4 rounded-lg text-center">
+                    <i class="fas fa-search text-purple-600 text-2xl mb-2"></i>
+                    <h5 class="font-medium">FastAPI</h5>
+                    <p class="text-sm text-slate-600">Web Interface</p>
+                  </div>
+                  <div class="text-center">
+                    <i class="fas fa-arrow-right text-slate-400 text-xl"></i>
+                  </div>
+                  <div class="bg-orange-50 p-4 rounded-lg text-center">
+                    <i class="fas fa-cloud text-orange-600 text-2xl mb-2"></i>
+                    <h5 class="font-medium">AWS Cloud</h5>
+                    <p class="text-sm text-slate-600">Production Deployment</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Storage Strategy -->
+          <div id="data-storage" class="mb-12">
+            <h3 class="font-serif text-2xl font-semibold mb-6">1.1 Data Storage Strategy</h3>
+
+            <div class="bg-white p-8 rounded-lg border border-slate-200 mb-8">
+              <h4 class="font-semibold mb-4">Redis Hash Structure for PII Records</h4>
+              <p class="mb-4">Each individual&#39;s PII record is stored as a Redis Hash with the Thai Citizen ID as the primary key:</p>
+              <div class="bg-slate-100 p-4 rounded font-mono text-sm">
+                <div class="text-blue-600">Key: user:1234567890123</div>
+                <div class="mt-2 space-y-1">
+                  <div>thai_id: &#34;1234567890123&#34;</div>
+                  <div>first_name: &#34;John&#34;</div>
+                  <div>last_name: &#34;Doe&#34;</div>
+                  <div>mobile: &#34;0812345678&#34;</div>
+                  <div>email: &#34;john.doe@example.com&#34;</div>
+                  <div>date_of_birth: &#34;1990-01-01&#34;</div>
+                </div>
+              </div>
+              <p class="mt-4 text-sm text-slate-600">
+                This structure provides O(1) access to any record using the Thai ID as the primary key.
+                <a href="https://redis.io/docs/latest/commands/hset/" class="citation-link" target="_blank">[Redis HSET Docs]</a>
+              </p>
+            </div>
+
+            <!-- Key Design -->
+            <div class="bg-white p-8 rounded-lg border border-slate-200 mb-8">
+              <h4 class="font-semibold mb-4">Key Design Strategy</h4>
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-medium mb-2">Primary Key Format</h5>
+                  <code class="bg-slate-100 px-2 py-1 rounded">user:{thai_id}</code>
+                  <p class="text-sm text-slate-600 mt-2">Uses Thai Citizen ID for direct, O(1) lookups</p>
+                </div>
+                <div>
+                  <h5 class="font-medium mb-2">Secondary Indexes</h5>
+                  <div class="space-y-1 text-sm">
+                    <div><code>ThaiID:{thai_id}</code> → Set</div>
+                    <div><code>Email:{email}</code> → Set</div>
+                    <div><code>Mobile</code> → Sorted Set</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Indexing Strategy -->
+          <div id="indexing" class="mb-12">
+            <h3 class="font-serif text-2xl font-semibold mb-6">1.2 Indexing for Fast Lookups</h3>
+
+            <!-- Indexing Table -->
+            <div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
+              <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                <h4 class="font-semibold">Complete Indexing Strategy</h4>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead class="bg-slate-50">
+                    <tr>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Field</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Data Structure</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Key Format</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Purpose</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200">
+                    <tr>
+                      <td class="px-6 py-4 font-medium">Primary Record</td>
+                      <td class="px-6 py-4">Hash</td>
+                      <td class="px-6 py-4"><code>user:{thai_id}</code></td>
+                      <td class="px-6 py-4">Direct O(1) access to full PII record</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-medium">Thai Citizen ID</td>
+                      <td class="px-6 py-4">Set</td>
+                      <td class="px-6 py-4"><code>ThaiID:{thai_id}</code></td>
+                      <td class="px-6 py-4">Exact-match lookup by Thai ID</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-medium">Mobile Number</td>
+                      <td class="px-6 py-4">Sorted Set</td>
+                      <td class="px-6 py-4"><code>Mobile</code></td>
+                      <td class="px-6 py-4">Exact-match and range/prefix lookups</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-medium">Email Address</td>
+                      <td class="px-6 py-4">Set</td>
+                      <td class="px-6 py-4"><code>Email:{email}</code></td>
+                      <td class="px-6 py-4">Exact-match lookup by email</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p class="mt-4 text-sm text-slate-600">
+              The Sorted Set for mobile numbers enables powerful range queries using ZRANGEBYSCORE.
+              <a href="https://redis.ac.cn/docs/latest/commands/zadd/" class="citation-link" target="_blank">[ZADD Docs]</a>
+            </p>
+          </div>
+
+          <!-- Data Ingestion -->
+          <div id="data-ingestion" class="mb-12">
+            <h3 class="font-serif text-2xl font-semibold mb-6">1.3 Data Ingestion: Efficient Bulk Import</h3>
+
+            <div class="bg-white p-8 rounded-lg border border-slate-200">
+              <h4 class="font-semibold mb-4">The redis-cli --pipe Method</h4>
+              <p class="mb-4">The most efficient approach for bulk loading millions of records:</p>
+              <div class="bg-slate-900 text-green-400 p-4 rounded font-mono text-sm mb-4">
+                <div># Generate Redis protocol file with Python</div>
+                <div>$ python generate_redis_protocol.py &gt; commands.txt</div>
+                <div># Bulk load using redis-cli</div>
+                <div>$ redis-cli --pipe &lt; commands.txt</div>
+              </div>
+              <p class="text-sm text-slate-600">
+                This method reduces network round-trips significantly compared to individual commands.
+                <a href="https://redis.io/docs/manual/patterns/bulk-loading/" class="citation-link" target="_blank">[Redis Bulk Loading]</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Technology Stack -->
+      <section id="technology-stack" class="bg-white py-16">
+        <div class="max-w-6xl mx-auto px-6">
+          <h2 class="font-serif text-4xl font-bold mb-12">2. Technology Stack and Development Approach</h2>
+
+          <!-- Python Development -->
+          <div id="python-development" class="mb-12">
+            <h3 class="font-serif text-2xl font-semibold mb-6">2.1 Primary Language: Python for Rapid Development</h3>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+              <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                <h4 class="font-semibold mb-4">redis-py Client Library</h4>
+                <p class="mb-4 text-sm">The official Python client for Redis with comprehensive features:</p>
+                <ul class="space-y-2 text-sm">
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-0.5"></i>
+                    <span>Complete Redis command support</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-0.5"></i>
+                    <span>Connection pooling for performance</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-0.5"></i>
+                    <span>Pipeline support for bulk operations</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-0.5"></i>
+                    <span>Asyncio support for asynchronous apps</span>
+                  </li>
+                </ul>
+                <p class="mt-4 text-xs text-slate-600">
+                  Install with hiredis parser for maximum performance:
+                  <code>pip install &#34;redis[hiredis]&#34;</code>
+                  <a href="https://redis.io/docs/latest/integrate/redis-py/" class="citation-link" target="_blank">[Redis-Py Docs]</a>
+                </p>
+              </div>
+
+              <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                <h4 class="font-semibold mb-4">Vibe-Coding with AI Assistance</h4>
+                <p class="mb-4 text-sm">Modern AI-assisted development approach:</p>
+                <ul class="space-y-2 text-sm">
+                  <li class="flex items-start">
+                    <i class="fas fa-robot text-blue-500 mr-2 mt-0.5"></i>
+                    <span>Natural language prompts for code generation</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-robot text-blue-500 mr-2 mt-0.5"></i>
+                    <span>Rapid prototyping and iteration</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-robot text-blue-500 mr-2 mt-0.5"></i>
+                    <span>Focus on architecture over syntax</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-robot text-blue-500 mr-2 mt-0.5"></i>
+                    <span>Tools: Cursor, Trae.ai, Cline for VS Code</span>
+                  </li>
+                </ul>
+                <p class="mt-4 text-xs text-slate-600">
+                  AI-powered IDEs accelerate development by handling boilerplate code.
+                  <a href="https://apifox.com/apiskills/what-is-vibe-coding/" class="citation-link" target="_blank">[Vibe-Coding Guide]</a>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Web Interface -->
+          <div id="web-interface" class="mb-12">
+            <h3 class="font-serif text-2xl font-semibold mb-6">2.2 Building the Web Interface</h3>
+
+            <div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
+              <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                <h4 class="font-semibold">Framework Comparison: Flask vs FastAPI</h4>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead class="bg-slate-50">
+                    <tr>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Criteria</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Flask</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">FastAPI</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200">
+                    <tr>
+                      <td class="px-6 py-4 font-medium">Learning Curve</td>
+                      <td class="px-6 py-4 text-green-600">Gentle</td>
+                      <td class="px-6 py-4 text-yellow-600">Moderate</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-medium">Performance</td>
+                      <td class="px-6 py-4 text-yellow-600">Good</td>
+                      <td class="px-6 py-4 text-green-600">Excellent</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-medium">Async Support</td>
+                      <td class="px-6 py-4 text-red-600">Limited</td>
+                      <td class="px-6 py-4 text-green-600">Native</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-medium">Auto-documentation</td>
+                      <td class="px-6 py-4 text-red-600">No</td>
+                      <td class="px-6 py-4 text-green-600">Yes (Swagger)</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-medium">Data Validation</td>
+                      <td class="px-6 py-4 text-red-600">Manual</td>
+                      <td class="px-6 py-4 text-green-600">Automatic (Pydantic)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p class="mt-4 text-sm text-slate-600">
+              <strong>Recommendation:</strong> FastAPI offers superior performance and modern features for this use case.
+              <a href="https://redis.io/tutorials/develop/python/fastapi/" class="citation-link" target="_blank">[FastAPI Redis Tutorial]</a>
+            </p>
+          </div>
+
+          <!-- Rust Alternative -->
+          <div id="rust-alternative" class="mb-12">
+            <h3 class="font-serif text-2xl font-semibold mb-6">2.3 Alternative: Rust for Performance-Critical Components</h3>
+
+            <div class="bg-slate-50 p-8 rounded-lg border border-slate-200">
+              <div class="grid md:grid-cols-3 gap-6">
+                <div>
+                  <h4 class="font-semibold mb-3">Performance Benefits</h4>
+                  <ul class="text-sm space-y-1">
+                    <li>• Compiled to native machine code</li>
+                    <li>• Memory safety without GC</li>
+                    <li>• Exceptional concurrency handling</li>
+                    <li>• Lower memory footprint</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-semibold mb-3">Web Frameworks</h4>
+                  <ul class="text-sm space-y-1">
+                    <li>• Actix Web</li>
+                    <li>• Rocket</li>
+                    <li>• Warp</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-semibold mb-3">Redis Clients</h4>
+                  <ul class="text-sm space-y-1">
+                    <li>• redis-rs (official)</li>
+                    <li>• Async support</li>
+                    <li>• Type-safe API</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="mt-4 text-sm text-slate-600">
+                For a single-user system, Python&#39;s development speed outweighs Rust&#39;s performance benefits.
+                Consider Rust for future scalability needs.
+                <a href="https://docs.rs/redis-module" class="citation-link" target="_blank">[Redis-Rs Docs]</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cloud Hosting -->
+      <section id="cloud-hosting" class="bg-slate-50 py-16">
+        <div class="max-w-6xl mx-auto px-6">
+          <h2 class="font-serif text-4xl font-bold mb-12">3. Cloud Hosting and Cost Management</h2>
+
+          <!-- Cloud Providers -->
+          <div id="cloud-providers" class="mb-12">
+            <h3 class="font-serif text-2xl font-semibold mb-6">3.1 Selecting a Cloud Provider</h3>
+
+            <!-- Provider Comparison -->
+            <div class="bg-white rounded-lg border border-slate-200 overflow-hidden">
+              <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                <h4 class="font-semibold">Cloud Provider Comparison - Thailand &amp; Singapore Regions</h4>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead class="bg-slate-50">
+                    <tr>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Provider</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Thailand</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Singapore</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Managed Redis</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200">
+                    <tr>
+                      <td class="px-6 py-4 font-medium">AWS</td>
+                      <td class="px-6 py-4 text-green-600">✓ Available</td>
+                      <td class="px-6 py-4 text-green-600">✓ Available</td>
+                      <td class="px-6 py-4">ElastiCache for Redis</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-medium">Google Cloud</td>
+                      <td class="px-6 py-4 text-yellow-600">Planned</td>
+                      <td class="px-6 py-4 text-green-600">✓ Available</td>
+                      <td class="px-6 py-4">Memorystore for Redis</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-medium">Alibaba Cloud</td>
+                      <td class="px-6 py-4 text-green-600">✓ Available</td>
+                      <td class="px-6 py-4 text-green-600">✓ Available</td>
+                      <td class="px-6 py-4">Tair (Redis-compatible)</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-medium">Tencent Cloud</td>
+                      <td class="px-6 py-4 text-green-600">✓ Available</td>
+                      <td class="px-6 py-4 text-green-600">✓ Available</td>
+                      <td class="px-6 py-4">TencentDB for Redis</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-medium">Huawei Cloud</td>
+                      <td class="px-6 py-4 text-green-600">✓ Available</td>
+                      <td class="px-6 py-4 text-green-600">✓ Available</td>
+                      <td class="px-6 py-4">Redis Cache Service</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p class="mt-4 text-sm text-slate-600">
+              AWS is recommended due to confirmed Thailand region availability and mature ecosystem.
+              <a href="https://govinsider.asia/intl-en/article/thailand-accelerates-cloud-and-ai-adoption-to-transform-public-services" class="citation-link" target="_blank">[AWS Thailand Launch]</a>
+            </p>
+          </div>
+
+          <!-- Managed Services -->
+          <div id="managed-services" class="mb-12">
+            <h3 class="font-serif text-2xl font-semibold mb-6">3.2 Managed Redis Services</h3>
+
+            <div class="grid md:grid-cols-2 gap-8">
+              <div class="bg-white p-6 rounded-lg border border-slate-200">
+                <h4 class="font-semibold mb-4">AWS ElastiCache for Redis</h4>
+                <ul class="space-y-2 text-sm">
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-0.5"></i>
+                    <span>Fully managed service</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-0.5"></i>
+                    <span>Automatic failover and backups</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-0.5"></i>
+                    <span>Monitoring with CloudWatch</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-0.5"></i>
+                    <span>Free tier available (750 hours/month)</span>
+                  </li>
+                </ul>
+                <p class="mt-4 text-xs text-slate-600">
+                  Pricing: cache.t3.micro ~$12.41/month
+                  <a href="https://www.amazonaws.cn/en/elasticache/pricing/" class="citation-link" target="_blank">[AWS Pricing]</a>
+                </p>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg border border-slate-200">
+                <h4 class="font-semibold mb-4">Google Cloud Memorystore</h4>
+                <ul class="space-y-2 text-sm">
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-0.5"></i>
+                    <span>High availability options</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-0.5"></i>
+                    <span>Seamless scaling</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-0.5"></i>
+                    <span>Integrated monitoring</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-0.5"></i>
+                    <span>Basic and Standard tiers</span>
+                  </li>
+                </ul>
+                <p class="mt-4 text-xs text-slate-600">
+                  Well-established in Singapore region
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cost Optimization -->
+          <div id="cost-optimization" class="mb-12">
+            <h3 class="font-serif text-2xl font-semibold mb-6">3.3 Budgeting and Cost Optimization</h3>
+
+            <!-- Cost Breakdown -->
+            <div class="bg-white rounded-lg border border-slate-200 overflow-hidden mb-8">
+              <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                <h4 class="font-semibold">Estimated Monthly Costs (Single-User System)</h4>
+              </div>
+              <div class="p-6">
+                <div class="space-y-4">
+                  <div class="flex justify-between items-center">
+                    <span>Redis Instance (cache.t3.medium)</span>
+                    <span class="font-semibold">~$40/month</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span>Application Server (t3.micro)</span>
+                    <span class="font-semibold">~$10/month</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span>Data Transfer &amp; Other</span>
+                    <span class="font-semibold">~$5/month</span>
+                  </div>
+                  <div class="border-t border-slate-200 pt-4">
+                    <div class="flex justify-between items-center font-bold text-lg">
+                      <span>Total Monthly Cost</span>
+                      <span class="text-blue-600">~$55/month</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+              <h4 class="font-semibold mb-3">Cost Optimization Strategies</h4>
+              <ul class="space-y-2 text-sm">
+                <li class="flex items-start">
+                  <i class="fas fa-lightbulb text-yellow-500 mr-2 mt-0.5"></i>
+                  <span><strong>Free Tier:</strong> Use AWS free tier for development and testing</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-lightbulb text-yellow-500 mr-2 mt-0.5"></i>
+                  <span><strong>Reserved Instances:</strong> 1-year reserved instances save ~40%</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-lightbulb text-yellow-500 mr-2 mt-0.5"></i>
+                  <span><strong>Right Sizing:</strong> Start small and scale up based on monitoring</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-lightbulb text-yellow-500 mr-2 mt-0.5"></i>
+                  <span><strong>Monitoring:</strong> Use redis-benchmark for performance testing</span>
+                </li>
+              </ul>
+              <p class="mt-4 text-sm text-slate-600">
+                Annual cost: ~$660 with optimization vs. $1,000 budget = 34% headroom
+                <a href="https://www.economize.cloud/resources/aws/pricing/elasticache/cache.t3.micro/" class="citation-link" target="_blank">[Cost Analysis]</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Implementation -->
+      <section id="implementation" class="bg-white py-16">
+        <div class="max-w-6xl mx-auto px-6">
+          <h2 class="font-serif text-4xl font-bold mb-12">4. Implementation Steps and Best Practices</h2>
+
+          <!-- Local Development -->
+          <div id="local-development" class="mb-12">
+            <h3 class="font-serif text-2xl font-semibold mb-6">4.1 Phase 1: Local Development and Data Import</h3>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+              <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                <i class="fas fa-server text-blue-600 text-2xl mb-4"></i>
+                <h4 class="font-semibold mb-3">Local Redis Setup</h4>
+                <ul class="text-sm space-y-1">
+                  <li>• Install Redis locally</li>
+                  <li>• Configure development environment</li>
+                  <li>• Install Redis GUI client</li>
+                  <li>• Test basic connectivity</li>
+                </ul>
+              </div>
+              <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                <i class="fab fa-python text-green-600 text-2xl mb-4"></i>
+                <h4 class="font-semibold mb-3">Python Import Script</h4>
+                <ul class="text-sm space-y-1">
+                  <li>• Read CSV files efficiently</li>
+                  <li>• Generate Redis protocol</li>
+                  <li>• Handle cross-referencing</li>
+                  <li>• Test with sample data</li>
+                </ul>
+              </div>
+              <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                <i class="fas fa-vial text-purple-600 text-2xl mb-4"></i>
+                <h4 class="font-semibold mb-3">Testing &amp; Validation</h4>
+                <ul class="text-sm space-y-1">
+                  <li>• Verify data model integrity</li>
+                  <li>• Test indexing strategy</li>
+                  <li>• Validate lookup performance</li>
+                  <li>• Debug edge cases</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-lg border border-slate-200">
+              <h4 class="font-semibold mb-4">Sample Python Import Script Structure</h4>
+              <div class="bg-slate-900 text-green-400 p-4 rounded font-mono text-sm">
+                <div>import csv</div>
+                <div>from redis import Redis</div>
+                <div></div>
+                <div>def generate_redis_protocol(file_path):</div>
+                <div class="ml-4">with open(file_path, &#39;r&#39;) as f:</div>
+                <div class="ml-8">reader = csv.DictReader(f)</div>
+                <div class="ml-8">for row in reader:</div>
+                <div class="ml-12"># Generate HSET command</div>
+                <div class="ml-12">yield f&#34;*4\r\n$4\r\nHSET\r\n...&#34;</div>
+                <div class="ml-12"># Generate SADD/ZADD commands</div>
+                <div class="ml-12">yield f&#34;*3\r\n$4\r\nSADD\r\n...&#34;</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lookup API -->
+          <div id="lookup-api" class="mb-12">
+            <h3 class="font-serif text-2xl font-semibold mb-6">4.2 Phase 2: Building the Lookup API</h3>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+              <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                <h4 class="font-semibold mb-4">API Endpoint Design</h4>
+                <div class="space-y-3 text-sm">
+                  <div>
+                    <code class="bg-green-100 text-green-800 px-2 py-1 rounded">GET /lookup/id/{thai_id}</code>
+                    <p class="text-xs text-slate-600 mt-1">Lookup by Thai Citizen ID</p>
+                  </div>
+                  <div>
+                    <code class="bg-green-100 text-green-800 px-2 py-1 rounded">GET /lookup/mobile/{mobile}</code>
+                    <p class="text-xs text-slate-600 mt-1">Lookup by mobile number</p>
+                  </div>
+                  <div>
+                    <code class="bg-green-100 text-green-800 px-2 py-1 rounded">GET /lookup/email/{email}</code>
+                    <p class="text-xs text-slate-600 mt-1">Lookup by email address</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                <h4 class="font-semibold mb-4">Query Implementation Flow</h4>
+                <div class="space-y-2 text-sm">
+                  <div class="flex items-center">
+                    <span class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs mr-3">1</span>
+                    <span>Receive API request with identifier</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs mr-3">2</span>
+                    <span>Query appropriate Redis index</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs mr-3">3</span>
+                    <span>Retrieve user ID from index</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs mr-3">4</span>
+                    <span>Fetch full record with HGETALL</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs mr-3">5</span>
+                    <span>Return JSON response</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-lg border border-slate-200">
+              <h4 class="font-semibold mb-4">FastAPI Implementation Example</h4>
+              <div class="bg-slate-900 text-green-400 p-4 rounded font-mono text-sm">
+                <div>from fastapi import FastAPI</div>
+                <div>from redis import Redis</div>
+                <div>import json</div>
+                <div></div>
+                <div>app = FastAPI()</div>
+                <div>redis = Redis(host=&#34;localhost&#34;, port=6379)</div>
+                <div></div>
+                <div>@app.get(&#34;/lookup/id/{thai_id}&#34;)</div>
+                <div>async def lookup_by_id(thai_id: str):</div>
+                <div class="ml-4">user_key = f&#34;user:{thai_id}&#34;</div>
+                <div class="ml-4">user_data = redis.hgetall(user_key)</div>
+                <div class="ml-4">return json.loads(user_data)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Deployment -->
+          <div id="deployment" class="mb-12">
+            <h3 class="font-serif text-2xl font-semibold mb-6">4.3 Phase 3: Deployment to the Cloud</h3>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+              <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                <i class="fas fa-cloud-upload-alt text-blue-600 text-2xl mb-4"></i>
+                <h4 class="font-semibold mb-3">Infrastructure Setup</h4>
+                <ul class="text-sm space-y-1">
+                  <li>• Provision VPC network</li>
+                  <li>• Create Redis instance</li>
+                  <li>• Deploy application server</li>
+                  <li>• Configure security groups</li>
+                </ul>
+              </div>
+              <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                <i class="fas fa-rocket text-green-600 text-2xl mb-4"></i>
+                <h4 class="font-semibold mb-3">Application Deployment</h4>
+                <ul class="text-sm space-y-1">
+                  <li>• Upload application code</li>
+                  <li>• Configure environment variables</li>
+                  <li>• Start FastAPI service</li>
+                  <li>• Set up process management</li>
+                </ul>
+              </div>
+              <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                <i class="fas fa-chart-line text-purple-600 text-2xl mb-4"></i>
+                <h4 class="font-semibold mb-3">Testing &amp; Monitoring</h4>
+                <ul class="text-sm space-y-1">
+                  <li>• Run redis-benchmark tests</li>
+                  <li>• Validate API endpoints</li>
+                  <li>• Monitor resource usage</li>
+                  <li>• Set up logging</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+              <h4 class="font-semibold mb-3">Performance Testing with redis-benchmark</h4>
+              <p class="text-sm mb-4">Essential benchmarking commands for validation:</p>
+              <div class="bg-slate-900 text-green-400 p-4 rounded font-mono text-sm mb-4">
+                <div># Test HGET performance</div>
+                <div>$ redis-benchmark -h redis-host -p 6379 -t hget -n 100000 -c 50</div>
+                <div></div>
+                <div># Test with pipelining</div>
+                <div>$ redis-benchmark -h redis-host -p 6379 -t hget -n 100000 -c 50 -P 10</div>
+                <div></div>
+                <div># Generate CSV output for analysis</div>
+                <div>$ redis-benchmark -h redis-host -p 6379 -t hget -n 100000 --csv &gt; results.csv</div>
+              </div>
+              <p class="text-sm text-slate-600">
+                Benchmarking validates performance and helps optimize instance sizing.
+                <a href="https://blog.csdn.net/maply/article/details/145057830" class="citation-link" target="_blank">[Redis-Benchmark Guide]</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-slate-900 text-white py-12">
+        <div class="max-w-6xl mx-auto px-6">
+          <div class="grid md:grid-cols-3 gap-8">
+            <div>
+              <h3 class="font-serif text-xl font-bold mb-4">Key Takeaways</h3>
+              <ul class="space-y-2 text-sm text-slate-300">
+                <li>• Redis provides optimal performance for lookup operations</li>
+                <li>• Python + FastAPI enables rapid development</li>
+                <li>• Managed services reduce operational overhead</li>
+                <li>• Budget of $1,000 is easily achievable</li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="font-serif text-xl font-bold mb-4">Recommended Stack</h3>
+              <ul class="space-y-2 text-sm text-slate-300">
+                <li>• <strong>Language:</strong> Python 3.9+</li>
+                <li>• <strong>Framework:</strong> FastAPI</li>
+                <li>• <strong>Database:</strong> Redis (Managed)</li>
+                <li>• <strong>Cloud:</strong> AWS (Thailand region)</li>
+                <li>• <strong>Deployment:</strong> ElastiCache + EC2</li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="font-serif text-xl font-bold mb-4">Next Steps</h3>
+              <ul class="space-y-2 text-sm text-slate-300">
+                <li>1. Set up local development environment</li>
+                <li>2. Develop data import script</li>
+                <li>3. Build FastAPI application</li>
+                <li>4. Test locally with sample data</li>
+                <li>5. Deploy to cloud infrastructure</li>
+              </ul>
+            </div>
+          </div>
+          <div class="border-t border-slate-700 mt-8 pt-8 text-center text-sm text-slate-400">
+            <p>This guide provides a comprehensive approach to building a high-performance PII lookup system within budget constraints while maintaining development efficiency.</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+        // Table of Contents scroll spy
+        const tocLinks = document.querySelectorAll('.toc-link');
+        const sections = document.querySelectorAll('section[id], div[id]');
+
+        function updateActiveLink() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveLink);
+        updateActiveLink();
+
+        // Smooth scrolling for TOC links
+        tocLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+  
+
+</body></html>
