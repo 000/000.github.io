@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS INTEL // Patikorn Pitakchanuan Network Analysis</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════════════
+           NEXUS MICRO-FRAMEWORK v12.0 — "TITANIUM-VOID" INVESTIGATIVE THEME
+           Zero-Dependency Custom CSS Architecture with CSS Layers
+        ═══════════════════════════════════════════════════════════════════════════ */
+        @layer base, layout, components, utilities, animations;
+
+        @layer base {
+            :root {
+                /* Core Palette */
+                --space-void: #030305;
+                --space-deep: #0a0a0f;
+                --space-surface: #111118;
+                --titanium: #86868b;
+                --titanium-light: #a1a1a6;
+                --silver: #f5f5f7;
+                --silver-muted: #d1d1d6;
+                
+                /* Accent Colors */
+                --neon-core: #3b82f6;
+                --neon-glow: #60a5fa;
+                --accent-violet: #8b5cf6;
+                --accent-gold: #f59e0b;
+                --accent-amber: #fbbf24;
+                --peach-fuzz: #FFBE98;
+                
+                /* Status Colors */
+                --risk-critical: #ef4444;
+                --risk-high: #f97316;
+                --risk-medium: #eab308;
+                --risk-low: #22c55e;
+                --success: #10b981;
+                --danger: #ef4444;
+                --warning: #f59e0b;
+                
+                /* Glass & Borders */
+                --glass-bg: rgba(17, 17, 24, 0.75);
+                --glass-border: rgba(255, 255, 255, 0.06);
+                --glass-border-hover: rgba(255, 255, 255, 0.12);
+                
+                /* Motion */
+                --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+                --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+                
+                /* Network Colors */
+                --node-person: #3b82f6;
+                --node-company: #8b5cf6;
+                --node-gov-contract: #ef4444;
+                --link-active: rgba(59, 130, 246, 0.6);
+                --link-dashed: rgba(139, 92, 246, 0.4);
+            }
+
+            *, *::before, *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            html {
+                font-size: 16px;
+                scroll-behavior: smooth;
+            }
+
+            body {
+                background: var(--space-void);
+                color: var(--silver);
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                line-height: 1.6;
+                overflow-x: hidden;
+                min-height: 100vh;
+            }
+
+            /* Deep-State i18n Logic */
+            [lang="th"] { display: none; }
+            body[data-lang="th"] [lang="en"] { display: none; }
+            body[data-lang="th"] [lang="th"] { display: block; font-family: 'Sarabun', sans-serif; }
+            body[data-lang="th"] .font-display { font-family: 'Sarabun', sans-serif; }
+
+            /* Custom Scrollbar */
+            ::-webkit-scrollbar { width: 8px; height: 8px; }
+            ::-webkit-scrollbar-track { background: var(--space-deep); }
+            ::-webkit-scrollbar-thumb { 
+                background: linear-gradient(180deg, var(--titanium) 0%, var(--space-surface) 100%);
+                border-radius: 4px;
+            }
+            ::-webkit-scrollbar-thumb:hover { background: var(--titanium-light); }
+
+            ::selection {
+                background: var(--neon-core);
+                color: white;
+            }
+        }
+
+        @layer layout {
+            .fixed { position: fixed; }
+            .absolute { position: absolute; }
+            .relative { position: relative; }
+            .sticky { position: sticky; }
+            
+            .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+            .top-0 { top: 0; }
+            .top-4 { top: 1rem; }
+            .top-6 { top: 1.5rem; }
+            .right-0 { right: 0; }
+            .right-4 { right: 1rem; }
+            .right-6 { right: 1.5rem; }
+            .bottom-0 { bottom: 0; }
+            .left-0 { left: 0; }
+            
+            .z-0 { z-index: 0; }
+            .z-10 { z-index: 10; }
+            .z-20 { z-index: 20; }
+            .z-50 { z-index: 50; }
+            .z-100 { z-index: 100; }
+            .z-9999 { z-index: 9999; }
+
+            .container {
+                max-width: 1600px;
+                margin: 0 auto;
+                padding: 0 1.5rem;
+            }
+
+            .flex { display: flex; }
+            .flex-col { flex-direction: column; }
+            .flex-row { flex-direction: row; }
+            .flex-wrap { flex-wrap: wrap; }
+            .items-center { align-items: center; }
+            .items-start { align-items: flex-start; }
+            .items-end { align-items: flex-end; }
+            .justify-center { justify-content: center; }
+            .justify-between { justify-content: space-between; }
+            .justify-end { justify-content: flex-end; }
+            .gap-1 { gap: 0.25rem; }
+            .gap-2 { gap: 0.5rem; }
+            .gap-3 { gap: 0.75rem; }
+            .gap-4 { gap: 1rem; }
+            .gap-6 { gap: 1.5rem; }
+            .gap-8 { gap: 2rem; }
+            .flex-1 { flex: 1; }
+            .flex-shrink-0 { flex-shrink: 0; }
+
+            .grid { display: grid; }
+            .grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+            .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+            .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+            .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+            .grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
+
+            .w-full { width: 100%; }
+            .w-auto { width: auto; }
+            .h-full { height: 100%; }
+            .h-screen { height: 100vh; }
+            .min-h-screen { min-height: 100vh; }
+
+            .m-0 { margin: 0; }
+            .m-4 { margin: 1rem; }
+            .m-6 { margin: 1.5rem; }
+            .mt-2 { margin-top: 0.5rem; }
+            .mt-4 { margin-top: 1rem; }
+            .mt-6 { margin-top: 1.5rem; }
+            .mt-8 { margin-top: 2rem; }
+            .mb-2 { margin-bottom: 0.5rem; }
+            .mb-4 { margin-bottom: 1rem; }
+            .mb-6 { margin-bottom: 1.5rem; }
+            .mb-8 { margin-bottom: 2rem; }
+            .ml-2 { margin-left: 0.5rem; }
+            .ml-4 { margin-left: 1rem; }
+            .mr-2 { margin-right: 0.5rem; }
+            .mr-4 { margin-right: 1rem; }
+            .mx-auto { margin-left: auto; margin-right: auto; }
+
+            .p-2 { padding: 0.5rem; }
+            .p-3 { padding: 0.75rem; }
+            .p-4 { padding: 1rem; }
+            .p-5 { padding: 1.25rem; }
+            .p-6 { padding: 1.5rem; }
+            .p-8 { padding: 2rem; }
+            .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+            .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+            .px-4 { padding-left: 1rem; padding-right: 1rem; }
+            .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+            .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+            .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+            .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+            .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+            .py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+
+            .overflow-hidden { overflow: hidden; }
+            .overflow-auto { overflow: auto; }
+            .overflow-x-auto { overflow-x: auto; }
+            .overflow-y-auto { overflow-y: auto; }
+
+            @media (min-width: 640px) {
+                .sm\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+            }
+            @media (min-width: 768px) {
+                .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+                .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+                .md\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+                .md\:flex-row { flex-direction: row; }
+            }
+            @media (min-width: 1024px) {
+                .lg\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+                .lg\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+                .lg\:grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
+            }
+            @media (min-width: 1280px) {
+                .xl\:grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
+            }
+        }
+
+        @layer components {
+            /* Glass Panel */
+            .glass-panel {
+                background: var(--glass-bg);
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
+                border: 1px solid var(--glass-border);
+                border-radius: 16px;
+                box-shadow: 
+                    0 4px 6px -1px rgba(0, 0, 0, 0.3),
+                    0 2px 4px -2px rgba(0, 0, 0, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+                transition: all 0.4s var(--ease-out);
+            }
+            .glass-panel:hover {
+                border-color: var(--glass-border-hover);
+                transform: translateY(-2px);
+                box-shadow: 
+                    0 20px 40px -12px rgba(0, 0, 0, 0.5),
+                    0 4px 6px -2px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            }
+            
+            .glass-panel-static {
+                background: var(--glass-bg);
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
+                border: 1px solid var(--glass-border);
+                border-radius: 16px;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            }
+
+            /* Buttons */
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                padding: 0.625rem 1.25rem;
+                font-family: 'Orbitron', sans-serif;
+                font-size: 0.75rem;
+                font-weight: 600;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                border-radius: 8px;
+                border: 1px solid transparent;
+                cursor: pointer;
+                transition: all 0.3s var(--ease-out);
+                text-decoration: none;
+                white-space: nowrap;
+            }
+            .btn-primary {
+                background: linear-gradient(135deg, var(--neon-core) 0%, var(--accent-violet) 100%);
+                color: white;
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+            .btn-primary:hover {
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+                transform: translateY(-2px);
+            }
+            .btn-ghost {
+                background: rgba(255, 255, 255, 0.03);
+                color: var(--silver);
+                border-color: var(--glass-border);
+            }
+            .btn-ghost:hover {
+                background: rgba(255, 255, 255, 0.08);
+                border-color: var(--glass-border-hover);
+            }
+            .btn-danger {
+                background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+                color: white;
+            }
+            .btn-danger:hover {
+                box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
+            }
+            .btn-sm {
+                padding: 0.5rem 0.875rem;
+                font-size: 0.65rem;
+            }
+
+            /* Cards */
+            .stat-card {
+                position: relative;
+                overflow: hidden;
+            }
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, var(--neon-core), var(--accent-violet));
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+            .stat-card:hover::before {
+                opacity: 1;
+            }
+            .stat-card[data-risk="critical"]::before { background: var(--risk-critical); opacity: 1; }
+            .stat-card[data-risk="high"]::before { background: var(--risk-high); opacity: 1; }
+            .stat-card[data-risk="medium"]::before { background: var(--risk-medium); opacity: 1; }
+            .stat-card[data-risk="low"]::before { background: var(--risk-low); opacity: 1; }
+
+            /* Badges */
+            .badge {
+                display: inline-flex;
+                align-items: center;
+                padding: 0.25rem 0.625rem;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.65rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                border-radius: 99px;
+                border: 1px solid;
+            }
+            .badge-critical {
+                background: rgba(239, 68, 68, 0.15);
+                color: var(--risk-critical);
+                border-color: rgba(239, 68, 68, 0.3);
+            }
+            .badge-high {
+                background: rgba(249, 115, 22, 0.15);
+                color: var(--risk-high);
+                border-color: rgba(249, 115, 22, 0.3);
+            }
+            .badge-medium {
+                background: rgba(234, 179, 8, 0.15);
+                color: var(--risk-medium);
+                border-color: rgba(234, 179, 8, 0.3);
+            }
+            .badge-low {
+                background: rgba(34, 197, 94, 0.15);
+                color: var(--risk-low);
+                border-color: rgba(34, 197, 94, 0.3);
+            }
+            .badge-person {
+                background: rgba(59, 130, 246, 0.15);
+                color: var(--neon-core);
+                border-color: rgba(59, 130, 246, 0.3);
+            }
+            .badge-company {
+                background: rgba(139, 92, 246, 0.15);
+                color: var(--accent-violet);
+                border-color: rgba(139, 92, 246, 0.3);
+            }
+
+            /* Tables */
+            .data-table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+                font-size: 0.875rem;
+            }
+            .data-table th {
+                text-align: left;
+                padding: 1rem;
+                color: var(--titanium);
+                font-family: 'Orbitron', sans-serif;
+                font-size: 0.65rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                border-bottom: 1px solid var(--glass-border);
+                background: rgba(0, 0, 0, 0.2);
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+            .data-table td {
+                padding: 0.875rem 1rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.8rem;
+                transition: background 0.2s;
+            }
+            .data-table tr:hover td {
+                background: rgba(59, 130, 246, 0.05);
+            }
+            .data-table tr[data-clickable] {
+                cursor: pointer;
+            }
+            .data-table tr[data-clickable]:hover td {
+                background: rgba(59, 130, 246, 0.1);
+            }
+
+            /* Network Visualization Container */
+            .network-container {
+                position: relative;
+                width: 100%;
+                height: 600px;
+                border-radius: 12px;
+                overflow: hidden;
+                background: radial-gradient(ellipse at center, var(--space-surface) 0%, var(--space-void) 100%);
+            }
+            .network-container svg {
+                width: 100%;
+                height: 100%;
+            }
+
+            /* Chart Container */
+            .chart-container {
+                position: relative;
+                height: 280px;
+                width: 100%;
+            }
+
+            /* Slide Panel */
+            .slide-panel {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 100%;
+                max-width: 520px;
+                height: 100%;
+                background: var(--space-deep);
+                border-left: 1px solid var(--glass-border);
+                transform: translateX(100%);
+                transition: transform 0.5s var(--ease-out);
+                z-index: 2000;
+                overflow-y: auto;
+                box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5);
+            }
+            .slide-panel.open {
+                transform: translateX(0);
+            }
+            .slide-panel-backdrop {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(4px);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s;
+                z-index: 1999;
+            }
+            .slide-panel-backdrop.open {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            /* Network Legend */
+            .network-legend {
+                position: absolute;
+                bottom: 1rem;
+                left: 1rem;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                border-radius: 8px;
+                padding: 0.75rem 1rem;
+                border: 1px solid var(--glass-border);
+                z-index: 10;
+            }
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.7rem;
+                color: var(--titanium-light);
+                margin-bottom: 0.375rem;
+            }
+            .legend-item:last-child { margin-bottom: 0; }
+            .legend-dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+            }
+            .legend-line {
+                width: 20px;
+                height: 2px;
+            }
+
+            /* Tabs */
+            .tabs {
+                display: flex;
+                gap: 0.5rem;
+                border-bottom: 1px solid var(--glass-border);
+                padding-bottom: 0;
+                margin-bottom: 1.5rem;
+            }
+            .tab {
+                padding: 0.75rem 1.25rem;
+                font-family: 'Orbitron', sans-serif;
+                font-size: 0.7rem;
+                font-weight: 600;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--titanium);
+                background: transparent;
+                border: none;
+                border-bottom: 2px solid transparent;
+                margin-bottom: -1px;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+            .tab:hover {
+                color: var(--silver);
+            }
+            .tab.active {
+                color: var(--neon-core);
+                border-bottom-color: var(--neon-core);
+            }
+
+            /* Search Input */
+            .search-input {
+                width: 100%;
+                padding: 0.75rem 1rem 0.75rem 2.75rem;
+                background: rgba(0, 0, 0, 0.3);
+                border: 1px solid var(--glass-border);
+                border-radius: 8px;
+                color: var(--silver);
+                font-family: 'Inter', sans-serif;
+                font-size: 0.875rem;
+                transition: all 0.3s;
+            }
+            .search-input:focus {
+                outline: none;
+                border-color: var(--neon-core);
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+            .search-input::placeholder {
+                color: var(--titanium);
+            }
+            .search-wrapper {
+                position: relative;
+            }
+            .search-icon {
+                position: absolute;
+                left: 0.875rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--titanium);
+                pointer-events: none;
+            }
+
+            /* Tooltip */
+            .tooltip {
+                position: absolute;
+                background: var(--space-void);
+                border: 1px solid var(--glass-border);
+                border-radius: 8px;
+                padding: 0.75rem 1rem;
+                font-size: 0.8rem;
+                max-width: 320px;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.2s;
+                z-index: 1000;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            }
+            .tooltip.visible {
+                opacity: 1;
+            }
+
+            /* Progress Ring */
+            .progress-ring {
+                transform: rotate(-90deg);
+            }
+            .progress-ring-circle {
+                transition: stroke-dashoffset 0.5s var(--ease-out);
+            }
+
+            /* Loader */
+            .loader {
+                width: 48px;
+                height: 48px;
+                border: 3px solid var(--glass-border);
+                border-top-color: var(--peach-fuzz);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+            /* Scanline Effect */
+            .scanlines::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: repeating-linear-gradient(
+                    0deg,
+                    rgba(0, 0, 0, 0.1) 0px,
+                    rgba(0, 0, 0, 0.1) 1px,
+                    transparent 1px,
+                    transparent 2px
+                );
+                pointer-events: none;
+                opacity: 0.3;
+            }
+
+            /* Glow Text */
+            .glow-text {
+                text-shadow: 0 0 20px currentColor;
+            }
+
+            /* Divider */
+            .divider {
+                height: 1px;
+                background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+                margin: 1.5rem 0;
+            }
+
+            /* Network Controls */
+            .network-controls {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                z-index: 10;
+            }
+            .network-controls .btn {
+                padding: 0.5rem;
+                min-width: 36px;
+                min-height: 36px;
+            }
+
+            /* Filter Chips */
+            .filter-chip {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.375rem;
+                padding: 0.375rem 0.75rem;
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid var(--glass-border);
+                border-radius: 99px;
+                font-size: 0.75rem;
+                color: var(--titanium-light);
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .filter-chip:hover {
+                background: rgba(255, 255, 255, 0.08);
+            }
+            .filter-chip.active {
+                background: rgba(59, 130, 246, 0.15);
+                border-color: rgba(59, 130, 246, 0.3);
+                color: var(--neon-core);
+            }
+            .filter-chip-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+            }
+        }
+
+        @layer utilities {
+            .font-display { font-family: 'Orbitron', sans-serif; }
+            .font-mono { font-family: 'JetBrains Mono', monospace; }
+            .font-thai { font-family: 'Sarabun', sans-serif; }
+            
+            .text-xs { font-size: 0.75rem; }
+            .text-sm { font-size: 0.875rem; }
+            .text-base { font-size: 1rem; }
+            .text-lg { font-size: 1.125rem; }
+            .text-xl { font-size: 1.25rem; }
+            .text-2xl { font-size: 1.5rem; }
+            .text-3xl { font-size: 1.875rem; }
+            .text-4xl { font-size: 2.25rem; }
+            .text-5xl { font-size: 3rem; }
+            
+            .font-light { font-weight: 300; }
+            .font-normal { font-weight: 400; }
+            .font-medium { font-weight: 500; }
+            .font-semibold { font-weight: 600; }
+            .font-bold { font-weight: 700; }
+            .font-black { font-weight: 900; }
+            
+            .tracking-tight { letter-spacing: -0.025em; }
+            .tracking-wide { letter-spacing: 0.025em; }
+            .tracking-wider { letter-spacing: 0.1em; }
+            .tracking-widest { letter-spacing: 0.2em; }
+            
+            .uppercase { text-transform: uppercase; }
+            .lowercase { text-transform: lowercase; }
+            .capitalize { text-transform: capitalize; }
+            
+            .text-left { text-align: left; }
+            .text-center { text-align: center; }
+            .text-right { text-align: right; }
+            
+            .leading-none { line-height: 1; }
+            .leading-tight { line-height: 1.25; }
+            .leading-relaxed { line-height: 1.75; }
+            
+            .text-void { color: var(--space-void); }
+            .text-silver { color: var(--silver); }
+            .text-muted { color: var(--titanium); }
+            .text-neon { color: var(--neon-core); }
+            .text-violet { color: var(--accent-violet); }
+            .text-gold { color: var(--accent-gold); }
+            .text-peach { color: var(--peach-fuzz); }
+            .text-danger { color: var(--danger); }
+            .text-success { color: var(--success); }
+            .text-warning { color: var(--warning); }
+            
+            .bg-void { background-color: var(--space-void); }
+            .bg-deep { background-color: var(--space-deep); }
+            .bg-surface { background-color: var(--space-surface); }
+            
+            .border-glass { border-color: var(--glass-border); }
+            
+            .rounded { border-radius: 4px; }
+            .rounded-md { border-radius: 8px; }
+            .rounded-lg { border-radius: 12px; }
+            .rounded-xl { border-radius: 16px; }
+            .rounded-full { border-radius: 9999px; }
+            
+            .opacity-0 { opacity: 0; }
+            .opacity-50 { opacity: 0.5; }
+            .opacity-75 { opacity: 0.75; }
+            .opacity-100 { opacity: 1; }
+            
+            .pointer-events-none { pointer-events: none; }
+            .pointer-events-auto { pointer-events: auto; }
+            
+            .cursor-pointer { cursor: pointer; }
+            .cursor-grab { cursor: grab; }
+            .cursor-grabbing { cursor: grabbing; }
+            
+            .select-none { user-select: none; }
+            
+            .truncate {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            .whitespace-nowrap { white-space: nowrap; }
+            .whitespace-pre-wrap { white-space: pre-wrap; }
+            
+            .hidden { display: none !important; }
+            .block { display: block; }
+            .inline-block { display: inline-block; }
+            .inline { display: inline; }
+            
+            .transition-all { transition: all 0.3s var(--ease-out); }
+            .transition-opacity { transition: opacity 0.3s var(--ease-out); }
+            .transition-transform { transition: transform 0.3s var(--ease-out); }
+            
+            .border { border-width: 1px; border-style: solid; }
+            .border-0 { border-width: 0; }
+            .border-t { border-top-width: 1px; border-top-style: solid; }
+            .border-b { border-bottom-width: 1px; border-bottom-style: solid; }
+            .border-l { border-left-width: 1px; border-left-style: solid; }
+            .border-r { border-right-width: 1px; border-right-style: solid; }
+        }
+
+        @layer animations {
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.5; }
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes fadeInScale {
+                from { opacity: 0; transform: scale(0.95); }
+                to { opacity: 1; transform: scale(1); }
+            }
+            @keyframes slideInRight {
+                from { opacity: 0; transform: translateX(30px); }
+                to { opacity: 1; transform: translateX(0); }
+            }
+            @keyframes glow {
+                0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+                50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6); }
+            }
+            @keyframes scanline {
+                0% { transform: translateY(-100%); }
+                100% { transform: translateY(100%); }
+            }
+            
+            .animate-spin { animation: spin 1s linear infinite; }
+            .animate-pulse { animation: pulse 2s ease-in-out infinite; }
+            .animate-fadeIn { animation: fadeIn 0.6s var(--ease-out) forwards; }
+            .animate-fadeInScale { animation: fadeInScale 0.4s var(--ease-out) forwards; }
+            .animate-slideInRight { animation: slideInRight 0.5s var(--ease-out) forwards; }
+            .animate-glow { animation: glow 2s ease-in-out infinite; }
+            
+            .reveal {
+                opacity: 0;
+                transform: translateY(30px);
+                transition: all 0.6s var(--ease-out);
+            }
+            .reveal.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            
+            .stagger-1 { animation-delay: 0.1s; }
+            .stagger-2 { animation-delay: 0.2s; }
+            .stagger-3 { animation-delay: 0.3s; }
+            .stagger-4 { animation-delay: 0.4s; }
+            .stagger-5 { animation-delay: 0.5s; }
+        }
+    </style>
+</head>
+<body data-lang="en" data-theme="dark">
+    <!-- Background Canvas -->
+    <canvas id="antigravity-canvas" class="fixed inset-0 z-0"></canvas>
+    
+    <!-- Cosmic Fog Overlay -->
+    <div class="fixed inset-0 z-0 pointer-events-none" style="background: radial-gradient(ellipse at 30% 20%, rgba(59, 130, 246, 0.03) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 50%), radial-gradient(circle at center, transparent 0%, var(--space-void) 80%);"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 z-9999 flex flex-col items-center justify-center transition-opacity" style="background: var(--space-void);">
+        <div class="loader mb-6"></div>
+        <div class="font-display text-xl text-peach animate-pulse tracking-widest mb-2">
+            <span lang="en">INITIALIZING INTEL SYSTEMS...</span>
+            <span lang="th">กำลังเริ่มต้นระบบข่าวกรอง...</span>
+        </div>
+        <div class="text-sm text-muted font-mono">
+            <span lang="en">Loading network topology & analytics</span>
+            <span lang="th">กำลังโหลดโครงสร้างเครือข่ายและการวิเคราะห์</span>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div class="relative z-10 min-h-screen">
+        <!-- Header -->
+        <header class="glass-panel-static m-4 p-4 sticky top-4 z-50">
+            <div class="container flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div id="logo-slot" class="text-neon"></div>
+                    <div>
+                        <h1 class="font-display text-lg font-bold tracking-wider text-silver">
+                            NEXUS // <span class="text-gold">INTEL</span>
+                        </h1>
+                        <p class="text-xs text-muted tracking-wide">
+                            <span lang="en">CORPORATE NETWORK ANALYSIS SYSTEM</span>
+                            <span lang="th">ระบบวิเคราะห์เครือข่ายองค์กร</span>
+                        </p>
+                    </div>
+                </div>
+                <nav class="flex items-center gap-3">
+                    <button class="btn btn-ghost btn-sm" onclick="APP.exportReport()">
+                        <span id="icon-export"></span>
+                        <span lang="en">EXPORT</span>
+                        <span lang="th">ส่งออก</span>
+                    </button>
+                    <button class="btn btn-ghost btn-sm" onclick="APP.toggleLang()">
+                        <span id="icon-globe"></span>
+                        <span>EN / TH</span>
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="APP.toggleHelp()">
+                        <span id="icon-help"></span>
+                        <span lang="en">GUIDE</span>
+                        <span lang="th">คู่มือ</span>
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container py-6">
+            <!-- Title Section -->
+            <section class="mb-8 reveal">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="badge badge-critical">
+                                <span lang="en">HIGH PRIORITY</span>
+                                <span lang="th">ความสำคัญสูง</span>
+                            </span>
+                            <span class="badge badge-person">
+                                <span lang="en">INDIVIDUAL</span>
+                                <span lang="th">บุคคล</span>
+                            </span>
+                        </div>
+                        <h2 class="font-display text-3xl font-bold tracking-tight text-silver mb-1">
+                            <span lang="en">Patikorn Pitakchanuan</span>
+                            <span lang="th">ปฏิกร พิทักษ์ฉนวน</span>
+                        </h2>
+                        <p class="text-titanium text-sm">
+                            <span lang="en">Network Investigation • Pram Group Engineering Cluster</span>
+                            <span lang="th">การสืบสวนเครือข่าย • กลุ่มเปรม กรุ๊ป เอ็นจิเนียริ่ง</span>
+                        </p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="btn btn-ghost btn-sm" onclick="APP.resetNetwork()">
+                            <span id="icon-reset"></span>
+                            <span lang="en">RESET VIEW</span>
+                            <span lang="th">รีเซ็ตมุมมอง</span>
+                        </button>
+                        <button class="btn btn-primary btn-sm" onclick="APP.highlightBridges()">
+                            <span id="icon-bridge"></span>
+                            <span lang="en">SHOW BRIDGES</span>
+                            <span lang="th">แสดงจุดเชื่อมต่อ</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Overview -->
+            <section class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8 reveal">
+                <div class="glass-panel stat-card p-4" data-risk="critical">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="text-xs text-muted tracking-widest font-display uppercase">
+                            <span lang="en">Total Entities</span>
+                            <span lang="th">หน่วยงานทั้งหมด</span>
+                        </div>
+                        <span id="icon-entities" class="text-muted"></span>
+                    </div>
+                    <div class="text-3xl font-display font-bold text-silver" id="stat-entities">--</div>
+                    <div class="text-xs text-muted mt-1">
+                        <span lang="en">Persons & Companies</span>
+                        <span lang="th">บุคคลและบริษัท</span>
+                    </div>
+                </div>
+                
+                <div class="glass-panel stat-card p-4" data-risk="high">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="text-xs text-muted tracking-widest font-display uppercase">
+                            <span lang="en">Connections</span>
+                            <span lang="th">การเชื่อมโยง</span>
+                        </div>
+                        <span id="icon-links" class="text-muted"></span>
+                    </div>
+                    <div class="text-3xl font-display font-bold text-silver" id="stat-connections">--</div>
+                    <div class="text-xs text-muted mt-1">
+                        <span lang="en">Direct & Indirect</span>
+                        <span lang="th">ตรงและอ้อม</span>
+                    </div>
+                </div>
+                
+                <div class="glass-panel stat-card p-4" data-risk="critical">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="text-xs text-muted tracking-widest font-display uppercase">
+                            <span lang="en">Gov Contracts</span>
+                            <span lang="th">สัญญาภาครัฐ</span>
+                        </div>
+                        <span id="icon-contract" class="text-muted"></span>
+                    </div>
+                    <div class="text-2xl font-display font-bold text-danger" id="stat-contracts">--</div>
+                    <div class="text-xs text-muted mt-1">
+                        <span lang="en">Total Value (THB)</span>
+                        <span lang="th">มูลค่ารวม (บาท)</span>
+                    </div>
+                </div>
+                
+                <div class="glass-panel stat-card p-4" data-risk="high">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="text-xs text-muted tracking-widest font-display uppercase">
+                            <span lang="en">High Risk</span>
+                            <span lang="th">ความเสี่ยงสูง</span>
+                        </div>
+                        <span id="icon-alert" class="text-muted"></span>
+                    </div>
+                    <div class="text-3xl font-display font-bold text-warning" id="stat-highrisk">--</div>
+                    <div class="text-xs text-muted mt-1">
+                        <span lang="en">Flagged Entities</span>
+                        <span lang="th">หน่วยงานที่ถูกตั้งค่าสถานะ</span>
+                    </div>
+                </div>
+                
+                <div class="glass-panel stat-card p-4" data-risk="medium">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="text-xs text-muted tracking-widest font-display uppercase">
+                            <span lang="en">Bridge Nodes</span>
+                            <span lang="th">จุดเชื่อมโยง</span>
+                        </div>
+                        <span id="icon-node" class="text-muted"></span>
+                    </div>
+                    <div class="text-3xl font-display font-bold text-gold" id="stat-bridges">--</div>
+                    <div class="text-xs text-muted mt-1">
+                        <span lang="en">Key Connectors</span>
+                        <span lang="th">ตัวเชื่อมสำคัญ</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Network Visualization -->
+            <section class="glass-panel p-6 mb-8 reveal">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                    <div>
+                        <h3 class="font-display text-lg font-bold tracking-wide text-silver mb-1">
+                            <span lang="en">NETWORK TOPOLOGY</span>
+                            <span lang="th">โครงสร้างเครือข่าย</span>
+                        </h3>
+                        <p class="text-xs text-muted">
+                            <span lang="en">Interactive force-directed graph • Click nodes for details • Drag to reposition</span>
+                            <span lang="th">กราฟแบบมีแรง • คลิกโหนดเพื่อดูรายละเอียด • ลากเพื่อจัดตำแหน่ง</span>
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <div class="filter-chip active" data-filter="all" onclick="APP.filterNetwork('all')">
+                            <span lang="en">All</span>
+                            <span lang="th">ทั้งหมด</span>
+                        </div>
+                        <div class="filter-chip" data-filter="person" onclick="APP.filterNetwork('person')">
+                            <span class="filter-chip-dot" style="background: var(--node-person);"></span>
+                            <span lang="en">Persons</span>
+                            <span lang="th">บุคคล</span>
+                        </div>
+                        <div class="filter-chip" data-filter="company" onclick="APP.filterNetwork('company')">
+                            <span class="filter-chip-dot" style="background: var(--node-company);"></span>
+                            <span lang="en">Companies</span>
+                            <span lang="th">บริษัท</span>
+                        </div>
+                        <div class="filter-chip" data-filter="high-risk" onclick="APP.filterNetwork('high-risk')">
+                            <span class="filter-chip-dot" style="background: var(--risk-critical);"></span>
+                            <span lang="en">High Risk</span>
+                            <span lang="th">ความเสี่ยงสูง</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="network-container" id="network-container">
+                    <svg id="network-svg"></svg>
+                    
+                    <!-- Network Legend -->
+                    <div class="network-legend">
+                        <div class="text-xs font-display tracking-wider text-muted mb-2 uppercase">
+                            <span lang="en">Legend</span>
+                            <span lang="th">คำอธิบาย</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot" style="background: var(--node-person);"></span>
+                            <span lang="en">Person</span>
+                            <span lang="th">บุคคล</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot" style="background: var(--node-company); border-radius: 2px;"></span>
+                            <span lang="en">Company</span>
+                            <span lang="th">บริษัท</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot" style="background: var(--risk-critical); box-shadow: 0 0 10px var(--risk-critical);"></span>
+                            <span lang="en">High Risk</span>
+                            <span lang="th">ความเสี่ยงสูง</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-line" style="background: var(--link-active);"></span>
+                            <span lang="en">Active Link</span>
+                            <span lang="th">เชื่อมโยงปัจจุบัน</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-line" style="background: repeating-linear-gradient(90deg, var(--link-dashed) 0 4px, transparent 4px 8px);"></span>
+                            <span lang="en">Former/Indirect</span>
+                            <span lang="th">อดีต/อ้อม</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Network Controls -->
+                    <div class="network-controls">
+                        <button class="btn btn-ghost" onclick="APP.zoomIn()" title="Zoom In">
+                            <span id="icon-zoom-in"></span>
+                        </button>
+                        <button class="btn btn-ghost" onclick="APP.zoomOut()" title="Zoom Out">
+                            <span id="icon-zoom-out"></span>
+                        </button>
+                        <button class="btn btn-ghost" onclick="APP.centerNetwork()" title="Center">
+                            <span id="icon-center"></span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section class="grid md:grid-cols-2 gap-6 mb-8">
+                <!-- Risk Matrix -->
+                <div class="glass-panel p-6 reveal">
+                    <h3 class="font-display text-sm font-bold tracking-wider text-silver mb-4 uppercase">
+                        <span lang="en">Risk Assessment Matrix</span>
+                        <span lang="th">เมทริกซ์ประเมินความเสี่ยง</span>
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Contract Distribution -->
+                <div class="glass-panel p-6 reveal">
+                    <h3 class="font-display text-sm font-bold tracking-wider text-silver mb-4 uppercase">
+                        <span lang="en">Government Contract Distribution</span>
+                        <span lang="th">การกระจายสัญญาภาครัฐ</span>
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="scatterChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cluster Analysis -->
+            <section class="glass-panel p-6 mb-8 reveal">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                    <div>
+                        <h3 class="font-display text-lg font-bold tracking-wide text-silver mb-1">
+                            <span lang="en">CLUSTER ANALYSIS</span>
+                            <span lang="th">การวิเคราะห์กลุ่ม</span>
+                        </h3>
+                        <p class="text-xs text-muted">
+                            <span lang="en">Identified connection clusters with potential collusion indicators</span>
+                            <span lang="th">กลุ่มการเชื่อมต่อที่ระบุพร้อมตัวบ่งชี้การสมคบคิดที่อาจเกิดขึ้น</span>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="tabs mb-0">
+                    <button class="tab active" data-tab="phoenix" onclick="APP.showCluster('phoenix')">
+                        <span lang="en">Phoenix-Prem</span>
+                        <span lang="th">ฟีนิกซ์-เปรม</span>
+                    </button>
+                    <button class="tab" data-tab="systronics" onclick="APP.showCluster('systronics')">
+                        <span lang="en">Systronics</span>
+                        <span lang="th">ซิสโทรนิคส์</span>
+                    </button>
+                    <button class="tab" data-tab="dps" onclick="APP.showCluster('dps')">
+                        <span lang="en">DPS Ground</span>
+                        <span lang="th">DPS กราวด์</span>
+                    </button>
+                    <button class="tab" data-tab="favorite" onclick="APP.showCluster('favorite')">
+                        <span lang="en">Favorite Tech</span>
+                        <span lang="th">เฟเวอริต เทค</span>
+                    </button>
+                </div>
+                
+                <div id="cluster-content" class="mt-6">
+                    <!-- Cluster content rendered by JS -->
+                </div>
+            </section>
+
+            <!-- Entity Table -->
+            <section class="glass-panel p-6 mb-8 reveal">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                    <div>
+                        <h3 class="font-display text-lg font-bold tracking-wide text-silver mb-1">
+                            <span lang="en">ENTITY REGISTRY</span>
+                            <span lang="th">ทะเบียนหน่วยงาน</span>
+                        </h3>
+                        <p class="text-xs text-muted">
+                            <span lang="en">Complete list of identified persons and companies • Click row for details</span>
+                            <span lang="th">รายชื่อบุคคลและบริษัทที่ระบุทั้งหมด • คลิกแถวเพื่อดูรายละเอียด</span>
+                        </p>
+                    </div>
+                    <div class="search-wrapper" style="width: 280px;">
+                        <span class="search-icon" id="icon-search"></span>
+                        <input type="text" class="search-input" id="entity-search" placeholder="Search entities..." oninput="APP.searchEntities(this.value)">
+                    </div>
+                </div>
+                
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table class="data-table" id="entity-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <span lang="en">Entity Name</span>
+                                    <span lang="th">ชื่อหน่วยงาน</span>
+                                </th>
+                                <th>
+                                    <span lang="en">Type</span>
+                                    <span lang="th">ประเภท</span>
+                                </th>
+                                <th>
+                                    <span lang="en">Risk Level</span>
+                                    <span lang="th">ระดับความเสี่ยง</span>
+                                </th>
+                                <th>
+                                    <span lang="en">Connections</span>
+                                    <span lang="th">การเชื่อมต่อ</span>
+                                </th>
+                                <th>
+                                    <span lang="en">Gov Contract Value</span>
+                                    <span lang="th">มูลค่าสัญญาภาครัฐ</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="entity-table-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Key Findings -->
+            <section class="glass-panel p-6 mb-8 reveal" style="border-color: rgba(239, 68, 68, 0.3);">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center" style="background: rgba(239, 68, 68, 0.15);">
+                        <span id="icon-warning-large" class="text-danger"></span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-display text-lg font-bold tracking-wide text-danger mb-2">
+                            <span lang="en">KEY FINDINGS & RISK INDICATORS</span>
+                            <span lang="th">ข้อค้นพบสำคัญและตัวบ่งชี้ความเสี่ยง</span>
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-4 mt-4">
+                            <div class="p-4 rounded-lg" style="background: rgba(0,0,0,0.3);">
+                                <div class="text-xs text-muted uppercase tracking-wider mb-2 font-display">
+                                    <span lang="en">Finding #1: The "Pram-Prem" Connection</span>
+                                    <span lang="th">ข้อค้นพบ #1: การเชื่อมโยง "เปรม-เปรม"</span>
+                                </div>
+                                <p class="text-sm text-silver-muted leading-relaxed">
+                                    <span lang="en">Phonetic similarity between <strong class="text-gold">Pram Group Engineering</strong> and liquidated <strong class="text-gold">Prem Engineering</strong>. Connection through <strong class="text-neon">Phoenix Corpasia</strong> links Patikorn to K Technology Solution (472M THB gov contracts) via Suwanee Yunirandorn and Jeerapong Jailak.</span>
+                                    <span lang="th">ความคล้ายคลึงทางเสียงระหว่าง <strong class="text-gold">เปรม กรุ๊ป เอ็นจิเนียริ่ง</strong> และ <strong class="text-gold">เปรม เอ็นจิเนียริ่ง</strong> ที่ถูกชำระบัญชี การเชื่อมต่อผ่าน <strong class="text-neon">ฟีนิกซ์ คอร์ปเอเชีย</strong> เชื่อมโยงปฏิกรไปยัง K Technology Solution (สัญญาภาครัฐ 472 ล้านบาท) ผ่านสุวณี ยูนิรันดร และจีระพงษ์ ใจลัก</span>
+                                </p>
+                            </div>
+                            <div class="p-4 rounded-lg" style="background: rgba(0,0,0,0.3);">
+                                <div class="text-xs text-muted uppercase tracking-wider mb-2 font-display">
+                                    <span lang="en">Finding #2: The Systronics Nexus</span>
+                                    <span lang="th">ข้อค้นพบ #2: จุดเชื่อม Systronics</span>
+                                </div>
+                                <p class="text-sm text-silver-muted leading-relaxed">
+                                    <span lang="en"><strong class="text-neon">Krungthep Brew House</strong> (50% owned by Patikorn) shares director <strong class="text-gold">Kriangsak Imsri</strong> who is the major shareholder of <strong class="text-danger">Systronics Co., Ltd.</strong> — a government contractor with <strong class="text-danger">2.4 Billion THB</strong> in contracts.</span>
+                                    <span lang="th"><strong class="text-neon">กรุงเทพ บริว เฮาส์</strong> (ปฏิกรถือหุ้น 50%) มีกรรมการร่วม <strong class="text-gold">เกรียงศักดิ์ อิ่มศรี</strong> ซึ่งเป็นผู้ถือหุ้นใหญ่ของ <strong class="text-danger">บริษัท ซิสโทรนิคส์ จำกัด</strong> — ผู้รับเหมาภาครัฐที่มีสัญญา <strong class="text-danger">2.4 พันล้านบาท</strong></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="text-center py-8 border-t border-glass">
+                <p class="text-xs text-muted">
+                    <span lang="en">NEXUS INTEL v12.0 • Generated from Corporate Registry Data • For Investigative Purposes Only</span>
+                    <span lang="th">NEXUS INTEL v12.0 • สร้างจากข้อมูลทะเบียนนิติบุคคล • เพื่อวัตถุประสงค์ในการสืบสวนเท่านั้น</span>
+                </p>
+                <p class="text-xs text-muted mt-2 font-mono">
+                    <span lang="en">Subject: Patikorn Pitakchanuan (ปฏิกร พิทักษ์ฉนวน) • Pram Group Engineering (บริษัท เปรม กรุ๊ป เอ็นจิเนียริ่ง จำกัด)</span>
+                    <span lang="th">เป้าหมาย: ปฏิกร พิทักษ์ฉนวน • บริษัท เปรม กรุ๊ป เอ็นจิเนียริ่ง จำกัด</span>
+                </p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Slide Panel -->
+    <div id="panel-backdrop" class="slide-panel-backdrop" onclick="APP.closePanel()"></div>
+    <aside id="slide-panel" class="slide-panel">
+        <div class="p-6">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <div class="text-xs text-muted uppercase tracking-widest font-display mb-1">
+                        <span lang="en">Entity Details</span>
+                        <span lang="th">รายละเอียดหน่วยงาน</span>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-silver" id="panel-title">--</h3>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="APP.closePanel()">
+                    <span id="icon-close"></span>
+                </button>
+            </div>
+            <div id="panel-content">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </aside>
+
+    <!-- Tooltip -->
+    <div id="tooltip" class="tooltip"></div>
+
+    <!-- Scripts -->
+    <script>
+        // ═══════════════════════════════════════════════════════════════════════════
+        // NEXUS INTEL v12.0 — CORPORATE NETWORK ANALYSIS SYSTEM
+        // ═══════════════════════════════════════════════════════════════════════════
+
+        // 1. NATIVE SVG ICONS (No FontAwesome)
+        const ICONS = {
+            logo: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-8 h-8" style="width:32px;height:32px"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`,
+            export: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
+            globe: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+            help: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+            reset: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>`,
+            bridge: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-4h6v4"/></svg>`,
+            entities: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+            links: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
+            contract: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,
+            alert: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+            node: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><circle cx="12" cy="12" r="3"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>`,
+            search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+            close: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
+            warningLarge: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+            zoomIn: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>`,
+            zoomOut: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>`,
+            center: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><circle cx="12" cy="12" r="3"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M2 12h4"/><path d="M18 12h4"/></svg>`,
+            person: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+            company: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M3 21h18"/><path d="M9 8h1"/><path d="M9 12h1"/><path d="M9 16h1"/><path d="M14 8h1"/><path d="M14 12h1"/><path d="M14 16h1"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg>`,
+            arrow: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`
+        };
+
+        // 2. NETWORK DATA
+        const graphData = {
+            nodes: [
+                // MAIN SUBJECTS
+                {id: "patikorn", label: "Patikorn Pitakchanuan", labelTh: "ปฏิกร พิทักษ์ฉนวน", type: "Person", risk: "High", info: "Dir/Shareholder: Pram Group, DPS, Krungthep Brew House. Ex-Dir: Phoenix Corpasia.", infoTh: "กรรมการ/ผู้ถือหุ้น: เปรม กรุ๊ป, DPS, กรุงเทพ บริว เฮาส์. อดีตกรรมการ: ฟีนิกซ์ คอร์ปเอเชีย", contractValue: 2000000000, isBridge: true},
+                {id: "pram-group", label: "Pram Group Engineering", labelTh: "บริษัท เปรม กรุ๊ป เอ็นจิเนียริ่ง จำกัด", type: "Company", risk: "High", info: "Holding Co. Gov Contracts: 2B+ THB. Shareholders: Patikorn (97.8%).", infoTh: "บริษัทโฮลดิ้ง สัญญาภาครัฐ: 2 พันล้าน+ บาท ผู้ถือหุ้น: ปฏิกร (97.8%)", contractValue: 2000000000},
+
+                // PHOENIX-PREM CLUSTER
+                {id: "phoenix", label: "Phoenix Corpasia", labelTh: "ฟีนิกซ์ คอร์ปเอเชีย", type: "Company", risk: "Medium", info: "Bridge between Patikorn and Suwanee.", infoTh: "สะพานเชื่อมระหว่างปฏิกรและสุวณี", isBridge: true},
+                {id: "suwanee", label: "Suwanee Yunirandorn", labelTh: "สุวณี ยูนิรันดร", type: "Person", risk: "Medium", info: "Dir: Phoenix Corpasia. Partner: Prem Engineering.", infoTh: "กรรมการ: ฟีนิกซ์ คอร์ปเอเชีย หุ้นส่วน: เปรม เอ็นจิเนียริ่ง"},
+                {id: "prem-eng", label: "Prem Engineering (Partnership)", labelTh: "ห้างหุ้นส่วนสามัญ เปรม เอ็นจิเนียริ่ง", type: "Company", risk: "Medium", info: "Liquidated. Name similarity to Pram Group.", infoTh: "ชำระบัญชีแล้ว ชื่อคล้ายกับ เปรม กรุ๊ป"},
+                {id: "jeerapong", label: "Jeerapong Jailak", labelTh: "จีระพงษ์ ใจลัก", type: "Person", risk: "High", info: "Dir: K Tech Solution. Partner: Prem Engineering.", infoTh: "กรรมการ: K Tech Solution หุ้นส่วน: เปรม เอ็นจิเนียริ่ง"},
+                {id: "k-tech", label: "K Technology Solution", labelTh: "บริษัท เค เทคโนโลยี โซลูชั่น จำกัด", type: "Company", risk: "High", info: "Gov Contracts: 472M THB.", infoTh: "สัญญาภาครัฐ: 472 ล้านบาท", contractValue: 472000000},
+
+                // DPS CLUSTER
+                {id: "dps", label: "DPS Ground Services", labelTh: "บริษัท ดีพีเอส กราวด์ เซอร์วิสเซส จำกัด", type: "Company", risk: "Medium", info: "Aviation Logistics.", infoTh: "โลจิสติกส์การบิน"},
+                {id: "sasawat", label: "Sasawat Dendandom", labelTh: "ศศวัฒน์ เดนดอม", type: "Person", risk: "Medium", info: "Dir: DPS. Connected to Dan-Thai Group.", infoTh: "กรรมการ: DPS เชื่อมต่อกับกลุ่มแดน-ไทย"},
+                {id: "dan-thai", label: "Dan-Thai Equipment", labelTh: "บริษัท แดน-ไทย อีควิปเมนท์ จำกัด", type: "Company", risk: "Medium", info: "Major Shareholder of DPS (49%).", infoTh: "ผู้ถือหุ้นรายใหญ่ของ DPS (49%)"},
+
+                // FAVORITE TECH CLUSTER
+                {id: "favorite", label: "Favorite Technology", labelTh: "บริษัท เฟเวอริต เทคโนโลยี จำกัด", type: "Company", risk: "Low", info: "Software dev.", infoTh: "พัฒนาซอฟต์แวร์"},
+                {id: "nujanart", label: "Nujanart Rummel-Eriksen", labelTh: "นุจนาถ รัมเมล-อีริกเซ่น", type: "Person", risk: "Low", info: "Major Shareholder: Favorite Tech.", infoTh: "ผู้ถือหุ้นรายใหญ่: เฟเวอริต เทค"},
+                {id: "nucha", label: "Nucha Montreesawatkul", labelTh: "ณุชา มนตรีสวัสดิ์กุล", type: "Person", risk: "Low", info: "Dir: Favorite Tech, Siam Express Survey.", infoTh: "กรรมการ: เฟเวอริต เทค, สยาม เอ็กซ์เพรส เซอร์เวย์"},
+
+                // BREW HOUSE CLUSTER
+                {id: "brew-house", label: "Krungthep Brew House", labelTh: "บริษัท กรุงเทพ บริว เฮาส์ จำกัด", type: "Company", risk: "Medium", info: "Restaurant/Bev.", infoTh: "ร้านอาหาร/เครื่องดื่ม", isBridge: true},
+                {id: "kriangsak", label: "Kriangsak Imsri", labelTh: "เกรียงศักดิ์ อิ่มศรี", type: "Person", risk: "High", info: "Dir: Krungthep Brew House. Owner: Systronics.", infoTh: "กรรมการ: กรุงเทพ บริว เฮาส์ เจ้าของ: Systronics"},
+                {id: "systronics", label: "Systronics Co Ltd", labelTh: "บริษัท ซิสโทรนิคส์ จำกัด", type: "Company", risk: "High", info: "Gov Contracts: 2.4B THB.", infoTh: "สัญญาภาครัฐ: 2.4 พันล้านบาท", contractValue: 2400000000},
+                {id: "jirawat", label: "Jirawat Bunwattanasophon", labelTh: "จิรวัฒน์ บุญวัฒนาโสภณ", type: "Person", risk: "Low", info: "Dir: Krungthep Brew House.", infoTh: "กรรมการ: กรุงเทพ บริว เฮาส์"}
+            ],
+            links: [
+                // Patikorn's Direct Holdings
+                {source: "patikorn", target: "pram-group", label: "Owns 97.8% / Director", labelTh: "ถือหุ้น 97.8% / กรรมการ", type: "solid"},
+                {source: "patikorn", target: "brew-house", label: "Owns 50% / Director", labelTh: "ถือหุ้น 50% / กรรมการ", type: "solid"},
+                {source: "patikorn", target: "dps", label: "Owns 1% / Director", labelTh: "ถือหุ้น 1% / กรรมการ", type: "solid"},
+                {source: "patikorn", target: "phoenix", label: "Former Director (Ended 2023)", labelTh: "อดีตกรรมการ (สิ้นสุด 2566)", type: "dashed"},
+
+                // Pram Group Downstream
+                {source: "pram-group", target: "dps", label: "Owns 29%", labelTh: "ถือหุ้น 29%", type: "solid"},
+                {source: "pram-group", target: "favorite", label: "Owns 25%", labelTh: "ถือหุ้น 25%", type: "solid"},
+
+                // Phoenix-Prem Connection
+                {source: "phoenix", target: "suwanee", label: "Director/Shareholder", labelTh: "กรรมการ/ผู้ถือหุ้น", type: "solid"},
+                {source: "suwanee", target: "prem-eng", label: "Partner (50%)", labelTh: "หุ้นส่วน (50%)", type: "solid"},
+                {source: "prem-eng", target: "jeerapong", label: "Partner (50%)", labelTh: "หุ้นส่วน (50%)", type: "solid"},
+                {source: "jeerapong", target: "k-tech", label: "Director/Major Shareholder", labelTh: "กรรมการ/ผู้ถือหุ้นรายใหญ่", type: "solid"},
+
+                // Systronics Connection
+                {source: "brew-house", target: "kriangsak", label: "Director / Shareholder (25%)", labelTh: "กรรมการ / ผู้ถือหุ้น (25%)", type: "solid"},
+                {source: "kriangsak", target: "systronics", label: "Director / Major Shareholder", labelTh: "กรรมการ / ผู้ถือหุ้นรายใหญ่", type: "solid"},
+                {source: "brew-house", target: "jirawat", label: "Director", labelTh: "กรรมการ", type: "solid"},
+
+                // DPS Connection
+                {source: "dps", target: "sasawat", label: "Director / Shareholder (6%)", labelTh: "กรรมการ / ผู้ถือหุ้น (6%)", type: "solid"},
+                {source: "dan-thai", target: "dps", label: "Shareholder (49%)", labelTh: "ผู้ถือหุ้น (49%)", type: "solid"},
+                {source: "sasawat", target: "dan-thai", label: "Major Shareholder", labelTh: "ผู้ถือหุ้นรายใหญ่", type: "solid"},
+
+                // Favorite Tech Connection
+                {source: "favorite", target: "nujanart", label: "Shareholder (65%)", labelTh: "ผู้ถือหุ้น (65%)", type: "solid"},
+                {source: "favorite", target: "nucha", label: "Director", labelTh: "กรรมการ", type: "solid"}
+            ]
+        };
+
+        // Cluster descriptions
+        const clusterData = {
+            phoenix: {
+                title: "Phoenix-Prem Legacy Connection",
+                titleTh: "การเชื่อมโยง Phoenix-เปรม",
+                risk: "High",
+                description: "This cluster reveals an indirect connection between Patikorn and a major government contractor through a chain of shared business relationships. The phonetic similarity between 'Pram' and 'Prem' suggests possible legacy association.",
+                descriptionTh: "กลุ่มนี้เผยให้เห็นการเชื่อมโยงทางอ้อมระหว่างปฏิกรและผู้รับเหมาภาครัฐรายใหญ่ผ่านห่วงโซ่ความสัมพันธ์ทางธุรกิจร่วมกัน ความคล้ายคลึงทางเสียงระหว่าง 'เปรม' และ 'เปรม' บ่งบอกถึงความเกี่ยวข้องในอดีตที่เป็นไปได้",
+                entities: ["patikorn", "phoenix", "suwanee", "prem-eng", "jeerapong", "k-tech"],
+                contractValue: 472000000,
+                keyFindings: [
+                    "Patikorn was director of Phoenix Corpasia until Feb 2023",
+                    "Phoenix's current director Suwanee was 50% partner in Prem Engineering",
+                    "Prem Engineering's other partner Jeerapong controls K Technology Solution",
+                    "K Technology Solution has 472M THB in government contracts"
+                ],
+                keyFindingsTh: [
+                    "ปฏิกรเป็นกรรมการของ Phoenix Corpasia จนถึงกุมภาพันธ์ 2566",
+                    "กรรมการปัจจุบันของ Phoenix คือสุวณี เป็นหุ้นส่วน 50% ในเปรม เอ็นจิเนียริ่ง",
+                    "หุ้นส่วนอีกคนของเปรม เอ็นจิเนียริ่งคือจีระพงษ์ ควบคุม K Technology Solution",
+                    "K Technology Solution มีสัญญาภาครัฐ 472 ล้านบาท"
+                ]
+            },
+            systronics: {
+                title: "Systronics High-Value Nexus",
+                titleTh: "จุดเชื่อม Systronics มูลค่าสูง",
+                risk: "Critical",
+                description: "Through Krungthep Brew House, Patikorn has a direct business relationship with Kriangsak Imsri, who is the major shareholder of Systronics - one of the largest government contractors.",
+                descriptionTh: "ผ่านกรุงเทพ บริว เฮาส์ ปฏิกรมีความสัมพันธ์ทางธุรกิจโดยตรงกับเกรียงศักดิ์ อิ่มศรี ซึ่งเป็นผู้ถือหุ้นรายใหญ่ของ Systronics - หนึ่งในผู้รับเหมาภาครัฐรายใหญ่ที่สุด",
+                entities: ["patikorn", "brew-house", "kriangsak", "systronics", "jirawat"],
+                contractValue: 2400000000,
+                keyFindings: [
+                    "Patikorn owns 50% of Krungthep Brew House",
+                    "Kriangsak Imsri is director and 25% shareholder of Brew House",
+                    "Kriangsak is the major shareholder of Systronics Co., Ltd.",
+                    "Systronics has 2.4 BILLION THB in government contracts"
+                ],
+                keyFindingsTh: [
+                    "ปฏิกรถือหุ้น 50% ของกรุงเทพ บริว เฮาส์",
+                    "เกรียงศักดิ์ อิ่มศรีเป็นกรรมการและผู้ถือหุ้น 25% ของ Brew House",
+                    "เกรียงศักดิ์เป็นผู้ถือหุ้นรายใหญ่ของบริษัท Systronics จำกัด",
+                    "Systronics มีสัญญาภาครัฐ 2.4 พันล้านบาท"
+                ]
+            },
+            dps: {
+                title: "DPS Ground Services Aviation Cluster",
+                titleTh: "กลุ่มการบิน DPS Ground Services",
+                risk: "Medium",
+                description: "Pram Group has diversified into aviation logistics through DPS Ground Services. The ownership structure involves multiple entities with significant cross-holdings.",
+                descriptionTh: "เปรม กรุ๊ป ได้กระจายธุรกิจเข้าสู่โลจิสติกส์การบินผ่าน DPS Ground Services โครงสร้างการถือหุ้นเกี่ยวข้องกับหลายหน่วยงานที่มีการถือหุ้นไขว้กันอย่างมีนัยสำคัญ",
+                entities: ["patikorn", "pram-group", "dps", "sasawat", "dan-thai"],
+                contractValue: 0,
+                keyFindings: [
+                    "Pram Group owns 29% of DPS Ground Services",
+                    "Patikorn personally owns 1% and is a director",
+                    "Dan-Thai Equipment holds 49% (majority) of DPS",
+                    "Sasawat Dendandom controls Dan-Thai and sits on DPS board with Patikorn"
+                ],
+                keyFindingsTh: [
+                    "เปรม กรุ๊ป ถือหุ้น 29% ของ DPS Ground Services",
+                    "ปฏิกรถือหุ้นส่วนตัว 1% และเป็นกรรมการ",
+                    "Dan-Thai Equipment ถือหุ้น 49% (ส่วนใหญ่) ของ DPS",
+                    "ศศวัฒน์ เดนดอม ควบคุม Dan-Thai และอยู่ในคณะกรรมการ DPS กับปฏิกร"
+                ]
+            },
+            favorite: {
+                title: "Favorite Technology Software Cluster",
+                titleTh: "กลุ่มซอฟต์แวร์ Favorite Technology",
+                risk: "Low",
+                description: "A smaller investment cluster in the technology sector. Pram Group holds a minority stake in this software development company.",
+                descriptionTh: "กลุ่มการลงทุนขนาดเล็กในภาคเทคโนโลยี เปรม กรุ๊ป ถือหุ้นส่วนน้อยในบริษัทพัฒนาซอฟต์แวร์นี้",
+                entities: ["pram-group", "favorite", "nujanart", "nucha"],
+                contractValue: 0,
+                keyFindings: [
+                    "Pram Group holds 25% of Favorite Technology",
+                    "Majority shareholder is Nujanart Rummel-Eriksen (65%)",
+                    "Nucha Montreesawatkul serves as director",
+                    "Lower risk profile - primarily private sector operations"
+                ],
+                keyFindingsTh: [
+                    "เปรม กรุ๊ป ถือหุ้น 25% ของ Favorite Technology",
+                    "ผู้ถือหุ้นรายใหญ่คือนุจนาถ รัมเมล-อีริกเซ่น (65%)",
+                    "ณุชา มนตรีสวัสดิ์กุล ดำรงตำแหน่งกรรมการ",
+                    "โปรไฟล์ความเสี่ยงต่ำ - ดำเนินงานภาคเอกชนเป็นหลัก"
+                ]
+            }
+        };
+
+        // 3. SIMPLEX NOISE ENGINE (Minified)
+        class SimplexNoise{constructor(){this.p=new Uint8Array(256);for(let i=0;i<256;i++)this.p[i]=Math.floor(256*Math.random());this.perm=new Uint8Array(512);for(let i=0;i<512;i++)this.perm[i]=this.p[i&255]}dot(g,x,y){return g[0]*x+g[1]*y}noise(xin,yin){const F2=.5*(Math.sqrt(3)-1),G2=(3-Math.sqrt(3))/6;let i=Math.floor(xin+((xin+yin)*F2)),j=Math.floor(yin+((xin+yin)*F2)),t=(i+j)*G2,X0=i-t,Y0=j-t,x0=xin-X0,y0=yin-Y0;let i1,j1;if(x0>y0){i1=1;j1=0}else{i1=0;j1=1}let x1=x0-i1+G2,y1=y0-j1+G2,x2=x0-1+2*G2,y2=y0-1+2*G2,ii=i&255,jj=j&255,gi0=this.perm[ii+this.perm[jj]]%12,gi1=this.perm[ii+i1+this.perm[jj+j1]]%12,gi2=this.perm[ii+1+this.perm[jj+1]]%12,t0=.5-x0*x0-y0*y0,n0=t0<0?0:Math.pow(t0,4)*this.dot([Math.cos(gi0),Math.sin(gi0)],x0,y0),t1=.5-x1*x1-y1*y1,n1=t1<0?0:Math.pow(t1,4)*this.dot([Math.cos(gi1),Math.sin(gi1)],x1,y1),t2=.5-x2*x2-y2*y2,n2=t2<0?0:Math.pow(t2,4)*this.dot([Math.cos(gi2),Math.sin(gi2)],x2,y2);return 70*(n0+n1+n2)}}
+
+        // 4. ANTIGRAVITY CANVAS ENGINE
+        class AntigravityCanvas {
+            constructor() {
+                this.canvas = document.getElementById('antigravity-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.simplex = new SimplexNoise();
+                this.particles = [];
+                this.orbs = [];
+                this.mouse = { x: -1000, y: -1000 };
+                this.init();
+            }
+            
+            init() {
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                window.addEventListener('mousemove', e => { this.mouse.x = e.clientX; this.mouse.y = e.clientY; });
+                
+                const count = Math.min(120, (this.width * this.height) / 15000);
+                for(let i = 0; i < count; i++) {
+                    const layer = Math.random() > 0.7 ? 2 : (Math.random() > 0.4 ? 1 : 0);
+                    this.particles.push({
+                        x: Math.random() * this.width,
+                        y: Math.random() * this.height,
+                        layer: layer,
+                        size: (Math.random() * 1.5 + 0.5) * (layer + 1),
+                        speed: (Math.random() * 0.3 + 0.1),
+                        noiseOffset: Math.random() * 1000
+                    });
+                }
+                
+                // Ambient orbs
+                for(let i = 0; i < 4; i++) {
+                    this.orbs.push({
+                        x: Math.random() * this.width,
+                        y: Math.random() * this.height,
+                        r: Math.random() * 250 + 150,
+                        color: i % 2 === 0 ? '#3b82f6' : '#8b5cf6',
+                        vx: (Math.random() - 0.5) * 0.2,
+                        vy: (Math.random() - 0.5) * 0.2
+                    });
+                }
+                
+                this.animate();
+            }
+
+            resize() {
+                this.width = this.canvas.width = window.innerWidth;
+                this.height = this.canvas.height = window.innerHeight;
+            }
+
+            animate() {
+                // Dark trail effect
+                this.ctx.fillStyle = 'rgba(3, 3, 5, 0.12)';
+                this.ctx.fillRect(0, 0, this.width, this.height);
+
+                // Draw orbs
+                this.orbs.forEach(o => {
+                    o.x += o.vx;
+                    o.y += o.vy;
+                    if(o.x < 0 || o.x > this.width) o.vx *= -1;
+                    if(o.y < 0 || o.y > this.height) o.vy *= -1;
+                    
+                    const g = this.ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+                    g.addColorStop(0, o.color + '08');
+                    g.addColorStop(0.5, o.color + '04');
+                    g.addColorStop(1, 'transparent');
+                    this.ctx.fillStyle = g;
+                    this.ctx.beginPath();
+                    this.ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
+                    this.ctx.fill();
+                });
+
+                // Draw particles
+                this.particles.forEach(p => {
+                    const noise = this.simplex.noise(p.x * 0.001 + p.noiseOffset, p.y * 0.001 + Date.now() * 0.00005);
+                    p.x += Math.cos(noise * Math.PI * 2) * p.speed;
+                    p.y += Math.sin(noise * Math.PI * 2) * p.speed;
+
+                    // Mouse interaction
+                    const dx = this.mouse.x - p.x;
+                    const dy = this.mouse.y - p.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if(dist < 200) {
+                        const force = (200 - dist) / 200;
+                        const dir = p.layer === 2 ? 0.8 : -0.4;
+                        p.x += dx * force * 0.02 * dir;
+                        p.y += dy * force * 0.02 * dir;
+                    }
+
+                    // Wrap around edges
+                    if(p.x < 0) p.x = this.width;
+                    if(p.x > this.width) p.x = 0;
+                    if(p.y < 0) p.y = this.height;
+                    if(p.y > this.height) p.y = 0;
+
+                    // Render particle
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    const colors = ['#4b5563', '#6366f1', '#3b82f6'];
+                    this.ctx.fillStyle = colors[p.layer];
+                    this.ctx.globalAlpha = p.layer === 2 ? 0.8 : (p.layer === 1 ? 0.5 : 0.3);
+                    this.ctx.fill();
+                    
+                    // Constellation lines (front layer only)
+                    if(p.layer === 2) {
+                        this.particles.filter(n => n.layer === 2 && n !== p).forEach(n => {
+                            const ndx = p.x - n.x;
+                            const ndy = p.y - n.y;
+                            const ndist = Math.sqrt(ndx * ndx + ndy * ndy);
+                            if(ndist < 80) {
+                                this.ctx.beginPath();
+                                this.ctx.moveTo(p.x, p.y);
+                                this.ctx.lineTo(n.x, n.y);
+                                this.ctx.strokeStyle = `rgba(59, 130, 246, ${0.15 * (1 - ndist / 80)})`;
+                                this.ctx.lineWidth = 0.5;
+                                this.ctx.stroke();
+                            }
+                        });
+                    }
+                });
+                
+                this.ctx.globalAlpha = 1;
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // 5. CHART MANAGER
+        const ChartManager = {
+            instances: {},
+            render: (id, type, data, opts) => {
+                const ctx = document.getElementById(id);
+                if(!ctx) return;
+                if(ChartManager.instances[id]) ChartManager.instances[id].destroy();
+                ChartManager.instances[id] = new Chart(ctx, { type, data, options: opts });
+            }
+        };
+
+        // 6. NETWORK VISUALIZATION (D3.js)
+        let networkSimulation = null;
+        let networkSvg = null;
+        let networkZoom = null;
+        let currentZoom = d3.zoomIdentity;
+
+        function initNetwork() {
+            const container = document.getElementById('network-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            
+            // Clear previous
+            d3.select('#network-svg').selectAll('*').remove();
+            
+            networkSvg = d3.select('#network-svg')
+                .attr('viewBox', [0, 0, width, height]);
+            
+            // Defs for markers and gradients
+            const defs = networkSvg.append('defs');
+            
+            // Arrow marker
+            defs.append('marker')
+                .attr('id', 'arrowhead')
+                .attr('viewBox', '-0 -5 10 10')
+                .attr('refX', 25)
+                .attr('refY', 0)
+                .attr('orient', 'auto')
+                .attr('markerWidth', 6)
+                .attr('markerHeight', 6)
+                .append('svg:path')
+                .attr('d', 'M 0,-5 L 10,0 L 0,5')
+                .attr('fill', 'rgba(255,255,255,0.3)');
+
+            // Glow filter
+            const glow = defs.append('filter')
+                .attr('id', 'glow')
+                .attr('x', '-50%')
+                .attr('y', '-50%')
+                .attr('width', '200%')
+                .attr('height', '200%');
+            glow.append('feGaussianBlur')
+                .attr('stdDeviation', '3')
+                .attr('result', 'coloredBlur');
+            const feMerge = glow.append('feMerge');
+            feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+            feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+
+            // Main group for zoom/pan
+            const g = networkSvg.append('g').attr('class', 'network-group');
+            
+            // Zoom behavior
+            networkZoom = d3.zoom()
+                .scaleExtent([0.3, 4])
+                .on('zoom', (event) => {
+                    currentZoom = event.transform;
+                    g.attr('transform', event.transform);
+                });
+            
+            networkSvg.call(networkZoom);
+
+            // Process data
+            const nodes = graphData.nodes.map(d => ({...d}));
+            const links = graphData.links.map(d => ({...d}));
+
+            // Force simulation
+            networkSimulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id).distance(120))
+                .force('charge', d3.forceManyBody().strength(-400))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(50));
+
+            // Draw links
+            const link = g.append('g')
+                .attr('class', 'links')
+                .selectAll('line')
+                .data(links)
+                .enter()
+                .append('line')
+                .attr('stroke', d => d.type === 'dashed' ? 'rgba(139, 92, 246, 0.4)' : 'rgba(59, 130, 246, 0.5)')
+                .attr('stroke-width', 2)
+                .attr('stroke-dasharray', d => d.type === 'dashed' ? '5,5' : 'none')
+                .attr('marker-end', 'url(#arrowhead)');
+
+            // Draw link labels
+            const linkLabels = g.append('g')
+                .attr('class', 'link-labels')
+                .selectAll('text')
+                .data(links)
+                .enter()
+                .append('text')
+                .attr('font-size', 9)
+                .attr('fill', 'rgba(255,255,255,0.5)')
+                .attr('text-anchor', 'middle')
+                .attr('dy', -5)
+                .text(d => APP.lang === 'th' ? d.labelTh : d.label)
+                .style('pointer-events', 'none')
+                .style('opacity', 0);
+
+            // Draw nodes
+            const node = g.append('g')
+                .attr('class', 'nodes')
+                .selectAll('g')
+                .data(nodes)
+                .enter()
+                .append('g')
+                .attr('class', 'node')
+                .style('cursor', 'pointer')
+                .call(d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended))
+                .on('click', (event, d) => APP.showEntityDetails(d))
+                .on('mouseenter', function(event, d) {
+                    // Highlight connected
+                    const connectedIds = new Set([d.id]);
+                    links.forEach(l => {
+                        if(l.source.id === d.id) connectedIds.add(l.target.id);
+                        if(l.target.id === d.id) connectedIds.add(l.source.id);
+                    });
+                    
+                    node.style('opacity', n => connectedIds.has(n.id) ? 1 : 0.2);
+                    link.style('opacity', l => (l.source.id === d.id || l.target.id === d.id) ? 1 : 0.1);
+                    linkLabels.style('opacity', l => (l.source.id === d.id || l.target.id === d.id) ? 1 : 0);
+                    
+                    // Show tooltip
+                    showTooltip(event, d);
+                })
+                .on('mouseleave', function() {
+                    node.style('opacity', 1);
+                    link.style('opacity', 1);
+                    linkLabels.style('opacity', 0);
+                    hideTooltip();
+                });
+
+            // Node shapes
+            node.each(function(d) {
+                const g = d3.select(this);
+                const size = d.id === 'patikorn' ? 28 : (d.risk === 'High' ? 22 : 18);
+                
+                if(d.type === 'Person') {
+                    g.append('circle')
+                        .attr('r', size)
+                        .attr('fill', d.risk === 'High' ? '#ef4444' : '#3b82f6')
+                        .attr('stroke', d.isBridge ? '#f59e0b' : 'rgba(255,255,255,0.2)')
+                        .attr('stroke-width', d.isBridge ? 3 : 1)
+                        .attr('filter', d.risk === 'High' ? 'url(#glow)' : 'none');
+                } else {
+                    g.append('rect')
+                        .attr('x', -size)
+                        .attr('y', -size)
+                        .attr('width', size * 2)
+                        .attr('height', size * 2)
+                        .attr('rx', 4)
+                        .attr('fill', d.risk === 'High' ? '#ef4444' : '#8b5cf6')
+                        .attr('stroke', d.isBridge ? '#f59e0b' : 'rgba(255,255,255,0.2)')
+                        .attr('stroke-width', d.isBridge ? 3 : 1)
+                        .attr('filter', d.risk === 'High' ? 'url(#glow)' : 'none');
+                }
+            });
+
+            // Node labels
+            node.append('text')
+                .attr('dy', d => (d.type === 'Person' ? (d.risk === 'High' ? 40 : 35) : (d.risk === 'High' ? 38 : 32)))
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#f5f5f7')
+                .attr('font-size', 10)
+                .attr('font-family', 'Inter, sans-serif')
+                .text(d => APP.lang === 'th' ? d.labelTh : d.label)
+                .each(function(d) {
+                    // Truncate long labels
+                    const text = d3.select(this);
+                    const label = APP.lang === 'th' ? d.labelTh : d.label;
+                    if(label.length > 20) {
+                        text.text(label.substring(0, 18) + '...');
+                    }
+                });
+
+            // Simulation tick
+            networkSimulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+                
+                linkLabels
+                    .attr('x', d => (d.source.x + d.target.x) / 2)
+                    .attr('y', d => (d.source.y + d.target.y) / 2);
+
+                node.attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+
+            function dragstarted(event) {
+                if(!event.active) networkSimulation.alphaTarget(0.3).restart();
+                event.subject.fx = event.subject.x;
+                event.subject.fy = event.subject.y;
+            }
+
+            function dragged(event) {
+                event.subject.fx = event.x;
+                event.subject.fy = event.y;
+            }
+
+            function dragended(event) {
+                if(!event.active) networkSimulation.alphaTarget(0);
+                event.subject.fx = null;
+                event.subject.fy = null;
+            }
+        }
+
+        function showTooltip(event, d) {
+            const tooltip = document.getElementById('tooltip');
+            const lang = APP.lang;
+            tooltip.innerHTML = `
+                <div class="font-display text-sm font-bold text-silver mb-1">${lang === 'th' ? d.labelTh : d.label}</div>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="badge ${d.type === 'Person' ? 'badge-person' : 'badge-company'}">${d.type}</span>
+                    <span class="badge badge-${d.risk.toLowerCase()}">${d.risk} Risk</span>
+                </div>
+                <p class="text-xs text-muted">${lang === 'th' ? d.infoTh : d.info}</p>
+                ${d.contractValue ? `<p class="text-xs text-gold mt-2">Gov Contracts: ฿${(d.contractValue/1000000).toFixed(0)}M</p>` : ''}
+            `;
+            tooltip.style.left = (event.pageX + 15) + 'px';
+            tooltip.style.top = (event.pageY - 10) + 'px';
+            tooltip.classList.add('visible');
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').classList.remove('visible');
+        }
+
+        // 7. MAIN APP LOGIC
+        const APP = {
+            lang: 'en',
+            currentCluster: 'phoenix',
+            
+            init: () => {
+                // Hide loader
+                document.getElementById('loading-overlay').classList.add('opacity-0', 'pointer-events-none');
+                
+                // Inject icons
+                document.getElementById('logo-slot').innerHTML = ICONS.logo;
+                document.getElementById('icon-export').innerHTML = ICONS.export;
+                document.getElementById('icon-globe').innerHTML = ICONS.globe;
+                document.getElementById('icon-help').innerHTML = ICONS.help;
+                document.getElementById('icon-reset').innerHTML = ICONS.reset;
+                document.getElementById('icon-bridge').innerHTML = ICONS.bridge;
+                document.getElementById('icon-entities').innerHTML = ICONS.entities;
+                document.getElementById('icon-links').innerHTML = ICONS.links;
+                document.getElementById('icon-contract').innerHTML = ICONS.contract;
+                document.getElementById('icon-alert').innerHTML = ICONS.alert;
+                document.getElementById('icon-node').innerHTML = ICONS.node;
+                document.getElementById('icon-search').innerHTML = ICONS.search;
+                document.getElementById('icon-close').innerHTML = ICONS.close;
+                document.getElementById('icon-warning-large').innerHTML = ICONS.warningLarge;
+                document.getElementById('icon-zoom-in').innerHTML = ICONS.zoomIn;
+                document.getElementById('icon-zoom-out').innerHTML = ICONS.zoomOut;
+                document.getElementById('icon-center').innerHTML = ICONS.center;
+                
+                // Initialize components
+                APP.hydrateStats();
+                APP.initObservers();
+                APP.renderCharts();
+                APP.renderEntityTable();
+                APP.showCluster('phoenix');
+                initNetwork();
+                new AntigravityCanvas();
+            },
+            
+            toggleLang: () => {
+                APP.lang = APP.lang === 'en' ? 'th' : 'en';
+                document.body.dataset.lang = APP.lang;
+                // Reinit network with new language
+                setTimeout(() => initNetwork(), 100);
+            },
+            
+            hydrateStats: () => {
+                const stats = {
+                    entities: graphData.nodes.length,
+                    connections: graphData.links.length,
+                    contracts: '4.87B+',
+                    highRisk: graphData.nodes.filter(n => n.risk === 'High').length,
+                    bridges: graphData.nodes.filter(n => n.isBridge).length
+                };
+                document.getElementById('stat-entities').textContent = stats.entities;
+                document.getElementById('stat-connections').textContent = stats.connections;
+                document.getElementById('stat-contracts').textContent = stats.contracts;
+                document.getElementById('stat-highrisk').textContent = stats.highRisk;
+                document.getElementById('stat-bridges').textContent = stats.bridges;
+            },
+            
+            renderCharts: () => {
+                // Radar Chart - Risk Assessment
+                ChartManager.render('radarChart', 'radar', {
+                    labels: ['Ownership Concentration', 'Gov Contract Exposure', 'Cross-Shareholding', 'Bridge Node Risk', 'Indirect Connections'],
+                    datasets: [{
+                        label: 'Risk Score',
+                        data: [95, 88, 75, 82, 70],
+                        backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                        borderColor: '#ef4444',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#ef4444'
+                    }]
+                }, {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 100,
+                            ticks: { display: false },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            angleLines: { color: 'rgba(255,255,255,0.1)' },
+                            pointLabels: { 
+                                color: '#86868b', 
+                                font: { size: 10, family: 'Inter' }
+                            }
+                        }
+                    }
+                });
+
+                // Scatter Chart - Contract Distribution
+                ChartManager.render('scatterChart', 'scatter', {
+                    datasets: [{
+                        label: 'Government Contracts',
+                        data: [
+                            { x: 2000, y: 95, label: 'Pram Group' },
+                            { x: 2400, y: 90, label: 'Systronics' },
+                            { x: 472, y: 75, label: 'K Technology' },
+                            { x: 0, y: 30, label: 'DPS Ground' },
+                            { x: 0, y: 20, label: 'Favorite Tech' }
+                        ],
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(249, 115, 22, 0.8)',
+                            'rgba(234, 179, 8, 0.8)',
+                            'rgba(34, 197, 94, 0.8)'
+                        ],
+                        borderColor: 'rgba(255,255,255,0.3)',
+                        borderWidth: 1,
+                        pointRadius: 12
+                    }]
+                }, {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `${ctx.raw.label}: ฿${ctx.raw.x}M (Risk: ${ctx.raw.y})`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Contract Value (Million THB)', color: '#86868b' },
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#86868b' }
+                        },
+                        y: {
+                            title: { display: true, text: 'Risk Score', color: '#86868b' },
+                            min: 0,
+                            max: 100,
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#86868b' }
+                        }
+                    }
+                });
+            },
+            
+            renderEntityTable: (filter = '') => {
+                const tbody = document.getElementById('entity-table-body');
+                const lang = APP.lang;
+                
+                let nodes = graphData.nodes;
+                if(filter) {
+                    const f = filter.toLowerCase();
+                    nodes = nodes.filter(n => 
+                        n.label.toLowerCase().includes(f) || 
+                        n.labelTh.includes(f) ||
+                        n.type.toLowerCase().includes(f)
+                    );
+                }
+                
+                // Count connections
+                const connectionCount = {};
+                graphData.links.forEach(l => {
+                    connectionCount[l.source] = (connectionCount[l.source] || 0) + 1;
+                    connectionCount[l.target] = (connectionCount[l.target] || 0) + 1;
+                });
+                
+                tbody.innerHTML = nodes.map(n => {
+                    const connections = connectionCount[n.id] || 0;
+                    const contractVal = n.contractValue ? `฿${(n.contractValue/1000000).toFixed(0)}M` : '-';
+                    return `
+                        <tr data-clickable onclick="APP.showEntityDetails(graphData.nodes.find(x => x.id === '${n.id}'))">
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs">${n.type === 'Person' ? ICONS.person : ICONS.company}</span>
+                                    <span>${lang === 'th' ? n.labelTh : n.label}</span>
+                                </div>
+                            </td>
+                            <td><span class="badge ${n.type === 'Person' ? 'badge-person' : 'badge-company'}">${n.type}</span></td>
+                            <td><span class="badge badge-${n.risk.toLowerCase()}">${n.risk}</span></td>
+                            <td>${connections}</td>
+                            <td class="${n.contractValue ? 'text-gold' : ''}">${contractVal}</td>
+                        </tr>
+                    `;
+                }).join('');
+            },
+            
+            searchEntities: (query) => {
+                APP.renderEntityTable(query);
+            },
+            
+            showCluster: (clusterId) => {
+                APP.currentCluster = clusterId;
+                const cluster = clusterData[clusterId];
+                const lang = APP.lang;
+                
+                // Update tabs
+                document.querySelectorAll('.tab').forEach(t => {
+                    t.classList.toggle('active', t.dataset.tab === clusterId);
+                });
+                
+                // Render cluster content
+                const content = document.getElementById('cluster-content');
+                content.innerHTML = `
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="md:col-span-2">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="badge badge-${cluster.risk.toLowerCase()}">${cluster.risk} Risk</span>
+                                ${cluster.contractValue ? `<span class="text-sm text-gold font-mono">Gov Contracts: ฿${(cluster.contractValue/1000000).toFixed(0)}M</span>` : ''}
+                            </div>
+                            <p class="text-sm text-silver-muted mb-4">${lang === 'th' ? cluster.descriptionTh : cluster.description}</p>
+                            <div class="text-xs text-muted uppercase tracking-wider font-display mb-2">${lang === 'th' ? 'ข้อค้นพบสำคัญ' : 'Key Findings'}</div>
+                            <ul class="space-y-2">
+                                ${(lang === 'th' ? cluster.keyFindingsTh : cluster.keyFindings).map(f => `
+                                    <li class="flex items-start gap-2 text-sm text-silver-muted">
+                                        <span class="text-neon mt-1">${ICONS.arrow}</span>
+                                        <span>${f}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="text-xs text-muted uppercase tracking-wider font-display mb-3">${lang === 'th' ? 'หน่วยงานที่เกี่ยวข้อง' : 'Involved Entities'}</div>
+                            <div class="space-y-2">
+                                ${cluster.entities.map(eid => {
+                                    const e = graphData.nodes.find(n => n.id === eid);
+                                    return `
+                                        <div class="flex items-center gap-2 p-2 rounded-md cursor-pointer transition-all hover:bg-white/5" onclick="APP.focusNode('${eid}')">
+                                            <span class="text-xs ${e.type === 'Person' ? 'text-neon' : 'text-violet'}">${e.type === 'Person' ? ICONS.person : ICONS.company}</span>
+                                            <span class="text-sm text-silver">${lang === 'th' ? e.labelTh : e.label}</span>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            showEntityDetails: (entity) => {
+                const panel = document.getElementById('slide-panel');
+                const backdrop = document.getElementById('panel-backdrop');
+                const content = document.getElementById('panel-content');
+                const title = document.getElementById('panel-title');
+                const lang = APP.lang;
+                
+                title.textContent = lang === 'th' ? entity.labelTh : entity.label;
+                
+                // Find connections
+                const connections = graphData.links.filter(l => l.source.id === entity.id || l.target.id === entity.id || l.source === entity.id || l.target === entity.id);
+                
+                content.innerHTML = `
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="badge ${entity.type === 'Person' ? 'badge-person' : 'badge-company'}">${entity.type}</span>
+                        <span class="badge badge-${entity.risk.toLowerCase()}">${entity.risk} Risk</span>
+                        ${entity.isBridge ? '<span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border-color: rgba(245, 158, 11, 0.3);">Bridge Node</span>' : ''}
+                    </div>
+                    
+                    <p class="text-sm text-silver-muted mb-6">${lang === 'th' ? entity.infoTh : entity.info}</p>
+                    
+                    ${entity.contractValue ? `
+                        <div class="p-4 rounded-lg mb-6" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3);">
+                            <div class="text-xs text-muted uppercase tracking-wider font-display mb-1">${lang === 'th' ? 'มูลค่าสัญญาภาครัฐ' : 'Government Contract Value'}</div>
+                            <div class="text-2xl font-display font-bold text-danger">฿${(entity.contractValue/1000000).toFixed(0)}M</div>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="text-xs text-muted uppercase tracking-wider font-display mb-3">${lang === 'th' ? 'การเชื่อมต่อ' : 'Connections'} (${connections.length})</div>
+                    <div class="space-y-2">
+                        ${connections.map(c => {
+                            const isSource = (c.source.id || c.source) === entity.id;
+                            const otherId = isSource ? (c.target.id || c.target) : (c.source.id || c.source);
+                            const other = graphData.nodes.find(n => n.id === otherId);
+                            if(!other) return '';
+                            return `
+                                <div class="flex items-center justify-between p-3 rounded-lg" style="background: rgba(0,0,0,0.3);">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs ${other.type === 'Person' ? 'text-neon' : 'text-violet'}">${other.type === 'Person' ? ICONS.person : ICONS.company}</span>
+                                        <div>
+                                            <div class="text-sm text-silver">${lang === 'th' ? other.labelTh : other.label}</div>
+                                            <div class="text-xs text-muted">${lang === 'th' ? c.labelTh : c.label}</div>
+                                        </div>
+                                    </div>
+                                    <span class="badge badge-${other.risk.toLowerCase()}">${other.risk}</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                
+                panel.classList.add('open');
+                backdrop.classList.add('open');
+            },
+            
+            closePanel: () => {
+                document.getElementById('slide-panel').classList.remove('open');
+                document.getElementById('panel-backdrop').classList.remove('open');
+            },
+            
+            focusNode: (nodeId) => {
+                // Find node and zoom to it
+                const node = graphData.nodes.find(n => n.id === nodeId);
+                if(node && networkSvg && networkZoom) {
+                    const container = document.getElementById('network-container');
+                    const width = container.clientWidth;
+                    const height = container.clientHeight;
+                    
+                    networkSvg.transition().duration(750).call(
+                        networkZoom.transform,
+                        d3.zoomIdentity.translate(width/2 - node.x * 1.5, height/2 - node.y * 1.5).scale(1.5)
+                    );
+                }
+            },
+            
+            filterNetwork: (filter) => {
+                // Update filter chips
+                document.querySelectorAll('.filter-chip').forEach(c => {
+                    c.classList.toggle('active', c.dataset.filter === filter);
+                });
+                
+                // Filter nodes
+                d3.selectAll('.node').style('opacity', function(d) {
+                    if(filter === 'all') return 1;
+                    if(filter === 'person' && d.type === 'Person') return 1;
+                    if(filter === 'company' && d.type === 'Company') return 1;
+                    if(filter === 'high-risk' && d.risk === 'High') return 1;
+                    return 0.15;
+                });
+            },
+            
+            resetNetwork: () => {
+                if(networkSvg && networkZoom) {
+                    networkSvg.transition().duration(750).call(
+                        networkZoom.transform,
+                        d3.zoomIdentity
+                    );
+                }
+                APP.filterNetwork('all');
+            },
+            
+            highlightBridges: () => {
+                d3.selectAll('.node').style('opacity', d => d.isBridge ? 1 : 0.15);
+            },
+            
+            zoomIn: () => {
+                if(networkSvg && networkZoom) {
+                    networkSvg.transition().duration(300).call(
+                        networkZoom.scaleBy, 1.3
+                    );
+                }
+            },
+            
+            zoomOut: () => {
+                if(networkSvg && networkZoom) {
+                    networkSvg.transition().duration(300).call(
+                        networkZoom.scaleBy, 0.7
+                    );
+                }
+            },
+            
+            centerNetwork: () => {
+                APP.resetNetwork();
+            },
+            
+            initObservers: () => {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(e => e.target.classList.toggle('active', e.isIntersecting));
+                }, { threshold: 0.1 });
+                document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            },
+            
+            exportReport: () => {
+                alert('Export functionality would generate a PDF report in production.');
+            },
+            
+            toggleHelp: () => {
+                alert('User guide: Click nodes to see details. Drag to reposition. Use filters to highlight specific entities. Language toggle available.');
+            }
+        };
+
+        // 8. RESILIENT LOADER
+        function waitForLibs(retries = 0) {
+            if (typeof d3 !== 'undefined' && typeof Chart !== 'undefined') {
+                console.log(`[Nexus] Libraries loaded (${retries * 100}ms)`);
+                APP.init();
+            } else if (retries < 50) {
+                setTimeout(() => waitForLibs(retries + 1), 100);
+            } else {
+                console.error('[Nexus] Critical dependency failure');
+                document.getElementById('loading-overlay').innerHTML = '<div class="text-danger">Failed to load required libraries. Please refresh.</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => waitForLibs());
+    </script>
+</body>
+</html>
