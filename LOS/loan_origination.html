@@ -1,0 +1,2855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กยศ. Nexus // Student Loan Allocation System</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <style>
+        /* === NEXUS MICRO-FRAMEWORK v15.0 === */
+        @layer base, layout, components, utilities, animations;
+
+        @layer base {
+            :root {
+                /* Dark Mode - Void Palette */
+                --space-void: #000000;
+                --space-deep: #0a0a0a;
+                --space-surface: #111111;
+                --space-elevated: #1a1a1a;
+                
+                /* Apple-Inspired Neutrals */
+                --titanium: #86868b;
+                --silver: #f5f5f7;
+                --platinum: #e8e8ed;
+                --graphite: #424245;
+                
+                /* Neon Accents */
+                --neon-core: #0071e3;
+                --neon-glow: #2997ff;
+                --accent-violet: #bf5af2;
+                --accent-gold: #ffd60a;
+                --peach-fuzz: #FFBE98;
+                
+                /* Semantic Colors */
+                --success: #30d158;
+                --success-dim: rgba(48, 209, 88, 0.15);
+                --danger: #ff453a;
+                --danger-dim: rgba(255, 69, 58, 0.15);
+                --warning: #ffd60a;
+                --warning-dim: rgba(255, 214, 10, 0.15);
+                --info: #64d2ff;
+                
+                /* Alert Colors */
+                --alert-bg: rgba(255, 69, 58, 0.25);
+                --alert-border: rgba(255, 69, 58, 0.6);
+                --alert-pulse: rgba(255, 69, 58, 0.4);
+                
+                /* Tier Colors */
+                --tier-1: #ffd700;
+                --tier-1-dim: rgba(255, 215, 0, 0.15);
+                --tier-2: #c0c0c0;
+                --tier-2-dim: rgba(192, 192, 192, 0.15);
+                --tier-3: #cd7f32;
+                --tier-3-dim: rgba(205, 127, 50, 0.15);
+                --tier-4: #64d2ff;
+                --tier-4-dim: rgba(100, 210, 255, 0.15);
+                --tier-none: #636366;
+                --tier-none-dim: rgba(99, 99, 102, 0.15);
+                
+                /* Glass & Borders */
+                --glass-bg: rgba(28, 28, 30, 0.72);
+                --glass-border: rgba(255, 255, 255, 0.08);
+                --glass-border-hover: rgba(255, 255, 255, 0.18);
+                
+                /* Text Colors */
+                --text-primary: #f5f5f7;
+                --text-secondary: #86868b;
+                --text-tertiary: #424245;
+                
+                /* Motion */
+                --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+                --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+                
+                /* Typography */
+                --font-display: 'Orbitron', system-ui, sans-serif;
+                --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                --font-thai: 'Sarabun', 'Inter', sans-serif;
+                --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+            }
+            
+            /* Light Mode Variables */
+            [data-theme="light"] {
+                --space-void: #ffffff;
+                --space-deep: #f5f5f7;
+                --space-surface: #ffffff;
+                --space-elevated: #f5f5f7;
+                
+                --titanium: #6e6e73;
+                --silver: #1d1d1f;
+                --platinum: #86868b;
+                --graphite: #d2d2d7;
+                
+                --glass-bg: rgba(255, 255, 255, 0.72);
+                --glass-border: rgba(0, 0, 0, 0.08);
+                --glass-border-hover: rgba(0, 0, 0, 0.15);
+                
+                --text-primary: #1d1d1f;
+                --text-secondary: #6e6e73;
+                --text-tertiary: #86868b;
+                
+                --tier-1-dim: rgba(255, 215, 0, 0.2);
+                --tier-2-dim: rgba(142, 142, 147, 0.2);
+                --tier-3-dim: rgba(205, 127, 50, 0.2);
+                --tier-4-dim: rgba(0, 113, 227, 0.15);
+                --tier-none-dim: rgba(142, 142, 147, 0.15);
+                
+                --success-dim: rgba(48, 209, 88, 0.2);
+                --danger-dim: rgba(255, 69, 58, 0.2);
+                --warning-dim: rgba(255, 214, 10, 0.25);
+                
+                --alert-bg: rgba(255, 69, 58, 0.15);
+                --alert-border: rgba(255, 69, 58, 0.5);
+                --alert-pulse: rgba(255, 69, 58, 0.3);
+            }
+            
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            
+            html { 
+                font-size: 16px; 
+                scroll-behavior: smooth;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            
+            body { 
+                background: var(--space-void); 
+                color: var(--text-primary); 
+                font-family: var(--font-ui);
+                line-height: 1.5;
+                overflow-x: hidden;
+                min-height: 100vh;
+                transition: background 0.3s ease, color 0.3s ease;
+            }
+            
+            /* Deep-State i18n */
+            [lang="th"] { display: none; font-family: var(--font-thai); }
+            body[data-lang="th"] [lang="en"] { display: none; }
+            body[data-lang="th"] [lang="th"] { display: block; font-family: var(--font-thai); }
+            body[data-lang="th"] { font-family: var(--font-thai); }
+            
+            /* Scrollbar */
+            ::-webkit-scrollbar { width: 8px; height: 8px; }
+            ::-webkit-scrollbar-track { background: var(--space-deep); }
+            ::-webkit-scrollbar-thumb { background: var(--graphite); border-radius: 4px; }
+            ::-webkit-scrollbar-thumb:hover { background: var(--titanium); }
+            
+            /* Selection */
+            ::selection { background: var(--neon-core); color: white; }
+        }
+
+        @layer layout {
+            .container { max-width: 1600px; margin: 0 auto; padding: 0 1.5rem; }
+            .grid { display: grid; gap: 1.5rem; }
+            .flex { display: flex; }
+            .flex-col { flex-direction: column; }
+            .flex-wrap { flex-wrap: wrap; }
+            .items-center { align-items: center; }
+            .items-start { align-items: flex-start; }
+            .items-end { align-items: flex-end; }
+            .justify-center { justify-content: center; }
+            .justify-between { justify-content: space-between; }
+            .justify-end { justify-content: flex-end; }
+            .gap-1 { gap: 0.25rem; }
+            .gap-2 { gap: 0.5rem; }
+            .gap-3 { gap: 0.75rem; }
+            .gap-4 { gap: 1rem; }
+            .gap-6 { gap: 1.5rem; }
+            .gap-8 { gap: 2rem; }
+            
+            .w-full { width: 100%; }
+            .h-full { height: 100%; }
+            .min-h-screen { min-height: 100vh; }
+            
+            .relative { position: relative; }
+            .absolute { position: absolute; }
+            .fixed { position: fixed; }
+            .sticky { position: sticky; }
+            .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+            .top-0 { top: 0; }
+            .right-0 { right: 0; }
+            .bottom-0 { bottom: 0; }
+            .left-0 { left: 0; }
+            
+            .z-0 { z-index: 0; }
+            .z-10 { z-index: 10; }
+            .z-50 { z-index: 50; }
+            .z-100 { z-index: 100; }
+            .z-max { z-index: 9999; }
+            
+            .overflow-hidden { overflow: hidden; }
+            .overflow-auto { overflow: auto; }
+            .overflow-x-auto { overflow-x: auto; }
+            
+            .p-2 { padding: 0.5rem; }
+            .p-3 { padding: 0.75rem; }
+            .p-4 { padding: 1rem; }
+            .p-5 { padding: 1.25rem; }
+            .p-6 { padding: 1.5rem; }
+            .p-8 { padding: 2rem; }
+            .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+            .px-4 { padding-left: 1rem; padding-right: 1rem; }
+            .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+            .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+            .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+            .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+            .py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+            .pt-4 { padding-top: 1rem; }
+            .pb-4 { padding-bottom: 1rem; }
+            .mb-2 { margin-bottom: 0.5rem; }
+            .mb-3 { margin-bottom: 0.75rem; }
+            .mb-4 { margin-bottom: 1rem; }
+            .mb-6 { margin-bottom: 1.5rem; }
+            .mb-8 { margin-bottom: 2rem; }
+            .mt-2 { margin-top: 0.5rem; }
+            .mt-4 { margin-top: 1rem; }
+            .mt-6 { margin-top: 1.5rem; }
+            .ml-2 { margin-left: 0.5rem; }
+            .ml-auto { margin-left: auto; }
+            .mr-2 { margin-right: 0.5rem; }
+            
+            @media (min-width: 640px) {
+                .sm\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+            }
+            @media (min-width: 768px) {
+                .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+                .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+                .md\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+            }
+            @media (min-width: 1024px) {
+                .lg\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+                .lg\:grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
+            }
+        }
+
+        @layer components {
+            /* Glass Panels */
+            .glass-panel {
+                background: var(--glass-bg);
+                backdrop-filter: blur(40px) saturate(180%);
+                -webkit-backdrop-filter: blur(40px) saturate(180%);
+                border: 1px solid var(--glass-border);
+                border-radius: 16px;
+                transition: all 0.3s var(--ease-out);
+            }
+            .glass-panel:hover {
+                border-color: var(--glass-border-hover);
+            }
+            .glass-panel-elevated {
+                background: var(--space-elevated);
+                border: 1px solid var(--glass-border);
+                border-radius: 12px;
+            }
+            
+            /* Typography */
+            .font-display { font-family: var(--font-display); letter-spacing: 0.05em; }
+            .font-mono { font-family: var(--font-mono); }
+            .font-thai { font-family: var(--font-thai); }
+            
+            .text-xs { font-size: 0.75rem; line-height: 1.4; }
+            .text-sm { font-size: 0.875rem; line-height: 1.5; }
+            .text-base { font-size: 1rem; }
+            .text-lg { font-size: 1.125rem; }
+            .text-xl { font-size: 1.25rem; }
+            .text-2xl { font-size: 1.5rem; }
+            .text-3xl { font-size: 1.875rem; }
+            .text-4xl { font-size: 2.25rem; }
+            
+            .font-light { font-weight: 300; }
+            .font-normal { font-weight: 400; }
+            .font-medium { font-weight: 500; }
+            .font-semibold { font-weight: 600; }
+            .font-bold { font-weight: 700; }
+            
+            .uppercase { text-transform: uppercase; }
+            .tracking-wide { letter-spacing: 0.025em; }
+            .tracking-wider { letter-spacing: 0.05em; }
+            .tracking-widest { letter-spacing: 0.1em; }
+            
+            .text-center { text-align: center; }
+            .text-right { text-align: right; }
+            
+            .text-white { color: white; }
+            .text-silver { color: var(--silver); }
+            .text-titanium { color: var(--titanium); }
+            .text-graphite { color: var(--graphite); }
+            .text-neon { color: var(--neon-core); }
+            .text-success { color: var(--success); }
+            .text-danger { color: var(--danger); }
+            .text-warning { color: var(--warning); }
+            .text-primary { color: var(--text-primary); }
+            .text-secondary { color: var(--text-secondary); }
+            
+            /* Buttons */
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                padding: 0.625rem 1.25rem;
+                font-family: var(--font-ui);
+                font-size: 0.875rem;
+                font-weight: 500;
+                border-radius: 8px;
+                border: none;
+                cursor: pointer;
+                transition: all 0.2s var(--ease-out);
+                white-space: nowrap;
+            }
+            .btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            .btn-primary {
+                background: var(--neon-core);
+                color: white;
+            }
+            .btn-primary:hover:not(:disabled) {
+                background: var(--neon-glow);
+                box-shadow: 0 0 20px rgba(0, 113, 227, 0.4);
+            }
+            .btn-secondary {
+                background: var(--space-elevated);
+                color: var(--text-primary);
+                border: 1px solid var(--glass-border);
+            }
+            .btn-secondary:hover:not(:disabled) {
+                background: var(--graphite);
+                border-color: var(--glass-border-hover);
+            }
+            .btn-ghost {
+                background: transparent;
+                color: var(--titanium);
+            }
+            .btn-ghost:hover:not(:disabled) {
+                color: var(--text-primary);
+                background: rgba(128,128,128,0.1);
+            }
+            .btn-danger {
+                background: var(--danger);
+                color: white;
+            }
+            .btn-danger:hover:not(:disabled) {
+                background: #ff6961;
+                box-shadow: 0 0 20px rgba(255, 69, 58, 0.4);
+            }
+            .btn-sm {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.75rem;
+            }
+            .btn-lg {
+                padding: 0.875rem 1.75rem;
+                font-size: 1rem;
+            }
+            
+            /* Theme Toggle Button */
+            .theme-toggle {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: var(--space-elevated);
+                border: 1px solid var(--glass-border);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s var(--ease-out);
+                font-size: 1.25rem;
+            }
+            .theme-toggle:hover {
+                background: var(--glass-border-hover);
+                transform: rotate(15deg);
+            }
+            
+            /* Form Elements */
+            .input-group {
+                display: flex;
+                flex-direction: column;
+                gap: 0.375rem;
+            }
+            .input-label {
+                font-size: 0.75rem;
+                font-weight: 500;
+                color: var(--titanium);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+            .input-field {
+                background: var(--space-deep);
+                border: 1px solid var(--glass-border);
+                border-radius: 8px;
+                padding: 0.625rem 0.875rem;
+                font-family: var(--font-mono);
+                font-size: 0.875rem;
+                color: var(--text-primary);
+                transition: all 0.2s var(--ease-out);
+                width: 100%;
+            }
+            .input-field:focus {
+                outline: none;
+                border-color: var(--neon-core);
+                box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+            }
+            .input-field::placeholder {
+                color: var(--graphite);
+            }
+            .input-field.input-warning {
+                border-color: var(--warning);
+                box-shadow: 0 0 0 3px var(--warning-dim);
+            }
+            .input-field.input-danger {
+                border-color: var(--danger);
+                box-shadow: 0 0 0 3px var(--danger-dim);
+            }
+            
+            select.input-field {
+                appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2386868b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 0.75rem center;
+                padding-right: 2.5rem;
+            }
+            
+            /* Toggle Switch */
+            .toggle-wrapper {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .toggle {
+                position: relative;
+                width: 44px;
+                height: 24px;
+                background: var(--graphite);
+                border-radius: 12px;
+                cursor: pointer;
+                transition: all 0.3s var(--ease-out);
+                flex-shrink: 0;
+            }
+            .toggle::after {
+                content: '';
+                position: absolute;
+                top: 2px;
+                left: 2px;
+                width: 20px;
+                height: 20px;
+                background: white;
+                border-radius: 50%;
+                transition: transform 0.3s var(--ease-spring);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            }
+            .toggle.active {
+                background: var(--success);
+            }
+            .toggle.active::after {
+                transform: translateX(20px);
+            }
+            .toggle.disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+                pointer-events: none;
+            }
+            .toggle-sm {
+                width: 36px;
+                height: 20px;
+            }
+            .toggle-sm::after {
+                width: 16px;
+                height: 16px;
+            }
+            .toggle-sm.active::after {
+                transform: translateX(16px);
+            }
+            
+            /* Badges */
+            .badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.25rem;
+                padding: 0.125rem 0.5rem;
+                font-size: 0.625rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                border-radius: 4px;
+                border: 1px solid transparent;
+            }
+            .badge-tier-1 { background: var(--tier-1-dim); color: var(--tier-1); border-color: rgba(255,215,0,0.3); }
+            .badge-tier-2 { background: var(--tier-2-dim); color: var(--tier-2); border-color: rgba(192,192,192,0.3); }
+            .badge-tier-3 { background: var(--tier-3-dim); color: var(--tier-3); border-color: rgba(205,127,50,0.3); }
+            .badge-tier-4 { background: var(--tier-4-dim); color: var(--tier-4); border-color: rgba(100,210,255,0.3); }
+            .badge-tier-none { background: var(--tier-none-dim); color: var(--tier-none); border-color: rgba(99,99,102,0.3); }
+            .badge-success { background: var(--success-dim); color: var(--success); border-color: rgba(48,209,88,0.3); }
+            .badge-danger { background: var(--danger-dim); color: var(--danger); border-color: rgba(255,69,58,0.3); }
+            .badge-warning { background: var(--warning-dim); color: var(--warning); border-color: rgba(255,214,10,0.3); }
+            .badge-neon { background: rgba(0,113,227,0.15); color: var(--neon-glow); border-color: rgba(0,113,227,0.3); }
+            
+            /* Light mode badge adjustments */
+            [data-theme="light"] .badge-tier-2 { color: #636366; }
+            
+            /* Tabs */
+            .tabs-container {
+                display: flex;
+                gap: 0.25rem;
+                background: var(--space-deep);
+                padding: 0.25rem;
+                border-radius: 10px;
+                border: 1px solid var(--glass-border);
+            }
+            .tab-btn {
+                flex: 1;
+                padding: 0.75rem 1.5rem;
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: var(--titanium);
+                background: transparent;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s var(--ease-out);
+            }
+            .tab-btn:hover {
+                color: var(--text-primary);
+                background: rgba(128,128,128,0.1);
+            }
+            .tab-btn.active {
+                color: white;
+                background: var(--neon-core);
+                box-shadow: 0 2px 8px rgba(0,113,227,0.3);
+            }
+            .tab-content {
+                display: none;
+            }
+            .tab-content.active {
+                display: block;
+            }
+            
+            /* Data Table */
+            .data-table-wrapper {
+                overflow-x: auto;
+                border-radius: 12px;
+                border: 1px solid var(--glass-border);
+            }
+            .data-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 0.8125rem;
+            }
+            .data-table th {
+                text-align: left;
+                padding: 0.875rem 1rem;
+                font-size: 0.6875rem;
+                font-weight: 600;
+                color: var(--titanium);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                background: var(--space-deep);
+                border-bottom: 1px solid var(--glass-border);
+                white-space: nowrap;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+            .data-table td {
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid var(--glass-border);
+                vertical-align: middle;
+                color: var(--text-primary);
+            }
+            .data-table tr {
+                transition: background 0.15s ease;
+            }
+            .data-table tbody tr:hover {
+                background: rgba(128,128,128,0.05);
+            }
+            .data-table tr.selected {
+                background: rgba(0,113,227,0.1);
+            }
+            .data-table tr.disabled {
+                opacity: 0.4;
+            }
+            .data-table tr.over-budget-alert {
+                background: var(--alert-bg) !important;
+                border-left: 3px solid var(--danger);
+                animation: alertPulse 1.5s ease-in-out infinite;
+            }
+            .data-table tr.over-budget-alert td {
+                border-bottom-color: var(--alert-border);
+            }
+            .data-table .mono {
+                font-family: var(--font-mono);
+                font-size: 0.75rem;
+            }
+            
+            /* Stat Cards */
+            .stat-card {
+                padding: 1.25rem;
+                border-radius: 12px;
+                background: var(--space-elevated);
+                border: 1px solid var(--glass-border);
+                transition: all 0.3s ease;
+            }
+            .stat-card.over-budget {
+                border-color: var(--danger);
+                background: var(--danger-dim);
+            }
+            .stat-card-label {
+                font-size: 0.6875rem;
+                font-weight: 600;
+                color: var(--titanium);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                margin-bottom: 0.5rem;
+            }
+            .stat-card-value {
+                font-family: var(--font-display);
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--text-primary);
+            }
+            .stat-card-sub {
+                font-size: 0.75rem;
+                color: var(--titanium);
+                margin-top: 0.25rem;
+            }
+            
+            /* Over Budget Alert Box */
+            .over-budget-alert-box {
+                background: var(--danger-dim);
+                border: 2px solid var(--danger);
+                border-radius: 12px;
+                padding: 1rem 1.25rem;
+                margin-bottom: 1rem;
+                animation: alertPulse 1.5s ease-in-out infinite;
+            }
+            .over-budget-alert-box .alert-header {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-weight: 600;
+                color: var(--danger);
+                margin-bottom: 0.5rem;
+            }
+            .over-budget-alert-box .alert-content {
+                font-size: 0.875rem;
+                color: var(--text-primary);
+            }
+            .over-budget-alert-box .alert-amount {
+                font-family: var(--font-mono);
+                font-size: 1.25rem;
+                font-weight: 700;
+                color: var(--danger);
+            }
+            
+            /* Tier Section */
+            .tier-section {
+                border-radius: 16px;
+                border: 1px solid var(--glass-border);
+                overflow: hidden;
+                margin-bottom: 1.5rem;
+                background: var(--space-surface);
+                transition: all 0.3s ease;
+            }
+            .tier-section.over-budget {
+                border-color: var(--danger);
+                box-shadow: 0 0 20px var(--alert-pulse);
+            }
+            .tier-header {
+                padding: 1rem 1.25rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                cursor: pointer;
+                transition: background 0.2s ease;
+            }
+            .tier-header:hover {
+                background: rgba(128,128,128,0.05);
+            }
+            .tier-header-left {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+            .tier-icon {
+                width: 36px;
+                height: 36px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1rem;
+            }
+            .tier-1-bg { background: var(--tier-1-dim); color: var(--tier-1); }
+            .tier-2-bg { background: var(--tier-2-dim); color: var(--tier-2); }
+            .tier-3-bg { background: var(--tier-3-dim); color: var(--tier-3); }
+            .tier-4-bg { background: var(--tier-4-dim); color: var(--tier-4); }
+            .tier-none-bg { background: var(--tier-none-dim); color: var(--tier-none); }
+            
+            [data-theme="light"] .tier-2-bg { color: #636366; }
+            
+            .tier-body {
+                display: none;
+                border-top: 1px solid var(--glass-border);
+            }
+            .tier-body.open {
+                display: block;
+            }
+            
+            /* Tier Budget Info */
+            .tier-budget-info {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.75rem;
+                padding: 1rem;
+                background: var(--space-deep);
+                border-bottom: 1px solid var(--glass-border);
+            }
+            .tier-budget-item {
+                text-align: center;
+            }
+            .tier-budget-item-label {
+                font-size: 0.625rem;
+                color: var(--titanium);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                margin-bottom: 0.25rem;
+            }
+            .tier-budget-item-value {
+                font-family: var(--font-mono);
+                font-size: 0.875rem;
+                font-weight: 600;
+            }
+            
+            /* Progress Bar */
+            .progress-bar {
+                height: 6px;
+                background: var(--space-deep);
+                border-radius: 3px;
+                overflow: hidden;
+            }
+            .progress-bar-fill {
+                height: 100%;
+                border-radius: 3px;
+                transition: width 0.5s var(--ease-out);
+            }
+            .progress-bar-fill.over-budget {
+                background: var(--danger) !important;
+            }
+            
+            /* Chart Container */
+            .chart-container {
+                position: relative;
+                height: 280px;
+                width: 100%;
+            }
+            
+            /* Loading Overlay */
+            .loading-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 9999;
+                background: var(--space-void);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: opacity 0.5s ease, visibility 0.5s ease;
+            }
+            .loading-overlay.hidden {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
+            .loading-spinner {
+                width: 48px;
+                height: 48px;
+                border: 3px solid var(--glass-border);
+                border-top-color: var(--neon-core);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+            
+            /* Slide Panel */
+            .slide-panel {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 100%;
+                max-width: 480px;
+                height: 100%;
+                background: var(--space-surface);
+                border-left: 1px solid var(--glass-border);
+                transform: translateX(100%);
+                transition: transform 0.4s var(--ease-out);
+                z-index: 1000;
+                overflow-y: auto;
+            }
+            .slide-panel.open {
+                transform: translateX(0);
+            }
+            .slide-panel-backdrop {
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.6);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+                z-index: 999;
+            }
+            .slide-panel-backdrop.open {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            /* Boolean Indicator */
+            .bool-indicator {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                font-size: 0.625rem;
+            }
+            .bool-true {
+                background: var(--success-dim);
+                color: var(--success);
+            }
+            .bool-false {
+                background: var(--danger-dim);
+                color: var(--danger);
+            }
+            
+            /* Hidden */
+            .hidden { display: none !important; }
+            .invisible { visibility: hidden; }
+            .pointer-events-none { pointer-events: none; }
+        }
+
+        @layer utilities {
+            .truncate {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .whitespace-nowrap { white-space: nowrap; }
+            .cursor-pointer { cursor: pointer; }
+            .select-none { user-select: none; }
+            .opacity-50 { opacity: 0.5; }
+            .opacity-70 { opacity: 0.7; }
+            
+            .border-l-2 { border-left-width: 2px; border-left-style: solid; }
+            .border-tier-1 { border-left-color: var(--tier-1); }
+            .border-tier-2 { border-left-color: var(--tier-2); }
+            .border-tier-3 { border-left-color: var(--tier-3); }
+            .border-tier-4 { border-left-color: var(--tier-4); }
+            .border-tier-none { border-left-color: var(--tier-none); }
+            
+            .bg-tier-1 { background: var(--tier-1-dim); }
+            .bg-tier-2 { background: var(--tier-2-dim); }
+            .bg-tier-3 { background: var(--tier-3-dim); }
+            .bg-tier-4 { background: var(--tier-4-dim); }
+            
+            .rounded { border-radius: 4px; }
+            .rounded-lg { border-radius: 8px; }
+            .rounded-xl { border-radius: 12px; }
+            .rounded-2xl { border-radius: 16px; }
+            .rounded-full { border-radius: 9999px; }
+            
+            .space-y-2 > * + * { margin-top: 0.5rem; }
+        }
+
+        @layer animations {
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.5; }
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes slideIn {
+                from { opacity: 0; transform: translateX(-20px); }
+                to { opacity: 1; transform: translateX(0); }
+            }
+            @keyframes alertPulse {
+                0%, 100% { 
+                    background: var(--alert-bg);
+                    box-shadow: 0 0 0 0 var(--alert-pulse);
+                }
+                50% { 
+                    background: rgba(255, 69, 58, 0.35);
+                    box-shadow: 0 0 15px 0 var(--alert-pulse);
+                }
+            }
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+                20%, 40%, 60%, 80% { transform: translateX(2px); }
+            }
+            
+            .animate-spin { animation: spin 1s linear infinite; }
+            .animate-pulse { animation: pulse 2s ease-in-out infinite; }
+            .animate-fade-in { animation: fadeIn 0.4s var(--ease-out) forwards; }
+            .animate-slide-in { animation: slideIn 0.4s var(--ease-out) forwards; }
+            .animate-shake { animation: shake 0.5s ease-in-out; }
+            
+            .reveal {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.6s var(--ease-out);
+            }
+            .reveal.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body data-lang="th" data-theme="dark">
+    <!-- Background Canvas -->
+    <canvas id="antigravity-canvas" class="fixed inset-0 z-0"></canvas>
+    <div id="gradient-overlay" class="fixed inset-0 z-0 pointer-events-none" style="background: radial-gradient(ellipse at 50% 0%, transparent 0%, #000 70%);"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner mb-4"></div>
+        <div class="font-display text-lg text-neon animate-pulse tracking-widest">
+            <span lang="en">INITIALIZING NEXUS...</span>
+            <span lang="th">กำลังเริ่มต้นระบบ NEXUS...</span>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div class="relative z-10 min-h-screen">
+        <!-- Header -->
+        <header class="glass-panel sticky top-4 z-50 mx-4 mt-4 mb-6">
+            <div class="container flex items-center justify-between p-4">
+                <div class="flex items-center gap-4">
+                    <div id="logo-slot" class="text-neon"></div>
+                    <div>
+                        <h1 class="font-display font-bold text-lg tracking-wider">
+                            <span class="text-primary">กยศ.</span> 
+                            <span class="text-titanium">NEXUS</span> //
+                            <span class="text-neon">ALLOCATION</span>
+                        </h1>
+                        <p class="text-xs text-titanium">
+                            <span lang="en">Student Loan Budget Allocation System</span>
+                            <span lang="th">ระบบจัดสรรงบประมาณกองทุนเงินให้กู้ยืมเพื่อการศึกษา</span>
+                        </p>
+                    </div>
+                </div>
+                <nav class="flex items-center gap-3">
+                    <button id="theme-toggle" class="theme-toggle" onclick="APP.toggleTheme()" title="Toggle Light/Dark Mode">
+                        <span id="theme-icon">🌙</span>
+                    </button>
+                    <button class="btn btn-ghost btn-sm" onclick="APP.toggleLang()">
+                        <span id="lang-indicator">EN</span> / <span>TH</span>
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="APP.showHelp()">
+                        <span lang="en">Help</span>
+                        <span lang="th">ช่วยเหลือ</span>
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <main class="container pb-12">
+            <!-- Role Tabs -->
+            <div class="tabs-container mb-6">
+                <button class="tab-btn active" data-tab="loan-dept" onclick="APP.switchTab('loan-dept')">
+                    <span lang="en">🏛️ Loan Origination Department</span>
+                    <span lang="th">🏛️ ฝ่ายกู้ยืม</span>
+                </button>
+                <button class="tab-btn" data-tab="institute" onclick="APP.switchTab('institute')">
+                    <span lang="en">🎓 Education Institute</span>
+                    <span lang="th">🎓 สถานศึกษา</span>
+                </button>
+            </div>
+
+            <!-- Tab 1: Loan Origination Department -->
+            <div id="tab-loan-dept" class="tab-content active">
+                <!-- Configuration Panel -->
+                <section class="glass-panel p-6 mb-6 reveal">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="font-display font-bold text-sm uppercase tracking-wider text-titanium">
+                            <span lang="en">⚙️ System Configuration</span>
+                            <span lang="th">⚙️ การตั้งค่าระบบ</span>
+                        </h2>
+                        <button class="btn btn-primary" onclick="APP.generateStudents()">
+                            <span lang="en">Generate Students</span>
+                            <span lang="th">สร้างข้อมูลนักเรียน</span>
+                        </button>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-4 gap-4">
+                        <div class="input-group">
+                            <label class="input-label">
+                                <span lang="en">Number of Institutes</span>
+                                <span lang="th">จำนวนสถานศึกษา</span>
+                            </label>
+                            <input type="number" id="config-institutes" class="input-field" min="1" max="5" value="3">
+                            <span class="text-xs text-titanium">(1-5)</span>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">
+                                <span lang="en">Number of Students</span>
+                                <span lang="th">จำนวนนักเรียน</span>
+                            </label>
+                            <input type="number" id="config-students" class="input-field" min="3" max="100" value="20">
+                            <span class="text-xs text-titanium">(3-100)</span>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">
+                                <span lang="en">Federal Budget (Million ฿)</span>
+                                <span lang="th">งบประมาณ (ล้านบาท)</span>
+                            </label>
+                            <input type="number" id="config-budget" class="input-field" min="1" max="10000" value="50" step="1" oninput="BudgetManager.onBudgetChange()">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">
+                                <span lang="en">Min/Max Budget Range</span>
+                                <span lang="th">ช่วงงบประมาณ</span>
+                            </label>
+                            <div class="text-sm font-mono text-titanium mt-2" id="budget-range-display">-</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tier Allocation Percentages -->
+                    <div class="mt-6 pt-6 border-t border-[var(--glass-border)]">
+                        <h3 class="text-xs font-semibold text-titanium uppercase tracking-wider mb-4">
+                            <span lang="en">Tier Allocation Percentages (Real-time)</span>
+                            <span lang="th">สัดส่วนการจัดสรรรายระดับ (อัปเดตทันที)</span>
+                        </h3>
+                        <div class="grid md:grid-cols-4 gap-4">
+                            <div class="input-group">
+                                <label class="input-label flex items-center gap-2">
+                                    <span class="badge badge-tier-1">Tier 1</span>
+                                    <span lang="en">Gold Priority</span>
+                                    <span lang="th">ลำดับที่ 1</span>
+                                </label>
+                                <div class="flex items-center gap-2">
+                                    <input type="number" id="tier1-pct" class="input-field" min="0" max="100" value="100" oninput="BudgetManager.onTierPctChange(1)">
+                                    <span class="text-titanium">%</span>
+                                </div>
+                                <div class="text-xs text-titanium mt-1" id="tier1-available-display">
+                                    <span lang="en">Available:</span><span lang="th">งบ:</span> <span class="font-mono">-</span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label flex items-center gap-2">
+                                    <span class="badge badge-tier-2">Tier 2</span>
+                                    <span lang="en">Silver</span>
+                                    <span lang="th">ลำดับที่ 2</span>
+                                </label>
+                                <div class="flex items-center gap-2">
+                                    <input type="number" id="tier2-pct" class="input-field" min="0" max="100" value="100" oninput="BudgetManager.onTierPctChange(2)">
+                                    <span class="text-titanium">%</span>
+                                </div>
+                                <div class="text-xs text-titanium mt-1" id="tier2-available-display">
+                                    <span lang="en">Available:</span><span lang="th">งบ:</span> <span class="font-mono">-</span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label flex items-center gap-2">
+                                    <span class="badge badge-tier-3">Tier 3</span>
+                                    <span lang="en">Bronze</span>
+                                    <span lang="th">ลำดับที่ 3</span>
+                                </label>
+                                <div class="flex items-center gap-2">
+                                    <input type="number" id="tier3-pct" class="input-field" min="0" max="100" value="100" oninput="BudgetManager.onTierPctChange(3)">
+                                    <span class="text-titanium">%</span>
+                                </div>
+                                <div class="text-xs text-titanium mt-1" id="tier3-available-display">
+                                    <span lang="en">Available:</span><span lang="th">งบ:</span> <span class="font-mono">-</span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label flex items-center gap-2">
+                                    <span class="badge badge-tier-4">Tier 4</span>
+                                    <span lang="en">Standard</span>
+                                    <span lang="th">ลำดับที่ 4</span>
+                                </label>
+                                <div class="flex items-center gap-2">
+                                    <input type="number" id="tier4-pct" class="input-field" min="0" max="100" value="100" oninput="BudgetManager.onTierPctChange(4)">
+                                    <span class="text-titanium">%</span>
+                                </div>
+                                <div class="text-xs text-titanium mt-1" id="tier4-available-display">
+                                    <span lang="en">Available:</span><span lang="th">งบ:</span> <span class="font-mono">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Constants Display -->
+                    <div class="mt-6 pt-6 border-t border-[var(--glass-border)]">
+                        <h3 class="text-xs font-semibold text-titanium uppercase tracking-wider mb-3">
+                            <span lang="en">System Constants</span>
+                            <span lang="th">ค่าคงที่ของระบบ</span>
+                        </h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 text-xs">
+                            <div class="glass-panel-elevated p-3">
+                                <div class="text-titanium mb-1">
+                                    <span lang="en">ม.ปลาย Stipend</span>
+                                    <span lang="th">ค่าครองชีพ ม.ปลาย</span>
+                                </div>
+                                <div class="font-mono text-success">฿1,800/mo</div>
+                            </div>
+                            <div class="glass-panel-elevated p-3">
+                                <div class="text-titanium mb-1">
+                                    <span lang="en">Other Stipend</span>
+                                    <span lang="th">ค่าครองชีพอื่นๆ</span>
+                                </div>
+                                <div class="font-mono text-success">฿3,000/mo</div>
+                            </div>
+                            <div class="glass-panel-elevated p-3">
+                                <div class="text-titanium mb-1">
+                                    <span lang="en">Income Threshold</span>
+                                    <span lang="th">เกณฑ์รายได้</span>
+                                </div>
+                                <div class="font-mono text-warning">฿360,000/yr</div>
+                            </div>
+                            <div class="glass-panel-elevated p-3">
+                                <div class="text-titanium mb-1">
+                                    <span lang="en">Tuition Range</span>
+                                    <span lang="th">ช่วงค่าเล่าเรียน</span>
+                                </div>
+                                <div class="font-mono text-neon">฿5K - ฿500K</div>
+                            </div>
+                            <div class="glass-panel-elevated p-3">
+                                <div class="text-titanium mb-1">
+                                    <span lang="en">Income Range</span>
+                                    <span lang="th">ช่วงรายได้</span>
+                                </div>
+                                <div class="font-mono text-neon">฿10K - ฿10M</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Budget Summary Dashboard -->
+                <section class="glass-panel p-6 mb-6 reveal" id="budget-dashboard">
+                    <h2 class="font-display font-bold text-sm uppercase tracking-wider text-titanium mb-4">
+                        <span lang="en">📊 Budget Allocation Dashboard</span>
+                        <span lang="th">📊 แดชบอร์ดการจัดสรรงบประมาณ</span>
+                    </h2>
+                    
+                    <div class="grid md:grid-cols-4 gap-4 mb-6">
+                        <div class="stat-card">
+                            <div class="stat-card-label">
+                                <span lang="en">Total Federal Budget</span>
+                                <span lang="th">งบประมาณทั้งหมด</span>
+                            </div>
+                            <div class="stat-card-value text-neon" id="total-budget-display">฿0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-label">
+                                <span lang="en">Allocated Budget</span>
+                                <span lang="th">งบที่จัดสรรแล้ว</span>
+                            </div>
+                            <div class="stat-card-value text-success" id="allocated-budget-display">฿0</div>
+                            <div class="stat-card-sub" id="allocated-pct-display">0%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-label">
+                                <span lang="en">Remaining Budget</span>
+                                <span lang="th">งบคงเหลือ</span>
+                            </div>
+                            <div class="stat-card-value text-warning" id="remaining-budget-display">฿0</div>
+                            <div class="stat-card-sub" id="remaining-pct-display">100%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-label">
+                                <span lang="en">Students Selected</span>
+                                <span lang="th">นักเรียนที่เลือก</span>
+                            </div>
+                            <div class="stat-card-value" id="selected-count-display">0 / 0</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="glass-panel-elevated p-4">
+                            <h3 class="text-xs font-semibold text-titanium uppercase tracking-wider mb-3">
+                                <span lang="en">Budget Distribution by Tier</span>
+                                <span lang="th">การกระจายงบตามระดับ</span>
+                            </h3>
+                            <div class="chart-container">
+                                <canvas id="tier-budget-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="glass-panel-elevated p-4">
+                            <h3 class="text-xs font-semibold text-titanium uppercase tracking-wider mb-3">
+                                <span lang="en">Student Distribution</span>
+                                <span lang="th">การกระจายนักเรียน</span>
+                            </h3>
+                            <div class="chart-container">
+                                <canvas id="student-distribution-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tier Sections -->
+                <div id="tiers-container">
+                    <!-- Tier sections will be dynamically generated -->
+                    <div class="text-center text-titanium py-12">
+                        <div class="text-4xl mb-4">📋</div>
+                        <p lang="en">Configure settings above and click "Generate Students" to begin allocation</p>
+                        <p lang="th">กรุณาตั้งค่าด้านบนและคลิก "สร้างข้อมูลนักเรียน" เพื่อเริ่มการจัดสรร</p>
+                    </div>
+                </div>
+
+                <!-- Final Summary -->
+                <section class="glass-panel p-6 mt-6 reveal hidden" id="final-summary">
+                    <h2 class="font-display font-bold text-sm uppercase tracking-wider text-titanium mb-4">
+                        <span lang="en">📈 Final Allocation Summary</span>
+                        <span lang="th">📈 สรุปผลการจัดสรร</span>
+                    </h2>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="stat-card bg-tier-1">
+                                    <div class="stat-card-label">
+                                        <span lang="en">Total Allocated</span>
+                                        <span lang="th">จัดสรรแล้วทั้งหมด</span>
+                                    </div>
+                                    <div class="stat-card-value" id="final-required">฿0</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-card-label">
+                                        <span lang="en">Remaining Unallocated</span>
+                                        <span lang="th">งบคงเหลือที่ยังไม่จัดสรร</span>
+                                    </div>
+                                    <div class="stat-card-value text-warning" id="final-remaining">฿0</div>
+                                </div>
+                            </div>
+                            <div class="mt-4 p-4 glass-panel-elevated">
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm text-titanium">
+                                        <span lang="en">% of Federal Budget Used</span>
+                                        <span lang="th">% ของงบที่ใช้</span>
+                                    </span>
+                                    <span class="font-mono text-success" id="final-used-pct">0%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" id="final-used-bar" style="width: 0%; background: var(--success);"></div>
+                                </div>
+                            </div>
+                            <div class="mt-4 p-4 glass-panel-elevated">
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm text-titanium">
+                                        <span lang="en">% Remaining Unallocated</span>
+                                        <span lang="th">% ที่ยังไม่จัดสรร</span>
+                                    </span>
+                                    <span class="font-mono text-warning" id="final-remaining-pct">100%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" id="final-remaining-bar" style="width: 100%; background: var(--warning);"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-panel-elevated p-4">
+                            <h3 class="text-xs font-semibold text-titanium uppercase tracking-wider mb-3">
+                                <span lang="en">Allocation by Tier</span>
+                                <span lang="th">การจัดสรรตามระดับ</span>
+                            </h3>
+                            <div id="tier-summary-list" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Tab 2: Education Institute -->
+            <div id="tab-institute" class="tab-content">
+                <section class="glass-panel p-6 mb-6 reveal">
+                    <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+                        <h2 class="font-display font-bold text-sm uppercase tracking-wider text-titanium">
+                            <span lang="en">🎓 Institute Student View</span>
+                            <span lang="th">🎓 มุมมองสถานศึกษา</span>
+                        </h2>
+                        <div class="flex items-center gap-4 flex-wrap">
+                            <div class="input-group">
+                                <label class="input-label">
+                                    <span lang="en">Select Institute</span>
+                                    <span lang="th">เลือกสถานศึกษา</span>
+                                </label>
+                                <select id="institute-select" class="input-field" onchange="APP.filterByInstitute()">
+                                    <option value="">
+                                        <span lang="en">-- Select Institute --</span>
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="toggle-wrapper">
+                                <span class="text-xs text-titanium">
+                                    <span lang="en">Show Granted Only</span>
+                                    <span lang="th">แสดงเฉพาะที่ได้รับจัดสรร</span>
+                                </span>
+                                <div id="granted-toggle" class="toggle toggle-sm" onclick="APP.toggleGrantedFilter()"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-4 mb-4">
+                        <div class="stat-card">
+                            <div class="stat-card-label">
+                                <span lang="en">Total Students</span>
+                                <span lang="th">นักเรียนทั้งหมด</span>
+                            </div>
+                            <div class="stat-card-value" id="inst-total-students">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-label">
+                                <span lang="en">Granted by ฝ่ายกู้ยืม</span>
+                                <span lang="th">ได้รับจัดสรรจากฝ่ายกู้ยืม</span>
+                            </div>
+                            <div class="stat-card-value text-success" id="inst-granted-students">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-label">
+                                <span lang="en">Selected by Institute</span>
+                                <span lang="th">เลือกโดยสถานศึกษา</span>
+                            </div>
+                            <div class="stat-card-value text-neon" id="inst-selected-students">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-sm text-titanium">
+                            <span lang="en">Note: Tier information is hidden in this view</span>
+                            <span lang="th">หมายเหตุ: ข้อมูลระดับชั้นจะไม่แสดงในมุมมองนี้</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <select id="export-format" class="input-field" style="width: auto;">
+                                <option value="csv">CSV</option>
+                                <option value="xlsx">XLSX</option>
+                            </select>
+                            <button class="btn btn-primary" onclick="APP.exportInstituteData()">
+                                <span lang="en">Export Selected</span>
+                                <span lang="th">ส่งออกที่เลือก</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="glass-panel p-6 reveal">
+                    <div class="data-table-wrapper" style="max-height: 600px; overflow-y: auto;">
+                        <table class="data-table" id="institute-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">
+                                        <span lang="en">Select</span>
+                                        <span lang="th">เลือก</span>
+                                    </th>
+                                    <th>
+                                        <span lang="en">CID</span>
+                                        <span lang="th">เลขประจำตัว</span>
+                                    </th>
+                                    <th>
+                                        <span lang="en">Name</span>
+                                        <span lang="th">ชื่อ-นามสกุล</span>
+                                    </th>
+                                    <th>
+                                        <span lang="en">Level</span>
+                                        <span lang="th">ระดับ</span>
+                                    </th>
+                                    <th>
+                                        <span lang="en">Loan Type</span>
+                                        <span lang="th">ลักษณะกู้ยืม</span>
+                                    </th>
+                                    <th>
+                                        <span lang="en">Poverty Status</span>
+                                        <span lang="th">สถานะฐานะยากจน</span>
+                                    </th>
+                                    <th>
+                                        <span lang="en">Tuition</span>
+                                        <span lang="th">ค่าเล่าเรียน</span>
+                                    </th>
+                                    <th>
+                                        <span lang="en">Stipend</span>
+                                        <span lang="th">ค่าครองชีพ</span>
+                                    </th>
+                                    <th>
+                                        <span lang="en">Total Loan</span>
+                                        <span lang="th">เงินกู้รวม</span>
+                                    </th>
+                                    <th>
+                                        <span lang="en">Status</span>
+                                        <span lang="th">สถานะ</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="institute-table-body">
+                                <tr>
+                                    <td colspan="10" class="text-center text-titanium py-8">
+                                        <span lang="en">Generate students first, then select an institute</span>
+                                        <span lang="th">กรุณาสร้างข้อมูลนักเรียนก่อน แล้วเลือกสถานศึกษา</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Slide Panel for Student Details -->
+    <div id="panel-backdrop" class="slide-panel-backdrop" onclick="APP.closePanel()"></div>
+    <aside id="slide-panel" class="slide-panel p-6">
+        <button class="absolute top-4 right-4 btn btn-ghost" onclick="APP.closePanel()">✕</button>
+        <div id="panel-content"></div>
+    </aside>
+
+    <script>
+        // ============================================
+        // 1. NATIVE SVG ICONS
+        // ============================================
+        const ICONS = {
+            logo: `<svg viewBox="0 0 40 40" fill="none" class="w-10 h-10">
+                <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                <circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="2" opacity="0.5"/>
+                <circle cx="20" cy="20" r="6" fill="currentColor"/>
+                <path d="M20 2 L20 8 M20 32 L20 38 M2 20 L8 20 M32 20 L38 20" stroke="currentColor" stroke-width="2" opacity="0.5"/>
+            </svg>`,
+            check: `<svg viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/></svg>`,
+            x: `<svg viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"/></svg>`,
+            chevronDown: `<svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path d="M4.22 6.22a.75.75 0 011.06 0L8 8.94l2.72-2.72a.75.75 0 111.06 1.06l-3.25 3.25a.75.75 0 01-1.06 0L4.22 7.28a.75.75 0 010-1.06z"/></svg>`,
+            trophy: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`,
+            medal: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><circle cx="12" cy="14" r="6"/><path d="M9 2L12 8L15 2" stroke="currentColor" stroke-width="2" fill="none"/></svg>`,
+            award: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><circle cx="12" cy="8" r="6"/><path d="M8.21 13.89L7 23L12 20L17 23L15.79 13.88"/></svg>`,
+            layers: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 2L2 7L12 12L22 7L12 2Z"/><path d="M2 17L12 22L22 17" opacity="0.5"/><path d="M2 12L12 17L22 12" opacity="0.7"/></svg>`,
+            helpCircle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg>`,
+            alertTriangle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`
+        };
+
+        // ============================================
+        // 2. CONSTANTS & CONFIGURATION
+        // ============================================
+        const CONFIG = {
+            STIPEND_HIGH_SCHOOL: 1800,
+            STIPEND_OTHER: 3000,
+            STIPEND_MONTHS: 12,
+            INCOME_THRESHOLD: 360000,
+            TUITION_MIN: 5000,
+            TUITION_MAX: 500000,
+            INCOME_MIN: 10000,
+            INCOME_MAX: 10000000,
+            EDUCATION_LEVELS: ['ม.ปลาย', 'ปวช.', 'ปวส.', 'ป.ตรี'],
+            LOAN_TYPES: [1, 2, 3, 5],
+            FIRST_NAMES: [
+                'สมชาย', 'สมหญิง', 'วิชัย', 'วิภา', 'ประเสริฐ', 'ประภา', 'สุรชัย', 'สุรีย์',
+                'อนันต์', 'อรุณี', 'ธนากร', 'ธนิดา', 'พิชัย', 'พิมพ์', 'ชัยวัฒน์', 'ชุติมา',
+                'ศักดิ์ชัย', 'ศิริพร', 'มานะ', 'มาลี', 'วีระ', 'วีณา', 'กิตติ', 'กัญญา',
+                'ณัฐพล', 'ณัฐธิดา', 'ภาคภูมิ', 'ภัทรา', 'อดิศักดิ์', 'อรวรรณ', 'ปรีชา', 'ปราณี',
+                'เกียรติศักดิ์', 'เกศรินทร์', 'ธีรศักดิ์', 'ธีราภรณ์', 'สันติ', 'สันทนา', 'วรพจน์', 'วรรณา',
+                'นพดล', 'นพรัตน์', 'ยุทธนา', 'ยุวดี', 'รัฐพล', 'รัตนา', 'จิรศักดิ์', 'จิราภรณ์',
+                'พงศกร', 'พิมพ์ใจ', 'สุทธิพงษ์', 'สุนิสา', 'อภิชาติ', 'อัญชลี', 'ธวัชชัย', 'ธัญญา',
+                'วิทยา', 'วิลาวัลย์', 'สมศักดิ์', 'สมใจ', 'ชาญชัย', 'ชนิดา', 'บุญมี', 'บุษบา'
+            ],
+            LAST_NAMES: [
+                'แก้วมณี', 'ทองดี', 'สุขใจ', 'รักษา', 'พงศ์พันธ์', 'วงศ์สกุล', 'สิทธิโชค', 'มหาชัย',
+                'ศรีสุข', 'วัฒนา', 'อมรรัตน์', 'พรหมมา', 'จันทร์เพ็ญ', 'สมบูรณ์', 'เจริญสุข', 'อินทรา',
+                'ประสิทธิ์', 'มงคล', 'ชัยรัตน์', 'สุวรรณ', 'ภูมิพัฒน์', 'รุ่งเรือง', 'กิจเจริญ', 'ศิริมงคล',
+                'นิยม', 'บุญมา', 'พิพัฒน์', 'สำเร็จ', 'เอกชัย', 'วิไลลักษณ์', 'ธนวัฒน์', 'ปัญญา',
+                'ใจดี', 'สุขสันต์', 'พรมแดน', 'ทิพย์สุข', 'ศรีวิชัย', 'เพชรดี', 'ทองคำ', 'เงินดี'
+            ],
+            INSTITUTES: [
+                'จุฬาลงกรณ์มหาวิทยาลัย', 'มหาวิทยาลัยธรรมศาสตร์', 'มหาวิทยาลัยเกษตรศาสตร์',
+                'มหาวิทยาลัยมหิดล', 'มหาวิทยาลัยเชียงใหม่', 'มหาวิทยาลัยขอนแก่น',
+                'มหาวิทยาลัยสงขลานครินทร์', 'สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง',
+                'มหาวิทยาลัยศรีนครินทรวิโรฒ', 'มหาวิทยาลัยบูรพา', 'วิทยาลัยอาชีวศึกษากรุงเทพ',
+                'วิทยาลัยเทคนิคกรุงเทพ', 'โรงเรียนเตรียมอุดมศึกษา', 'โรงเรียนสวนกุหลาบวิทยาลัย',
+                'โรงเรียนบดินทรเดชา', 'โรงเรียนสามเสนวิทยาลัย', 'วิทยาลัยเทคนิคชลบุรี',
+                'วิทยาลัยอาชีวศึกษาเชียงใหม่'
+            ]
+        };
+
+        // ============================================
+        // 3. STATE MANAGEMENT
+        // ============================================
+        const STATE = {
+            lang: 'th',
+            theme: 'dark',
+            students: [],
+            selectedInstitutes: [],
+            tierAllocations: { 1: [], 2: [], 3: [], 4: [], none: [] },
+            selectedStudents: new Set(),
+            instituteSelectedStudents: new Set(),
+            grantedStudents: new Set(),
+            showGrantedOnly: false,
+            tierGroupingEnabled: false,
+            totalBudget: 0,
+            overBudgetStudents: { 1: [], 2: [], 3: [], 4: [], none: [] },
+            charts: {}
+        };
+
+        // ============================================
+        // 4. BUDGET MANAGER - Real-time Budget Calculations
+        // ============================================
+        const BudgetManager = {
+            // Get current federal budget from input
+            getFederalBudget() {
+                const budgetMillions = parseFloat(document.getElementById('config-budget').value) || 50;
+                return budgetMillions * 1e6;
+            },
+            
+            // Get tier percentage from input
+            getTierPercentage(tier) {
+                const inputId = tier === 'none' ? 'tier4-pct' : `tier${tier}-pct`;
+                const input = document.getElementById(inputId);
+                return parseFloat(input?.value) || 100;
+            },
+            
+            // Calculate available budget for each tier (cascading)
+            calculateTierBudgets() {
+                const federalBudget = this.getFederalBudget();
+                const tierOrder = [1, 2, 3, 4, 'none'];
+                const budgets = {};
+                
+                let remainingBudget = federalBudget;
+                
+                tierOrder.forEach(tier => {
+                    const pct = this.getTierPercentage(tier);
+                    const tierAvailable = remainingBudget * (pct / 100);
+                    const tierUsed = this.getTierSelectedBudget(tier);
+                    
+                    budgets[tier] = {
+                        available: tierAvailable,
+                        used: tierUsed,
+                        remaining: tierAvailable - tierUsed,
+                        overBudget: tierUsed > tierAvailable ? tierUsed - tierAvailable : 0,
+                        pctOfTier: tierAvailable > 0 ? (tierUsed / tierAvailable * 100) : 0,
+                        pctOfFederal: federalBudget > 0 ? (tierUsed / federalBudget * 100) : 0
+                    };
+                    
+                    // Remaining for next tier is what's left after this tier's allocation
+                    remainingBudget = remainingBudget - tierUsed;
+                });
+                
+                return budgets;
+            },
+            
+            // Get total selected budget for a tier
+            getTierSelectedBudget(tier) {
+                let total = 0;
+                STATE.selectedStudents.forEach(id => {
+                    const student = STATE.students.find(s => s.id === id);
+                    if (student && student.tier === tier) {
+                        total += student.totalLoan;
+                    }
+                });
+                return total;
+            },
+            
+            // Check if a student can be selected
+            canSelectStudent(student) {
+                const budgets = this.calculateTierBudgets();
+                const tierBudget = budgets[student.tier];
+                return (tierBudget.used + student.totalLoan) <= tierBudget.available;
+            },
+            
+            // Detect over-budget situations and identify students to highlight
+            detectOverBudget() {
+                const budgets = this.calculateTierBudgets();
+                const tierOrder = [1, 2, 3, 4, 'none'];
+                const overBudgetInfo = {};
+                
+                tierOrder.forEach(tier => {
+                    const tierBudget = budgets[tier];
+                    overBudgetInfo[tier] = {
+                        isOverBudget: tierBudget.overBudget > 0,
+                        overAmount: tierBudget.overBudget,
+                        studentsToHighlight: []
+                    };
+                    
+                    if (tierBudget.overBudget > 0) {
+                        // Get selected students in this tier, sorted by totalLoan descending
+                        const selectedInTier = STATE.students
+                            .filter(s => s.tier === tier && STATE.selectedStudents.has(s.id))
+                            .sort((a, b) => b.totalLoan - a.totalLoan);
+                        
+                        // Find students to highlight (top loans until we exceed over-budget amount)
+                        let accumulated = 0;
+                        for (const student of selectedInTier) {
+                            overBudgetInfo[tier].studentsToHighlight.push(student.id);
+                            accumulated += student.totalLoan;
+                            if (accumulated >= tierBudget.overBudget) {
+                                break;
+                            }
+                        }
+                    }
+                });
+                
+                STATE.overBudgetStudents = overBudgetInfo;
+                return overBudgetInfo;
+            },
+            
+            // Handle budget input change
+            onBudgetChange() {
+                STATE.totalBudget = this.getFederalBudget();
+                this.updateAllDisplays();
+            },
+            
+            // Handle tier percentage change
+            onTierPctChange(tier) {
+                this.updateAllDisplays();
+            },
+            
+            // Update all displays
+            updateAllDisplays() {
+                if (STATE.students.length === 0) return;
+                
+                STATE.totalBudget = this.getFederalBudget();
+                
+                // Detect over-budget situations
+                this.detectOverBudget();
+                
+                // Update tier available displays in config
+                this.updateTierAvailableDisplays();
+                
+                // Update dashboard
+                updateBudgetDashboard();
+                
+                // Update tier sections
+                this.updateTierSections();
+                
+                // Update charts
+                renderCharts();
+                
+                // Update institute view if visible
+                updateInstituteView();
+            },
+            
+            // Update tier available displays in config panel
+            updateTierAvailableDisplays() {
+                const budgets = this.calculateTierBudgets();
+                const tierOrder = [1, 2, 3, 4];
+                
+                tierOrder.forEach(tier => {
+                    const display = document.getElementById(`tier${tier}-available-display`);
+                    if (display) {
+                        const budget = budgets[tier];
+                        const isOver = budget.overBudget > 0;
+                        display.innerHTML = `
+                            <span lang="en">Available:</span><span lang="th">งบ:</span> 
+                            <span class="font-mono ${isOver ? 'text-danger' : ''}">${Utils.formatCurrency(budget.available)}</span>
+                            ${isOver ? `<br><span class="text-danger font-semibold"><span lang="en">Over:</span><span lang="th">เกิน:</span> ${Utils.formatCurrency(budget.overBudget)}</span>` : ''}
+                        `;
+                        
+                        // Update input field styling
+                        const input = document.getElementById(`tier${tier}-pct`);
+                        if (input) {
+                            input.classList.toggle('input-danger', isOver);
+                        }
+                    }
+                });
+            },
+            
+            // Update tier sections with over-budget highlighting
+            updateTierSections() {
+                const budgets = this.calculateTierBudgets();
+                const tierOrder = [1, 2, 3, 4, 'none'];
+                
+                tierOrder.forEach(tier => {
+                    const section = document.getElementById(`tier-section-${tier}`);
+                    if (!section) return;
+                    
+                    const budget = budgets[tier];
+                    const overBudgetInfo = STATE.overBudgetStudents[tier];
+                    
+                    // Update section styling
+                    section.classList.toggle('over-budget', overBudgetInfo?.isOverBudget);
+                    
+                    // Update tier budget info display
+                    const budgetInfoEl = section.querySelector('.tier-budget-info');
+                    if (budgetInfoEl) {
+                        budgetInfoEl.innerHTML = this.renderTierBudgetInfo(tier, budget, overBudgetInfo);
+                    }
+                    
+                    // Update row highlighting
+                    const tbody = section.querySelector('tbody');
+                    if (tbody) {
+                        const rows = tbody.querySelectorAll('tr[data-student-id]');
+                        rows.forEach(row => {
+                            const studentId = parseInt(row.dataset.studentId);
+                            const shouldHighlight = overBudgetInfo?.studentsToHighlight?.includes(studentId);
+                            row.classList.toggle('over-budget-alert', shouldHighlight);
+                        });
+                    }
+                    
+                    // Update header info
+                    this.updateTierHeader(tier, budget, overBudgetInfo);
+                });
+            },
+            
+            renderTierBudgetInfo(tier, budget, overBudgetInfo) {
+                const isOver = overBudgetInfo?.isOverBudget;
+                
+                return `
+                    <div class="tier-budget-item">
+                        <div class="tier-budget-item-label">
+                            <span lang="en">Available</span>
+                            <span lang="th">งบที่มี</span>
+                        </div>
+                        <div class="tier-budget-item-value text-neon">${Utils.formatCurrency(budget.available)}</div>
+                    </div>
+                    <div class="tier-budget-item">
+                        <div class="tier-budget-item-label">
+                            <span lang="en">Used</span>
+                            <span lang="th">ใช้แล้ว</span>
+                        </div>
+                        <div class="tier-budget-item-value ${isOver ? 'text-danger' : 'text-success'}">${Utils.formatCurrency(budget.used)}</div>
+                        <div class="text-xs text-titanium">${budget.pctOfTier.toFixed(1)}% <span lang="en">of tier</span><span lang="th">ของระดับ</span></div>
+                    </div>
+                    <div class="tier-budget-item">
+                        <div class="tier-budget-item-label">
+                            <span lang="en">${isOver ? 'Over Budget' : 'Remaining'}</span>
+                            <span lang="th">${isOver ? 'เกินงบ' : 'คงเหลือ'}</span>
+                        </div>
+                        <div class="tier-budget-item-value ${isOver ? 'text-danger animate-pulse' : 'text-warning'}">${Utils.formatCurrency(isOver ? budget.overBudget : budget.remaining)}</div>
+                        <div class="text-xs text-titanium">${budget.pctOfFederal.toFixed(1)}% <span lang="en">of federal</span><span lang="th">ของงบรวม</span></div>
+                    </div>
+                    ${isOver ? `
+                    <div style="grid-column: 1 / -1;" class="over-budget-alert-box mt-2">
+                        <div class="alert-header">
+                            ${ICONS.alertTriangle}
+                            <span lang="en">OVER BUDGET ALERT</span>
+                            <span lang="th">แจ้งเตือน: เกินงบประมาณ</span>
+                        </div>
+                        <div class="alert-content">
+                            <span lang="en">This tier is over budget by</span>
+                            <span lang="th">ระดับนี้เกินงบประมาณ</span>
+                            <span class="alert-amount ml-2">${Utils.formatCurrency(budget.overBudget)}</span>
+                            <br>
+                            <span class="text-sm text-titanium">
+                                <span lang="en">Highlighted rows (${overBudgetInfo.studentsToHighlight.length} students) are suggested for deselection or increase tier allocation %.</span>
+                                <span lang="th">แถวที่ไฮไลท์ (${overBudgetInfo.studentsToHighlight.length} คน) แนะนำให้ยกเลิกการเลือก หรือเพิ่ม % การจัดสรร</span>
+                            </span>
+                        </div>
+                    </div>
+                    ` : ''}
+                `;
+            },
+            
+            updateTierHeader(tier, budget, overBudgetInfo) {
+                const section = document.getElementById(`tier-section-${tier}`);
+                if (!section) return;
+                
+                const headerRight = section.querySelector('.tier-header .flex.items-center.gap-4 > .text-right');
+                if (headerRight) {
+                    const isOver = overBudgetInfo?.isOverBudget;
+                    headerRight.innerHTML = `
+                        <div class="text-sm font-mono ${isOver ? 'text-danger' : ''}">${Utils.formatCurrency(budget.used)}</div>
+                        <div class="text-xs ${isOver ? 'text-danger' : 'text-titanium'}">
+                            ${budget.pctOfTier.toFixed(1)}% 
+                            ${isOver ? `<span class="font-semibold">(+${Utils.formatCurrency(budget.overBudget)})</span>` : ''}
+                        </div>
+                    `;
+                }
+            }
+        };
+
+        // ============================================
+        // 5. CHART MANAGER
+        // ============================================
+        const ChartManager = {
+            instances: {},
+            render(id, type, data, options) {
+                const ctx = document.getElementById(id);
+                if (!ctx) return;
+                if (this.instances[id]) this.instances[id].destroy();
+                this.instances[id] = new Chart(ctx, { type, data, options });
+            },
+            destroy(id) {
+                if (this.instances[id]) {
+                    this.instances[id].destroy();
+                    delete this.instances[id];
+                }
+            }
+        };
+
+        // ============================================
+        // 6. UTILITY FUNCTIONS
+        // ============================================
+        const Utils = {
+            formatCurrency(value) {
+                if (value >= 1e9) return `฿${(value / 1e9).toFixed(2)}B`;
+                if (value >= 1e6) return `฿${(value / 1e6).toFixed(2)}M`;
+                if (value >= 1e3) return `฿${(value / 1e3).toFixed(1)}K`;
+                return `฿${value.toLocaleString()}`;
+            },
+            
+            formatNumber(value) {
+                return value.toLocaleString('th-TH');
+            },
+            
+            randomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            },
+            
+            randomChoice(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            },
+            
+            shuffleArray(arr) {
+                const shuffled = [...arr];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+                return shuffled;
+            },
+            
+            generateCID() {
+                const digits = [];
+                for (let i = 0; i < 12; i++) {
+                    digits.push(this.randomInt(0, 9));
+                }
+                const weights = [13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
+                let sum = 0;
+                for (let i = 0; i < 12; i++) {
+                    sum += digits[i] * weights[i];
+                }
+                const checkDigit = (11 - (sum % 11)) % 10;
+                digits.push(checkDigit);
+                return digits.join('');
+            },
+            
+            formatCID(cid) {
+                return `${cid.slice(0,1)}-${cid.slice(1,5)}-${cid.slice(5,10)}-${cid.slice(10,12)}-${cid.slice(12)}`;
+            }
+        };
+
+        // ============================================
+        // 7. STUDENT GENERATION
+        // ============================================
+        function generateStudentWithCriteria(usedNames, shuffledFirstNames, shuffledLastNames, index, criteria) {
+            let firstName, lastName, fullName;
+            let attempts = 0;
+            
+            do {
+                firstName = shuffledFirstNames[(index + attempts) % shuffledFirstNames.length];
+                lastName = shuffledLastNames[(index + attempts * 2) % shuffledLastNames.length];
+                fullName = `${firstName} ${lastName}`;
+                attempts++;
+            } while (usedNames.has(fullName) && attempts < 200);
+            
+            usedNames.add(fullName);
+            
+            const educationLevel = criteria.educationLevel || Utils.randomChoice(CONFIG.EDUCATION_LEVELS);
+            const loanType = criteria.loanType !== undefined ? criteria.loanType : Utils.randomChoice(CONFIG.LOAN_TYPES);
+            const hasEEF = criteria.hasEEF !== undefined ? criteria.hasEEF : Math.random() < 0.25;
+            const hasWelfareCard = criteria.hasWelfareCard !== undefined ? criteria.hasWelfareCard : Math.random() < 0.3;
+            
+            let householdIncome;
+            if (criteria.isLowIncome === true) {
+                householdIncome = Utils.randomInt(CONFIG.INCOME_MIN, CONFIG.INCOME_THRESHOLD);
+            } else if (criteria.isLowIncome === false) {
+                householdIncome = Utils.randomInt(CONFIG.INCOME_THRESHOLD + 1, CONFIG.INCOME_MAX);
+            } else {
+                const incomeRand = Math.pow(Math.random(), 2);
+                householdIncome = Math.round(CONFIG.INCOME_MIN + incomeRand * (CONFIG.INCOME_MAX - CONFIG.INCOME_MIN));
+            }
+            
+            const isLowIncome = householdIncome <= CONFIG.INCOME_THRESHOLD;
+            const isPoor = hasEEF || hasWelfareCard || isLowIncome;
+            const requestedStipend = isPoor && Math.random() < 0.7;
+            const approvedStipend = requestedStipend && Math.random() < 0.85;
+            const monthlyStipend = educationLevel === 'ม.ปลาย' ? CONFIG.STIPEND_HIGH_SCHOOL : CONFIG.STIPEND_OTHER;
+            const annualStipend = approvedStipend ? monthlyStipend * CONFIG.STIPEND_MONTHS : 0;
+            const tuitionRand = Math.pow(Math.random(), 1.5);
+            const tuition = Math.round(CONFIG.TUITION_MIN + tuitionRand * (CONFIG.TUITION_MAX - CONFIG.TUITION_MIN));
+            const totalLoan = tuition + annualStipend;
+            
+            let tier;
+            const isTargetedMajor = loanType === 2 || loanType === 3;
+            
+            if (isTargetedMajor) {
+                tier = householdIncome > CONFIG.INCOME_THRESHOLD ? 2 : 1;
+            } else {
+                if (hasEEF || hasWelfareCard) {
+                    tier = 3;
+                } else if (isLowIncome) {
+                    tier = 4;
+                } else {
+                    tier = 'none';
+                }
+            }
+            
+            const hasBenefitCard = hasEEF || hasWelfareCard;
+            
+            return {
+                cid: Utils.generateCID(),
+                firstName,
+                lastName,
+                fullName,
+                educationLevel,
+                loanType,
+                hasEEF,
+                hasWelfareCard,
+                isLowIncome,
+                isPoor,
+                householdIncome,
+                requestedStipend,
+                approvedStipend,
+                monthlyStipend: approvedStipend ? monthlyStipend : 0,
+                annualStipend,
+                tuition,
+                totalLoan,
+                tier,
+                hasBenefitCard,
+                isSelected: false,
+                isInstituteSelected: false
+            };
+        }
+
+        function generateStudents() {
+            const numInstitutes = parseInt(document.getElementById('config-institutes').value) || 3;
+            const numStudents = parseInt(document.getElementById('config-students').value) || 20;
+            const budgetMillions = parseFloat(document.getElementById('config-budget').value) || 50;
+            
+            if (numStudents < numInstitutes) {
+                alert('จำนวนนักเรียนต้องมากกว่าหรือเท่ากับจำนวนสถานศึกษา');
+                return;
+            }
+            
+            STATE.selectedInstitutes = Utils.shuffleArray(CONFIG.INSTITUTES).slice(0, numInstitutes);
+            
+            const usedNames = new Set();
+            const students = [];
+            const shuffledFirstNames = Utils.shuffleArray([...CONFIG.FIRST_NAMES]);
+            const shuffledLastNames = Utils.shuffleArray([...CONFIG.LAST_NAMES]);
+            
+            let studentIndex = 0;
+            
+            if (numStudents >= 4) {
+                const tierCriteria = [
+                    { loanType: 2, isLowIncome: true, educationLevel: 'ม.ปลาย' },
+                    { loanType: 3, isLowIncome: false, educationLevel: 'ปวช.' },
+                    { loanType: 1, hasEEF: true, hasWelfareCard: false, educationLevel: 'ปวส.' },
+                    { loanType: 1, isLowIncome: true, hasEEF: false, hasWelfareCard: false, educationLevel: 'ป.ตรี' }
+                ];
+                
+                tierCriteria.forEach((criteria, idx) => {
+                    const student = generateStudentWithCriteria(
+                        usedNames, shuffledFirstNames, shuffledLastNames, studentIndex, criteria
+                    );
+                    student.id = studentIndex + 1;
+                    student.institute = STATE.selectedInstitutes[idx % STATE.selectedInstitutes.length];
+                    students.push(student);
+                    studentIndex++;
+                });
+                
+                const coveredLevels = new Set(students.map(s => s.educationLevel));
+                const missingLevels = CONFIG.EDUCATION_LEVELS.filter(l => !coveredLevels.has(l));
+                
+                missingLevels.forEach(level => {
+                    if (studentIndex < numStudents) {
+                        const student = generateStudentWithCriteria(
+                            usedNames, shuffledFirstNames, shuffledLastNames, studentIndex,
+                            { educationLevel: level }
+                        );
+                        student.id = studentIndex + 1;
+                        student.institute = Utils.randomChoice(STATE.selectedInstitutes);
+                        students.push(student);
+                        studentIndex++;
+                    }
+                });
+                
+                if (studentIndex < numStudents) {
+                    const noneStudent = generateStudentWithCriteria(
+                        usedNames, shuffledFirstNames, shuffledLastNames, studentIndex,
+                        { loanType: 1, isLowIncome: false, hasEEF: false, hasWelfareCard: false }
+                    );
+                    noneStudent.id = studentIndex + 1;
+                    noneStudent.institute = Utils.randomChoice(STATE.selectedInstitutes);
+                    students.push(noneStudent);
+                    studentIndex++;
+                }
+            }
+            
+            for (let i = studentIndex; i < numStudents; i++) {
+                const student = generateStudentWithCriteria(
+                    usedNames, shuffledFirstNames, shuffledLastNames, i, {}
+                );
+                student.id = i + 1;
+                student.institute = Utils.randomChoice(STATE.selectedInstitutes);
+                students.push(student);
+            }
+            
+            students.sort((a, b) => a.householdIncome - b.householdIncome);
+            students.forEach((s, idx) => s.id = idx + 1);
+            
+            STATE.students = students;
+            STATE.totalBudget = budgetMillions * 1e6;
+            STATE.selectedStudents.clear();
+            STATE.grantedStudents.clear();
+            STATE.instituteSelectedStudents.clear();
+            STATE.overBudgetStudents = { 1: [], 2: [], 3: [], 4: [], none: [] };
+            
+            STATE.tierAllocations = { 1: [], 2: [], 3: [], 4: [], none: [] };
+            students.forEach(s => {
+                STATE.tierAllocations[s.tier].push(s);
+            });
+            
+            updateBudgetRangeDisplay();
+            renderTierSections();
+            BudgetManager.updateAllDisplays();
+            populateInstituteSelect();
+            
+            document.getElementById('final-summary').classList.remove('hidden');
+            
+            document.querySelectorAll('.reveal').forEach((el, i) => {
+                setTimeout(() => el.classList.add('visible'), i * 100);
+            });
+        }
+
+        function updateBudgetRangeDisplay() {
+            const totalRequired = STATE.students.reduce((sum, s) => sum + s.totalLoan, 0);
+            const minBudget = STATE.students.length > 0 ? Math.min(...STATE.students.map(s => s.totalLoan)) : 0;
+            
+            document.getElementById('budget-range-display').innerHTML = `
+                Min: ${Utils.formatCurrency(minBudget)}<br>
+                Max: ${Utils.formatCurrency(totalRequired)}
+            `;
+        }
+
+        // ============================================
+        // 8. TIER RENDERING
+        // ============================================
+        function renderTierSections() {
+            const container = document.getElementById('tiers-container');
+            
+            if (STATE.students.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-titanium py-12">
+                        <div class="text-4xl mb-4">📋</div>
+                        <p lang="en">Configure settings above and click "Generate Students" to begin allocation</p>
+                        <p lang="th">กรุณาตั้งค่าด้านบนและคลิก "สร้างข้อมูลนักเรียน" เพื่อเริ่มการจัดสรร</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const tierConfigs = [
+                { tier: 1, name: 'Tier 1 - Gold Priority', nameTH: 'ระดับ 1 - ลำดับความสำคัญสูงสุด', icon: ICONS.trophy, bgClass: 'tier-1-bg' },
+                { tier: 2, name: 'Tier 2 - Silver', nameTH: 'ระดับ 2 - รายได้สูง สาขาเป้าหมาย', icon: ICONS.medal, bgClass: 'tier-2-bg' },
+                { tier: 3, name: 'Tier 3 - Bronze', nameTH: 'ระดับ 3 - กลุ่มเปราะบาง', icon: ICONS.award, bgClass: 'tier-3-bg' },
+                { tier: 4, name: 'Tier 4 - Standard', nameTH: 'ระดับ 4 - รายได้น้อย สาขาทั่วไป', icon: ICONS.layers, bgClass: 'tier-4-bg' },
+                { tier: 'none', name: 'Unclassified', nameTH: 'ไม่จัดประเภท', icon: ICONS.helpCircle, bgClass: 'tier-none-bg' }
+            ];
+            
+            let html = '';
+            
+            tierConfigs.forEach(config => {
+                const students = STATE.tierAllocations[config.tier] || [];
+                
+                html += `
+                <div class="tier-section reveal" id="tier-section-${config.tier}">
+                    <div class="tier-header" onclick="toggleTierBody('${config.tier}')">
+                        <div class="tier-header-left">
+                            <div class="tier-icon ${config.bgClass}">${config.icon}</div>
+                            <div>
+                                <div class="font-semibold text-sm">
+                                    <span lang="en">${config.name}</span>
+                                    <span lang="th">${config.nameTH}</span>
+                                </div>
+                                <div class="text-xs text-titanium">
+                                    ${students.length} <span lang="en">students</span><span lang="th">คน</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="text-right">
+                                <div class="text-sm font-mono">-</div>
+                                <div class="text-xs text-titanium">-</div>
+                            </div>
+                            ${config.tier === 1 ? `
+                            <div class="toggle-wrapper" onclick="event.stopPropagation()">
+                                <span class="text-xs text-titanium whitespace-nowrap">
+                                    <span lang="en">Group by EEF/Welfare</span>
+                                    <span lang="th">จัดกลุ่ม กสศ./บัตรสวัสดิการ</span>
+                                </span>
+                                <div id="tier1-grouping-toggle" class="toggle toggle-sm ${STATE.tierGroupingEnabled ? 'active' : ''}" onclick="event.stopPropagation(); toggleTier1Grouping()"></div>
+                            </div>
+                            ` : ''}
+                            <span class="text-titanium">${ICONS.chevronDown}</span>
+                        </div>
+                    </div>
+                    <div class="tier-body open" id="tier-body-${config.tier}">
+                        <div class="tier-budget-info"></div>
+                        ${renderTierTable(config.tier, students)}
+                    </div>
+                </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function renderTierTable(tier, students) {
+            if (students.length === 0) {
+                return `<div class="p-8 text-center text-titanium">
+                    <span lang="en">No students in this tier</span>
+                    <span lang="th">ไม่มีนักเรียนในระดับนี้</span>
+                </div>`;
+            }
+            
+            let sortedStudents = [...students];
+            if (tier === 1 && STATE.tierGroupingEnabled) {
+                const withBenefit = sortedStudents.filter(s => s.hasBenefitCard).sort((a, b) => a.householdIncome - b.householdIncome);
+                const withoutBenefit = sortedStudents.filter(s => !s.hasBenefitCard).sort((a, b) => a.householdIncome - b.householdIncome);
+                sortedStudents = [...withBenefit, ...withoutBenefit];
+            }
+            
+            let html = `
+            <div class="data-table-wrapper" style="max-height: 400px; overflow-y: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;"><span lang="en">Select</span><span lang="th">เลือก</span></th>
+                            <th><span lang="en">CID</span><span lang="th">เลขประจำตัว</span></th>
+                            <th><span lang="en">Name</span><span lang="th">ชื่อ-นามสกุล</span></th>
+                            <th><span lang="en">Institute</span><span lang="th">สถานศึกษา</span></th>
+                            <th><span lang="en">Level</span><span lang="th">ระดับ</span></th>
+                            <th><span lang="en">Loan Type</span><span lang="th">ลักษณะ</span></th>
+                            <th><span lang="en">EEF</span><span lang="th">กสศ.</span></th>
+                            <th><span lang="en">Welfare</span><span lang="th">บัตรฯ</span></th>
+                            <th><span lang="en">Low Income</span><span lang="th">รายได้น้อย</span></th>
+                            <th><span lang="en">Income</span><span lang="th">รายได้</span></th>
+                            <th><span lang="en">Stipend</span><span lang="th">ค่าครองชีพ</span></th>
+                            <th><span lang="en">Tuition</span><span lang="th">ค่าเล่าเรียน</span></th>
+                            <th><span lang="en">Total Loan</span><span lang="th">เงินกู้รวม</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            let lastBenefitStatus = null;
+            
+            sortedStudents.forEach(student => {
+                if (tier === 1 && STATE.tierGroupingEnabled) {
+                    if (lastBenefitStatus !== student.hasBenefitCard) {
+                        lastBenefitStatus = student.hasBenefitCard;
+                        html += `
+                        <tr class="bg-tier-1" style="opacity: 0.5;">
+                            <td colspan="13" class="text-xs font-semibold uppercase tracking-wider py-2">
+                                ${student.hasBenefitCard ? 
+                                    '<span lang="en">With EEF/Welfare Card</span><span lang="th">มี กสศ./บัตรสวัสดิการ</span>' : 
+                                    '<span lang="en">Without EEF/Welfare Card (Tagged)</span><span lang="th">ไม่มี กสศ./บัตรสวัสดิการ (Tagged)</span>'}
+                            </td>
+                        </tr>
+                        `;
+                    }
+                }
+                
+                const isSelected = STATE.selectedStudents.has(student.id);
+                
+                html += `
+                <tr class="${isSelected ? 'selected' : ''}" data-student-id="${student.id}">
+                    <td>
+                        <div class="toggle toggle-sm ${isSelected ? 'active' : ''}" 
+                             onclick="handleToggleClick(event, ${student.id})"></div>
+                    </td>
+                    <td class="mono text-xs">${Utils.formatCID(student.cid)}</td>
+                    <td class="font-thai">${student.fullName}</td>
+                    <td class="text-xs truncate font-thai" style="max-width: 150px;" title="${student.institute}">${student.institute}</td>
+                    <td><span class="badge badge-neon">${student.educationLevel}</span></td>
+                    <td class="text-center">${student.loanType}</td>
+                    <td class="text-center">${renderBoolIndicator(student.hasEEF)}</td>
+                    <td class="text-center">${renderBoolIndicator(student.hasWelfareCard)}</td>
+                    <td class="text-center">${renderBoolIndicator(student.isLowIncome)}</td>
+                    <td class="mono text-xs text-right">${Utils.formatCurrency(student.householdIncome)}</td>
+                    <td class="mono text-xs text-right ${student.approvedStipend ? 'text-success' : 'text-titanium'}">${Utils.formatCurrency(student.annualStipend)}</td>
+                    <td class="mono text-xs text-right">${Utils.formatCurrency(student.tuition)}</td>
+                    <td class="mono text-sm text-right font-semibold">${Utils.formatCurrency(student.totalLoan)}</td>
+                </tr>
+                `;
+            });
+            
+            html += '</tbody></table></div>';
+            return html;
+        }
+
+        function renderBoolIndicator(value) {
+            return value ? 
+                `<span class="bool-indicator bool-true">${ICONS.check}</span>` : 
+                `<span class="bool-indicator bool-false">${ICONS.x}</span>`;
+        }
+
+        // ============================================
+        // 9. TOGGLE HANDLERS
+        // ============================================
+        function handleToggleClick(event, studentId) {
+            event.stopPropagation();
+            toggleStudentSelection(studentId);
+        }
+
+        function toggleStudentSelection(studentId) {
+            const student = STATE.students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            if (STATE.selectedStudents.has(studentId)) {
+                STATE.selectedStudents.delete(studentId);
+                STATE.grantedStudents.delete(studentId);
+                student.isSelected = false;
+            } else {
+                STATE.selectedStudents.add(studentId);
+                STATE.grantedStudents.add(studentId);
+                student.isSelected = true;
+            }
+            
+            // Update row state
+            updateStudentRowState(studentId);
+            
+            // Update all budget displays
+            BudgetManager.updateAllDisplays();
+        }
+
+        function updateStudentRowState(studentId) {
+            const row = document.querySelector(`tr[data-student-id="${studentId}"]`);
+            if (!row) return;
+            
+            const isSelected = STATE.selectedStudents.has(studentId);
+            const toggle = row.querySelector('.toggle');
+            
+            if (isSelected) {
+                row.classList.add('selected');
+                toggle?.classList.add('active');
+            } else {
+                row.classList.remove('selected');
+                toggle?.classList.remove('active');
+            }
+        }
+
+        function toggleTierBody(tier) {
+            const body = document.getElementById(`tier-body-${tier}`);
+            if (body) {
+                body.classList.toggle('open');
+            }
+        }
+
+        function toggleTier1Grouping() {
+            STATE.tierGroupingEnabled = !STATE.tierGroupingEnabled;
+            const toggle = document.getElementById('tier1-grouping-toggle');
+            if (toggle) {
+                toggle.classList.toggle('active', STATE.tierGroupingEnabled);
+            }
+            const tier1Body = document.getElementById('tier-body-1');
+            if (tier1Body) {
+                const budgetInfoEl = tier1Body.querySelector('.tier-budget-info');
+                const budgetInfoHTML = budgetInfoEl ? budgetInfoEl.outerHTML : '<div class="tier-budget-info"></div>';
+                tier1Body.innerHTML = budgetInfoHTML + renderTierTable(1, STATE.tierAllocations[1] || []);
+            }
+            BudgetManager.updateAllDisplays();
+        }
+
+        // ============================================
+        // 10. BUDGET DASHBOARD
+        // ============================================
+        function updateBudgetDashboard() {
+            const totalBudget = BudgetManager.getFederalBudget();
+            let allocatedBudget = 0;
+            
+            STATE.selectedStudents.forEach(id => {
+                const student = STATE.students.find(s => s.id === id);
+                if (student) allocatedBudget += student.totalLoan;
+            });
+            
+            const remainingBudget = totalBudget - allocatedBudget;
+            const allocatedPct = totalBudget > 0 ? (allocatedBudget / totalBudget * 100) : 0;
+            const remainingPct = totalBudget > 0 ? (remainingBudget / totalBudget * 100) : 100;
+            
+            document.getElementById('total-budget-display').textContent = Utils.formatCurrency(totalBudget);
+            document.getElementById('allocated-budget-display').textContent = Utils.formatCurrency(allocatedBudget);
+            document.getElementById('allocated-pct-display').textContent = `${allocatedPct.toFixed(1)}%`;
+            document.getElementById('remaining-budget-display').textContent = Utils.formatCurrency(remainingBudget);
+            document.getElementById('remaining-pct-display').textContent = `${remainingPct.toFixed(1)}%`;
+            document.getElementById('selected-count-display').textContent = `${STATE.selectedStudents.size} / ${STATE.students.length}`;
+            
+            // Final summary
+            document.getElementById('final-required').textContent = Utils.formatCurrency(allocatedBudget);
+            document.getElementById('final-remaining').textContent = Utils.formatCurrency(remainingBudget);
+            document.getElementById('final-used-pct').textContent = `${allocatedPct.toFixed(1)}%`;
+            document.getElementById('final-remaining-pct').textContent = `${remainingPct.toFixed(1)}%`;
+            document.getElementById('final-used-bar').style.width = `${Math.min(allocatedPct, 100)}%`;
+            document.getElementById('final-remaining-bar').style.width = `${Math.max(remainingPct, 0)}%`;
+            
+            // Check for over-budget on overall
+            const usedBar = document.getElementById('final-used-bar');
+            usedBar.classList.toggle('over-budget', allocatedPct > 100);
+            
+            updateTierSummaryList();
+        }
+
+        function updateTierSummaryList() {
+            const budgets = BudgetManager.calculateTierBudgets();
+            const tiers = [
+                { tier: 1, name: 'Tier 1', nameTH: 'ระดับ 1', color: 'var(--tier-1)' },
+                { tier: 2, name: 'Tier 2', nameTH: 'ระดับ 2', color: 'var(--tier-2)' },
+                { tier: 3, name: 'Tier 3', nameTH: 'ระดับ 3', color: 'var(--tier-3)' },
+                { tier: 4, name: 'Tier 4', nameTH: 'ระดับ 4', color: 'var(--tier-4)' },
+                { tier: 'none', name: 'Unclassified', nameTH: 'ไม่จัดประเภท', color: 'var(--tier-none)' }
+            ];
+            
+            let html = '';
+            tiers.forEach(t => {
+                const budget = budgets[t.tier];
+                const students = STATE.tierAllocations[t.tier] || [];
+                const selectedCount = students.filter(s => STATE.selectedStudents.has(s.id)).length;
+                const isOver = budget.overBudget > 0;
+                
+                html += `
+                <div class="flex items-center justify-between py-2 border-b border-[var(--glass-border)] ${isOver ? 'bg-danger-dim rounded' : ''}">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded" style="background: ${t.color}"></div>
+                        <span class="text-sm">
+                            <span lang="en">${t.name}</span>
+                            <span lang="th">${t.nameTH}</span>
+                        </span>
+                        ${isOver ? `<span class="badge badge-danger ml-2"><span lang="en">OVER</span><span lang="th">เกิน</span></span>` : ''}
+                    </div>
+                    <div class="text-right">
+                        <div class="font-mono text-sm ${isOver ? 'text-danger' : ''}">${Utils.formatCurrency(budget.used)}</div>
+                        <div class="text-xs text-titanium">${selectedCount}/${students.length} • ${budget.pctOfTier.toFixed(1)}%</div>
+                    </div>
+                </div>
+                `;
+            });
+            
+            document.getElementById('tier-summary-list').innerHTML = html;
+        }
+
+        // ============================================
+        // 11. CHARTS
+        // ============================================
+        function renderCharts() {
+            const isDark = STATE.theme === 'dark';
+            const textColor = isDark ? '#86868b' : '#6e6e73';
+            const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+            
+            const budgets = BudgetManager.calculateTierBudgets();
+            const tierBudgets = [
+                budgets[1]?.used || 0,
+                budgets[2]?.used || 0,
+                budgets[3]?.used || 0,
+                budgets[4]?.used || 0,
+                budgets['none']?.used || 0
+            ];
+            
+            ChartManager.render('tier-budget-chart', 'doughnut', {
+                labels: ['Tier 1', 'Tier 2', 'Tier 3', 'Tier 4', 'Unclassified'],
+                datasets: [{
+                    data: tierBudgets,
+                    backgroundColor: [
+                        'rgba(255, 215, 0, 0.8)',
+                        'rgba(192, 192, 192, 0.8)',
+                        'rgba(205, 127, 50, 0.8)',
+                        'rgba(100, 210, 255, 0.8)',
+                        'rgba(99, 99, 102, 0.8)'
+                    ],
+                    borderColor: 'transparent',
+                    borderWidth: 0
+                }]
+            }, {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { color: textColor, font: { size: 11 } }
+                    }
+                },
+                cutout: '60%'
+            });
+            
+            const tierCounts = [
+                STATE.tierAllocations[1]?.length || 0,
+                STATE.tierAllocations[2]?.length || 0,
+                STATE.tierAllocations[3]?.length || 0,
+                STATE.tierAllocations[4]?.length || 0,
+                STATE.tierAllocations['none']?.length || 0
+            ];
+            
+            const selectedCounts = [1, 2, 3, 4, 'none'].map(tier => {
+                const students = STATE.tierAllocations[tier] || [];
+                return students.filter(s => STATE.selectedStudents.has(s.id)).length;
+            });
+            
+            ChartManager.render('student-distribution-chart', 'bar', {
+                labels: ['Tier 1', 'Tier 2', 'Tier 3', 'Tier 4', 'N/A'],
+                datasets: [
+                    {
+                        label: STATE.lang === 'th' ? 'ทั้งหมด' : 'Total',
+                        data: tierCounts,
+                        backgroundColor: isDark ? 'rgba(134, 134, 139, 0.3)' : 'rgba(110, 110, 115, 0.3)',
+                        borderColor: isDark ? 'rgba(134, 134, 139, 0.5)' : 'rgba(110, 110, 115, 0.5)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: STATE.lang === 'th' ? 'เลือกแล้ว' : 'Selected',
+                        data: selectedCounts,
+                        backgroundColor: 'rgba(0, 113, 227, 0.7)',
+                        borderColor: 'rgba(0, 113, 227, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            }, {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { color: textColor, font: { size: 11 } }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: gridColor },
+                        ticks: { color: textColor }
+                    },
+                    y: {
+                        grid: { color: gridColor },
+                        ticks: { color: textColor }
+                    }
+                }
+            });
+        }
+
+        // ============================================
+        // 12. INSTITUTE VIEW
+        // ============================================
+        function populateInstituteSelect() {
+            const select = document.getElementById('institute-select');
+            select.innerHTML = `<option value="">${STATE.lang === 'th' ? '-- เลือกสถานศึกษา --' : '-- Select Institute --'}</option>`;
+            
+            STATE.selectedInstitutes.forEach(inst => {
+                select.innerHTML += `<option value="${inst}">${inst}</option>`;
+            });
+        }
+
+        function filterByInstitute() {
+            const selected = document.getElementById('institute-select').value;
+            updateInstituteView(selected);
+        }
+
+        function toggleGrantedFilter() {
+            STATE.showGrantedOnly = !STATE.showGrantedOnly;
+            const toggle = document.getElementById('granted-toggle');
+            if (toggle) {
+                toggle.classList.toggle('active', STATE.showGrantedOnly);
+            }
+            filterByInstitute();
+        }
+
+        function updateInstituteView(institute) {
+            institute = institute || document.getElementById('institute-select').value;
+            const tbody = document.getElementById('institute-table-body');
+            
+            if (!institute) {
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="10" class="text-center text-titanium py-8">
+                        <span lang="en">Please select an institute</span>
+                        <span lang="th">กรุณาเลือกสถานศึกษา</span>
+                    </td>
+                </tr>`;
+                return;
+            }
+            
+            let students = STATE.students.filter(s => s.institute === institute);
+            
+            const levelOrder = { 'ม.ปลาย': 0, 'ปวช.': 1, 'ปวส.': 2, 'ป.ตรี': 3 };
+            students.sort((a, b) => {
+                const levelDiff = levelOrder[a.educationLevel] - levelOrder[b.educationLevel];
+                if (levelDiff !== 0) return levelDiff;
+                return a.fullName.localeCompare(b.fullName, 'th');
+            });
+            
+            const grantedStudents = students.filter(s => STATE.grantedStudents.has(s.id));
+            const selectedByInstitute = students.filter(s => STATE.instituteSelectedStudents.has(s.id));
+            
+            document.getElementById('inst-total-students').textContent = students.length;
+            document.getElementById('inst-granted-students').textContent = grantedStudents.length;
+            document.getElementById('inst-selected-students').textContent = selectedByInstitute.length;
+            
+            if (STATE.showGrantedOnly) {
+                students = grantedStudents;
+            }
+            
+            if (students.length === 0) {
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="10" class="text-center text-titanium py-8">
+                        <span lang="en">No students found</span>
+                        <span lang="th">ไม่พบนักเรียน</span>
+                    </td>
+                </tr>`;
+                return;
+            }
+            
+            let html = '';
+            students.forEach(student => {
+                const isGranted = STATE.grantedStudents.has(student.id);
+                const isInstSelected = STATE.instituteSelectedStudents.has(student.id);
+                
+                html += `
+                <tr class="${!isGranted ? 'disabled' : ''} ${isInstSelected ? 'selected' : ''}" style="${!isGranted ? 'opacity: 0.5;' : ''}">
+                    <td>
+                        ${isGranted ? `
+                        <div class="toggle toggle-sm ${isInstSelected ? 'active' : ''}" 
+                             onclick="toggleInstituteStudentSelection(${student.id})"></div>
+                        ` : `<span class="text-titanium text-xs">—</span>`}
+                    </td>
+                    <td class="mono text-xs">${Utils.formatCID(student.cid)}</td>
+                    <td class="font-thai">${student.fullName}</td>
+                    <td><span class="badge badge-neon">${student.educationLevel}</span></td>
+                    <td class="text-center">${student.loanType}</td>
+                    <td>
+                        ${student.isPoor ? 
+                            `<span class="badge badge-success"><span lang="en">Eligible</span><span lang="th">ฐานะยากจน</span></span>` : 
+                            `<span class="badge badge-tier-none"><span lang="en">N/A</span><span lang="th">ไม่เข้าเกณฑ์</span></span>`}
+                    </td>
+                    <td class="mono text-xs text-right">${Utils.formatCurrency(student.tuition)}</td>
+                    <td class="mono text-xs text-right ${student.approvedStipend ? 'text-success' : 'text-titanium'}">${Utils.formatCurrency(student.annualStipend)}</td>
+                    <td class="mono text-sm text-right font-semibold">${Utils.formatCurrency(student.totalLoan)}</td>
+                    <td>
+                        ${isGranted ? 
+                            `<span class="badge badge-success"><span lang="en">Granted</span><span lang="th">ได้รับจัดสรร</span></span>` : 
+                            `<span class="badge badge-danger"><span lang="en">Not Granted</span><span lang="th">ไม่ได้รับจัดสรร</span></span>`}
+                    </td>
+                </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        function toggleInstituteStudentSelection(studentId) {
+            if (STATE.instituteSelectedStudents.has(studentId)) {
+                STATE.instituteSelectedStudents.delete(studentId);
+            } else {
+                STATE.instituteSelectedStudents.add(studentId);
+            }
+            filterByInstitute();
+        }
+
+        // ============================================
+        // 13. EXPORT FUNCTIONALITY
+        // ============================================
+        function exportInstituteData() {
+            const institute = document.getElementById('institute-select').value;
+            if (!institute) {
+                alert(STATE.lang === 'th' ? 'กรุณาเลือกสถานศึกษา' : 'Please select an institute');
+                return;
+            }
+            
+            const format = document.getElementById('export-format').value;
+            
+            const students = STATE.students.filter(s => 
+                s.institute === institute && STATE.instituteSelectedStudents.has(s.id)
+            );
+            
+            if (students.length === 0) {
+                alert(STATE.lang === 'th' ? 'ไม่มีนักเรียนที่เลือก' : 'No students selected');
+                return;
+            }
+            
+            const data = students.map(s => ({
+                'เลขประจำตัวประชาชน': Utils.formatCID(s.cid),
+                'ชื่อ': s.firstName,
+                'นามสกุล': s.lastName,
+                'สถานศึกษา': s.institute,
+                'ระดับการศึกษา': s.educationLevel,
+                'ลักษณะการกู้ยืม': s.loanType,
+                'รับทุน กสศ.': s.hasEEF ? 'ใช่' : 'ไม่ใช่',
+                'บัตรสวัสดิการ': s.hasWelfareCard ? 'ใช่' : 'ไม่ใช่',
+                'รายได้ครอบครัว': s.householdIncome,
+                'ค่าเล่าเรียน': s.tuition,
+                'ค่าครองชีพ': s.annualStipend,
+                'เงินกู้รวม': s.totalLoan
+            }));
+            
+            const filename = `${institute.replace(/\s+/g, '_')}_selected_students`;
+            
+            if (format === 'csv') {
+                exportToCSV(data, filename);
+            } else {
+                exportToXLSX(data, filename);
+            }
+        }
+
+        function exportToCSV(data, filename) {
+            if (data.length === 0) return;
+            
+            const headers = Object.keys(data[0]);
+            const csvContent = [
+                headers.join(','),
+                ...data.map(row => headers.map(h => `"${row[h]}"`).join(','))
+            ].join('\n');
+            
+            const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${filename}.csv`;
+            link.click();
+        }
+
+        function exportToXLSX(data, filename) {
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Students');
+            XLSX.writeFile(wb, `${filename}.xlsx`);
+        }
+
+        // ============================================
+        // 14. APP CORE
+        // ============================================
+        const APP = {
+            init() {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                document.getElementById('logo-slot').innerHTML = ICONS.logo;
+                this.initPhysics();
+                this.initObservers();
+                this.updateLangIndicator();
+                this.updateThemeIcon();
+            },
+            
+            toggleTheme() {
+                STATE.theme = STATE.theme === 'dark' ? 'light' : 'dark';
+                document.body.dataset.theme = STATE.theme;
+                this.updateThemeIcon();
+                this.updateGradientOverlay();
+                renderCharts();
+            },
+            
+            updateThemeIcon() {
+                document.getElementById('theme-icon').textContent = STATE.theme === 'dark' ? '🌙' : '☀️';
+            },
+            
+            updateGradientOverlay() {
+                const overlay = document.getElementById('gradient-overlay');
+                overlay.style.background = STATE.theme === 'light' 
+                    ? 'radial-gradient(ellipse at 50% 0%, transparent 0%, rgba(255,255,255,0.8) 70%)'
+                    : 'radial-gradient(ellipse at 50% 0%, transparent 0%, #000 70%)';
+            },
+            
+            toggleLang() {
+                STATE.lang = STATE.lang === 'en' ? 'th' : 'en';
+                document.body.dataset.lang = STATE.lang;
+                this.updateLangIndicator();
+                populateInstituteSelect();
+                renderCharts();
+            },
+            
+            updateLangIndicator() {
+                document.getElementById('lang-indicator').style.fontWeight = STATE.lang === 'en' ? '700' : '400';
+            },
+            
+            switchTab(tabId) {
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.tab === tabId);
+                });
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.toggle('active', content.id === `tab-${tabId}`);
+                });
+                if (tabId === 'institute') {
+                    filterByInstitute();
+                }
+            },
+            
+            generateStudents() {
+                generateStudents();
+            },
+            
+            toggleGrantedFilter() {
+                toggleGrantedFilter();
+            },
+            
+            filterByInstitute() {
+                filterByInstitute();
+            },
+            
+            exportInstituteData() {
+                exportInstituteData();
+            },
+            
+            showHelp() {
+                alert(STATE.lang === 'th' ? 
+                    'ระบบจัดสรรงบประมาณ กยศ. Nexus\n\n1. ตั้งค่าจำนวนสถานศึกษาและนักเรียน\n2. คลิก "สร้างข้อมูลนักเรียน"\n3. เลือกนักเรียนในแต่ละระดับ\n4. ปรับ % การจัดสรรแต่ละระดับได้ทันที\n5. ระบบจะแจ้งเตือนเมื่อเกินงบประมาณ' :
+                    'กยศ. Nexus Budget Allocation System\n\n1. Configure institutes and student count\n2. Click "Generate Students"\n3. Select students in each tier\n4. Adjust tier allocation % in real-time\n5. System alerts when over budget');
+            },
+            
+            closePanel() {
+                document.getElementById('slide-panel').classList.remove('open');
+                document.getElementById('panel-backdrop').classList.remove('open');
+            },
+            
+            initPhysics() {
+                const canvas = document.getElementById('antigravity-canvas');
+                
+                if (typeof THREE !== 'undefined') {
+                    try {
+                        const scene = new THREE.Scene();
+                        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+                        renderer.setSize(window.innerWidth, window.innerHeight);
+                        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                        
+                        const geometry = new THREE.BufferGeometry();
+                        const count = 1500;
+                        const positions = new Float32Array(count * 3);
+                        
+                        for (let i = 0; i < count * 3; i += 3) {
+                            positions[i] = (Math.random() - 0.5) * 100;
+                            positions[i + 1] = (Math.random() - 0.5) * 100;
+                            positions[i + 2] = (Math.random() - 0.5) * 50;
+                        }
+                        
+                        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                        
+                        const material = new THREE.PointsMaterial({
+                            color: 0x0071e3,
+                            size: 0.15,
+                            transparent: true,
+                            opacity: 0.6,
+                            sizeAttenuation: true
+                        });
+                        
+                        const particles = new THREE.Points(geometry, material);
+                        scene.add(particles);
+                        camera.position.z = 30;
+                        
+                        function animate() {
+                            requestAnimationFrame(animate);
+                            particles.rotation.x += 0.0002;
+                            particles.rotation.y += 0.0003;
+                            renderer.render(scene, camera);
+                        }
+                        
+                        animate();
+                        
+                        window.addEventListener('resize', () => {
+                            camera.aspect = window.innerWidth / window.innerHeight;
+                            camera.updateProjectionMatrix();
+                            renderer.setSize(window.innerWidth, window.innerHeight);
+                        });
+                        
+                        return;
+                    } catch (e) {
+                        console.warn('[Physics] WebGL failed, using fallback', e);
+                    }
+                }
+                
+                const ctx = canvas.getContext('2d');
+                let w = canvas.width = window.innerWidth;
+                let h = canvas.height = window.innerHeight;
+                
+                const particles = [];
+                for (let i = 0; i < 80; i++) {
+                    particles.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        size: Math.random() * 2 + 1
+                    });
+                }
+                
+                function draw() {
+                    ctx.clearRect(0, 0, w, h);
+                    ctx.fillStyle = 'rgba(0, 113, 227, 0.6)';
+                    
+                    particles.forEach(p => {
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        if (p.x < 0 || p.x > w) p.vx *= -1;
+                        if (p.y < 0 || p.y > h) p.vy *= -1;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                    
+                    ctx.strokeStyle = 'rgba(0, 113, 227, 0.1)';
+                    ctx.lineWidth = 0.5;
+                    for (let i = 0; i < particles.length; i++) {
+                        for (let j = i + 1; j < particles.length; j++) {
+                            const dx = particles[i].x - particles[j].x;
+                            const dy = particles[i].y - particles[j].y;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+                            if (dist < 100) {
+                                ctx.beginPath();
+                                ctx.moveTo(particles[i].x, particles[i].y);
+                                ctx.lineTo(particles[j].x, particles[j].y);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                    
+                    requestAnimationFrame(draw);
+                }
+                
+                draw();
+                
+                window.addEventListener('resize', () => {
+                    w = canvas.width = window.innerWidth;
+                    h = canvas.height = window.innerHeight;
+                });
+            },
+            
+            initObservers() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+                
+                document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            }
+        };
+
+        // ============================================
+        // 15. RESILIENT LOADER
+        // ============================================
+        function waitForLibs(retries = 0) {
+            const d3Ready = typeof d3 !== 'undefined';
+            const chartReady = typeof Chart !== 'undefined';
+            const xlsxReady = typeof XLSX !== 'undefined';
+            
+            if (d3Ready && chartReady && xlsxReady) {
+                console.log(`[System] All libraries loaded (${retries * 100}ms)`);
+                APP.init();
+            } else if (retries < 50) {
+                setTimeout(() => waitForLibs(retries + 1), 100);
+            } else {
+                console.error('[System] Library loading timeout');
+                APP.init();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => waitForLibs());
+    </script>
+</body>
+</html>
