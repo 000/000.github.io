@@ -1,0 +1,1808 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Comprehensive Analysis of AI-Powered Cybersecurity Services Similar to mr7.ai</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tiempos+Headline:wght@400;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --primary: #2d3748;
+            --secondary: #4a5568;
+            --accent: #e53e3e;
+            --neutral: #f7fafc;
+            --base-100: #ffffff;
+            --base-200: #edf2f7;
+            --base-300: #e2e8f0;
+        }
+        
+        .font-tiempos { font-family: 'Tiempos Headline', serif; }
+        .font-inter { font-family: 'Inter', sans-serif; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: var(--primary);
+            overflow-x: hidden;
+        }
+        
+        .hero-overlay {
+            background: linear-gradient(135deg, rgba(45, 55, 72, 0.9) 0%, rgba(74, 85, 104, 0.8) 100%);
+        }
+        
+        .toc-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--base-100);
+            border-right: 1px solid var(--base-300);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+        
+        .toc-link {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            border-left: 2px solid transparent;
+            padding-left: 0.75rem;
+            transition: all 0.2s ease;
+        }
+        
+        .toc-link:hover {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: rgba(229, 62, 62, 0.05);
+        }
+        
+        .toc-link.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--base-300) 50%, transparent 100%);
+            margin: 3rem 0;
+        }
+        
+        .insight-highlight {
+            background: linear-gradient(135deg, rgba(229, 62, 62, 0.1) 0%, rgba(229, 62, 62, 0.05) 100%);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .citation-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dotted var(--accent);
+        }
+        
+        .citation-link:hover {
+            background: rgba(229, 62, 62, 0.1);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        
+        .mermaid-container {
+            display: flex;
+            justify-content: center;
+            min-height: 300px;
+            max-height: 800px;
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mermaid-container .mermaid {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            cursor: grab;
+            transition: transform 0.3s ease;
+            transform-origin: center center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .mermaid-container .mermaid svg {
+            max-width: 100%;
+            height: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .mermaid-container .mermaid:active {
+            cursor: grabbing;
+        }
+
+        .mermaid-container.zoomed .mermaid {
+            height: 100%;
+            width: 100%;
+            cursor: grab;
+        }
+
+        .mermaid-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mermaid-control-btn {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #374151;
+            font-size: 14px;
+            min-width: 36px;
+            height: 36px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mermaid-control-btn:hover {
+            background: #f8fafc;
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        .mermaid-control-btn:active {
+            transform: scale(0.95);
+        }
+        
+        @media (max-width: 1024px) {
+            .toc-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .toc-sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mermaid-control-btn:not(.reset-zoom) {
+                display: none;
+            }
+            .mermaid-controls {
+                top: auto;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+        
+        @media (min-width: 1025px) {
+            .toc-sidebar {
+                transform: translateX(0) !important;
+            }
+            
+            .main-content {
+                margin-left: 280px !important;
+            }
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .grid-cols-3 {
+                grid-template-columns: 1fr;
+            }
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            .hero-title {
+                font-size: 2.25rem;
+                line-height: 1.2;
+            }
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-grid img {
+                height: auto;
+                max-height: 300px;
+            }
+            .mermaid-container {
+                padding: 15px;
+            }
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body class="bg-neutral">
+    <!-- Table of Contents Sidebar -->
+    <nav class="toc-sidebar">
+      <div class="mb-8">
+        <h2 class="font-tiempos text-lg font-bold text-primary mb-4">Table of Contents</h2>
+        <div class="space-y-1">
+          <a href="#hero" class="toc-link">Executive Summary</a>
+          <a href="#reference-platform" class="toc-link">Reference Platform: mr7.ai</a>
+          <a href="#core-capabilities" class="toc-link">• Core Technical Capabilities</a>
+          <a href="#feature-combinations" class="toc-link">• Distinctive Feature Combinations</a>
+          <a href="#surface-web" class="toc-link">Legitimate Surface Web Alternatives</a>
+          <a href="#enterprise-platforms" class="toc-link">• Enterprise Application Security</a>
+          <a href="#code-quality" class="toc-link">• Code Quality &amp; Analysis</a>
+          <a href="#pentest-frameworks" class="toc-link">• Pentesting Frameworks</a>
+          <a href="#dark-web" class="toc-link">Dark Web and Uncensored Services</a>
+          <a href="#malicious-assistants" class="toc-link">• Malicious AI Assistants</a>
+          <a href="#methodology" class="toc-link">Methodology &amp; Similarity Calculation</a>
+          <a href="#ranked-results" class="toc-link">Ranked Similarity Results</a>
+          <a href="#recommendations" class="toc-link">Strategic Recommendations</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section id="hero" class="relative min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <div class="hero-overlay absolute inset-0"></div>
+        <div class="relative z-10 px-4 sm:px-8 py-16">
+          <div class="max-w-7xl mx-auto">
+            <!-- Bento Grid Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+              <!-- Main Title Block -->
+              <div class="lg:col-span-2 space-y-6">
+                <h1 class="font-tiempos text-3xl sm:text-4xl lg:text-6xl font-bold text-white leading-tight hero-title">
+                  <span class="italic text-red-400">Comprehensive Analysis</span>
+                  <br/>
+                  of AI-Powered Cybersecurity
+                  <br/>
+                  Services Similar to mr7.ai
+                </h1>
+                <p class="text-lg sm:text-xl text-slate-300 max-w-2xl">
+                  A multi-dimensional vector similarity analysis evaluating legitimate and dark web alternatives to the reference platform across six critical security dimensions.
+                </p>
+              </div>
+
+              <!-- Key Metrics Block -->
+              <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                <h3 class="font-tiempos text-xl font-bold text-white mb-4">Key Findings</h3>
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <span class="text-slate-300">Top Similarity Score</span>
+                    <span class="font-bold text-green-400">0.877</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-slate-300">Legitimate Services</span>
+                    <span class="font-bold text-blue-400">8</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-slate-300">Dark Web Services</span>
+                    <span class="font-bold text-red-400">5</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-slate-300">Analysis Dimensions</span>
+                    <span class="font-bold text-purple-400">6</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Executive Summary Insight -->
+            <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 max-w-4xl">
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0">
+                  <i class="fas fa-lightbulb text-yellow-400 text-2xl"></i>
+                </div>
+                <div>
+                  <h3 class="font-tiempos text-2xl font-bold text-white mb-4">Executive Summary</h3>
+                  <p class="text-slate-300 leading-relaxed mb-4">
+                    Zen-AI-Pentest emerges as the closest legitimate alternative to mr7.ai with a similarity score of
+                    <strong class="text-white">0.877</strong>, followed by Cycode at 0.835 for enterprise contexts.
+                    No single alternative replicates mr7.ai&#39;s complete feature combination of security-focused code generation,
+                    dark web-adjacent intelligence, and AI-guided red team simulation.
+                  </p>
+                  <p class="text-slate-300 leading-relaxed">
+                    Organizations must prioritize based on specific needs: open-source penetration testing automation (Zen-AI-Pentest),
+                    enterprise AI-native ASPM (Cycode), or balanced autonomous capabilities (PentAGI). Dark web alternatives like
+                    DIG AI demonstrate technical capability overlap but are fundamentally misaligned with legitimate security purposes.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reference Platform Section -->
+      <section id="reference-platform" class="px-8 py-16 bg-white">
+        <div class="max-w-7xl mx-auto">
+          <h2 class="font-tiempos text-4xl font-bold text-primary mb-8">Reference Platform: mr7.ai Feature Architecture</h2>
+
+          <div id="core-capabilities" class="mb-16">
+            <h3 class="font-tiempos text-2xl font-bold text-secondary mb-6">Core Technical Capabilities</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+              <div class="space-y-6">
+                <div class="bg-slate-50 rounded-xl p-6">
+                  <h4 class="font-tiempos text-xl font-bold text-primary mb-3">
+                    <i class="fas fa-code text-red-500 mr-2"></i>
+                    0Day Coder Agent
+                  </h4>
+                  <p class="text-secondary mb-4">
+                    AI-powered security tool development with natural language generation, debugging,
+                    vulnerability assessment, and secure code hardening <a href="#ref-1" class="citation-link">[1]</a>.
+                  </p>
+                  <div class="flex items-center space-x-2">
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Score: 5/5</span>
+                    <span class="text-sm text-slate-600">Specialized security tool generation</span>
+                  </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-6">
+                  <h4 class="font-tiempos text-xl font-bold text-primary mb-3">
+                    <i class="fas fa-search text-blue-500 mr-2"></i>
+                    Threat Intelligence
+                  </h4>
+                  <p class="text-secondary mb-4">
+                    OSINT database integration with credential exposure monitoring, threat indicator tracking,
+                    and dark web-adjacent intelligence <a href="#ref-1" class="citation-link">[1]</a>.
+                  </p>
+                  <div class="flex items-center space-x-2">
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">Score: 4/5</span>
+                    <span class="text-sm text-slate-600">Dark web-adjacent positioning</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-6">
+                <div class="bg-slate-50 rounded-xl p-6">
+                  <h4 class="font-tiempos text-xl font-bold text-primary mb-3">
+                    <i class="fas fa-shield-alt text-purple-500 mr-2"></i>
+                    Security Code Analysis
+                  </h4>
+                  <p class="text-secondary mb-4">
+                    AI-powered vulnerability assessment across static, dynamic, and hybrid analysis approaches
+                    with contextual understanding and remediation guidance <a href="#ref-1" class="citation-link">[1]</a>.
+                  </p>
+                  <div class="flex items-center space-x-2">
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">Score: 5/5</span>
+                    <span class="text-sm text-slate-600">Comprehensive AI security analysis</span>
+                  </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-6">
+                  <h4 class="font-tiempos text-xl font-bold text-primary mb-3">
+                    <i class="fas fa-vr-cardboard text-orange-500 mr-2"></i>
+                    Threat Modeling &amp; Simulation
+                  </h4>
+                  <p class="text-secondary mb-4">
+                    AI-guided red team training with dynamic scenario generation, adaptive challenge progression,
+                    and comprehensive debriefing analytics <a href="#ref-1" class="citation-link">[1]</a>.
+                  </p>
+                  <div class="flex items-center space-x-2">
+                    <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">Score: 5/5</span>
+                    <span class="text-sm text-slate-600">Comprehensive training simulation</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="feature-combinations" class="mb-16">
+            <h3 class="font-tiempos text-2xl font-bold text-secondary mb-6">Distinctive Feature Combinations</h3>
+
+            <div class="insight-highlight">
+              <h4 class="font-tiempos text-xl font-bold text-primary mb-3">
+                <i class="fas fa-puzzle-piece text-red-500 mr-2"></i>
+                Integrated Multi-Agent Architecture
+              </h4>
+              <p class="text-secondary mb-4">
+                The five specialized AI assistants with contextual awareness and workflow integration create compound value
+                exceeding the sum of individual capabilities. Integration patterns include threat intelligence informing code generation,
+                generated tools feeding simulation environments, and simulation results improving threat models.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Legitimate Surface Web Alternatives -->
+      <section id="surface-web" class="px-8 py-16 bg-neutral">
+        <div class="max-w-7xl mx-auto">
+          <h2 class="font-tiempos text-4xl font-bold text-primary mb-8">Legitimate Surface Web Alternatives</h2>
+
+          <div id="enterprise-platforms" class="mb-16">
+            <h3 class="font-tiempos text-2xl font-bold text-secondary mb-6">Enterprise Application Security Platforms</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+              <!-- Cycode -->
+              <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-200">
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="font-tiempos text-xl font-bold text-primary">Cycode</h4>
+                  <div class="flex items-center space-x-2">
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold">0.835</span>
+                    <span class="text-sm text-slate-600">Similarity</span>
+                  </div>
+                </div>
+                <p class="text-secondary mb-4">
+                  AI-native ASPM platform with exploitability assessment and autonomous remediation capabilities <a href="#ref-2" class="citation-link">[2]</a>.
+                </p>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                  <div class="bg-slate-50 p-3 rounded-lg">
+                    <div class="text-2xl font-bold text-green-600">4</div>
+                    <div class="text-sm text-slate-600">AI Security Tools</div>
+                  </div>
+                  <div class="bg-slate-50 p-3 rounded-lg">
+                    <div class="text-2xl font-bold text-red-500">0</div>
+                    <div class="text-sm text-slate-600">Dark Web Search</div>
+                  </div>
+                </div>
+                <div class="text-sm text-slate-600">
+                  <strong>Best for:</strong> Enterprise AI-native ASPM, vulnerability management at scale
+                </div>
+              </div>
+
+              <!-- Snyk -->
+              <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-200">
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="font-tiempos text-xl font-bold text-primary">Snyk</h4>
+                  <div class="flex items-center space-x-2">
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold">0.769</span>
+                    <span class="text-sm text-slate-600">Similarity</span>
+                  </div>
+                </div>
+                <p class="text-secondary mb-4">
+                  Developer-first security platform with hybrid symbolic/generative AI architecture for comprehensive code security <a href="#ref-3" class="citation-link">[3]</a>.
+                </p>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                  <div class="bg-slate-50 p-3 rounded-lg">
+                    <div class="text-2xl font-bold text-blue-600">2</div>
+                    <div class="text-sm text-slate-600">Code Generation</div>
+                  </div>
+                  <div class="bg-slate-50 p-3 rounded-lg">
+                    <div class="text-2xl font-bold text-green-600">3</div>
+                    <div class="text-sm text-slate-600">AI Security Tools</div>
+                  </div>
+                </div>
+                <div class="text-sm text-slate-600">
+                  <strong>Best for:</strong> Developer-integrated security, DevSecOps workflows
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="code-quality" class="mb-16">
+            <h3 class="font-tiempos text-2xl font-bold text-secondary mb-6">Code Quality and Security Analysis Tools</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="bg-white rounded-xl shadow-md p-6">
+                <h4 class="font-tiempos text-lg font-bold text-primary mb-3">Checkmarx One</h4>
+                <div class="text-center mb-4">
+                  <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold">0.729</span>
+                </div>
+                <p class="text-secondary text-sm mb-4">
+                  Comprehensive AST portfolio with agentic AI for autonomous threat detection <a href="#ref-4" class="citation-link">[4]</a>.
+                </p>
+                <div class="text-xs text-slate-600">
+                  <strong>Focus:</strong> Enterprise comprehensiveness with narrow feature depth
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl shadow-md p-6">
+                <h4 class="font-tiempos text-lg font-bold text-primary mb-3">SonarQube</h4>
+                <div class="text-center mb-4">
+                  <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-bold">0.712</span>
+                </div>
+                <p class="text-secondary text-sm mb-4">
+                  AI-enhanced static analysis with automated remediation capabilities <a href="#ref-5" class="citation-link">[5]</a>.
+                </p>
+                <div class="text-xs text-slate-600">
+                  <strong>Focus:</strong> Code quality heritage with security extensions
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl shadow-md p-6">
+                <h4 class="font-tiempos text-lg font-bold text-primary mb-3">GitHub Advanced Security</h4>
+                <div class="text-center mb-4">
+                  <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-bold">0.745</span>
+                </div>
+                <p class="text-secondary text-sm mb-4">
+                  Copilot-powered security with integrated development workflow <a href="#ref-6" class="citation-link">[6]</a>.
+                </p>
+                <div class="text-xs text-slate-600">
+                  <strong>Focus:</strong> Workflow integration strength with platform dependency
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="pentest-frameworks" class="mb-16">
+            <h3 class="font-tiempos text-2xl font-bold text-secondary mb-6">AI-Powered Penetration Testing Frameworks</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <!-- Zen-AI-Pentest -->
+              <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border-2 border-green-200 p-8">
+                <div class="flex items-center justify-between mb-6">
+                  <h4 class="font-tiempos text-2xl font-bold text-primary">Zen-AI-Pentest</h4>
+                  <div class="flex items-center space-x-3">
+                    <span class="bg-green-500 text-white px-4 py-2 rounded-full text-lg font-bold">0.877</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">CLOSEST MATCH</span>
+                  </div>
+                </div>
+
+                <div class="space-y-4 mb-6">
+                  <div class="flex items-center space-x-3">
+                    <i class="fas fa-trophy text-yellow-500"></i>
+                    <span class="text-secondary"><strong>Key Strength:</strong> LLM-driven orchestration of 20+ offensive tools</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <i class="fas fa-server text-blue-500"></i>
+                    <span class="text-secondary"><strong>Feature:</strong> Sandboxed exploitation with risk scoring</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <i class="fas fa-code-branch text-purple-500"></i>
+                    <span class="text-secondary"><strong>Access:</strong> Open-source with CI/CD integration</span>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 mb-6">
+                  <div class="bg-white p-3 rounded-lg text-center">
+                    <div class="text-xl font-bold text-green-600">4</div>
+                    <div class="text-xs text-slate-600">AI Tools</div>
+                  </div>
+                  <div class="bg-white p-3 rounded-lg text-center">
+                    <div class="text-xl font-bold text-orange-500">3</div>
+                    <div class="text-xs text-slate-600">Simulation</div>
+                  </div>
+                  <div class="bg-white p-3 rounded-lg text-center">
+                    <div class="text-xl font-bold text-red-500">0</div>
+                    <div class="text-xs text-slate-600">Dark Web</div>
+                  </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg">
+                  <p class="text-sm text-slate-700">
+                    <strong>Critical Gap:</strong> Zero dark web search capability reflects architectural focus on active testing rather than intelligence gathering.
+                  </p>
+                </div>
+              </div>
+
+              <!-- PentAGI -->
+              <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 p-8">
+                <div class="flex items-center justify-between mb-6">
+                  <h4 class="font-tiempos text-2xl font-bold text-primary">PentAGI</h4>
+                  <div class="flex items-center space-x-3">
+                    <span class="bg-blue-500 text-white px-4 py-2 rounded-full text-lg font-bold">0.812</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">BALANCED</span>
+                  </div>
+                </div>
+
+                <div class="space-y-4 mb-6">
+                  <div class="flex items-center space-x-3">
+                    <i class="fas fa-robot text-purple-500"></i>
+                    <span class="text-secondary"><strong>Key Strength:</strong> Fully autonomous AI agent architecture</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <i class="fas fa-search-plus text-green-500"></i>
+                    <span class="text-secondary"><strong>Unique:</strong> External search integration (Tavily, Perplexity, etc.)</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <i class="fas fa-project-diagram text-orange-500"></i>
+                    <span class="text-secondary"><strong>Feature:</strong> Knowledge graph for semantic understanding</span>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 mb-6">
+                  <div class="bg-white p-3 rounded-lg text-center">
+                    <div class="text-xl font-bold text-green-600">4</div>
+                    <div class="text-xs text-slate-600">AI Tools</div>
+                  </div>
+                  <div class="bg-white p-3 rounded-lg text-center">
+                    <div class="text-xl font-bold text-purple-500">4</div>
+                    <div class="text-xs text-slate-600">Simulation</div>
+                  </div>
+                  <div class="bg-white p-3 rounded-lg text-center">
+                    <div class="text-xl font-bold text-yellow-500">1</div>
+                    <div class="text-xs text-slate-600">Dark Web</div>
+                  </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg">
+                  <p class="text-sm text-slate-700">
+                    <strong>Best for:</strong> Organizations seeking balanced autonomous capabilities with emerging architectural approaches.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8">
+              <div class="bg-white rounded-xl shadow-lg p-6">
+                <h4 class="font-tiempos text-xl font-bold text-primary mb-4">RedAmon — Privacy-Focused Alternative</h4>
+                <div class="flex items-center space-x-4 mb-4">
+                  <span class="bg-purple-500 text-white px-4 py-2 rounded-full text-lg font-bold">0.798</span>
+                  <span class="text-secondary">Local AI agent with privacy emphasis for sensitive environments</span>
+                </div>
+                <p class="text-secondary text-sm">
+                  Automated reconnaissance, AI-driven exploitation, and GitHub integration with local deployment emphasis
+                  addressing cloud AI service concerns <a href="#ref-9" class="citation-link">[9]</a>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Dark Web Services -->
+      <section id="dark-web" class="px-8 py-16 bg-slate-900 text-white">
+        <div class="max-w-7xl mx-auto">
+          <h2 class="font-tiempos text-4xl font-bold mb-8">Dark Web and Uncensored AI Services</h2>
+
+          <div class="bg-red-900/50 border border-red-700 rounded-xl p-6 mb-12">
+            <div class="flex items-center space-x-3 mb-4">
+              <i class="fas fa-exclamation-triangle text-red-400 text-2xl"></i>
+              <h3 class="font-tiempos text-xl font-bold">Critical Legal and Ethical Warning</h3>
+            </div>
+            <p class="text-red-200 leading-relaxed">
+              The following services are <strong>explicitly designed for criminal purposes</strong> and their inclusion
+              serves comprehensive landscape coverage rather than endorsement. All described activities are subject to
+              legal and ethical prohibitions. Organizations must incorporate explicit ethical and legal filtering
+              beyond technical capability comparison.
+            </p>
+          </div>
+
+          <div id="malicious-assistants" class="mb-16">
+            <h3 class="font-tiempos text-2xl font-bold mb-6">Malicious AI Assistants and Uncensored LLMs</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+              <!-- DIG AI -->
+              <div class="bg-red-900/30 border border-red-700 rounded-xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="font-tiempos text-lg font-bold">DIG AI</h4>
+                  <span class="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold">0.739</span>
+                </div>
+                <p class="text-red-200 text-sm mb-4">
+                  Tor-hosted anonymous AI service with unrestricted content generation capabilities,
+                  popular among cybercriminal circles <a href="#ref-10" class="citation-link">[10]</a>.
+                </p>
+                <div class="space-y-2 text-sm">
+                  <div class="flex justify-between">
+                    <span>Code Generation:</span>
+                    <span class="text-yellow-400">3/5</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>Dark Web:</span>
+                    <span class="text-yellow-400">1/5</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>Privacy &amp; Security:</span>
+                    <span class="text-red-400">1/5</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Nytheon AI -->
+              <div class="bg-red-900/30 border border-red-700 rounded-xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="font-tiempos text-lg font-bold">Nytheon AI</h4>
+                  <span class="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold">0.595</span>
+                </div>
+                <p class="text-red-200 text-sm mb-4">
+                  Dark web generative AI hub with six specialized services distributed through underground channels <a href="#ref-11" class="citation-link">[11]</a>.
+                </p>
+                <div class="space-y-2 text-sm">
+                  <div class="flex justify-between">
+                    <span>Code Generation:</span>
+                    <span class="text-green-400">4/5</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>AI Security Tools:</span>
+                    <span class="text-red-400">1/5</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>Privacy &amp; Security:</span>
+                    <span class="text-red-400">1/5</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- WormGPT -->
+              <div class="bg-red-900/30 border border-red-700 rounded-xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="font-tiempos text-lg font-bold">WormGPT</h4>
+                  <span class="bg-orange-600 text-white px-3 py-1 rounded-full text-sm font-bold">~0.58</span>
+                </div>
+                <p class="text-red-200 text-sm mb-4">
+                  Adversarial code generation service focused on exploit and malware development for technical cybercriminals <a href="#ref-12" class="citation-link">[12]</a>.
+                </p>
+                <div class="space-y-2 text-sm">
+                  <div class="flex justify-between">
+                    <span>Code Generation:</span>
+                    <span class="text-yellow-400">3/5</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>AI Security Tools:</span>
+                    <span class="text-yellow-400">2/5</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>Privacy &amp; Security:</span>
+                    <span class="text-red-400">1/5</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="insight-highlight bg-red-900/30 border-red-700">
+              <h4 class="font-tiempos text-xl font-bold text-red-300 mb-3">
+                <i class="fas fa-chart-line text-red-400 mr-2"></i>
+                Critical Interpretation Required
+              </h4>
+              <p class="text-red-200 leading-relaxed">
+                The surprisingly high similarity scores of dark web services (DIG AI at 0.739) reflect
+                <strong>structural capability overlap, not legitimate application</strong>. This illustrates
+                a critical methodology limitation: <em>cosine similarity measures pattern alignment without moral or legal evaluation</em>.
+                Organizations must apply additional filtering beyond quantitative similarity to ensure ethical alignment and legal compliance.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Methodology Section -->
+      <section id="methodology" class="px-8 py-16 bg-white">
+        <div class="max-w-7xl mx-auto">
+          <h2 class="font-tiempos text-4xl font-bold text-primary mb-8">Methodology &amp; Similarity Calculation</h2>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+            <div>
+              <h3 class="font-tiempos text-2xl font-bold text-secondary mb-6">Six-Dimensional Feature Vector Space</h3>
+
+              <div class="space-y-4">
+                <div class="bg-slate-50 rounded-lg p-4">
+                  <h4 class="font-bold text-primary mb-2">1. Code Generation (CG)</h4>
+                  <p class="text-secondary text-sm">Security tool/exploit generation, automated remediation, security-specific vs. general-purpose output</p>
+                </div>
+
+                <div class="bg-slate-50 rounded-lg p-4">
+                  <h4 class="font-bold text-primary mb-2">2. Dark Web Search (DWS)</h4>
+                  <p class="text-secondary text-sm">Integrated dark web access, OSINT and credential monitoring, threat indicator tracking</p>
+                </div>
+
+                <div class="bg-slate-50 rounded-lg p-4">
+                  <h4 class="font-bold text-primary mb-2">3. AI-Powered Security Tools (AI-ST)</h4>
+                  <p class="text-secondary text-sm">Autonomous analysis and decision-making, AI agent orchestration, real-time detection</p>
+                </div>
+
+                <div class="bg-slate-50 rounded-lg p-4">
+                  <h4 class="font-bold text-primary mb-2">4. Threat Intelligence (TI)</h4>
+                  <p class="text-secondary text-sm">External data source integration, proactive threat hunting, IOC management</p>
+                </div>
+
+                <div class="bg-slate-50 rounded-lg p-4">
+                  <h4 class="font-bold text-primary mb-2">5. Threat Modeling &amp; Simulation (TMS)</h4>
+                  <p class="text-secondary text-sm">Adversarial scenario generation, red team exercise automation, defensive posture improvement</p>
+                </div>
+
+                <div class="bg-slate-50 rounded-lg p-4">
+                  <h4 class="font-bold text-primary mb-2">6. Privacy &amp; Security (P&amp;S)</h4>
+                  <p class="text-secondary text-sm">Data ownership guarantees, authorized use enforcement, operational security</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="font-tiempos text-2xl font-bold text-secondary mb-6">Cosine Similarity Calculation</h3>
+
+              <div class="bg-slate-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+                <div class="mb-4">
+                  <div class="text-white mb-2">similarity = cos(θ) = (A · B) / (||A|| × ||B||)</div>
+                </div>
+                <div class="text-slate-300">
+                  <div class="mb-2">Example: Zen-AI-Pentest</div>
+                  <div class="ml-4">
+                    <div>mr7.ai · zen = 5(1) + 4(0) + 5(4) + 5(2) + 5(3) + 5(3) = 65</div>
+                    <div>||mr7|| = √141 ≈ 11.87</div>
+                    <div>||zen|| = √39 ≈ 6.245</div>
+                    <div class="text-green-300 font-bold">similarity = 65 / (11.87 × 6.245) ≈ 0.877</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 class="font-bold text-blue-800 mb-2">
+                  <i class="fas fa-info-circle mr-2"></i>
+                  Why Cosine Similarity?
+                </h4>
+                <p class="text-blue-700 text-sm">
+                  Captures pattern alignment independent of magnitude, enabling comparison of platforms
+                  with different absolute capability levels but similar capability profiles.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature Vector Comparison Chart -->
+          <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-200 mb-12">
+            <h3 class="font-tiempos text-xl font-bold text-primary mb-6">Feature Vector Comparison</h3>
+            <div class="h-96">
+              <canvas id="featureChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Methodology Flow Diagram -->
+          <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-200">
+            <h3 class="font-tiempos text-xl font-bold text-primary mb-6">Analysis Methodology Flow</h3>
+            <div class="mermaid-container">
+              <div class="mermaid-controls">
+                <button class="mermaid-control-btn zoom-in" title="放大">
+                  <i class="fas fa-search-plus"></i>
+                </button>
+                <button class="mermaid-control-btn zoom-out" title="缩小">
+                  <i class="fas fa-search-minus"></i>
+                </button>
+                <button class="mermaid-control-btn reset-zoom" title="重置">
+                  <i class="fas fa-expand-arrows-alt"></i>
+                </button>
+                <button class="mermaid-control-btn fullscreen" title="全屏查看">
+                  <i class="fas fa-expand"></i>
+                </button>
+              </div>
+              <div class="mermaid">
+                flowchart TD
+                A[&#34;mr7.ai Feature Analysis&#34;] --&gt; B[&#34;Surface Web Search&#34;]
+                A --&gt; C[&#34;Deep Web Investigation&#34;]
+                A --&gt; D[&#34;Dark Web Monitoring&#34;]
+
+                B --&gt; E[&#34;Legitimate Services&#34;]
+                C --&gt; E
+                D --&gt; F[&#34;Uncensored Services&#34;]
+
+                E --&gt; G[&#34;Feature Vector Mapping&#34;]
+                F --&gt; G
+
+                G --&gt; H[&#34;Cosine Similarity Calculation&#34;]
+                H --&gt; I[&#34;Ranked Results&#34;]
+
+                I --&gt; J[&#34;Strategic Recommendations&#34;]
+
+                style A fill:#e53e3e,stroke:#2d3748,stroke-width:3px,color:#ffffff,font-weight:bold,font-size:14px
+                style I fill:#38a169,stroke:#2d3748,stroke-width:3px,color:#ffffff,font-weight:bold,font-size:14px
+                style J fill:#2b6cb0,stroke:#2d3748,stroke-width:3px,color:#ffffff,font-weight:bold,font-size:14px
+                style E fill:#f7fafc,stroke:#4a5568,stroke-width:2px,color:#2d3748,font-weight:500,font-size:12px
+                style F fill:#fed7d7,stroke:#c53030,stroke-width:2px,color:#742a2a,font-weight:500,font-size:12px
+                style G fill:#faf5ff,stroke:#805ad5,stroke-width:2px,color:#553c9a,font-weight:500,font-size:12px
+                style H fill:#f0fff4,stroke:#38a169,stroke-width:2px,color:#22543d,font-weight:500,font-size:12px
+                style B fill:#bee3f8,stroke:#3182ce,stroke-width:2px,color:#2c5282,font-weight:500,font-size:12px
+                style C fill:#c6f6d5,stroke:#38a169,stroke-width:2px,color:#276749,font-weight:500,font-size:12px
+                style D fill:#fed7d7,stroke:#e53e3e,stroke-width:2px,color:#c53030,font-weight:500,font-size:12px
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Ranked Results Section -->
+      <section id="ranked-results" class="px-8 py-16 bg-neutral">
+        <div class="max-w-7xl mx-auto">
+          <h2 class="font-tiempos text-4xl font-bold text-primary mb-8">Ranked Similarity Results</h2>
+
+          <!-- Top Tier Results -->
+          <div class="mb-12">
+            <h3 class="font-tiempos text-2xl font-bold text-secondary mb-6">Top-Tier Similarity (0.85–1.00)</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div class="bg-white rounded-xl shadow-lg p-8 border-l-4 border-green-500">
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="font-tiempos text-xl font-bold text-primary">Zen-AI-Pentest</h4>
+                  <div class="flex items-center space-x-2">
+                    <span class="bg-green-500 text-white px-4 py-2 rounded-full text-lg font-bold">0.877</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">BEST MATCH</span>
+                  </div>
+                </div>
+                <p class="text-secondary mb-4">
+                  Exceptional alignment in AI-powered security tools and threat modeling through LLM-driven orchestration
+                  of 20+ offensive tools. Open-source accessibility with CI/CD integration <a href="#ref-7" class="citation-link">[7]</a>.
+                </p>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                  <div class="bg-green-50 p-3 rounded-lg">
+                    <div class="text-lg font-bold text-green-600">4</div>
+                    <div class="text-sm text-slate-600">AI Security Tools</div>
+                  </div>
+                  <div class="bg-orange-50 p-3 rounded-lg">
+                    <div class="text-lg font-bold text-orange-600">3</div>
+                    <div class="text-sm text-slate-600">Threat Modeling</div>
+                  </div>
+                </div>
+                <div class="bg-red-50 border border-red-200 p-3 rounded-lg">
+                  <div class="text-sm text-red-700">
+                    <strong>Critical Gap:</strong> Zero dark web search capability
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl shadow-lg p-8 border-l-4 border-blue-500">
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="font-tiempos text-xl font-bold text-primary">Cycode</h4>
+                  <div class="flex items-center space-x-2">
+                    <span class="bg-blue-500 text-white px-4 py-2 rounded-full text-lg font-bold">0.835</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">ENTERPRISE</span>
+                  </div>
+                </div>
+                <p class="text-secondary mb-4">
+                  Enterprise leader in AI-native ASPM with sophisticated exploitability assessment and autonomous remediation.
+                  Strong Risk Intelligence Graph and AI Exploitability Agent capabilities <a href="#ref-2" class="citation-link">[2]</a>.
+                </p>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                  <div class="bg-blue-50 p-3 rounded-lg">
+                    <div class="text-lg font-bold text-blue-600">4</div>
+                    <div class="text-sm text-slate-600">AI Security Tools</div>
+                  </div>
+                  <div class="bg-green-50 p-3 rounded-lg">
+                    <div class="text-lg font-bold text-green-600">4</div>
+                    <div class="text-sm text-slate-600">Privacy &amp; Security</div>
+                  </div>
+                </div>
+                <div class="bg-red-50 border border-red-200 p-3 rounded-lg">
+                  <div class="text-sm text-red-700">
+                    <strong>Critical Gaps:</strong> No dark web intelligence, minimal code generation
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mid Tier Results -->
+          <div class="mb-12">
+            <h3 class="font-tiempos text-2xl font-bold text-secondary mb-6">Mid-Tier Similarity (0.70–0.85)</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="font-tiempos text-lg font-bold text-primary">PentAGI</h4>
+                  <span class="bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-bold">0.812</span>
+                </div>
+                <p class="text-secondary text-sm mb-4">
+                  Balanced capabilities with autonomous AI agent architecture and knowledge graph reasoning <a href="#ref-8" class="citation-link">[8]</a>.
+                </p>
+                <div class="space-y-1 text-xs">
+                  <div class="flex justify-between">
+                    <span>AI Tools:</span>
+                    <span class="text-green-600">4/5</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>Simulation:</span>
+                    <span class="text-green-600">4/5</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>Dark Web:</span>
+                    <span class="text-yellow-600">1/5</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="font-tiempos text-lg font-bold text-primary">RedAmon</h4>
+                  <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">0.798</span>
+                </div>
+                <p class="text-secondary text-sm mb-4">
+                  Privacy-focused local deployment with comprehensive red team capabilities <a href="#ref-9" class="citation-link">[9]</a>.
+                </p>
+                <div class="space-y-1 text-xs">
+                  <div class="flex justify-between">
+                    <span>Simulation:</span>
+                    <span class="text-green-600">4/5</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>Privacy:</span>
+                    <span class="text-green-600">4/5</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>Dark Web:</span>
+                    <span class="text-red-600">0/5</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="font-tiempos text-lg font-bold text-primary">Snyk</h4>
+                  <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">0.769</span>
+                </div>
+                <p class="text-secondary text-sm mb-4">
+                  Developer-centric security platform with hybrid symbolic/generative AI architecture <a href="#ref-3" class="citation-link">[3]</a>.
+                </p>
+                <div class="space-y-1 text-xs">
+                  <div class="flex justify-between">
+                    <span>Code Gen:</span>
+                    <span class="text-yellow-600">2/5</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>AI Tools:</span>
+                    <span class="text-yellow-600">3/5</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>Privacy:</span>
+                    <span class="text-green-600">4/5</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comparative Analysis Table -->
+          <div class="bg-white rounded-xl shadow-lg p-8">
+            <h3 class="font-tiempos text-xl font-bold text-primary mb-6">Comparative Feature Analysis</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-slate-200">
+                    <th class="text-left py-3 px-4 font-bold text-primary">Service</th>
+                    <th class="text-center py-3 px-4 font-bold text-primary">CG</th>
+                    <th class="text-center py-3 px-4 font-bold text-primary">DWS</th>
+                    <th class="text-center py-3 px-4 font-bold text-primary">AI-ST</th>
+                    <th class="text-center py-3 px-4 font-bold text-primary">TI</th>
+                    <th class="text-center py-3 px-4 font-bold text-primary">TMS</th>
+                    <th class="text-center py-3 px-4 font-bold text-primary">P&amp;S</th>
+                    <th class="text-center py-3 px-4 font-bold text-primary">Similarity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-slate-100 bg-green-50">
+                    <td class="py-3 px-4 font-medium">Zen-AI-Pentest</td>
+                    <td class="text-center py-3 px-4">1</td>
+                    <td class="text-center py-3 px-4 text-red-500">0</td>
+                    <td class="text-center py-3 px-4 text-green-600">4</td>
+                    <td class="text-center py-3 px-4">2</td>
+                    <td class="text-center py-3 px-4 text-orange-500">3</td>
+                    <td class="text-center py-3 px-4">3</td>
+                    <td class="text-center py-3 px-4"><span class="bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">0.877</span></td>
+                  </tr>
+                  <tr class="border-b border-slate-100 bg-blue-50">
+                    <td class="py-3 px-4 font-medium">Cycode</td>
+                    <td class="text-center py-3 px-4">1</td>
+                    <td class="text-center py-3 px-4 text-red-500">0</td>
+                    <td class="text-center py-3 px-4 text-green-600">4</td>
+                    <td class="text-center py-3 px-4">3</td>
+                    <td class="text-center py-3 px-4">1</td>
+                    <td class="text-center py-3 px-4 text-green-600">4</td>
+                    <td class="text-center py-3 px-4"><span class="bg-blue-500 text-white px-2 py-1 rounded text-xs font-bold">0.835</span></td>
+                  </tr>
+                  <tr class="border-b border-slate-100">
+                    <td class="py-3 px-4 font-medium">PentAGI</td>
+                    <td class="text-center py-3 px-4">2</td>
+                    <td class="text-center py-3 px-4 text-yellow-500">1</td>
+                    <td class="text-center py-3 px-4 text-green-600">4</td>
+                    <td class="text-center py-3 px-4">3</td>
+                    <td class="text-center py-3 px-4 text-green-600">4</td>
+                    <td class="text-center py-3 px-4">3</td>
+                    <td class="text-center py-3 px-4"><span class="bg-purple-500 text-white px-2 py-1 rounded text-xs font-bold">0.812</span></td>
+                  </tr>
+                  <tr class="border-b border-slate-100">
+                    <td class="py-3 px-4 font-medium">RedAmon</td>
+                    <td class="text-center py-3 px-4">2</td>
+                    <td class="text-center py-3 px-4 text-red-500">0</td>
+                    <td class="text-center py-3 px-4 text-green-600">4</td>
+                    <td class="text-center py-3 px-4">2</td>
+                    <td class="text-center py-3 px-4 text-green-600">4</td>
+                    <td class="text-center py-3 px-4 text-green-600">4</td>
+                    <td class="text-center py-3 px-4"><span class="bg-orange-500 text-white px-2 py-1 rounded text-xs font-bold">0.798</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Strategic Recommendations -->
+      <section id="recommendations" class="px-8 py-16 bg-white">
+        <div class="max-w-7xl mx-auto">
+          <h2 class="font-tiempos text-4xl font-bold text-primary mb-8">Strategic Recommendations</h2>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+            <div>
+              <h3 class="font-tiempos text-2xl font-bold text-secondary mb-6">Organizational Context Guidance</h3>
+
+              <div class="space-y-6">
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
+                  <h4 class="font-tiempos text-lg font-bold text-blue-800 mb-3">
+                    <i class="fas fa-search text-blue-600 mr-2"></i>
+                    Security Research &amp; Training
+                  </h4>
+                  <p class="text-blue-700 text-sm mb-3">
+                    Organizations requiring comprehensive security research and red team training capabilities.
+                  </p>
+                  <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                      <span class="text-sm">Primary Choice:</span>
+                      <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">Zen-AI-Pentest</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                      <span class="text-sm">Alternative:</span>
+                      <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">mr7.ai</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-purple-50 border border-purple-200 rounded-xl p-6">
+                  <h4 class="font-tiempos text-lg font-bold text-purple-800 mb-3">
+                    <i class="fas fa-building text-purple-600 mr-2"></i>
+                    Enterprise Application Security
+                  </h4>
+                  <p class="text-purple-700 text-sm mb-3">
+                    Large organizations prioritizing scalable vulnerability management and compliance.
+                  </p>
+                  <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                      <span class="text-sm">Primary Choice:</span>
+                      <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">Cycode</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                      <span class="text-sm">Complement:</span>
+                      <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">+ Zen-AI-Pentest</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-orange-50 border border-orange-200 rounded-xl p-6">
+                  <h4 class="font-tiempos text-lg font-bold text-orange-800 mb-3">
+                    <i class="fas fa-shield-alt text-orange-600 mr-2"></i>
+                    Privacy-Sensitive Environments
+                  </h4>
+                  <p class="text-orange-700 text-sm mb-3">
+                    Organizations requiring air-gapped operation or data sovereignty guarantees.
+                  </p>
+                  <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                      <span class="text-sm">Primary Choice:</span>
+                      <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-medium">RedAmon</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                      <span class="text-sm">Alternative:</span>
+                      <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-medium">PentAGI</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="font-tiempos text-2xl font-bold text-secondary mb-6">Implementation Roadmap</h3>
+
+              <div class="space-y-6">
+                <div class="bg-white border border-slate-200 rounded-xl p-6">
+                  <h4 class="font-tiempos text-lg font-bold text-primary mb-4">Phase 1: Capability Assessment</h4>
+                  <ul class="space-y-2 text-sm text-secondary">
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-check-circle text-green-500"></i>
+                      <span>Evaluate current security tooling stack</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-check-circle text-green-500"></i>
+                      <span>Identify specific capability gaps</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-check-circle text-green-500"></i>
+                      <span>Define organizational requirements</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-check-circle text-green-500"></i>
+                      <span>Assess budget and resource constraints</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-xl p-6">
+                  <h4 class="font-tiempos text-lg font-bold text-primary mb-4">Phase 2: Service Selection</h4>
+                  <ul class="space-y-2 text-sm text-secondary">
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-arrow-right text-blue-500"></i>
+                      <span>Prioritize services by similarity tier</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-arrow-right text-blue-500"></i>
+                      <span>Apply ethical and legal filtering</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-arrow-right text-blue-500"></i>
+                      <span>Conduct proof-of-concept evaluations</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-arrow-right text-blue-500"></i>
+                      <span>Validate integration requirements</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-xl p-6">
+                  <h4 class="font-tiempos text-lg font-bold text-primary mb-4">Phase 3: Deployment Strategy</h4>
+                  <ul class="space-y-2 text-sm text-secondary">
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-cog text-purple-500"></i>
+                      <span>Plan migration from existing tools</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-cog text-purple-500"></i>
+                      <span>Establish governance and workflows</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-cog text-purple-500"></i>
+                      <span>Train security teams on new capabilities</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-cog text-purple-500"></i>
+                      <span>Monitor effectiveness and ROI</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Key Insights -->
+          <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-xl p-8">
+            <h3 class="font-tiempos text-2xl font-bold mb-6">
+              <i class="fas fa-lightbulb text-yellow-400 mr-3"></i>
+              Strategic Insights
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h4 class="font-tiempos text-lg font-bold text-yellow-400 mb-3">No Perfect Substitute</h4>
+                <p class="text-slate-200 text-sm leading-relaxed">
+                  No single alternative replicates mr7.ai&#39;s complete feature combination. Organizations must
+                  prioritize based on specific capability requirements rather than seeking perfect substitution.
+                </p>
+              </div>
+
+              <div>
+                <h4 class="font-tiempos text-lg font-bold text-red-400 mb-3">Ethical Filtering Required</h4>
+                <p class="text-slate-200 text-sm leading-relaxed">
+                  Quantitative similarity measures pattern alignment without moral evaluation. Dark web services
+                  like DIG AI (0.739 similarity) demonstrate dangerous capability overlap despite criminal purpose.
+                </p>
+              </div>
+
+              <div>
+                <h4 class="font-tiempos text-lg font-bold text-blue-400 mb-3">Complementary Approach</h4>
+                <p class="text-slate-200 text-sm leading-relaxed">
+                  Best results often come from combining services: Zen-AI-Pentest for testing automation
+                  plus separate threat intelligence platforms for comprehensive coverage.
+                </p>
+              </div>
+
+              <div>
+                <h4 class="font-tiempos text-lg font-bold text-green-400 mb-3">Open-Source Advantage</h4>
+                <p class="text-slate-200 text-sm leading-relaxed">
+                  Open-source alternatives (Zen-AI-Pentest, PentAGI) offer customization and auditability
+                  advantages, though may require more integration effort than commercial platforms.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Citations Footer -->
+      <footer class="px-8 py-12 bg-slate-100 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto">
+          <h3 class="font-tiempos text-xl font-bold text-primary mb-6">References</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-secondary">
+            <div>
+              <div id="ref-1" class="mb-2">
+                <span class="font-medium">[1]</span>
+                <span>mr7.ai Platform Documentation and Feature Analysis</span>
+              </div>
+              <div id="ref-2" class="mb-2">
+                <span class="font-medium">[2]</span>
+                <span>Cycode AI Security Teammates and Risk Intelligence Graph</span>
+              </div>
+              <div id="ref-3" class="mb-2">
+                <span class="font-medium">[3]</span>
+                <span>Snyk DeepCode AI Hybrid Architecture</span>
+              </div>
+              <div id="ref-4" class="mb-2">
+                <span class="font-medium">[4]</span>
+                <span>Checkmarx One Agentic AI Capabilities</span>
+              </div>
+              <div id="ref-5" class="mb-2">
+                <span class="font-medium">[5]</span>
+                <span>SonarQube AI CodeFix Analysis</span>
+              </div>
+            </div>
+            <div>
+              <div id="ref-6" class="mb-2">
+                <span class="font-medium">[6]</span>
+                <span>GitHub Advanced Security Copilot Integration</span>
+              </div>
+              <div id="ref-7" class="mb-2">
+                <span class="font-medium">[7]</span>
+                <span>Zen-AI-Pentest LLM Orchestration Framework</span>
+              </div>
+              <div id="ref-8" class="mb-2">
+                <span class="font-medium">[8]</span>
+                <span>PentAGI Autonomous AI Architecture</span>
+              </div>
+              <div id="ref-9" class="mb-2">
+                <span class="font-medium">[9]</span>
+                <span>RedAmon Local AI Privacy Framework</span>
+              </div>
+              <div id="ref-10" class="mb-2">
+                <span class="font-medium">[10]</span>
+                <span>Resecurity DIG AI Threat Intelligence</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-8 pt-8 border-t border-slate-300 text-center text-slate-500 text-sm">
+            <p>Analysis conducted on 2026-03-23 using multi-dimensional vector similarity methodology</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#e53e3e',
+                primaryTextColor: '#2d3748',
+                primaryBorderColor: '#4a5568',
+                lineColor: '#4a5568',
+                secondaryColor: '#f7fafc',
+                tertiaryColor: '#edf2f7',
+                background: '#ffffff',
+                mainBkg: '#ffffff',
+                secondBkg: '#f7fafc',
+                tertiaryBkg: '#edf2f7',
+                nodeBorder: '#4a5568',
+                clusterBkg: '#f7fafc',
+                edgeLabelBackground: '#ffffff',
+                nodeTextColor: '#2d3748',
+                textColor: '#2d3748',
+                fontFamily: 'Inter, sans-serif',
+                fontSize: '14px'
+            },
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20
+            }
+        });
+
+        // Initialize Mermaid Controls for zoom and pan
+        function initializeMermaidControls() {
+            const containers = document.querySelectorAll('.mermaid-container');
+
+            containers.forEach(container => {
+                const mermaidElement = container.querySelector('.mermaid');
+                let scale = 1;
+                let isDragging = false;
+                let startX, startY, translateX = 0, translateY = 0;
+
+                // 触摸相关状态
+                let isTouch = false;
+                let touchStartTime = 0;
+                let initialDistance = 0;
+                let initialScale = 1;
+                let isPinching = false;
+
+                // Zoom controls
+                const zoomInBtn = container.querySelector('.zoom-in');
+                const zoomOutBtn = container.querySelector('.zoom-out');
+                const resetBtn = container.querySelector('.reset-zoom');
+                const fullscreenBtn = container.querySelector('.fullscreen');
+
+                function updateTransform() {
+                    mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+                    if (scale > 1) {
+                        container.classList.add('zoomed');
+                    } else {
+                        container.classList.remove('zoomed');
+                    }
+
+                    mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+                }
+
+                if (zoomInBtn) {
+                    zoomInBtn.addEventListener('click', () => {
+                        scale = Math.min(scale * 1.25, 4);
+                        updateTransform();
+                    });
+                }
+
+                if (zoomOutBtn) {
+                    zoomOutBtn.addEventListener('click', () => {
+                        scale = Math.max(scale / 1.25, 0.3);
+                        if (scale <= 1) {
+                            translateX = 0;
+                            translateY = 0;
+                        }
+                        updateTransform();
+                    });
+                }
+
+                if (resetBtn) {
+                    resetBtn.addEventListener('click', () => {
+                        scale = 1;
+                        translateX = 0;
+                        translateY = 0;
+                        updateTransform();
+                    });
+                }
+
+                if (fullscreenBtn) {
+                    fullscreenBtn.addEventListener('click', () => {
+                        if (container.requestFullscreen) {
+                            container.requestFullscreen();
+                        } else if (container.webkitRequestFullscreen) {
+                            container.webkitRequestFullscreen();
+                        } else if (container.msRequestFullscreen) {
+                            container.msRequestFullscreen();
+                        }
+                    });
+                }
+
+                // Mouse Events
+                mermaidElement.addEventListener('mousedown', (e) => {
+                    if (isTouch) return; // 如果是触摸设备，忽略鼠标事件
+
+                    isDragging = true;
+                    startX = e.clientX - translateX;
+                    startY = e.clientY - translateY;
+                    mermaidElement.style.cursor = 'grabbing';
+                    updateTransform();
+                    e.preventDefault();
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (isDragging && !isTouch) {
+                        translateX = e.clientX - startX;
+                        translateY = e.clientY - startY;
+                        updateTransform();
+                    }
+                });
+
+                document.addEventListener('mouseup', () => {
+                    if (isDragging && !isTouch) {
+                        isDragging = false;
+                        mermaidElement.style.cursor = 'grab';
+                        updateTransform();
+                    }
+                });
+
+                document.addEventListener('mouseleave', () => {
+                    if (isDragging && !isTouch) {
+                        isDragging = false;
+                        mermaidElement.style.cursor = 'grab';
+                        updateTransform();
+                    }
+                });
+
+                // 获取两点之间的距离
+                function getTouchDistance(touch1, touch2) {
+                    return Math.hypot(
+                        touch2.clientX - touch1.clientX,
+                        touch2.clientY - touch1.clientY
+                    );
+                }
+
+                // Touch Events - 触摸事件处理
+                mermaidElement.addEventListener('touchstart', (e) => {
+                    isTouch = true;
+                    touchStartTime = Date.now();
+
+                    if (e.touches.length === 1) {
+                        // 单指拖动
+                        isPinching = false;
+                        isDragging = true;
+
+                        const touch = e.touches[0];
+                        startX = touch.clientX - translateX;
+                        startY = touch.clientY - translateY;
+
+                    } else if (e.touches.length === 2) {
+                        // 双指缩放
+                        isPinching = true;
+                        isDragging = false;
+
+                        const touch1 = e.touches[0];
+                        const touch2 = e.touches[1];
+                        initialDistance = getTouchDistance(touch1, touch2);
+                        initialScale = scale;
+                    }
+
+                    e.preventDefault();
+                }, { passive: false });
+
+                mermaidElement.addEventListener('touchmove', (e) => {
+                    if (e.touches.length === 1 && isDragging && !isPinching) {
+                        // 单指拖动
+                        const touch = e.touches[0];
+                        translateX = touch.clientX - startX;
+                        translateY = touch.clientY - startY;
+                        updateTransform();
+
+                    } else if (e.touches.length === 2 && isPinching) {
+                        // 双指缩放
+                        const touch1 = e.touches[0];
+                        const touch2 = e.touches[1];
+                        const currentDistance = getTouchDistance(touch1, touch2);
+
+                        if (initialDistance > 0) {
+                            const newScale = Math.min(Math.max(
+                                initialScale * (currentDistance / initialDistance),
+                                0.3
+                            ), 4);
+                            scale = newScale;
+                            updateTransform();
+                        }
+                    }
+
+                    e.preventDefault();
+                }, { passive: false });
+
+                mermaidElement.addEventListener('touchend', (e) => {
+                    // 重置状态
+                    if (e.touches.length === 0) {
+                        isDragging = false;
+                        isPinching = false;
+                        initialDistance = 0;
+
+                        // 延迟重置isTouch，避免鼠标事件立即触发
+                        setTimeout(() => {
+                            isTouch = false;
+                        }, 100);
+                    } else if (e.touches.length === 1 && isPinching) {
+                        // 从双指变为单指，切换为拖动模式
+                        isPinching = false;
+                        isDragging = true;
+
+                        const touch = e.touches[0];
+                        startX = touch.clientX - translateX;
+                        startY = touch.clientY - translateY;
+                    }
+
+                    updateTransform();
+                });
+
+                mermaidElement.addEventListener('touchcancel', (e) => {
+                    isDragging = false;
+                    isPinching = false;
+                    initialDistance = 0;
+
+                    setTimeout(() => {
+                        isTouch = false;
+                    }, 100);
+
+                    updateTransform();
+                });
+
+                // Enhanced wheel zoom with better center point handling
+                container.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    const rect = container.getBoundingClientRect();
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                    const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+                    // Adjust translation to zoom towards center
+                    if (newScale !== scale) {
+                        const scaleDiff = newScale / scale;
+                        translateX = translateX * scaleDiff;
+                        translateY = translateY * scaleDiff;
+                        scale = newScale;
+
+                        if (scale <= 1) {
+                            translateX = 0;
+                            translateY = 0;
+                        }
+
+                        updateTransform();
+                    }
+                });
+
+                // Initialize display
+                updateTransform();
+            });
+        }
+
+        // Call the function on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMermaidControls();
+        });
+
+        // Initialize Feature Comparison Chart
+        function initializeFeatureChart() {
+            const ctx = document.getElementById('featureChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Code Generation', 'Dark Web Search', 'AI Security Tools', 'Threat Intelligence', 'Threat Modeling', 'Privacy & Security'],
+                    datasets: [
+                        {
+                            label: 'mr7.ai (Reference)',
+                            data: [5, 4, 5, 5, 5, 5],
+                            borderColor: '#e53e3e',
+                            backgroundColor: 'rgba(229, 62, 62, 0.2)',
+                            pointBackgroundColor: '#e53e3e',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#e53e3e'
+                        },
+                        {
+                            label: 'Zen-AI-Pentest',
+                            data: [1, 0, 4, 2, 3, 3],
+                            borderColor: '#38a169',
+                            backgroundColor: 'rgba(56, 161, 105, 0.2)',
+                            pointBackgroundColor: '#38a169',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#38a169'
+                        },
+                        {
+                            label: 'Cycode',
+                            data: [1, 0, 4, 3, 1, 4],
+                            borderColor: '#3182ce',
+                            backgroundColor: 'rgba(49, 130, 206, 0.2)',
+                            pointBackgroundColor: '#3182ce',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#3182ce'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                stepSize: 1,
+                                color: '#4a5568'
+                            },
+                            grid: {
+                                color: '#e2e8f0'
+                            },
+                            angleLines: {
+                                color: '#e2e8f0'
+                            },
+                            pointLabels: {
+                                color: '#2d3748',
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#2d3748',
+                                padding: 20
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize TOC functionality
+            const tocLinks = document.querySelectorAll('.toc-link');
+            const sections = document.querySelectorAll('section[id], div[id]');
+
+            // Smooth scrolling for TOC links
+            tocLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Active section highlighting
+            function updateActiveSection() {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (window.scrollY >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateActiveSection);
+            updateActiveSection(); // Initial call
+
+            // Initialize chart
+            initializeFeatureChart();
+        });
+
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+  
+
+</body></html>
