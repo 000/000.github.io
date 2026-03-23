@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSRC Thailand // Cyber Security Research Center Strategic Intelligence</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Sarabun:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <style>
+        @layer base, layout, components, utilities, animations;
+
+        @layer base {
+            :root {
+                --void: #0a0604;
+                --surface: #1a100b;
+                --surface-elevated: #2a1f1a;
+                --surface-card: #1e1510;
+                --gold: #c89b3c;
+                --gold-dim: rgba(200, 155, 60, 0.4);
+                --copper: #c8956c;
+                --neon: #3b82f6;
+                --teal: #0f766e;
+                --red-alert: #ef4444;
+                --emerald: #10b981;
+                --violet: #8b5cf6;
+                --amber: #f59e0b;
+                --pink: #ec4899;
+                --text-main: #f5e6c8;
+                --text-muted: #8a7560;
+                --text-dim: #5a4a3a;
+                --glass-border: rgba(200, 155, 60, 0.15);
+                --glass-border-hover: rgba(200, 155, 60, 0.4);
+                --ease: cubic-bezier(0.16, 1, 0.3, 1);
+                --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+                --radius: 12px;
+                --radius-sm: 8px;
+                --radius-lg: 16px;
+            }
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+            body {
+                background: var(--void);
+                color: var(--text-main);
+                font-family: 'Sarabun', 'Inter', sans-serif;
+                overflow-x: hidden;
+                line-height: 1.7;
+                font-size: 16px;
+            }
+            h1, h2, h3, h4, h5 { font-family: 'Cinzel', serif; line-height: 1.3; }
+            a { color: var(--gold); text-decoration: none; transition: color 0.2s; }
+            a:hover { color: var(--copper); }
+            img { max-width: 100%; height: auto; display: block; }
+            ::selection { background: var(--gold); color: var(--void); }
+            ::-webkit-scrollbar { width: 8px; }
+            ::-webkit-scrollbar-track { background: var(--void); }
+            ::-webkit-scrollbar-thumb { background: var(--surface-elevated); border-radius: 4px; }
+            ::-webkit-scrollbar-thumb:hover { background: var(--gold-dim); }
+
+            [lang="th"] { display: none; }
+            body[data-lang="th"] [lang="en"] { display: none; }
+            body[data-lang="th"] [lang="th"] { display: revert; }
+        }
+
+        @layer layout {
+            .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+            .section { padding: 5rem 0; }
+            .grid-2 { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+            .grid-3 { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+            .grid-4 { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+            .flex-center { display: flex; align-items: center; justify-content: center; }
+            .flex-between { display: flex; align-items: center; justify-content: space-between; }
+            .flex-col { display: flex; flex-direction: column; }
+            .gap-1 { gap: 0.5rem; }
+            .gap-2 { gap: 1rem; }
+            .gap-3 { gap: 1.5rem; }
+            .gap-4 { gap: 2rem; }
+
+            @media (min-width: 768px) {
+                .grid-2 { grid-template-columns: repeat(2, 1fr); }
+                .grid-3 { grid-template-columns: repeat(3, 1fr); }
+                .grid-4 { grid-template-columns: repeat(2, 1fr); }
+                .md-col-span-2 { grid-column: span 2; }
+            }
+            @media (min-width: 1024px) {
+                .grid-4 { grid-template-columns: repeat(4, 1fr); }
+                .lg-grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2rem; }
+                .lg-col-7 { grid-column: span 7; }
+                .lg-col-5 { grid-column: span 5; }
+                .lg-col-8 { grid-column: span 8; }
+                .lg-col-4 { grid-column: span 4; }
+            }
+        }
+
+        @layer components {
+            /* Glass Panel */
+            .glass-panel {
+                background: rgba(26, 16, 11, 0.85);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid var(--glass-border);
+                border-radius: var(--radius);
+                box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+                transition: transform 0.3s var(--ease), border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+            }
+            .glass-panel:hover {
+                border-color: var(--glass-border-hover);
+                transform: translateY(-4px);
+                box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+            }
+            .glass-panel.no-hover:hover { transform: none; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+            .glass-panel.static { transition: none; }
+            .glass-panel.static:hover { transform: none; border-color: var(--glass-border); }
+
+            /* Header */
+            .site-header {
+                position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+                background: rgba(10, 6, 4, 0.92);
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
+                border-bottom: 1px solid var(--glass-border);
+                padding: 0 1.5rem;
+                height: 64px;
+                display: flex; align-items: center; justify-content: space-between;
+            }
+            .header-logo { display: flex; align-items: center; gap: 0.75rem; }
+            .header-logo svg { width: 28px; height: 28px; color: var(--gold); }
+            .header-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.15em; color: var(--text-main); }
+            .header-title span { color: var(--gold); }
+            .header-nav { display: none; align-items: center; gap: 0.25rem; }
+            .header-nav a {
+                font-size: 0.72rem; color: var(--text-muted); padding: 0.4rem 0.6rem;
+                border-radius: var(--radius-sm); transition: all 0.2s;
+                font-family: 'Inter', sans-serif; letter-spacing: 0.05em; text-transform: uppercase;
+            }
+            .header-nav a:hover, .header-nav a.active { color: var(--gold); background: rgba(200,155,60,0.08); }
+            .header-actions { display: flex; align-items: center; gap: 0.5rem; }
+            @media (min-width: 1024px) { .header-nav { display: flex; } }
+
+            /* Mobile Menu */
+            .mobile-menu-btn { display: flex; padding: 0.5rem; background: none; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); color: var(--gold); cursor: pointer; }
+            @media (min-width: 1024px) { .mobile-menu-btn { display: none; } }
+            .mobile-nav {
+                position: fixed; top: 64px; left: 0; right: 0; bottom: 0; z-index: 99;
+                background: rgba(10, 6, 4, 0.97); backdrop-filter: blur(20px);
+                display: flex; flex-direction: column; padding: 2rem;
+                transform: translateY(-100%); opacity: 0; pointer-events: none;
+                transition: all 0.4s var(--ease);
+            }
+            .mobile-nav.open { transform: translateY(0); opacity: 1; pointer-events: all; }
+            .mobile-nav a {
+                font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--text-muted);
+                padding: 1rem 0; border-bottom: 1px solid rgba(200,155,60,0.08);
+                transition: color 0.2s;
+            }
+            .mobile-nav a:hover { color: var(--gold); }
+
+            /* Buttons */
+            .btn {
+                display: inline-flex; align-items: center; gap: 0.5rem;
+                padding: 0.5rem 1rem;
+                background: linear-gradient(135deg, var(--gold), var(--copper));
+                color: var(--void); border-radius: var(--radius-sm);
+                font-weight: 700; font-family: 'Cinzel', serif; cursor: pointer;
+                border: none; transition: all 0.3s var(--ease);
+                font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+            }
+            .btn:hover { filter: brightness(1.2); transform: translateY(-2px); }
+            .btn:active { transform: translateY(0) scale(0.97); }
+            .btn-outline {
+                background: transparent; border: 1px solid var(--gold); color: var(--gold);
+            }
+            .btn-outline:hover { background: rgba(200,155,60,0.1); }
+            .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.65rem; }
+            .btn-icon {
+                width: 32px; height: 32px; padding: 0; border-radius: 50%;
+                display: inline-flex; align-items: center; justify-content: center;
+            }
+
+            /* Tags / Badges */
+            .tag {
+                display: inline-flex; align-items: center; gap: 0.3rem;
+                padding: 0.2rem 0.6rem; border-radius: 999px;
+                font-size: 0.65rem; font-family: 'JetBrains Mono', monospace;
+                font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+            }
+            .tag-gold { background: rgba(200,155,60,0.15); color: var(--gold); border: 1px solid rgba(200,155,60,0.3); }
+            .tag-neon { background: rgba(59,130,246,0.15); color: var(--neon); border: 1px solid rgba(59,130,246,0.3); }
+            .tag-teal { background: rgba(15,118,110,0.15); color: var(--teal); border: 1px solid rgba(15,118,110,0.3); }
+            .tag-red { background: rgba(239,68,68,0.15); color: var(--red-alert); border: 1px solid rgba(239,68,68,0.3); }
+            .tag-emerald { background: rgba(16,185,129,0.15); color: var(--emerald); border: 1px solid rgba(16,185,129,0.3); }
+            .tag-violet { background: rgba(139,92,246,0.15); color: var(--violet); border: 1px solid rgba(139,92,246,0.3); }
+            .tag-amber { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+
+            /* Custom Range Slider */
+            input[type=range] {
+                -webkit-appearance: none; appearance: none;
+                width: 100%; height: 4px; background: var(--surface-elevated);
+                border-radius: 2px; outline: none; cursor: pointer;
+            }
+            input[type=range]::-webkit-slider-thumb {
+                -webkit-appearance: none; appearance: none;
+                width: 18px; height: 18px; border-radius: 50%;
+                background: var(--gold); border: 3px solid var(--void);
+                box-shadow: 0 0 8px rgba(200,155,60,0.4);
+                transition: transform 0.2s var(--ease-bounce);
+            }
+            input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.3); }
+            input[type=range]::-moz-range-thumb {
+                width: 18px; height: 18px; border-radius: 50%;
+                background: var(--gold); border: 3px solid var(--void);
+                box-shadow: 0 0 8px rgba(200,155,60,0.4); cursor: pointer;
+            }
+
+            /* Progress Bar */
+            .progress-track {
+                height: 6px; background: var(--surface-elevated);
+                border-radius: 3px; overflow: hidden; position: relative;
+            }
+            .progress-fill {
+                height: 100%; border-radius: 3px;
+                background: linear-gradient(90deg, var(--copper), var(--gold));
+                transition: width 0.6s var(--ease);
+                position: relative;
+            }
+            .progress-fill::after {
+                content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 20px;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2));
+            }
+            .progress-fill.neon { background: linear-gradient(90deg, #1d4ed8, var(--neon)); }
+            .progress-fill.teal { background: linear-gradient(90deg, #065f46, var(--teal)); }
+            .progress-fill.red { background: linear-gradient(90deg, #991b1b, var(--red-alert)); }
+            .progress-fill.emerald { background: linear-gradient(90deg, #065f46, var(--emerald)); }
+            .progress-fill.violet { background: linear-gradient(90deg, #4c1d95, var(--violet)); }
+
+            /* Slide Panel */
+            .slide-panel {
+                position: fixed; top: 0; right: 0; width: 100%; max-width: 520px; height: 100%;
+                background: var(--surface); border-left: 1px solid var(--glass-border);
+                transform: translateX(100%); transition: transform 0.5s var(--ease);
+                z-index: 200; padding: 2rem; overflow-y: auto;
+            }
+            .slide-panel.open { transform: translateX(0); }
+            .slide-overlay {
+                position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 199;
+                opacity: 0; pointer-events: none; transition: opacity 0.4s;
+            }
+            .slide-overlay.open { opacity: 1; pointer-events: all; }
+
+            /* Accordion */
+            .accordion-item { border: 1px solid var(--glass-border); border-radius: var(--radius); overflow: hidden; margin-bottom: 0.75rem; transition: border-color 0.3s; }
+            .accordion-item:hover { border-color: var(--glass-border-hover); }
+            .accordion-trigger {
+                width: 100%; display: flex; align-items: center; justify-content: space-between;
+                padding: 1rem 1.25rem; background: rgba(26,16,11,0.6); border: none;
+                color: var(--text-main); cursor: pointer; font-family: 'Cinzel', serif;
+                font-size: 0.95rem; font-weight: 600; text-align: left; transition: background 0.2s;
+            }
+            .accordion-trigger:hover { background: rgba(200,155,60,0.05); }
+            .accordion-trigger svg { width: 20px; height: 20px; color: var(--gold); transition: transform 0.3s var(--ease); flex-shrink: 0; }
+            .accordion-item.open .accordion-trigger svg { transform: rotate(180deg); }
+            .accordion-body {
+                max-height: 0; overflow: hidden; transition: max-height 0.4s var(--ease), padding 0.3s;
+                padding: 0 1.25rem; background: rgba(26,16,11,0.4);
+            }
+            .accordion-item.open .accordion-body { max-height: 800px; padding: 1.25rem; }
+
+            /* Personnel Card */
+            .person-card {
+                background: var(--surface-card); border: 1px solid var(--glass-border);
+                border-radius: var(--radius); padding: 1.5rem;
+                transition: all 0.3s var(--ease); position: relative; overflow: hidden;
+            }
+            .person-card::before {
+                content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+                background: linear-gradient(90deg, var(--gold), var(--copper));
+                transform: scaleX(0); transform-origin: left; transition: transform 0.4s var(--ease);
+            }
+            .person-card:hover { border-color: var(--glass-border-hover); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+            .person-card:hover::before { transform: scaleX(1); }
+            .person-level {
+                position: absolute; top: 0.75rem; right: 0.75rem;
+                font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+                padding: 0.15rem 0.5rem; border-radius: 999px;
+            }
+
+            /* Timeline */
+            .timeline { position: relative; padding-left: 2rem; }
+            .timeline::before {
+                content: ''; position: absolute; left: 7px; top: 0; bottom: 0;
+                width: 2px; background: linear-gradient(to bottom, var(--gold), var(--copper), var(--text-dim));
+            }
+            .timeline-item { position: relative; padding-bottom: 2rem; }
+            .timeline-dot {
+                position: absolute; left: -2rem; top: 0.3rem;
+                width: 16px; height: 16px; border-radius: 50%;
+                background: var(--gold); border: 3px solid var(--void);
+                box-shadow: 0 0 12px rgba(200,155,60,0.3);
+            }
+
+            /* Stat Counter */
+            .stat-block { text-align: center; padding: 1.5rem; }
+            .stat-number {
+                font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700;
+                color: var(--gold); line-height: 1;
+            }
+            .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.1em; }
+
+            /* Divider */
+            .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); margin: 1.5rem 0; }
+
+            /* Section Header */
+            .section-header { margin-bottom: 3rem; }
+            .section-eyebrow {
+                font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+                color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase;
+                margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;
+            }
+            .section-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+            .section-title { font-size: 2rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem; }
+            .section-desc { font-size: 1rem; color: var(--text-muted); max-width: 700px; line-height: 1.8; }
+
+            /* Callout */
+            .callout {
+                border-left: 3px solid var(--gold); padding: 1rem 1.25rem;
+                background: rgba(200,155,60,0.05); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+                font-size: 0.9rem; color: var(--text-main); line-height: 1.7;
+            }
+            .callout.neon { border-left-color: var(--neon); background: rgba(59,130,246,0.05); }
+            .callout.teal { border-left-color: var(--teal); background: rgba(15,118,110,0.05); }
+            .callout.red { border-left-color: var(--red-alert); background: rgba(239,68,68,0.05); }
+
+            /* Empty State */
+            .empty-state {
+                text-align: center; padding: 3rem; color: var(--text-dim);
+                font-family: 'Inter', sans-serif; font-size: 0.9rem;
+            }
+            .empty-state svg { width: 48px; height: 48px; margin: 0 auto 1rem; opacity: 0.3; }
+
+            /* Tooltip */
+            .tooltip-wrap { position: relative; cursor: help; }
+            .tooltip-wrap .tooltip-text {
+                position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-4px);
+                background: var(--surface-elevated); color: var(--text-main); padding: 0.4rem 0.8rem;
+                border-radius: var(--radius-sm); font-size: 0.7rem; white-space: nowrap;
+                opacity: 0; pointer-events: none; transition: all 0.2s;
+                border: 1px solid var(--glass-border);
+            }
+            .tooltip-wrap:hover .tooltip-text { opacity: 1; transform: translateX(-50%) translateY(-8px); }
+        }
+
+        @layer utilities {
+            .text-gold { color: var(--gold); }
+            .text-copper { color: var(--copper); }
+            .text-neon { color: var(--neon); }
+            .text-teal { color: var(--teal); }
+            .text-muted { color: var(--text-muted); }
+            .text-dim { color: var(--text-dim); }
+            .text-xs { font-size: 0.7rem; }
+            .text-sm { font-size: 0.8rem; }
+            .text-md { font-size: 0.95rem; }
+            .text-lg { font-size: 1.15rem; }
+            .text-xl { font-size: 1.4rem; }
+            .text-2xl { font-size: 1.8rem; }
+            .text-3xl { font-size: 2.2rem; }
+            .text-center { text-align: center; }
+            .font-mono { font-family: 'JetBrains Mono', monospace; }
+            .font-display { font-family: 'Cinzel', serif; }
+            .font-bold { font-weight: 700; }
+            .font-semibold { font-weight: 600; }
+            .mt-1 { margin-top: 0.5rem; }
+            .mt-2 { margin-top: 1rem; }
+            .mt-3 { margin-top: 1.5rem; }
+            .mt-4 { margin-top: 2rem; }
+            .mb-1 { margin-bottom: 0.5rem; }
+            .mb-2 { margin-bottom: 1rem; }
+            .mb-3 { margin-bottom: 1.5rem; }
+            .mb-4 { margin-bottom: 2rem; }
+            .p-2 { padding: 1rem; }
+            .p-3 { padding: 1.5rem; }
+            .p-4 { padding: 2rem; }
+            .px-3 { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .py-2 { padding-top: 1rem; padding-bottom: 1rem; }
+            .w-full { width: 100%; }
+            .h-full { height: 100%; }
+            .relative { position: relative; }
+            .overflow-hidden { overflow: hidden; }
+            .rounded { border-radius: var(--radius); }
+            .rounded-sm { border-radius: var(--radius-sm); }
+            .rounded-lg { border-radius: var(--radius-lg); }
+            .hidden { display: none; }
+            .block { display: block; }
+            .inline-flex { display: inline-flex; }
+            .items-center { align-items: center; }
+            .items-start { align-items: flex-start; }
+            .justify-center { justify-content: center; }
+            .justify-between { justify-content: space-between; }
+            .flex-1 { flex: 1; }
+            .shrink-0 { flex-shrink: 0; }
+            .opacity-0 { opacity: 0; }
+            .pointer-events-none { pointer-events: none; }
+            .z-0 { z-index: 0; }
+            .z-10 { z-index: 10; }
+            .cursor-pointer { cursor: pointer; }
+            .select-none { user-select: none; }
+            .list-none { list-style: none; }
+        }
+
+        @layer animations {
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(30px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes pulse-glow {
+                0%, 100% { box-shadow: 0 0 8px rgba(200,155,60,0.2); }
+                50% { box-shadow: 0 0 20px rgba(200,155,60,0.4); }
+            }
+            @keyframes shimmer {
+                0% { background-position: -200% 0; }
+                100% { background-position: 200% 0; }
+            }
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+            @keyframes countUp {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .anim-fade-up { animation: fadeInUp 0.8s var(--ease) both; }
+            .anim-fade { animation: fadeIn 0.6s var(--ease) both; }
+            .anim-delay-1 { animation-delay: 0.1s; }
+            .anim-delay-2 { animation-delay: 0.2s; }
+            .anim-delay-3 { animation-delay: 0.3s; }
+            .anim-delay-4 { animation-delay: 0.4s; }
+            .anim-delay-5 { animation-delay: 0.5s; }
+            .anim-spin { animation: spin 1s linear infinite; }
+            .anim-pulse { animation: pulse-glow 2s ease-in-out infinite; }
+
+            /* Scroll-triggered animations */
+            .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s var(--ease); }
+            .reveal.visible { opacity: 1; transform: translateY(0); }
+            .reveal-delay-1 { transition-delay: 0.1s; }
+            .reveal-delay-2 { transition-delay: 0.2s; }
+            .reveal-delay-3 { transition-delay: 0.3s; }
+            .reveal-delay-4 { transition-delay: 0.4s; }
+        }
+    </style>
+</head>
+
+<body data-lang="en">
+    <!-- Physics Canvas Background -->
+    <canvas id="physics-canvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
+
+    <!-- Progress Bar -->
+    <div id="progress-bar" style="position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--copper));z-index:200;width:0;transition:width 0.15s;"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" style="position:fixed;inset:0;z-index:9999;background:var(--void);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.8s var(--ease);">
+        <div style="width:48px;height:48px;border:2px solid rgba(200,155,60,0.15);border-top-color:var(--gold);border-radius:50%;" class="anim-spin"></div>
+        <div class="font-display text-sm text-gold mt-3" style="letter-spacing:0.2em;opacity:0.8;">
+            <span lang="en">INITIALIZING INTELLIGENCE...</span>
+            <span lang="th">กำลังเริ่มต้นระบบ...</span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-logo">
+            <div id="logo-slot"></div>
+            <div class="header-title">
+                <span lang="en">CSRC // <span>THAILAND</span></span>
+                <span lang="th">ศวจ. // <span>ไทยแลนด์</span></span>
+            </div>
+        </div>
+
+        <nav class="header-nav" id="desktop-nav">
+            <a href="#hero" data-nav="hero"><span lang="en">Home</span><span lang="th">หน้าแรก</span></a>
+            <a href="#csrc" data-nav="csrc"><span lang="en">CSRC</span><span lang="th">ศวจ.</span></a>
+            <a href="#htcr" data-nav="htcr"><span lang="en">HTCR</span><span lang="th">ศชวซ.</span></a>
+            <a href="#personnel" data-nav="personnel"><span lang="en">Personnel</span><span lang="th">บุคลากร</span></a>
+            <a href="#intl" data-nav="intl"><span lang="en">Global</span><span lang="th">สากล</span></a>
+            <a href="#threats" data-nav="threats"><span lang="en">Threats</span><span lang="th">ภัยคุกคาม</span></a>
+        </nav>
+
+        <div class="header-actions">
+            <button class="btn btn-sm btn-outline" onclick="APP.toggleLang()">EN / TH</button>
+            <button class="mobile-menu-btn" onclick="APP.toggleMobile()" id="mobile-toggle">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Nav -->
+    <nav class="mobile-nav" id="mobile-nav">
+        <a href="#hero" onclick="APP.closeMobile()"><span lang="en">Home</span><span lang="th">หน้าแรก</span></a>
+        <a href="#csrc" onclick="APP.closeMobile()"><span lang="en">CSRC — Research Center</span><span lang="th">ศวจ. — ศูนย์วิจัย</span></a>
+        <a href="#htcr" onclick="APP.closeMobile()"><span lang="en">HTCR — Hub of Talents</span><span lang="th">ศชวซ. — ศูนย์รวมผู้เชี่ยวชาญ</span></a>
+        <a href="#personnel" onclick="APP.closeMobile()"><span lang="en">Personnel & Hierarchy</span><span lang="th">บุคลากรและลำดับบังคับบัญชา</span></a>
+        <a href="#intl" onclick="APP.closeMobile()"><span lang="en">International Cooperation</span><span lang="th">ความร่วมมือระหว่างประเทศ</span></a>
+        <a href="#threats" onclick="APP.closeMobile()"><span lang="en">Emerging Threats</span><span lang="th">ภัยคุกคามแห่งอนาคต</span></a>
+        <a href="#conclusion" onclick="APP.closeMobile()"><span lang="en">Conclusion</span><span lang="th">บทสรุป</span></a>
+    </nav>
+
+    <!-- Main Content -->
+    <main style="position:relative;z-index:10;">
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- HERO SECTION -->
+        <!-- ═══════════════════════════════════════════ -->
+        <section id="hero" class="section" style="padding-top:8rem;min-height:100vh;display:flex;align-items:center;">
+            <div class="container">
+                <div class="lg-grid-12" style="align-items:center;">
+                    <div class="lg-col-7 anim-fade-up">
+                        <div class="section-eyebrow">
+                            <span lang="en">National Cyber Security Agency — NCSA</span>
+                            <span lang="th">สำนักงานคณะกรรมการการรักษาความมั่นคงปลอดภัยไซเบอร์แห่งชาติ — สกมช.</span>
+                        </div>
+                        <h1 class="font-display" style="font-size:clamp(2rem,5vw,3.5rem);font-weight:900;line-height:1.15;margin-bottom:1.5rem;">
+                            <span lang="en">Cyber Security<br>Research Center</span>
+                            <span lang="th">ศูนย์วิจัยความมั่นคง<br>ปลอดภัยไซเบอร์</span>
+                        </h1>
+                        <p style="font-size:1.05rem;color:var(--text-muted);max-width:560px;line-height:1.9;margin-bottom:2rem;">
+                            <span lang="en">The R&D brain of NCSA — known as <strong style="color:var(--gold);">"Cybreplus"</strong> — building homegrown cybersecurity innovations tailored to Thailand's unique threat landscape. Combining <strong style="color:var(--copper);">Policy + Innovation + Talent</strong> to protect every Thai citizen in the digital age.</span>
+                            <span lang="th">สมองกล R&D ของ สกมช. หรือที่รู้จักกันในชื่อ <strong style="color:var(--gold);">"Cybreplus"</strong> — สร้างนวัตกรรมความมั่นคงปลอดภัยไซเบอร์ที่เหมาะสมกับบริบทไทย ผสานพลัง <strong style="color:var(--copper);">นโยบาย + นวัตกรรม + บุคลากร</strong> เพื่อปกป้องคนไทยทุกคนในยุคดิจิทัล</span>
+                        </p>
+                        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+                            <a href="#csrc" class="btn">
+                                <span lang="en">Explore CSRC</span>
+                                <span lang="th">สำรวจ ศวจ.</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </a>
+                            <a href="#personnel" class="btn btn-outline">
+                                <span lang="en">Meet the Team</span>
+                                <span lang="th">พบทีมงาน</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="lg-col-5 anim-fade-up anim-delay-3">
+                        <div class="glass-panel p-4 no-hover">
+                            <h3 class="font-display text-md text-gold mb-3" style="letter-spacing:0.1em;">
+                                <span lang="en">KEY INTELLIGENCE</span>
+                                <span lang="th">ข้อมูลสำคัญ</span>
+                            </h3>
+                            <div class="flex-col gap-2">
+                                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;background:rgba(200,155,60,0.05);border-radius:var(--radius-sm);">
+                                    <div id="icon-shield-hero" style="color:var(--gold);flex-shrink:0;"></div>
+                                    <div>
+                                        <div class="text-sm font-semibold" lang="en">National R&D Infrastructure</div>
+                                        <div class="text-sm font-semibold" lang="th">โครงสร้างพื้นฐานวิจัยระดับชาติ</div>
+                                        <div class="text-xs text-muted" lang="en">Under Cybersecurity Act B.E. 2562</div>
+                                        <div class="text-xs text-muted" lang="th">ภายใต้ พ.ร.บ. ไซเบอร์ พ.ศ. 2562</div>
+                                    </div>
+                                </div>
+                                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;background:rgba(59,130,246,0.05);border-radius:var(--radius-sm);">
+                                    <div id="icon-network-hero" style="color:var(--neon);flex-shrink:0;"></div>
+                                    <div>
+                                        <div class="text-sm font-semibold" lang="en">20+ Partner Institutions</div>
+                                        <div class="text-sm font-semibold" lang="th">สถาบันพันธมิตร 20+ แห่ง</div>
+                                        <div class="text-xs text-muted" lang="en">Hub & Spoke research model</div>
+                                        <div class="text-xs text-muted" lang="th">โมเดล Hub & Spoke</div>
+                                    </div>
+                                </div>
+                                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;background:rgba(15,118,110,0.05);border-radius:var(--radius-sm);">
+                                    <div id="icon-chart-hero" style="color:var(--teal);flex-shrink:0;"></div>
+                                    <div>
+                                        <div class="text-sm font-semibold" lang="en">2,500+ ASEAN Experts Trained</div>
+                                        <div class="text-sm font-semibold" lang="th">ปั้นผู้เชี่ยวชาญอาเซียน 2,500+ คน</div>
+                                        <div class="text-xs text-muted" lang="en">Via AJCCBC training center</div>
+                                        <div class="text-xs text-muted" lang="th">ผ่านศูนย์ฝึกอบรม AJCCBC</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- CSRC SECTION -->
+        <!-- ═══════════════════════════════════════════ -->
+        <section id="csrc" class="section" style="background:rgba(26,16,11,0.3);">
+            <div class="container">
+                <div class="section-header reveal">
+                    <div class="section-eyebrow">
+                        <span lang="en">Section 02 — Deep Dive</span>
+                        <span lang="th">ส่วนที่ 02 — เจาะลึก</span>
+                    </div>
+                    <h2 class="section-title">
+                        <span lang="en">CSRC: The Innovation Lab for Security</span>
+                        <span lang="th">ศวจ.: ห้องแล็บนวัตกรรมเพื่อความปลอดภัย</span>
+                    </h2>
+                    <p class="section-desc">
+                        <span lang="en">The Cyber Security Research Center (CSRC) — also known as "Cybreplus" — is NCSA's R&D brain, focused on building innovations tailored to Thailand's context. It operates through 3 core divisions.</span>
+                        <span lang="th">ศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์ (CSRC) หรือ "Cybreplus" คือสมองกล R&D ของ สกมช. ที่เน้นสร้างนวัตกรรมเหมาะสมกับบริบทไทย แบ่งการทำงานเป็น 3 ฝ่ายหลัก</span>
+                    </p>
+                </div>
+
+                <!-- Interactive Mission Explorer -->
+                <div class="glass-panel p-4 mb-4 no-hover reveal reveal-delay-1">
+                    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+                        <div id="icon-filter" style="color:var(--gold);"></div>
+                        <span class="font-display text-sm text-gold" style="letter-spacing:0.15em;">
+                            <span lang="en">MISSION EXPLORER — SELECT A DIVISION</span>
+                            <span lang="th">สำรวจภารกิจ — เลือกฝ่ายงาน</span>
+                        </span>
+                    </div>
+                    <div id="division-buttons" style="display:flex;flex-wrap:wrap;gap:0.5rem;"></div>
+                </div>
+
+                <div id="division-detail" class="glass-panel p-4 mb-4 no-hover reveal reveal-delay-2" style="min-height:180px;">
+                    <div style="display:flex;align-items:flex-start;gap:1rem;">
+                        <div id="division-icon" style="font-size:2rem;flex-shrink:0;"></div>
+                        <div style="flex:1;">
+                            <h3 id="division-title" class="font-display text-lg text-gold mb-1">
+                                <span lang="en">Select a division above</span>
+                                <span lang="th">เลือกฝ่ายงานด้านบน</span>
+                            </h3>
+                            <p id="division-desc" class="text-sm text-muted" style="line-height:1.8;">
+                                <span lang="en">Click on any division button to explore its role, responsibilities, and impact on Thailand's cybersecurity landscape.</span>
+                                <span lang="th">คลิกที่ปุ่มฝ่ายงานเพื่อสำรวจบทบาท หน้าที่ และผลกระทบต่อภูมิทัศน์ความมั่นคงปลอดภัยไซเบอร์ของไทย</span>
+                            </p>
+                            <div id="division-progress" style="margin-top:1rem;display:none;">
+                                <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+                                    <span class="text-xs text-muted" id="division-progress-label"></span>
+                                    <span class="text-xs font-mono text-gold" id="division-progress-val"></span>
+                                </div>
+                                <div class="progress-track"><div class="progress-fill" id="division-progress-fill" style="width:0;"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tangible Outcomes -->
+                <div class="section-header reveal" style="margin-top:3rem;">
+                    <div class="section-eyebrow">
+                        <span lang="en">Tangible Outcomes</span>
+                        <span lang="th">ผลลัพธ์ที่จับต้องได้</span>
+                    </div>
+                </div>
+
+                <div class="grid-2 reveal reveal-delay-1">
+                    <div class="glass-panel p-3">
+                        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+                            <div id="icon-globe-std" style="color:var(--neon);"></div>
+                            <div>
+                                <h4 class="font-display text-md">
+                                    <span lang="en">Website Security Standard</span>
+                                    <span lang="th">มาตรฐานเว็บไซต์</span>
+                                </h4>
+                                <span class="tag tag-neon">
+                                    <span lang="en">GAZETTE PUBLISHED</span>
+                                    <span lang="th">ประกาศราชกิจจาฯ</span>
+                                </span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-muted" style="line-height:1.8;">
+                            <span lang="en">Published in the Royal Gazette in September 2025, effective from fiscal year 2026 onwards. All government agencies must comply to ensure website security.</span>
+                            <span lang="th">ประกาศในราชกิจจานุเบกษาเมื่อกันยายน 2568 มีผลบังคับใช้ในปีงบประมาณ 2569 เป็นต้นไป ทุกหน่วยงานรัฐต้องทำตาม</span>
+                        </p>
+                        <div style="margin-top:1rem;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+                                <span class="text-xs text-muted" lang="en">Enforcement Progress</span>
+                                <span class="text-xs text-muted" lang="th">ความคืบหน้าการบังคับใช้</span>
+                                <span class="text-xs font-mono text-neon">85%</span>
+                            </div>
+                            <div class="progress-track"><div class="progress-fill neon" style="width:85%;"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-3">
+                        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+                            <div id="icon-brain-ai" style="color:var(--violet);"></div>
+                            <div>
+                                <h4 class="font-display text-md">
+                                    <span lang="en">AI Security Guidelines</span>
+                                    <span lang="th">แนวปฏิบัติ AI</span>
+                                </h4>
+                                <span class="tag tag-violet">
+                                    <span lang="en">OCT 2025 — COMPLETE</span>
+                                    <span lang="th">ต.ค. 2568 — สมบูรณ์</span>
+                                </span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-muted" style="line-height:1.8;">
+                            <span lang="en">A comprehensive guide (October 2025) enabling safe AI usage — preventing model theft, data leakage, adversarial attacks, and ensuring ethical deployment.</span>
+                            <span lang="th">คู่มือฉบับสมบูรณ์ (ต.ค. 2568) ช่วยให้ใช้ AI ได้อย่างปลอดภัย ไม่เสี่ยงต่อการถูกขโมยโมเดลหรือข้อมูลรั่วไหล</span>
+                        </p>
+                        <div style="margin-top:1rem;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+                                <span class="text-xs text-muted" lang="en">Completion</span>
+                                <span class="text-xs text-muted" lang="th">ความสมบูรณ์</span>
+                                <span class="text-xs font-mono text-violet" style="color:var(--violet);">100%</span>
+                            </div>
+                            <div class="progress-track"><div class="progress-fill violet" style="width:100%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- HTCR SECTION -->
+        <!-- ═══════════════════════════════════════════ -->
+        <section id="htcr" class="section">
+            <div class="container">
+                <div class="section-header reveal">
+                    <div class="section-eyebrow">
+                        <span lang="en">Section 03 — National Talent Network</span>
+                        <span lang="th">ส่วนที่ 03 — เครือข่ายมันสมองแห่งชาติ</span>
+                    </div>
+                    <h2 class="section-title">
+                        <span lang="en">HTCR: The Nation's Cyber Brain Trust</span>
+                        <span lang="th">ศชวซ.: ศูนย์รวมมันสมองไซเบอร์ของชาติ</span>
+                    </h2>
+                    <p class="section-desc">
+                        <span lang="en">To fight world-class hackers, we need researchers from across the nation. The Thailand Hub of Talents in Cybersecurity Research (HTCR) unites 20+ institutions under a Hub & Spoke model.</span>
+                        <span lang="th">การจะสู้กับแฮกเกอร์ระดับโลก เราต้องใช้พลังจากนักวิจัยทั่วประเทศ จึงเกิดเป็น HTCR ที่เชื่อมต่อมหาวิทยาลัยและสถาบันวิจัยกว่า 20 แห่ง</span>
+                    </p>
+                </div>
+
+                <div class="lg-grid-12 reveal reveal-delay-1">
+                    <!-- Network Visualization -->
+                    <div class="lg-col-8">
+                        <div class="glass-panel no-hover" style="height:480px;overflow:hidden;position:relative;">
+                            <div style="position:absolute;top:1rem;left:1rem;z-index:5;">
+                                <span class="tag tag-gold">
+                                    <span lang="en">INTERACTIVE NETWORK</span>
+                                    <span lang="th">เครือข่ายเชิงโต้ตอบ</span>
+                                </span>
+                            </div>
+                            <div id="network-viz" style="width:100%;height:100%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- HTCR Details -->
+                    <div class="lg-col-4 flex-col gap-3">
+                        <div class="glass-panel p-3 no-hover">
+                            <h4 class="font-display text-sm text-gold mb-2" style="letter-spacing:0.1em;">
+                                <span lang="en">HUB & SPOKE MODEL</span>
+                                <span lang="th">โมเดล HUB & SPOKE</span>
+                            </h4>
+                            <p class="text-sm text-muted" style="line-height:1.8;">
+                                <span lang="en">HTCR acts as the central "Hub" connecting "Spokes" — universities and research institutes nationwide. Transforming shelf research into real-world cybersecurity products and services.</span>
+                                <span lang="th">HTCR ทำหน้าที่เป็น "ศูนย์กลาง" (Hub) เชื่อมต่อกับ "ซี่ล้อ" (Spoke) คือมหาวิทยาลัยและสถาบันวิจัยทั่วประเทศ เปลี่ยนงานวิจัยบนหิ้งให้เป็นผลิตภัณฑ์จริง</span>
+                            </p>
+                        </div>
+
+                        <div class="glass-panel p-3 no-hover">
+                            <h4 class="font-display text-sm text-gold mb-2" style="letter-spacing:0.1em;">
+                                <span lang="en">PROACTIVE ACTIVITIES</span>
+                                <span lang="th">กิจกรรมเชิงรุก</span>
+                            </h4>
+                            <div class="callout" style="margin-top:0.75rem;">
+                                <span lang="en"><strong>Post-Quantum Cryptography Training</strong> — November 2025: Preparing Thai researchers for the quantum computing era.</span>
+                                <span lang="th"><strong>การฝึกอบรม Post-Quantum Cryptography</strong> — พฤศจิกายน 2568: เตรียมความพร้อมนักวิจัยไทยรับมือคอมพิวเตอร์ควอนตัม</span>
+                            </div>
+                        </div>
+
+                        <div class="glass-panel p-3 no-hover">
+                            <h4 class="font-display text-sm text-gold mb-2" style="letter-spacing:0.1em;">
+                                <span lang="en">RESEARCH WORKING GROUPS</span>
+                                <span lang="th">คณะทำงานวิจัย</span>
+                            </h4>
+                            <div style="display:flex;flex-wrap:wrap;gap:0.4rem;">
+                                <span class="tag tag-red">PQC</span>
+                                <span class="tag tag-violet">AI Security</span>
+                                <span class="tag tag-teal">IoT / Embedded</span>
+                                <span class="tag tag-amber">Cyber Education</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- PERSONNEL SECTION -->
+        <!-- ═══════════════════════════════════════════ -->
+        <section id="personnel" class="section" style="background:rgba(26,16,11,0.3);">
+            <div class="container">
+                <div class="section-header reveal">
+                    <div class="section-eyebrow">
+                        <span lang="en">Section 04 — Command Structure</span>
+                        <span lang="th">ส่วนที่ 04 — โครงสร้างบุคลากร</span>
+                    </div>
+                    <h2 class="section-title">
+                        <span lang="en">Personnel & Strategic Hierarchy</span>
+                        <span lang="th">บุคลากรและลำดับบังคับบัญชา</span>
+                    </h2>
+                    <p class="section-desc">
+                        <span lang="en">The ecosystem is driven by Thailand's top-tier cybersecurity professionals, organized in a strategic chain of command across 5 levels.</span>
+                        <span lang="th">ระบบนิเวศนี้ขับเคลื่อนด้วยบุคลากรระดับแถวหน้าของประเทศ โดยมีลำดับสายการบังคับบัญชาเชิงยุทธศาสตร์ 5 ระดับ</span>
+                    </p>
+                </div>
+
+                <!-- Filter Controls -->
+                <div class="glass-panel p-3 mb-4 no-hover reveal reveal-delay-1">
+                    <div style="display:flex;flex-wrap:wrap;gap:1.5rem;align-items:flex-end;">
+                        <div style="flex:1;min-width:200px;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                                <span class="text-xs text-gold font-mono" style="letter-spacing:0.1em;">
+                                    <span lang="en">HIERARCHY LEVEL</span>
+                                    <span lang="th">ระดับบังคับบัญชา</span>
+                                </span>
+                                <span class="text-xs font-mono text-gold" id="level-val">1 — 5</span>
+                            </div>
+                            <input type="range" id="level-filter" min="1" max="5" value="5">
+                        </div>
+                        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                            <button class="btn btn-sm" id="filter-all" onclick="APP.filterPersonnel('all')">
+                                <span lang="en">ALL</span><span lang="th">ทั้งหมด</span>
+                            </button>
+                            <button class="btn btn-sm btn-outline" id="filter-csrc" onclick="APP.filterPersonnel('csrc')">CSRC</button>
+                            <button class="btn btn-sm btn-outline" id="filter-htcr" onclick="APP.filterPersonnel('htcr')">HTCR</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personnel Grid -->
+                <div id="personnel-grid" class="grid-3 reveal reveal-delay-2"></div>
+                <div id="personnel-empty" class="empty-state hidden">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                    <p lang="en">No personnel match the current filter.</p>
+                    <p lang="th">ไม่พบบุคลากรตามตัวกรองที่เลือก</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- INTERNATIONAL COOPERATION -->
+        <!-- ═══════════════════════════════════════════ -->
+        <section id="intl" class="section">
+            <div class="container">
+                <div class="section-header reveal">
+                    <div class="section-eyebrow">
+                        <span lang="en">Section 05 — Global Alliances</span>
+                        <span lang="th">ส่วนที่ 05 — พันธมิตรระดับโลก</span>
+                    </div>
+                    <h2 class="section-title">
+                        <span lang="en">International Cooperation</span>
+                        <span lang="th">ความร่วมมือระหว่างประเทศ</span>
+                    </h2>
+                    <p class="section-desc">
+                        <span lang="en">Cyberspace knows no borders. Thailand collaborates with international partners to exchange knowledge and strengthen collective security.</span>
+                        <span lang="th">โลกไซเบอร์ไม่มีพรมแดน ไทยจึงร่วมมือกับนานาชาติเพื่อแลกเปลี่ยนความรู้และเสริมสร้างความมั่นคงร่วมกัน</span>
+                    </p>
+                </div>
+
+                <div class="grid-3 reveal reveal-delay-1">
+                    <!-- Japan -->
+                    <div class="glass-panel p-3">
+                        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+                            <span style="font-size:1.8rem;">🇯🇵</span>
+                            <div>
+                                <h4 class="font-display text-md">
+                                    <span lang="en">Japan (JICA/NCO)</span>
+                                    <span lang="th">ญี่ปุ่น (JICA/NCO)</span>
+                                </h4>
+                                <span class="tag tag-gold">OT SECURITY</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-muted" style="line-height:1.8;">
+                            <span lang="en">Joint development of OT Security and management of the AJCCBC training center, which has trained over <strong style="color:var(--gold);">2,500 ASEAN experts</strong>.</span>
+                            <span lang="th">ร่วมกันพัฒนาความปลอดภัยระบบอุตสาหกรรม (OT Security) และบริหารศูนย์ฝึกอบรม AJCCBC ซึ่งปั้นผู้เชี่ยวชาญในอาเซียนไปแล้วกว่า <strong style="color:var(--gold);">2,500 คน</strong></span>
+                        </p>
+                        <div style="margin-top:1rem;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+                                <span class="text-xs text-muted" lang="en">Experts Trained</span>
+                                <span class="text-xs text-muted" lang="th">ผู้เชี่ยวชาญที่ฝึกแล้ว</span>
+                                <span class="text-xs font-mono text-gold">2,500+</span>
+                            </div>
+                            <div class="progress-track"><div class="progress-fill" style="width:83%;"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- South Korea -->
+                    <div class="glass-panel p-3">
+                        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+                            <span style="font-size:1.8rem;">🇰🇷</span>
+                            <div>
+                                <h4 class="font-display text-md">
+                                    <span lang="en">South Korea (KISA)</span>
+                                    <span lang="th">เกาหลีใต้ (KISA)</span>
+                                </h4>
+                                <span class="tag tag-neon">THREAT INTEL</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-muted" style="line-height:1.8;">
+                            <span lang="en">Deep threat intelligence exchange. KISA is considering establishing an office in Thailand for closer cooperation.</span>
+                            <span lang="th">แลกเปลี่ยนข้อมูลภัยคุกคามเชิงลึก และกำลังพิจารณาจัดตั้งสำนักงานในไทยเพื่อความร่วมมือที่ใกล้ชิดขึ้น</span>
+                        </p>
+                        <div style="margin-top:1rem;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+                                <span class="text-xs text-muted" lang="en">Cooperation Depth</span>
+                                <span class="text-xs text-muted" lang="th">ความลึกของความร่วมมือ</span>
+                                <span class="text-xs font-mono text-neon">65%</span>
+                            </div>
+                            <div class="progress-track"><div class="progress-fill neon" style="width:65%;"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- ASEAN -->
+                    <div class="glass-panel p-3">
+                        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+                            <span style="font-size:1.8rem;">🌏</span>
+                            <div>
+                                <h4 class="font-display text-md">
+                                    <span lang="en">ASEAN</span>
+                                    <span lang="th">อาเซียน</span>
+                                </h4>
+                                <span class="tag tag-teal">REGIONAL STRATEGY</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-muted" style="line-height:1.8;">
+                            <span lang="en">Thailand plays a key role in the ASEAN Cybersecurity Cooperation Strategy, building a safe digital region together.</span>
+                            <span lang="th">ไทยมีบทบาทสำคัญใน ASEAN Cybersecurity Cooperation Strategy เพื่อสร้างภูมิภาคดิจิทัลที่ปลอดภัยร่วมกัน</span>
+                        </p>
+                        <div style="margin-top:1rem;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+                                <span class="text-xs text-muted" lang="en">Regional Integration</span>
+                                <span class="text-xs text-muted" lang="th">การบูรณาการภูมิภาค</span>
+                                <span class="text-xs font-mono text-teal">72%</span>
+                            </div>
+                            <div class="progress-track"><div class="progress-fill teal" style="width:72%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- EMERGING THREATS -->
+        <!-- ═══════════════════════════════════════════ -->
+        <section id="threats" class="section" style="background:rgba(26,16,11,0.3);">
+            <div class="container">
+                <div class="section-header reveal">
+                    <div class="section-eyebrow">
+                        <span lang="en">Section 06 — Future Preparedness</span>
+                        <span lang="th">ส่วนที่ 06 — เตรียมพร้อมรับอนาคต</span>
+                    </div>
+                    <h2 class="section-title">
+                        <span lang="en">Emerging Threats & PQC Roadmap</span>
+                        <span lang="th">ภัยคุกคามแห่งอนาคตและ Roadmap PQC</span>
+                    </h2>
+                </div>
+
+                <!-- PQC Roadmap Timeline -->
+                <div class="glass-panel p-4 mb-4 no-hover reveal reveal-delay-1">
+                    <h3 class="font-display text-md text-gold mb-3" style="letter-spacing:0.1em;">
+                        <span lang="en">POST-QUANTUM CRYPTOGRAPHY ROADMAP</span>
+                        <span lang="th">แผนงาน POST-QUANTUM CRYPTOGRAPHY</span>
+                    </h3>
+                    <p class="text-sm text-muted mb-3" style="line-height:1.8;">
+                        <span lang="en">Countering the "Harvest Now, Decrypt Later" threat with a clear national timeline.</span>
+                        <span lang="th">รับมือภัย "แอบเก็บวันนี้ เพื่อไปถอดรหัสวันหน้า" ด้วยแผนงานระดับชาติที่ชัดเจน</span>
+                    </p>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot" style="background:var(--emerald);"></div>
+                            <div style="padding-left:0.5rem;">
+                                <span class="tag tag-emerald mb-1">2025</span>
+                                <p class="text-sm text-muted mt-1">
+                                    <span lang="en">Build awareness & establish working committee</span>
+                                    <span lang="th">สร้างความตระหนักรู้และตั้งคณะทำงาน</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot" style="background:var(--amber);"></div>
+                            <div style="padding-left:0.5rem;">
+                                <span class="tag tag-amber mb-1">2030</span>
+                                <p class="text-sm text-muted mt-1">
+                                    <span lang="en">Enforce PQC for new projects involving critical data</span>
+                                    <span lang="th">บังคับใช้ PQC กับโครงการใหม่ที่เกี่ยวข้องกับข้อมูลสำคัญ</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="timeline-item" style="padding-bottom:0;">
+                            <div class="timeline-dot" style="background:var(--gold);"></div>
+                            <div style="padding-left:0.5rem;">
+                                <span class="tag tag-gold mb-1">2035</span>
+                                <p class="text-sm text-muted mt-1">
+                                    <span lang="en">Complete national migration to PQC standards</span>
+                                    <span lang="th">ย้ายระบบเข้ารหัสลับทั้งหมดของประเทศสู่มาตรฐาน PQC อย่างสมบูรณ์</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Threat Cards with Chart -->
+                <div class="lg-grid-12 reveal reveal-delay-2">
+                    <div class="lg-col-8">
+                        <div class="grid-2">
+                            <div class="glass-panel p-3">
+                                <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+                                    <div id="icon-brain-threat" style="color:var(--violet);"></div>
+                                    <h4 class="font-display text-md">AI & Deepfakes</h4>
+                                </div>
+                                <p class="text-sm text-muted" style="line-height:1.8;">
+                                    <span lang="en">Researching tools to detect face and voice forgery to prevent fraud and scams.</span>
+                                    <span lang="th">วิจัยเครื่องมือตรวจสอบการปลอมแปลงใบหน้าและเสียงเพื่อป้องกันมิจฉาชีพ</span>
+                                </p>
+                                <div style="margin-top:1rem;">
+                                    <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+                                        <span class="text-xs text-muted" lang="en">Threat Level</span>
+                                        <span class="text-xs text-muted" lang="th">ระดับภัยคุกคาม</span>
+                                        <span class="text-xs font-mono" style="color:var(--red-alert);">HIGH</span>
+                                    </div>
+                                    <div class="progress-track"><div class="progress-fill red" style="width:88%;"></div></div>
+                                </div>
+                            </div>
+
+                            <div class="glass-panel p-3">
+                                <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+                                    <div id="icon-chip-threat" style="color:var(--teal);"></div>
+                                    <h4 class="font-display text-md">IoT & Embedded</h4>
+                                </div>
+                                <p class="text-sm text-muted" style="line-height:1.8;">
+                                    <span lang="en">Building security standards for smart devices (Target 2026) — ensuring your "smart home" won't become a hacker's gateway. Includes the <strong style="color:var(--gold);">dSURE</strong> certification mark.</span>
+                                    <span lang="th">สร้างมาตรฐานความปลอดภัยให้อุปกรณ์อัจฉริยะ (เป้าหมาย 2569) เพื่อให้ "บ้านอัจฉริยะ" ไม่เป็นช่องโหว่ รวมถึงเครื่องหมาย <strong style="color:var(--gold);">dSURE</strong></span>
+                                </p>
+                                <div style="margin-top:1rem;">
+                                    <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+                                        <span class="text-xs text-muted" lang="en">Threat Level</span>
+                                        <span class="text-xs text-muted" lang="th">ระดับภัยคุกคาม</span>
+                                        <span class="text-xs font-mono" style="color:var(--amber);">MEDIUM-HIGH</span>
+                                    </div>
+                                    <div class="progress-track"><div class="progress-fill" style="width:72%;background:linear-gradient(90deg,#92400e,var(--amber));"></div></div>
+                                </div>
+                            </div>
+
+                            <div class="glass-panel p-3 md-col-span-2">
+                                <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+                                    <div id="icon-atom-threat" style="color:var(--red-alert);"></div>
+                                    <h4 class="font-display text-md">Post-Quantum Cryptography</h4>
+                                </div>
+                                <p class="text-sm text-muted" style="line-height:1.8;">
+                                    <span lang="en">Preparing for the "Harvest Now, Decrypt Later" threat. Quantum computers could break current encryption — we must migrate to quantum-resistant algorithms before it's too late.</span>
+                                    <span lang="th">เตรียมรับมือภัย "แอบเก็บวันนี้ เพื่อไปถอดรหัสวันหน้า" คอมพิวเตอร์ควอนตัมอาจทำลายการเข้ารหัสปัจจุบัน — เราต้องย้ายไปใช้อัลกอริทึมที่ทนทานต่อควอนตัมก่อนที่จะสายเกินไป</span>
+                                </p>
+                                <div style="margin-top:1rem;">
+                                    <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+                                        <span class="text-xs text-muted" lang="en">Urgency Level</span>
+                                        <span class="text-xs text-muted" lang="th">ระดับความเร่งด่วน</span>
+                                        <span class="text-xs font-mono" style="color:var(--red-alert);">CRITICAL</span>
+                                    </div>
+                                    <div class="progress-track"><div class="progress-fill red" style="width:95%;"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg-col-4">
+                        <div class="glass-panel p-3 no-hover" style="height:100%;">
+                            <h4 class="font-display text-sm text-gold mb-2" style="letter-spacing:0.1em;">
+                                <span lang="en">THREAT LANDSCAPE</span>
+                                <span lang="th">ภูมิทัศน์ภัยคุกคาม</span>
+                            </h4>
+                            <div style="position:relative;width:100%;height:300px;">
+                                <canvas id="threatChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- CONCLUSION -->
+        <!-- ═══════════════════════════════════════════ -->
+        <section id="conclusion" class="section">
+            <div class="container">
+                <div class="section-header reveal">
+                    <div class="section-eyebrow">
+                        <span lang="en">Section 07 — Summary</span>
+                        <span lang="th">ส่วนที่ 07 — บทสรุป</span>
+                    </div>
+                    <h2 class="section-title">
+                        <span lang="en">Conclusion & Continuous Learning</span>
+                        <span lang="th">บทสรุปและการเรียนรู้ต่อเนื่อง</span>
+                    </h2>
+                </div>
+
+                <div class="glass-panel p-4 mb-4 no-hover reveal reveal-delay-1">
+                    <div class="callout" style="margin-bottom:1.5rem;">
+                        <span lang="en">Thailand's cyber ecosystem is the combined force of <strong style="color:var(--gold);">Policy (NCSA)</strong> + <strong style="color:var(--neon);">Innovation (CSRC)</strong> + <strong style="color:var(--teal);">Talent (HTCR)</strong> — working together to protect every Thai citizen.</span>
+                        <span lang="th">ระบบนิเวศไซเบอร์ไทยคือการรวมพลังของ <strong style="color:var(--gold);">นโยบาย (สกมช.)</strong> + <strong style="color:var(--neon);">นวัตกรรม (ศวจ.)</strong> + <strong style="color:var(--teal);">บุคลากร (ศชวซ.)</strong> เพื่อสร้างความปลอดภัยให้คนไทยทุกคน</span>
+                    </div>
+
+                    <div class="callout neon">
+                        <span lang="en">🎲 <strong>Want to become a young "Cyber Agent"?</strong> Try the <strong>NCSA Cyber Boardgame</strong> — a board game designed to teach cyber threat response through fun and engagement!</span>
+                        <span lang="th">🎲 <strong>อยากลองเป็น "สายลับไซเบอร์" รุ่นเยาว์?</strong> ลอง <strong>NCSA Cyber Boardgame</strong> — เกมกระดานที่ออกแบบมาเพื่อให้เรียนรู้วิธีรับมือภัยไซเบอร์ผ่านความสนุกสนาน!</span>
+                    </div>
+
+                    <p class="text-sm text-muted mt-3" style="line-height:1.8;text-align:center;">
+                        <span lang="en">Remember: Digital safety is not one person's job — it's about <strong style="color:var(--gold);">Collaboration</strong> and never stopping learning. With every click you make, these expert teams are your shield. 🛡️</span>
+                        <span lang="th">จำไว้นะครับว่า... ความปลอดภัยดิจิทัลไม่ใช่เรื่องของใครคนใดคนหนึ่ง แต่คือ <strong style="color:var(--gold);">ความร่วมมือ</strong> และการไม่หยุดเรียนรู้ ในทุกคลิกที่ใช้งาน มีทีมงานผู้เชี่ยวชาญเหล่านี้คอยเป็นโล่ปกป้องอยู่เสมอครับ! 🛡️</span>
+                    </p>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid-4 reveal reveal-delay-2">
+                    <div class="glass-panel stat-block">
+                        <div class="stat-number" data-count="20">0</div>
+                        <div class="stat-label">
+                            <span lang="en">Partner Institutions</span>
+                            <span lang="th">สถาบันพันธมิตร</span>
+                        </div>
+                    </div>
+                    <div class="glass-panel stat-block">
+                        <div class="stat-number" data-count="2500">0</div>
+                        <div class="stat-label">
+                            <span lang="en">ASEAN Experts Trained</span>
+                            <span lang="th">ผู้เชี่ยวชาญอาเซียนที่ฝึกแล้ว</span>
+                        </div>
+                    </div>
+                    <div class="glass-panel stat-block">
+                        <div class="stat-number" data-count="3">0</div>
+                        <div class="stat-label">
+                            <span lang="en">Core Divisions</span>
+                            <span lang="th">ฝ่ายงานหลัก</span>
+                        </div>
+                    </div>
+                    <div class="glass-panel stat-block">
+                        <div class="stat-number" data-count="5">0</div>
+                        <div class="stat-label">
+                            <span lang="en">Hierarchy Levels</span>
+                            <span lang="th">ระดับบังคับบัญชา</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Slide Panel -->
+    <div class="slide-overlay" id="slide-overlay" onclick="APP.closePanel()"></div>
+    <aside class="slide-panel" id="slide-panel">
+        <button onclick="APP.closePanel()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer;transition:color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'">×</button>
+        <div id="panel-content"></div>
+    </aside>
+
+    <!-- Footer -->
+    <footer style="background:var(--surface);border-top:1px solid var(--glass-border);padding:3rem 0;">
+        <div class="container text-center">
+            <h3 class="font-display text-md text-gold mb-2">
+                <span lang="en">Cyber Security Research Center</span>
+                <span lang="th">ศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์</span>
+            </h3>
+            <p class="text-sm text-muted mb-3">
+                <span lang="en">National Cyber Security Agency (NCSA) — Government Complex, Chaeng Watthana Rd., Bangkok</span>
+                <span lang="th">สำนักงานคณะกรรมการการรักษาความมั่นคงปลอดภัยไซเบอร์แห่งชาติ (สกมช.) — ศูนย์ราชการฯ ถนนแจ้งวัฒนะ กรุงเทพฯ</span>
+            </p>
+            <div class="divider"></div>
+            <p class="text-xs text-dim">
+                <span lang="en">Strategic Intelligence Artifact — Built with the Nexus-Architect Protocol</span>
+                <span lang="th">ระบบข่าวกรองเชิงยุทธศาสตร์ — สร้างด้วย Nexus-Architect Protocol</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SCRIPTS -->
+    <!-- ═══════════════════════════════════════════ -->
+    <script>
+    // ═══════════════════════════════════════════
+    // 1. ICON SYSTEM (Native Inline SVGs)
+    // ═══════════════════════════════════════════
+    const ICONS = {
+        logo: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4M12 16h.01"/></svg>`,
+        shield: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+        network: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><line x1="12" y1="8" x2="5" y2="16"/><line x1="12" y1="8" x2="19" y2="16"/></svg>`,
+        chart: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+        brain: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a5 5 0 0 1 5 5c0 1.5-.5 2.5-1.5 3.5L12 14l-3.5-3.5C7.5 9.5 7 8.5 7 7a5 5 0 0 1 5-5z"/><path d="M12 14v8"/><path d="M8 18h8"/></svg>`,
+        globe: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+        atom: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="1"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(0 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></svg>`,
+        chip: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>`,
+        filter: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>`,
+        microscope: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0-1-13"/><path d="M9 14h1"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/></svg>`,
+        certificate: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>`,
+        copy: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`,
+        user: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+        chevDown: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>`,
+    };
+
+    // ═══════════════════════════════════════════
+    // 2. SIMPLEX NOISE (Physics Engine)
+    // ═══════════════════════════════════════════
+    class SimplexNoise{constructor(){this.p=new Uint8Array(256);for(let i=0;i<256;i++)this.p[i]=Math.floor(256*Math.random());this.perm=new Uint8Array(512);for(let i=0;i<512;i++)this.perm[i]=this.p[i&255]}dot(g,x,y){return g[0]*x+g[1]*y}noise(xin,yin){const F2=.5*(Math.sqrt(3)-1),G2=(3-Math.sqrt(3))/6;let i=Math.floor(xin+((xin+yin)*F2)),j=Math.floor(yin+((xin+yin)*F2)),t=(i+j)*G2,X0=i-t,Y0=j-t,x0=xin-X0,y0=yin-Y0;let i1,j1;if(x0>y0){i1=1;j1=0}else{i1=0;j1=1}let x1=x0-i1+G2,y1=y0-j1+G2,x2=x0-1+2*G2,y2=y0-1+2*G2,ii=i&255,jj=j&255,gi0=this.perm[ii+this.perm[jj]]%12,gi1=this.perm[ii+i1+this.perm[jj+j1]]%12,gi2=this.perm[ii+1+this.perm[jj+1]]%12,t0=.5-x0*x0-y0*y0,n0=t0<0?0:Math.pow(t0,4)*this.dot([Math.cos(gi0),Math.sin(gi0)],x0,y0),t1=.5-x1*x1-y1*y1,n1=t1<0?0:Math.pow(t1,4)*this.dot([Math.cos(gi1),Math.sin(gi1)],x1,y1),t2=.5-x2*x2-y2*y2,n2=t2<0?0:Math.pow(t2,4)*this.dot([Math.cos(gi2),Math.sin(gi2)],x2,y2);return 70*(n0+n1+n2)}}
+
+    // ═══════════════════════════════════════════
+    // 3. DATA MODELS
+    // ═══════════════════════════════════════════
+    const DIVISIONS = [
+        {
+            id: 'research', icon: '🔬',
+            en: { name: 'Research & Development', desc: 'Creates innovations and lays out a 5-year Roadmap so Thailand can rely on its own technology in the long run. Develops homegrown cybersecurity tools and conducts cutting-edge research in emerging threat domains.' },
+            th: { name: 'ฝ่ายวิจัยและพัฒนาเครือข่ายวิจัย', desc: 'สร้างนวัตกรรมและวาง Roadmap 5 ปี เพื่อให้ไทยพึ่งพาเทคโนโลยีของตนเองได้ในระยะยาว พัฒนาเครื่องมือความมั่นคงปลอดภัยไซเบอร์และดำเนินการวิจัยเชิงลึก' },
+            color: 'var(--neon)', progressLabel: { en: 'R&D Capacity', th: 'ขีดความสามารถ R&D' }, progressVal: 78, tagClass: 'tag-neon'
+        },
+        {
+            id: 'analysis', icon: '📊',
+            en: { name: 'Data Analysis & Processing', desc: 'Collects threat statistics (Threat Intelligence) to predict attack patterns in advance. Analyzes cybersecurity technologies — both existing and emerging — for effectiveness assessment and trend forecasting.' },
+            th: { name: 'ฝ่ายวิเคราะห์และประมวลผลข้อมูล', desc: 'รวบรวมสถิติภัยคุกคาม (Threat Intelligence) เพื่อคาดการณ์รูปแบบการโจมตีล่วงหน้า วิเคราะห์เทคโนโลยีความมั่นคงปลอดภัยไซเบอร์ทั้งที่มีอยู่และที่กำลังพัฒนา' },
+            color: 'var(--copper)', progressLabel: { en: 'Intel Coverage', th: 'ความครอบคลุมข่าวกรอง' }, progressVal: 85, tagClass: 'tag-gold'
+        },
+        {
+            id: 'testing', icon: '✅',
+            en: { name: 'Testing & Certification', desc: 'Issues certification standards such as the dSURE mark on IoT devices — giving citizens confidence that their purchases are safe from spying or hacking. Develops security testing tools tailored to Thailand.' },
+            th: { name: 'ฝ่ายทดสอบและรับรอง', desc: 'ออกใบรับรองมาตรฐาน เช่น เครื่องหมาย dSURE บนอุปกรณ์ IoT เพื่อให้ประชาชนมั่นใจว่าซื้อไปใช้แล้วจะไม่โดนแอบดูหรือโดนแฮ็ก พัฒนาเครื่องมือทดสอบที่เหมาะกับบริบทไทย' },
+            color: 'var(--emerald)', progressLabel: { en: 'Certifications Issued', th: 'ใบรับรองที่ออก' }, progressVal: 62, tagClass: 'tag-emerald'
+        }
+    ];
+
+    const PERSONNEL = [
+        {
+            level: 1, org: 'htcr',
+            en: { name: 'Asst. Prof. Dr. Waraporn Promwikorn', title: 'Assistant Secretary-General, NCSA & Head of HTCR', role: 'Responsible for laying the national research foundation and connecting universities nationwide.' },
+            th: { name: 'ผศ. ดร.วราภรณ์ พรหมวิกร', title: 'ผู้ช่วยเลขาธิการ สกมช. และหัวหน้า ศชวซ.', role: 'รับผิดชอบการวางรากฐานวิจัยระดับชาติและการเชื่อมต่อมหาวิทยาลัยทั่วประเทศ' },
+            tagClass: 'tag-gold', levelLabel: 'LEVEL 1 — STRATEGY & NETWORK'
+        },
+        {
+            level: 2, org: 'csrc',
+            en: { name: 'Air Vice Marshal Chalermchai Wongket', title: 'Director, Cyber Security Research Center (CSRC)', role: 'Manages overall operations of CSRC under the oversight of Level 1.' },
+            th: { name: 'พลอากาศตรี เฉลิมชัย วงษ์เกตุ', title: 'ผู้อำนวยการ ศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์ (ศวจ.)', role: 'บริหารงานภาพรวมของศูนย์วิจัย CSRC ภายใต้การกำกับดูแลของระดับแรก' },
+            tagClass: 'tag-neon', levelLabel: 'LEVEL 2 — CENTER MANAGEMENT'
+        },
+        {
+            level: 3, org: 'csrc',
+            en: { name: 'Dr. Suchitra Pongpitsuthipha', title: 'Director, Data Analysis & Processing Division', role: 'Leads the threat intelligence analysis team and develops Threat Intelligence systems.' },
+            th: { name: 'ดร.สุจิตรา พงศ์พิศุทธิ์โสภา', title: 'ผู้อำนวยการฝ่ายวิเคราะห์และประมวลผลข้อมูล', role: 'นำทีมวิเคราะห์ข้อมูลภัยคุกคามและพัฒนาระบบ Threat Intelligence' },
+            tagClass: 'tag-teal', levelLabel: 'LEVEL 3 — DIVISION DIRECTOR'
+        },
+        {
+            level: 3, org: 'csrc',
+            en: { name: 'Dr. Sunthorn Sirapaisan', title: 'Head of Research & Acting Director, R&D Division', role: 'Conducts research projects and develops collaboration networks with academic institutions.' },
+            th: { name: 'ดร.สุนทร ศิระไพศาล', title: 'หัวหน้างานวิจัย และรักษาการผู้อำนวยการฝ่ายวิจัยและพัฒนาเครือข่ายวิจัย', role: 'ดำเนินโครงการวิจัยและพัฒนาเครือข่ายความร่วมมือกับสถาบันการศึกษา' },
+            tagClass: 'tag-teal', levelLabel: 'LEVEL 3 — DIVISION DIRECTOR'
+        },
+        {
+            level: 3, org: 'csrc',
+            en: { name: 'Mr. Nitoon Moonwiriyakit', title: 'Director, Testing & Certification Division', role: 'Leads security testing of information systems and develops certification standards including dSURE.' },
+            th: { name: 'คุณนิฑูรย์ มูลวิริยกิจ', title: 'ผู้อำนวยการฝ่ายทดสอบและรับรอง', role: 'นำทีมทดสอบความปลอดภัยของระบบสารสนเทศและพัฒนามาตรฐานการรับรอง รวมถึง dSURE' },
+            tagClass: 'tag-teal', levelLabel: 'LEVEL 3 — DIVISION DIRECTOR'
+        },
+        {
+            level: 4, org: 'csrc',
+            en: { name: 'Ms. Worawan Srisak', title: 'Head of Research Network Development', role: 'Builds and expands collaboration networks with various institutions across Thailand.' },
+            th: { name: 'คุณวรวรรณ ศรีศักดิ์', title: 'หัวหน้างานพัฒนาเครือข่ายวิจัย', role: 'สร้างและขยายเครือข่ายความร่วมมือกับสถาบันต่างๆ ทั่วประเทศ' },
+            tagClass: 'tag-amber', levelLabel: 'LEVEL 4 — SECTION HEAD'
+        },
+        {
+            level: 5, org: 'csrc',
+            en: { name: 'Nawarat Chaisri', title: 'Staff, Cyber Security Research Center, NCSA', role: 'Operational staff supporting CSRC research and development activities.' },
+            th: { name: 'นวรัตน์ ฉายศรี', title: 'เจ้าหน้าที่ ศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์ สกมช.', role: 'เจ้าหน้าที่สนับสนุนกิจกรรมวิจัยและพัฒนาของ ศวจ.' },
+            tagClass: 'tag-violet', levelLabel: 'LEVEL 5 — STAFF'
+        },
+        {
+            level: 5, org: 'htcr',
+            en: { name: 'Supanat Ruangdej', title: 'Officer, Cyber Profession Specialist Group / HTCR Coordinator', role: 'Coordinates HTCR activities and liaises with the National Research Council of Thailand (NRCT).' },
+            th: { name: 'ศุภณัฐ เรืองเดช', title: 'เจ้าหน้าที่กลุ่มวิชาชีพเฉพาะด้านไซเบอร์ / ผู้ประสานงาน ศชวซ.', role: 'ประสานงานกิจกรรม ศชวซ. และเชื่อมต่อกับสำนักงานการวิจัยแห่งชาติ (วช.)' },
+            tagClass: 'tag-violet', levelLabel: 'LEVEL 5 — STAFF'
+        }
+    ];
+
+    const NETWORK_NODES = [
+        { id: 'HTCR', group: 'hub', label: 'HTCR Hub' },
+        { id: 'CU', group: 'spoke', label: 'Chulalongkorn' },
+        { id: 'MU', group: 'spoke', label: 'Mahidol' },
+        { id: 'KU', group: 'spoke', label: 'Kasetsart' },
+        { id: 'KKU', group: 'spoke', label: 'Khon Kaen' },
+        { id: 'CMU', group: 'spoke', label: 'Chiang Mai' },
+        { id: 'PSU', group: 'spoke', label: 'Prince of Songkla' },
+        { id: 'SUT', group: 'spoke', label: 'Suranaree' },
+        { id: 'KMUTT', group: 'spoke', label: 'KMUTT' },
+        { id: 'KMITL', group: 'spoke', label: 'KMITL' },
+        { id: 'TU', group: 'spoke', label: 'Thammasat' },
+        { id: 'NIDA', group: 'spoke', label: 'NIDA' },
+        { id: 'BUU', group: 'spoke', label: 'Burapha' },
+        { id: 'MFU', group: 'spoke', label: 'Mae Fah Luang' },
+        { id: 'WU', group: 'spoke', label: 'Walailak' },
+        { id: 'NSTDA', group: 'partner', label: 'NSTDA' },
+        { id: 'ETDA', group: 'partner', label: 'ETDA' },
+        { id: 'TESA', group: 'partner', label: 'TESA' },
+        { id: 'NRCT', group: 'partner', label: 'NRCT' },
+    ];
+
+    const NETWORK_LINKS = NETWORK_NODES.filter(n => n.id !== 'HTCR').map(n => ({ source: 'HTCR', target: n.id }));
+
+    // ═══════════════════════════════════════════
+    // 4. APP CONTROLLER
+    // ═══════════════════════════════════════════
+    const APP = {
+        lang: 'en',
+        state: { levelFilter: 5, orgFilter: 'all', activeDivision: null },
+        particles: [],
+        simplex: null,
+        mouse: { x: -1000, y: -1000 },
+
+        init() {
+            // Remove loading overlay
+            const overlay = document.getElementById('loading-overlay');
+            overlay.style.opacity = '0';
+            overlay.style.pointerEvents = 'none';
+            setTimeout(() => overlay.remove(), 800);
+
+            // Inject icons
+            document.getElementById('logo-slot').innerHTML = ICONS.logo;
+            this.injectIcon('icon-shield-hero', ICONS.shield);
+            this.injectIcon('icon-network-hero', ICONS.network);
+            this.injectIcon('icon-chart-hero', ICONS.chart);
+            this.injectIcon('icon-filter', ICONS.filter);
+            this.injectIcon('icon-globe-std', ICONS.globe);
+            this.injectIcon('icon-brain-ai', ICONS.brain);
+            this.injectIcon('icon-brain-threat', ICONS.brain);
+            this.injectIcon('icon-chip-threat', ICONS.chip);
+            this.injectIcon('icon-atom-threat', ICONS.atom);
+
+            // Initialize systems
+            this.initPhysics();
+            this.initDivisionExplorer();
+            this.initPersonnelGrid();
+            this.initPersonnelFilter();
+            this.initNetworkViz();
+            this.initThreatChart();
+            this.initScrollReveal();
+            this.initProgressBar();
+            this.initNavHighlight();
+            this.initCountUp();
+        },
+
+        injectIcon(id, svg) {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = svg;
+        },
+
+        // ─── PHYSICS CANVAS ───
+        initPhysics() {
+            const canvas = document.getElementById('physics-canvas');
+            const ctx = canvas.getContext('2d');
+            this.simplex = new SimplexNoise();
+            let w, h;
+
+            const resize = () => {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            };
+            resize();
+            window.addEventListener('resize', resize);
+
+            // Create particles
+            const count = Math.min(80, Math.floor(w * h / 15000));
+            for (let i = 0; i < count; i++) {
+                this.particles.push({
+                    x: Math.random() * w, y: Math.random() * h,
+                    vx: 0, vy: 0, size: Math.random() * 1.5 + 0.5,
+                    alpha: Math.random() * 0.3 + 0.05
+                });
+            }
+
+            // Mouse tracking
+            window.addEventListener('mousemove', (e) => {
+                this.mouse.x = e.clientX;
+                this.mouse.y = e.clientY;
+            });
+
+            let time = 0;
+            const animate = () => {
+                ctx.clearRect(0, 0, w, h);
+                time += 0.003;
+
+                this.particles.forEach(p => {
+                    const n = this.simplex.noise(p.x * 0.003 + time, p.y * 0.003 + time);
+                    p.vx += Math.cos(n * Math.PI * 2) * 0.05;
+                    p.vy += Math.sin(n * Math.PI * 2) * 0.05;
+
+                    // Mouse repulsion
+                    const dx = p.x - this.mouse.x;
+                    const dy = p.y - this.mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        const force = (150 - dist) / 150 * 0.5;
+                        p.vx += (dx / dist) * force;
+                        p.vy += (dy / dist) * force;
+                    }
+
+                    p.vx *= 0.96;
+                    p.vy *= 0.96;
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    // Wrap
+                    if (p.x < 0) p.x = w;
+                    if (p.x > w) p.x = 0;
+                    if (p.y < 0) p.y = h;
+                    if (p.y > h) p.y = 0;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(200, 155, 60, ${p.alpha})`;
+                    ctx.fill();
+                });
+
+                // Draw connections
+                for (let i = 0; i < this.particles.length; i++) {
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        const dx = this.particles[i].x - this.particles[j].x;
+                        const dy = this.particles[i].y - this.particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(this.particles[i].x, this.particles[i].y);
+                            ctx.lineTo(this.particles[j].x, this.particles[j].y);
+                            ctx.strokeStyle = `rgba(200, 155, 60, ${0.06 * (1 - dist / 120)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                requestAnimationFrame(animate);
+            };
+            animate();
+        },
+
+        // ─── DIVISION EXPLORER ───
+        initDivisionExplorer() {
+            const container = document.getElementById('division-buttons');
+            DIVISIONS.forEach((div, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-outline btn-sm';
+                btn.dataset.index = i;
+                btn.innerHTML = `<span style="font-size:1.1rem;">${div.icon}</span> <span lang="en">${div.en.name}</span><span lang="th">${div.th.name}</span>`;
+                btn.onclick = () => this.selectDivision(i);
+                container.appendChild(btn);
+            });
+        },
+
+        selectDivision(index) {
+            this.state.activeDivision = index;
+            const div = DIVISIONS[index];
+            const lang = this.lang;
+            const data = div[lang];
+
+            document.getElementById('division-icon').textContent = div.icon;
+
+            const titleEl = document.getElementById('division-title');
+            titleEl.innerHTML = '';
+            titleEl.textContent = data.name;
+            titleEl.style.color = div.color;
+
+            const descEl = document.getElementById('division-desc');
+            descEl.innerHTML = '';
+            descEl.textContent = data.desc;
+
+            const progressWrap = document.getElementById('division-progress');
+            progressWrap.style.display = 'block';
+            document.getElementById('division-progress-label').textContent = div.progressLabel[lang];
+            document.getElementById('division-progress-val').textContent = div.progressVal + '%';
+            const fill = document.getElementById('division-progress-fill');
+            fill.style.width = '0';
+            fill.style.background = `linear-gradient(90deg, var(--surface-elevated), ${div.color})`;
+            requestAnimationFrame(() => { fill.style.width = div.progressVal + '%'; });
+
+            // Highlight active button
+            document.querySelectorAll('#division-buttons button').forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.remove('btn-outline');
+                    btn.style.borderColor = div.color;
+                } else {
+                    btn.classList.add('btn-outline');
+                    btn.style.borderColor = '';
+                }
+            });
+        },
+
+        // ─── PERSONNEL GRID ───
+        initPersonnelGrid() {
+            this.renderPersonnel();
+        },
+
+        renderPersonnel() {
+            const grid = document.getElementById('personnel-grid');
+            const empty = document.getElementById('personnel-empty');
+            const maxLevel = this.state.levelFilter;
+            const orgFilter = this.state.orgFilter;
+            const lang = this.lang;
+
+            const filtered = PERSONNEL.filter(p => {
+                if (p.level > maxLevel) return false;
+                if (orgFilter !== 'all' && p.org !== orgFilter) return false;
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            grid.innerHTML = filtered.map(p => {
+                const data = p[lang];
+                const levelPercent = ((6 - p.level) / 5) * 100;
+                return `
+                    <div class="person-card" onclick="APP.openPersonPanel(${PERSONNEL.indexOf(p)})">
+                        <span class="person-level ${p.tagClass}">${p.levelLabel}</span>
+                        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;margin-top:1.5rem;">
+                            <div style="width:40px;height:40px;border-radius:50%;background:var(--surface-elevated);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gold);">
+                                ${ICONS.user}
+                            </div>
+                            <div>
+                                <h4 class="font-display text-sm font-bold" style="line-height:1.3;">${data.name}</h4>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gold mb-1" style="font-weight:600;">${data.title}</p>
+                        <p class="text-xs text-muted" style="line-height:1.6;">${data.role}</p>
+                        <div style="margin-top:1rem;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+                                <span class="text-xs text-dim">${lang === 'en' ? 'Seniority' : 'อาวุโส'}</span>
+                                <span class="text-xs font-mono text-gold">L${p.level}</span>
+                            </div>
+                            <div class="progress-track"><div class="progress-fill" style="width:${levelPercent}%;"></div></div>
+                        </div>
+                        <div style="margin-top:0.75rem;display:flex;gap:0.4rem;flex-wrap:wrap;">
+                            <span class="tag ${p.org === 'csrc' ? 'tag-neon' : 'tag-gold'}">${p.org.toUpperCase()}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        },
+
+        initPersonnelFilter() {
+            const slider = document.getElementById('level-filter');
+            slider.addEventListener('input', (e) => {
+                this.state.levelFilter = parseInt(e.target.value);
+                document.getElementById('level-val').textContent = `1 — ${this.state.levelFilter}`;
+                this.renderPersonnel();
+            });
+        },
+
+        filterPersonnel(org) {
+            this.state.orgFilter = org;
+            // Update button states
+            document.getElementById('filter-all').className = org === 'all' ? 'btn btn-sm' : 'btn btn-sm btn-outline';
+            document.getElementById('filter-csrc').className = org === 'csrc' ? 'btn btn-sm' : 'btn btn-sm btn-outline';
+            document.getElementById('filter-htcr').className = org === 'htcr' ? 'btn btn-sm' : 'btn btn-sm btn-outline';
+            this.renderPersonnel();
+        },
+
+        openPersonPanel(index) {
+            const p = PERSONNEL[index];
+            const data = p[this.lang];
+            const panel = document.getElementById('slide-panel');
+            const overlay = document.getElementById('slide-overlay');
+            const content = document.getElementById('panel-content');
+
+            content.innerHTML = `
+                <div style="margin-top:2rem;">
+                    <span class="${p.tagClass} tag mb-2">${p.levelLabel}</span>
+                    <h2 class="font-display text-xl text-gold mt-2 mb-1">${data.name}</h2>
+                    <p class="text-sm text-copper mb-3">${data.title}</p>
+                    <div class="divider"></div>
+                    <h4 class="font-display text-sm text-gold mb-1" style="letter-spacing:0.1em;">${this.lang === 'en' ? 'ROLE & RESPONSIBILITIES' : 'บทบาทและหน้าที่'}</h4>
+                    <p class="text-sm text-muted" style="line-height:1.9;">${data.role}</p>
+                    <div class="divider"></div>
+                    <h4 class="font-display text-sm text-gold mb-1" style="letter-spacing:0.1em;">${this.lang === 'en' ? 'ORGANIZATION' : 'สังกัด'}</h4>
+                    <span class="tag ${p.org === 'csrc' ? 'tag-neon' : 'tag-gold'}">${p.org === 'csrc' ? 'Cyber Security Research Center (CSRC)' : 'Hub of Talents in Cybersecurity Research (HTCR)'}</span>
+                    <div class="divider"></div>
+                    <button class="btn btn-sm" onclick="APP.copyToClipboard('${data.name} — ${data.title}')">
+                        ${ICONS.copy} <span>${this.lang === 'en' ? 'Copy Info' : 'คัดลอกข้อมูล'}</span>
+                    </button>
+                </div>
+            `;
+
+            panel.classList.add('open');
+            overlay.classList.add('open');
+        },
+
+        closePanel() {
+            document.getElementById('slide-panel').classList.remove('open');
+            document.getElementById('slide-overlay').classList.remove('open');
+        },
+
+        // ─── D3 NETWORK VISUALIZATION ───
+        initNetworkViz() {
+            const container = document.getElementById('network-viz');
+            const rect = container.getBoundingClientRect();
+            const width = rect.width || 700;
+            const height = rect.height || 480;
+
+            const svg = d3.select('#network-viz')
+                .append('svg')
+                .attr('width', '100%')
+                .attr('height', '100%')
+                .attr('viewBox', `0 0 ${width} ${height}`)
+                .call(d3.zoom().scaleExtent([0.5, 3]).on('zoom', (event) => {
+                    g.attr('transform', event.transform);
+                }));
+
+            const g = svg.append('g');
+
+            const simulation = d3.forceSimulation(NETWORK_NODES)
+                .force('link', d3.forceLink(NETWORK_LINKS).id(d => d.id).distance(100))
+                .force('charge', d3.forceManyBody().strength(-200))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(30));
+
+            // Links
+            const link = g.append('g')
+                .selectAll('line')
+                .data(NETWORK_LINKS)
+                .join('line')
+                .attr('stroke', 'rgba(200, 155, 60, 0.2)')
+                .attr('stroke-width', 1);
+
+            // Nodes
+            const node = g.append('g')
+                .selectAll('g')
+                .data(NETWORK_NODES)
+                .join('g')
+                .call(d3.drag()
+                    .on('start', (event, d) => { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+                    .on('drag', (event, d) => { d.fx = event.x; d.fy = event.y; })
+                    .on('end', (event, d) => { if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
+                )
+                .style('cursor', 'grab');
+
+            // Polymorphic shapes
+            node.each(function(d) {
+                const el = d3.select(this);
+                if (d.group === 'hub') {
+                    // Hexagon for hub
+                    const size = 24;
+                    const hex = Array.from({length: 6}, (_, i) => {
+                        const angle = (Math.PI / 3) * i - Math.PI / 6;
+                        return `${Math.cos(angle) * size},${Math.sin(angle) * size}`;
+                    }).join(' ');
+                    el.append('polygon').attr('points', hex).attr('fill', '#c89b3c').attr('stroke', '#0a0604').attr('stroke-width', 2);
+                } else if (d.group === 'spoke') {
+                    el.append('circle').attr('r', 12).attr('fill', '#3b82f6').attr('stroke', '#0a0604').attr('stroke-width', 1.5).attr('opacity', 0.8);
+                } else {
+                    el.append('rect').attr('x', -10).attr('y', -10).attr('width', 20).attr('height', 20).attr('rx', 4).attr('fill', '#0f766e').attr('stroke', '#0a0604').attr('stroke-width', 1.5).attr('opacity', 0.8);
+                }
+            });
+
+            // Labels
+            node.append('text')
+                .text(d => d.label)
+                .attr('dy', d => d.group === 'hub' ? 35 : 25)
+                .attr('text-anchor', 'middle')
+                .attr('fill', d => d.group === 'hub' ? '#c89b3c' : '#8a7560')
+                .attr('font-size', d => d.group === 'hub' ? '11px' : '9px')
+                .attr('font-family', d => d.group === 'hub' ? 'Cinzel, serif' : 'Inter, sans-serif')
+                .attr('font-weight', d => d.group === 'hub' ? '700' : '400');
+
+            simulation.on('tick', () => {
+                link.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+                node.attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+        },
+
+        // ─── THREAT CHART ───
+        initThreatChart() {
+            const ctx = document.getElementById('threatChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['PQC', 'AI/Deepfake', 'IoT', 'Ransomware', 'Supply Chain', 'Social Eng.'],
+                    datasets: [{
+                        label: 'Threat Level 2025',
+                        data: [95, 88, 72, 80, 68, 85],
+                        backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                        borderColor: '#ef4444',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#ef4444',
+                        pointBorderColor: '#0a0604',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }, {
+                        label: 'Preparedness',
+                        data: [45, 60, 62, 75, 55, 70],
+                        backgroundColor: 'rgba(200, 155, 60, 0.15)',
+                        borderColor: '#c89b3c',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#c89b3c',
+                        pointBorderColor: '#0a0604',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { display: false },
+                            grid: { color: 'rgba(200, 155, 60, 0.1)' },
+                            angleLines: { color: 'rgba(200, 155, 60, 0.1)' },
+                            pointLabels: {
+                                color: '#8a7560',
+                                font: { family: 'JetBrains Mono', size: 9 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#8a7560',
+                                font: { family: 'Inter', size: 10 },
+                                boxWidth: 12, boxHeight: 12
+                            }
+                        }
+                    }
+                }
+            });
+        },
+
+        // ─── SCROLL REVEAL ───
+        initScrollReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        },
+
+        // ─── PROGRESS BAR ───
+        initProgressBar() {
+            const bar = document.getElementById('progress-bar');
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const percent = (scrollTop / docHeight) * 100;
+                bar.style.width = percent + '%';
+            });
+        },
+
+        // ─── NAV HIGHLIGHT ───
+        initNavHighlight() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('[data-nav]');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const top = section.offsetTop - 100;
+                    if (window.scrollY >= top) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                navLinks.forEach(link => {
+                    link.classList.toggle('active', link.dataset.nav === current);
+                });
+            });
+        },
+
+        // ─── COUNT UP ANIMATION ───
+        initCountUp() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const target = parseInt(el.dataset.count);
+                        let current = 0;
+                        const increment = target / 40;
+                        const timer = setInterval(() => {
+                            current += increment;
+                            if (current >= target) {
+                                current = target;
+                                clearInterval(timer);
+                            }
+                            el.textContent = Math.floor(current).toLocaleString() + (target >= 100 ? '+' : '+');
+                        }, 30);
+                        observer.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            document.querySelectorAll('[data-count]').forEach(el => observer.observe(el));
+        },
+
+        // ─── LANGUAGE TOGGLE ───
+        toggleLang() {
+            this.lang = this.lang === 'en' ? 'th' : 'en';
+            document.body.dataset.lang = this.lang;
+            this.renderPersonnel();
+            if (this.state.activeDivision !== null) {
+                this.selectDivision(this.state.activeDivision);
+            }
+        },
+
+        // ─── MOBILE MENU ───
+        toggleMobile() {
+            document.getElementById('mobile-nav').classList.toggle('open');
+        },
+        closeMobile() {
+            document.getElementById('mobile-nav').classList.remove('open');
+        },
+
+        // ─── CLIPBOARD ───
+        copyToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    this.showToast(this.lang === 'en' ? 'Copied to clipboard!' : 'คัดลอกแล้ว!');
+                }).catch(() => {
+                    this.fallbackCopy(text);
+                });
+            } else {
+                this.fallbackCopy(text);
+            }
+        },
+
+        fallbackCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+                this.showToast(this.lang === 'en' ? 'Copied!' : 'คัดลอกแล้ว!');
+            } catch(e) {
+                this.showToast('Copy failed');
+            }
+            document.body.removeChild(ta);
+        },
+
+        showToast(msg) {
+            const toast = document.createElement('div');
+            toast.textContent = msg;
+            Object.assign(toast.style, {
+                position: 'fixed', bottom: '2rem', left: '50%', transform: 'translateX(-50%)',
+                background: 'var(--gold)', color: 'var(--void)', padding: '0.6rem 1.5rem',
+                borderRadius: '8px', fontFamily: 'Cinzel, serif', fontSize: '0.8rem',
+                fontWeight: '700', zIndex: '9999', boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+                animation: 'fadeInUp 0.3s var(--ease)'
+            });
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+    };
+
+    // ═══════════════════════════════════════════
+    // 5. RESILIENT LOADER
+    // ═══════════════════════════════════════════
+    function waitForLibs(retries = 0) {
+        if (typeof d3 !== 'undefined' && typeof Chart !== 'undefined') {
+            APP.init();
+        } else if (retries < 50) {
+            setTimeout(() => waitForLibs(retries + 1), 100);
+        } else {
+            // Fallback: init without D3/Chart
+            console.warn('Libraries failed to load. Initializing with reduced functionality.');
+            APP.init();
+        }
+    }
+    document.addEventListener('DOMContentLoaded', () => waitForLibs());
+    </script>
+</body>
+</html>
