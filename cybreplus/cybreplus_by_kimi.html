@@ -1,0 +1,981 @@
+<!DOCTYPE html><html lang="th"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์: โครงสร้าง ภารกิจ และบุคลากร</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'serif': ['Playfair Display', 'serif'],
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#1e3a8a',
+                        'secondary': '#64748b',
+                        'accent': '#0f766e',
+                        'neutral': '#f8fafc',
+                        'base': '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+  <base target="_blank">
+</head>
+
+  <body class="bg-neutral text-base font-sans leading-relaxed">
+    <!-- Fixed Table of Contents -->
+    <nav id="toc" class="fixed left-0 top-0 h-full w-80 bg-white shadow-lg z-40 overflow-y-auto border-r border-gray-200 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+      <div class="p-6">
+        <h3 class="font-serif font-bold text-lg text-primary mb-4">สารบัญ</h3>
+        <ul class="space-y-3 text-sm">
+          <li>
+            <a href="#hero" class="block text-secondary hover:text-primary transition-colors">บทนำ</a>
+          </li>
+          <li>
+            <a href="#history" class="block text-secondary hover:text-primary transition-colors">ประวัติความเป็นมา</a>
+          </li>
+          <li>
+            <a href="#organization" class="block text-secondary hover:text-primary transition-colors">โครงสร้างองค์กร</a>
+          </li>
+          <li>
+            <a href="#missions" class="block text-secondary hover:text-primary transition-colors">ภารกิจหลัก</a>
+          </li>
+          <li>
+            <a href="#research" class="block text-secondary hover:text-primary transition-colors pl-4">• วิจัยและวิเคราะห์</a>
+          </li>
+          <li>
+            <a href="#standards" class="block text-secondary hover:text-primary transition-colors pl-4">• มาตรฐานและแนวทาง</a>
+          </li>
+          <li>
+            <a href="#ecosystem" class="block text-secondary hover:text-primary transition-colors pl-4">• ระบบนิเวศการวิจัย</a>
+          </li>
+          <li>
+            <a href="#personnel" class="block text-secondary hover:text-primary transition-colors">บุคลากรและตำแหน่ง</a>
+          </li>
+          <li>
+            <a href="#leadership" class="block text-secondary hover:text-primary transition-colors pl-4">• ผู้บริหารระดับสูง</a>
+          </li>
+          <li>
+            <a href="#departments" class="block text-secondary hover:text-primary transition-colors pl-4">• ฝ่ายงานภายใน</a>
+          </li>
+          <li>
+            <a href="#network" class="block text-secondary hover:text-primary transition-colors pl-4">• ศชวซ.และเครือข่าย</a>
+          </li>
+          <li>
+            <a href="#future" class="block text-secondary hover:text-primary transition-colors">ทิศทางการพัฒนา</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Toggle button for mobile -->
+    <button id="toc-toggle" class="fixed top-4 left-4 z-50 md:hidden bg-primary text-white p-2 rounded-full shadow-lg">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Main Content -->
+    <main class="ml-0 md:ml-80">
+      <!-- Hero Section -->
+      <section id="hero" class="relative min-h-screen flex items-center">
+        <div class="absolute inset-0">
+          <img src="https://kimi-web-img.moonshot.cn/img/media.aedas.com/6992aa4cedb75d333c62d9680c139a39d1dc952c.jpg" alt="Cybersecurity research center facility" class="w-full h-full object-cover opacity-20" size="wallpaper" aspect="wide" style="photo" query="cybersecurity research center" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+          <div class="absolute inset-0 bg-gradient-to-br from-primary/80 to-accent/60"></div>
+        </div>
+
+        <div class="relative z-10 max-w-6xl mx-auto px-4 md:px-8 py-16">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-7 space-y-8">
+              <div class="space-y-6">
+                <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-tight">
+                  ศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์
+                </h1>
+                <p class="text-base sm:text-lg md:text-xl text-white/90 font-light leading-relaxed">
+                  กำเนิดจากยุทธศาสตร์ความมั่นคงปลอดภัยไซเบอร์แห่งชาติ สู่การเป็นศูนย์กลางวิจัยระดับชาติ
+                  ที่ขับเคลื่อนความสามารถด้านความมั่นคงปลอดภัยไซเบอร์ของประเทศไทยสู่อนาคต
+                </p>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                  <h3 class="font-semibold text-white mb-2">สังกัด</h3>
+                  <p class="text-white/80 text-sm">สำนักงานคณะกรรมการการรักษาความมั่นคงปลอดภัยไซเบอร์แห่งชาติ (NCSA)</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                  <h3 class="font-semibold text-white mb-2">กำเนิด</h3>
+                  <p class="text-white/80 text-sm">พระราชบัญญัติการรักษาความมั่นคงปลอดภัยไซเบอร์ พ.ศ. 2562</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="lg:col-span-5">
+              <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-4 md:p-8 shadow-2xl">
+                <h3 class="font-serif text-2xl font-bold text-primary mb-6">ข้อมูลสำคัญ</h3>
+                <div class="space-y-4">
+                  <div class="flex items-center space-x-3">
+                    <i class="fas fa-shield-alt text-accent text-lg"></i>
+                    <span class="text-secondary">โครงสร้างพื้นฐานวิจัยระดับชาติ</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <i class="fas fa-network-wired text-accent text-lg"></i>
+                    <span class="text-secondary">เครือข่าย 20+ สถาบันการศึกษา</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <i class="fas fa-chart-line text-accent text-lg"></i>
+                    <span class="text-secondary">วิจัยเชิงรุกสู่เทคโนโลยีใหม่</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- History Section -->
+      <section id="history" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4 md:px-8">
+          <div class="text-center mb-16">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-6">ประวัติความเป็นมาและวิวัฒนาการ</h2>
+            <p class="text-xl text-secondary max-w-3xl mx-auto">
+              จากวิสัยทัศน์สู่ความเป็นจริง ศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์เติบโตอย่างต่อเนื่อง
+              เพื่อตอบสนองต่อความท้าทายด้านความมั่นคงในยุคดิจิทัล
+            </p>
+          </div>
+
+          <div class="grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div>
+              <img src="https://kimi-web-img.moonshot.cn/img/lawfare-assets-new.azureedge.net/8ab5aeef443ff699fbb5be3267983b5179b2e79a.jpg" alt="National cybersecurity strategy meeting" class="rounded-lg shadow-lg w-full" size="medium" aspect="wide" style="photo" query="cybersecurity strategy conference" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+            </div>
+            <div class="space-y-6">
+              <h3 class="font-serif text-2xl font-bold text-primary">ที่มาและการจัดตั้ง</h3>
+              <p class="text-secondary leading-relaxed">
+                ศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์ก่อตั้งขึ้นภายใต้กรอบของ
+                <strong>พระราชบัญญัติการรักษาความมั่นคงปลอดภัยไซเบอร์ พ.ศ. 2562</strong>
+                เพื่อแก้ไขปัญหาที่ประเทศไทยเคยประสบมายาวนาน ทั้งการขาดแคลนโครงสร้างพื้นฐานวิจัย
+                การพึ่งพาเทคโนโลยีจากต่างประเทศ และการไม่มีกลไกการพัฒนามาตรฐานความปลอดภัยที่เหมาะสมกับบริบทไทย
+                <a href="https://re.sukhothaiinterlaw.com/thailands-national-cyber-security-agency-roles-and-responsibilities/" class="text-accent hover:underline ml-1" target="_blank">[1]</a>
+              </p>
+
+              <div class="bg-accent/10 p-4 rounded-lg border-l-4 border-accent">
+                <p class="text-sm text-accent font-medium">
+                  &#34;การมีศูนย์วิจัยที่มีความเชี่ยวชาญเฉพาะด้านจึงเป็นกลไกสำคัญในการรักษาความมั่นคงของประเทศในยุคดิจิทัล&#34;
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Evolution Timeline -->
+          <div class="bg-gray-50 rounded-2xl p-8">
+            <h3 class="font-serif text-2xl font-bold text-primary mb-8 text-center">วิวัฒนาการของศูนย์วิจัยฯ</h3>
+            <div class="grid md:grid-cols-3 gap-8">
+              <div class="text-center">
+                <div class="bg-primary text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
+                <h4 class="font-bold text-lg text-primary mb-3">ระยะเริ่มต้น (พ.ศ. 2562-2563)</h4>
+                <p class="text-secondary text-sm mb-4">มุ่งเน้นการสร้างรากฐานทางกายภาพและเทคนิค</p>
+                <ul class="text-sm text-secondary space-y-1">
+                  <li>• จัดตั้งห้องปฏิบัติการทดสอบ</li>
+                  <li>• จัดหาอุปกรณ์วิจัย</li>
+                  <li>• สร้างทีมบุคลากรหลัก</li>
+                </ul>
+              </div>
+              <div class="text-center">
+                <div class="bg-accent text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
+                <h4 class="font-bold text-lg text-primary mb-3">ระยะขยายตัว (พ.ศ. 2564-2565)</h4>
+                <p class="text-secondary text-sm mb-4">ขยายภารกิจสู่การพัฒนามาตรฐาน</p>
+                <ul class="text-sm text-secondary space-y-1">
+                  <li>• จัดทำมาตรฐานความปลอดภัยเว็บไซต์</li>
+                  <li>• ก่อตั้ง ศชวซ.</li>
+                  <li>• ขยายความร่วมมือ</li>
+                </ul>
+              </div>
+              <div class="text-center">
+                <div class="bg-secondary text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>
+                <h4 class="font-bold text-lg text-primary mb-3">ระยะเติบโตเต็มรูปแบบ (พ.ศ. 2566-ปัจจุบัน)</h4>
+                <p class="text-secondary text-sm mb-4">วิจัยเชิงรุกและบูรณาการระบบนิเวศ</p>
+                <ul class="text-sm text-secondary space-y-1">
+                  <li>• AI Security Guidelines</li>
+                  <li>• Post-Quantum Cryptography</li>
+                  <li>• ความร่วมมือ ASEAN</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Organization Structure -->
+      <section id="organization" class="py-20 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4 md:px-8">
+          <div class="text-center mb-16">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-6">โครงสร้างองค์กรและการบริหาร</h2>
+            <p class="text-xl text-secondary max-w-3xl mx-auto">
+              โครงสร้างการบริหารของศูนย์วิจัยฯ ถูกออกแบบให้มีความยืดหยุ่นและสามารถขับเคลื่อนภารกิจที่หลากหลาย
+              ประสานงานอย่างใกล้ชิดกับ NCSA และเครือข่ายพันธมิตร
+            </p>
+          </div>
+
+          <!-- Leadership Structure -->
+          <div class="bg-white rounded-2xl p-8 shadow-lg mb-12">
+            <h3 class="font-serif text-2xl font-bold text-primary mb-8 text-center">สายบังคับบัญชาหลัก</h3>
+            <div class="grid lg:grid-cols-2 gap-8 items-center">
+              <div class="space-y-6">
+                <div class="border-l-4 border-primary pl-6">
+                  <h4 class="font-bold text-lg text-primary mb-2">ผู้อำนวยการศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์</h4>
+                  <p class="text-secondary mb-2">พลอากาศตรี เฉลิมชัย วงษ์เกตุ (Air Vice Marshal Chalermchai Wongket)</p>
+                  <p class="text-sm text-secondary">
+                    ผู้มีประสบการณ์ด้านความมั่นคงปลอดภัยไซเบอร์และการบริหารจัดการในระบบราชการทหาร
+                    <a href="https://th.linkedin.com/in/chalermchai-wonggate-6a7002339" class="text-accent hover:underline ml-1" target="_blank">[2]</a>
+                  </p>
+                </div>
+
+                <div class="border-l-4 border-accent pl-6">
+                  <h4 class="font-bold text-lg text-primary mb-2">ผู้ช่วยเลขาธิการฯ และหัวหน้า ศชวซ.</h4>
+                  <p class="text-secondary mb-2">ผู้ช่วยศาสตราจารย์ ดร.วราภรณ์ พรหมวิกร</p>
+                  <p class="text-sm text-secondary">
+                    Asst. Prof. Dr. Waraporn Promwikorn - ผู้บริหารระดับสูงที่มีบทบาทสำคัญในการกำกับดูแลการวิจัย
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <img src="https://kimi-web-img.moonshot.cn/img/placeholder-0620/%E5%9B%BE%E7%89%8716.png" alt="Military officer leading cybersecurity meeting" class="rounded-lg shadow-lg w-full" size="medium" aspect="wide" style="photo" query="military officer cybersecurity meeting" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+              </div>
+            </div>
+          </div>
+
+          <!-- Internal Departments -->
+          <div class="bg-white rounded-2xl p-8 shadow-lg">
+            <h3 class="font-serif text-2xl font-bold text-primary mb-8 text-center">หน่วยงานภายในศูนย์วิจัยฯ</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div class="bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg p-6 border border-primary/20">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-microscope text-primary text-xl mr-3"></i>
+                  <h4 class="font-bold text-primary">ฝ่ายวิจัยและพัฒนาเครือข่ายวิจัย</h4>
+                </div>
+                <p class="text-sm text-secondary mb-3">นำโดย ดร.สุนทร ศิระไพศาล</p>
+                <p class="text-sm text-secondary">ดำเนินโครงการวิจัยและพัฒนาเครือข่ายความร่วมมือ</p>
+              </div>
+
+              <div class="bg-gradient-to-br from-accent/5 to-accent/10 rounded-lg p-6 border border-accent/20">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-chart-bar text-accent text-xl mr-3"></i>
+                  <h4 class="font-bold text-accent">ฝ่ายวิเคราะห์และประมวลผลข้อมูล</h4>
+                </div>
+                <p class="text-sm text-secondary mb-3">นำโดย ดร.สุจิตรา พงศ์พิศุทธิ์โสภา</p>
+                <p class="text-sm text-secondary">วิเคราะห์ข้อมูลภัยคุกคามและพัฒนาระบบ Threat Intelligence</p>
+              </div>
+
+              <div class="bg-gradient-to-br from-secondary/5 to-secondary/10 rounded-lg p-6 border border-secondary/20">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-certificate text-secondary text-xl mr-3"></i>
+                  <h4 class="font-bold text-secondary">ฝ่ายทดสอบและรับรอง</h4>
+                </div>
+                <p class="text-sm text-secondary mb-3">นำโดย คุณนิฑูรย์ มูลวิริยกิจ</p>
+                <p class="text-sm text-secondary">ทดสอบความปลอดภัยและพัฒนามาตรฐานการรับรอง</p>
+              </div>
+
+              <div class="bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg p-6 border border-primary/20">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-clipboard-list text-primary text-xl mr-3"></i>
+                  <h4 class="font-bold text-primary">ฝ่ายกำหนดมาตรฐาน</h4>
+                </div>
+                <p class="text-sm text-secondary mb-3">นำโดย ว่าที่ร้อยตรี ภูวิช ชัยกรเริงเดช</p>
+                <p class="text-sm text-secondary">จัดทำมาตรฐานความมั่นคงปลอดภัยไซเบอร์แห่งชาติ</p>
+              </div>
+
+              <div class="bg-gradient-to-br from-accent/5 to-accent/10 rounded-lg p-6 border border-accent/20">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-network-wired text-accent text-xl mr-3"></i>
+                  <h4 class="font-bold text-accent">งานพัฒนาเครือข่ายวิจัย</h4>
+                </div>
+                <p class="text-sm text-secondary mb-3">นำโดย คุณวรวรรณ ศรีศักดิ์</p>
+                <p class="text-sm text-secondary">สร้างและขยายเครือข่ายความร่วมมือกับสถาบันต่างๆ</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Missions Section -->
+      <section id="missions" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4 md:px-8">
+          <div class="text-center mb-16">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-6">ภารกิจหลักและหน้าที่รับผิดชอบ</h2>
+            <p class="text-xl text-secondary max-w-3xl mx-auto">
+              ศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์มีภารกิจครอบคลุมทั้งการสร้างความรู้
+              การพัฒนามาตรฐาน และการสร้างระบบนิเวศการวิจัยระดับชาติ
+            </p>
+          </div>
+
+          <!-- Research Mission -->
+          <div id="research" class="mb-16">
+            <div class="bg-gradient-to-r from-primary/5 to-primary/10 rounded-2xl p-8">
+              <div class="flex items-center mb-6">
+                <i class="fas fa-flask text-primary text-2xl mr-4"></i>
+                <h3 class="font-serif text-2xl font-bold text-primary">ด้านการวิจัย ทดสอบ และวิเคราะห์</h3>
+              </div>
+
+              <div class="grid lg:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                  <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <h4 class="font-bold text-primary mb-3">การจัดหาโครงสร้างพื้นฐานวิจัย</h4>
+                    <p class="text-secondary text-sm mb-3">
+                      จัดหาและบริหารจัดการโครงสร้างพื้นฐานที่จำเป็นสำหรับการวิจัย ทดสอบ และวิเคราะห์
+                      รวมถึงห้องปฏิบัติการวิจัย ระบบ Cyber Range และศูนย์ข้อมูลความปลอดภัยไซเบอร์
+                    </p>
+                    <div class="flex items-center text-accent text-sm">
+                      <i class="fas fa-check-circle mr-2"></i>
+                      <span>ครอบคลุมทั้งโครงสร้างทางกายภาพและเทคนิค</span>
+                    </div>
+                  </div>
+
+                  <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <h4 class="font-bold text-primary mb-3">การพัฒนาเครื่องมือทดสอบความปลอดภัย</h4>
+                    <p class="text-secondary text-sm mb-3">
+                      พัฒนาเครื่องมือและอุปกรณ์ทดสอบความปลอดภัยที่เหมาะสมกับบริบทของประเทศไทย
+                      ลดการพึ่งพาเทคโนโลยีจากต่างประเทศ
+                    </p>
+                    <div class="flex items-center text-accent text-sm">
+                      <i class="fas fa-check-circle mr-2"></i>
+                      <span>สร้างขีดความสามารถด้านการวิจัยและพัฒนาอิสระ</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <img src="https://kimi-web-img.moonshot.cn/img/media.wired.com/da6da16780af650e0ea01baad1bb75db9f713e6d.jpg" alt="Cybersecurity laboratory interior with testing equipment" class="rounded-lg shadow-lg w-full mb-6" size="medium" aspect="wide" style="photo" query="cybersecurity laboratory interior" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+
+                  <div class="bg-accent/10 rounded-lg p-6 border border-accent/20">
+                    <h4 class="font-bold text-accent mb-3">การวิเคราะห์เทคโนโลยี</h4>
+                    <p class="text-secondary text-sm">
+                      วิเคราะห์เทคโนโลยีความมั่นคงปลอดภัยไซเบอร์ทั้งที่มีอยู่แล้วและที่กำลังพัฒนา
+                      เพื่อการประเมินประสิทธิภาพ วิเคราะห์ความเหมาะสม และคาดการณ์แนวโน้ม
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Standards Mission -->
+          <div id="standards" class="mb-16">
+            <div class="bg-gradient-to-r from-accent/5 to-accent/10 rounded-2xl p-8">
+              <div class="flex items-center mb-6">
+                <i class="fas fa-clipboard-check text-accent text-2xl mr-4"></i>
+                <h3 class="font-serif text-2xl font-bold text-accent">ด้านการพัฒนามาตรฐานและแนวทางปฏิบัติ</h3>
+              </div>
+
+              <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                  <h4 class="font-bold text-accent mb-3">มาตรฐานความปลอดภัยเว็บไซต์</h4>
+                  <p class="text-secondary text-sm mb-3">
+                    ทำหน้าที่เป็นสำนักงานเลขานุการของคณะทำงานจัดทำมาตรฐานความปลอดภัยเว็บไซต์แห่งชาติ
+                    มีกำหนดบังคับใช้ในวันที่ <strong>17 กันยายน 2569</strong>
+                    <a href="https://www.thnca.or.th/out_activities/thnca-news/" class="text-accent hover:underline ml-1" target="_blank">[3]</a>
+                  </p>
+                  <div class="bg-primary/10 rounded p-3">
+                    <p class="text-xs text-primary font-medium">กำหนดบังคับใช้: 17 กันยายน 2569</p>
+                  </div>
+                </div>
+
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                  <h4 class="font-bold text-accent mb-3">AI Security Guidelines</h4>
+                  <p class="text-secondary text-sm mb-3">
+                    จัดทำแนวทางความปลอดภัยด้านปัญญาประดิษฐ์เพื่อส่งเสริมการใช้งาน AI อย่างปลอดภัยและมีจริยธรรม
+                  </p>
+                  <ul class="text-xs text-secondary space-y-1">
+                    <li>• ความปลอดภัยของข้อมูล</li>
+                    <li>• ความโปร่งใสในการตัดสินใจ</li>
+                    <li>• ป้องกันการโจมตีระบบ AI</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-lg p-6 shadow-sm">
+                <h4 class="font-bold text-accent mb-3">แนวทางความปลอดภัยสำหรับอุปกรณ์ IoT</h4>
+                <p class="text-secondary text-sm mb-4">
+                  จัดตั้งคณะทำงานจัดทำแนวทางความปลอดภัยไซเบอร์สำหรับอุปกรณ์ IoT สำหรับผู้บริโภค
+                  เพื่อกำหนดข้อกำหนดขั้นต่ำด้านความปลอดภัยและสร้างความตระหนักรู้
+                </p>
+                <div class="grid grid-cols-3 gap-4 text-center">
+                  <div class="bg-accent/10 rounded p-3">
+                    <i class="fas fa-lightbulb text-accent text-lg mb-2"></i>
+                    <p class="text-xs text-accent">Security by Design</p>
+                  </div>
+                  <div class="bg-accent/10 rounded p-3">
+                    <i class="fas fa-users text-accent text-lg mb-2"></i>
+                    <p class="text-xs text-accent">ความตระหนักรู้</p>
+                  </div>
+                  <div class="bg-accent/10 rounded p-3">
+                    <i class="fas fa-shield-alt text-accent text-lg mb-2"></i>
+                    <p class="text-xs text-accent">มาตรฐานขั้นต่ำ</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ecosystem Mission -->
+          <div id="ecosystem" class="mb-16">
+            <div class="bg-gradient-to-r from-secondary/5 to-secondary/10 rounded-2xl p-8">
+              <div class="flex items-center mb-6">
+                <i class="fas fa-network-wired text-secondary text-2xl mr-4"></i>
+                <h3 class="font-serif text-2xl font-bold text-secondary">ด้านการสร้างระบบนิเวศการวิจัยระดับชาติ</h3>
+              </div>
+
+              <div class="grid lg:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                  <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <h4 class="font-bold text-secondary mb-3">การจัดกิจกรรมภูมิภาค</h4>
+                    <p class="text-secondary text-sm mb-4">
+                      จัดกิจกรรมเฉพาะทางในภูมิภาคต่างๆ เพื่อกระจายความรู้และทรัพยากรด้านความมั่นคงปลอดภัยไซเบอร์
+                      สร้างเครือข่ายนักวิจัยและผู้ปฏิบัติงานในท้องถิ่น
+                    </p>
+                    <div class="grid grid-cols-4 gap-2">
+                      <div class="bg-secondary/10 rounded p-2 text-center">
+                        <i class="fas fa-mountain text-secondary text-sm"></i>
+                        <p class="text-xs text-secondary mt-1">ภาคเหนือ</p>
+                      </div>
+                      <div class="bg-secondary/10 rounded p-2 text-center">
+                        <i class="fas fa-water text-secondary text-sm"></i>
+                        <p class="text-xs text-secondary mt-1">ภาคตะวันออกเฉียงเหนือ</p>
+                      </div>
+                      <div class="bg-secondary/10 rounded p-2 text-center">
+                        <i class="fas fa-tree text-secondary text-sm"></i>
+                        <p class="text-xs text-secondary mt-1">ภาคใต้</p>
+                      </div>
+                      <div class="bg-secondary/10 rounded p-2 text-center">
+                        <i class="fas fa-city text-secondary text-sm"></i>
+                        <p class="text-xs text-secondary mt-1">กรุงเทพฯ</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <h4 class="font-bold text-secondary mb-3">การส่งเสริมความร่วมมือ</h4>
+                    <p class="text-secondary text-sm mb-4">
+                      ทำหน้าที่เป็นตัวกลางประสานความร่วมมือระหว่างภาครัฐ เอกชน และสถาบันการศึกษา
+                      ผ่านการจัดทำบันทึกความเข้าใจ (MoU) และจัดตั้งคณะทำงานร่วม
+                    </p>
+                    <div class="flex space-x-4">
+                      <div class="flex items-center text-secondary">
+                        <i class="fas fa-building text-secondary mr-2"></i>
+                        <span class="text-sm">ภาครัฐ</span>
+                      </div>
+                      <div class="flex items-center text-secondary">
+                        <i class="fas fa-industry text-secondary mr-2"></i>
+                        <span class="text-sm">ภาคเอกชน</span>
+                      </div>
+                      <div class="flex items-center text-secondary">
+                        <i class="fas fa-university text-secondary mr-2"></i>
+                        <span class="text-sm">สถาบันการศึกษา</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <img src="https://kimi-web-img.moonshot.cn/img/i.ytimg.com/74ed3247163926850d050a6a4534223928a09fdd.jpg" alt="Academic conference on cybersecurity research collaboration" class="rounded-lg shadow-lg w-full mb-6" size="medium" aspect="wide" style="photo" query="cybersecurity research conference" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+
+                  <div class="bg-secondary/10 rounded-lg p-6 border border-secondary/20">
+                    <h4 class="font-bold text-secondary mb-4">ผลการดำเนินงาน</h4>
+                    <div class="space-y-3">
+                      <div class="flex justify-between items-center">
+                        <span class="text-sm text-secondary">การประชุมภูมิภาค</span>
+                        <span class="text-sm font-medium text-secondary">4 ภูมิภาค</span>
+                      </div>
+                      <div class="flex justify-between items-center">
+                        <span class="text-sm text-secondary">MoU ความร่วมมือ</span>
+                        <span class="text-sm font-medium text-secondary">20+ สถาบัน</span>
+                      </div>
+                      <div class="flex justify-between items-center">
+                        <span class="text-sm text-secondary">โครงการร่วม</span>
+                        <span class="text-sm font-medium text-secondary">50+ โครงการ</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Personnel Section -->
+      <section id="personnel" class="py-20 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4 md:px-8">
+          <div class="text-center mb-16">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-6">บุคลากรและตำแหน่ง</h2>
+            <p class="text-xl text-secondary max-w-3xl mx-auto">
+              ศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์มีโครงสร้างบุคลากรที่ครอบคลุมตั้งแต่ผู้บริหารระดับสูง
+              ผู้เชี่ยวชาญเฉพาะด้าน ไปจนถึงเจ้าหน้าที่วิชาชีพและเทคนิค
+            </p>
+          </div>
+
+          <!-- Leadership -->
+          <div id="leadership" class="mb-16">
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8 text-center">ผู้บริหารระดับสูง</h3>
+              <div class="grid lg:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                  <div class="bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg p-6 border-l-4 border-primary">
+                    <div class="flex items-start justify-between">
+                      <div>
+                        <h4 class="font-bold text-primary mb-2">พลอากาศตรี เฉลิมชัย วงษ์เกตุ</h4>
+                        <p class="text-secondary text-sm mb-2">Air Vice Marshal Chalermchai Wongket</p>
+                        <p class="text-sm text-primary font-medium">ผู้อำนวยการศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์</p>
+                        <p class="text-xs text-secondary mt-2">
+                          ดำรงตำแหน่งผู้อำนวยการสำนักงานบริหารโครงสร้างพื้นฐานสารสนเทศที่สำคัญควบคู่กัน
+                          <a href="https://th.linkedin.com/in/chalermchai-wonggate-6a7002339" class="text-accent hover:underline ml-1" target="_blank">[4]</a>
+                        </p>
+                      </div>
+                      <i class="fas fa-star text-primary text-xl"></i>
+                    </div>
+                  </div>
+
+                  <div class="bg-gradient-to-r from-accent/5 to-accent/10 rounded-lg p-6 border-l-4 border-accent">
+                    <div class="flex items-start justify-between">
+                      <div>
+                        <h4 class="font-bold text-accent mb-2">ผู้ช่วยศาสตราจารย์ ดร.วราภรณ์ พรหมวิกร</h4>
+                        <p class="text-secondary text-sm mb-2">Asst. Prof. Dr. Waraporn Promwikorn</p>
+                        <p class="text-sm text-accent font-medium">ผู้ช่วยเลขาธิการคณะกรรมการการรักษาความมั่นคงปลอดภัยไซเบอร์แห่งชาติ</p>
+                        <p class="text-sm text-accent font-medium">หัวหน้าศูนย์รวมผู้เชี่ยวชาญการวิจัยเพื่อความมั่นคงปลอดภัยไซเบอร์แห่งประเทศไทย</p>
+                      </div>
+                      <i class="fas fa-graduation-cap text-accent text-xl"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <img src="https://kimi-web-img.moonshot.cn/img/placeholder-0620/%E5%9B%BE%E7%89%875.png" alt="Formal portrait of a Thai military officer" class="rounded-lg shadow-lg w-full mb-6" size="medium" aspect="tall" style="photo" query="Thai military officer portrait formal uniform" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+
+                  <div class="bg-primary/10 rounded-lg p-6">
+                    <h4 class="font-bold text-primary mb-3">บทบาทและอำนาจหน้าที่</h4>
+                    <ul class="space-y-2 text-sm text-secondary">
+                      <li class="flex items-center">
+                        <i class="fas fa-chess-king text-primary mr-2"></i>
+                        <span>กำหนดยุทธศาสตร์การวิจัยระยะยาว 3-5 ปี</span>
+                      </li>
+                      <li class="flex items-center">
+                        <i class="fas fa-coins text-primary mr-2"></i>
+                        <span>บริหารงบประมาณและจัดสรรทรัพยากร</span>
+                      </li>
+                      <li class="flex items-center">
+                        <i class="fas fa-handshake text-primary mr-2"></i>
+                        <span>เป็นตัวแทนศูนย์ในเวทีระดับชาติและนานาชาติ</span>
+                      </li>
+                      <li class="flex items-center">
+                        <i class="fas fa-check-double text-primary mr-2"></i>
+                        <span>กำกับดูแลคุณภาพผลงานวิจัย</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Department Heads -->
+          <div id="departments" class="mb-16">
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+              <h3 class="font-serif text-2xl font-bold text-accent mb-8 text-center">ผู้บริหารฝ่ายงานภายใน</h3>
+              <div class="grid lg:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                  <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                    <div class="flex items-start justify-between mb-4">
+                      <div>
+                        <h4 class="font-bold text-primary">ดร.สุจิตรา พงศ์พิศุทธิ์โสภา</h4>
+                        <p class="text-sm text-secondary">Dr. Suchitra Pongpitsuthipha</p>
+                      </div>
+                      <div class="bg-accent/10 rounded-full p-2">
+                        <i class="fas fa-chart-bar text-accent"></i>
+                      </div>
+                    </div>
+                    <p class="text-sm text-primary font-medium mb-2">ผู้อำนวยการฝ่ายวิเคราะห์และประมวลผลข้อมูล</p>
+                    <p class="text-sm text-secondary mb-3">รองหัวหน้าศูนย์รวมผู้เชี่ยวชาญการวิจัยเพื่อความมั่นคงปลอดภัยไซเบอร์แห่งประเทศไทย</p>
+                    <p class="text-xs text-secondary">นำทีมวิเคราะห์ข้อมูลภัยคุกคามและพัฒนาระบบ Threat Intelligence</p>
+                  </div>
+
+                  <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                    <div class="flex items-start justify-between mb-4">
+                      <div>
+                        <h4 class="font-bold text-primary">ดร.สุนทร ศิระไพศาล</h4>
+                        <p class="text-sm text-secondary">Dr. Sunthorn Sirapaisan</p>
+                      </div>
+                      <div class="bg-primary/10 rounded-full p-2">
+                        <i class="fas fa-microscope text-primary"></i>
+                      </div>
+                    </div>
+                    <p class="text-sm text-primary font-medium mb-2">หัวหน้างานวิจัย รักษาการผู้อำนวยการฝ่ายวิจัยและพัฒนาเครือข่ายวิจัย</p>
+                    <p class="text-sm text-secondary mb-3">รองหัวหน้าศูนย์รวมผู้เชี่ยวชาญการวิจัยเพื่อความมั่นคงปลอดภัยไซเบอร์แห่งประเทศไทย</p>
+                    <p class="text-xs text-secondary">ดำเนินโครงการวิจัยและพัฒนาเครือข่ายความร่วมมือกับสถาบันการศึกษา
+                      <a href="https://th.linkedin.com/in/soontorn-sirapaisan" class="text-accent hover:underline ml-1" target="_blank">[5]</a>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="space-y-6">
+                  <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                    <div class="flex items-start justify-between mb-4">
+                      <div>
+                        <h4 class="font-bold text-primary">คุณนิฑูรย์ มูลวิริยกิจ</h4>
+                        <p class="text-sm text-secondary">Mr. Nitoon Moonwiriyakit</p>
+                      </div>
+                      <div class="bg-secondary/10 rounded-full p-2">
+                        <i class="fas fa-certificate text-secondary"></i>
+                      </div>
+                    </div>
+                    <p class="text-sm text-primary font-medium mb-2">ผู้อำนวยการฝ่ายทดสอบและรับรอง</p>
+                    <p class="text-xs text-secondary mb-3">นำทีมทดสอบความปลอดภัยของระบบสารสนเทศและพัฒนามาตรฐานการรับรอง</p>
+                  </div>
+
+                  <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                    <div class="flex items-start justify-between mb-4">
+                      <div>
+                        <h4 class="font-bold text-primary">ว่าที่ร้อยตรี ภูวิช ชัยกรเริงเดช</h4>
+                        <p class="text-sm text-secondary">Lt Col Phuvich Chaygrerungdet</p>
+                      </div>
+                      <div class="bg-primary/10 rounded-full p-2">
+                        <i class="fas fa-clipboard-list text-primary"></i>
+                      </div>
+                    </div>
+                    <p class="text-sm text-primary font-medium mb-2">ผู้อำนวยการฝ่ายกำหนดมาตรฐาน</p>
+                    <p class="text-xs text-secondary mb-3">นำทีมจัดทำมาตรฐานความมั่นคงปลอดภัยไซเบอร์แห่งชาติ</p>
+                    <p class="text-xs text-secondary">เป็นสำนักงานเลขานุการของคณะทำงานมาตรฐานต่างๆ
+                      <a href="https://cloudsecurity.ncsa.or.th/team.html" class="text-accent hover:underline ml-1" target="_blank">[6]</a>
+                    </p>
+                  </div>
+
+                  <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                    <div class="flex items-start justify-between mb-4">
+                      <div>
+                        <h4 class="font-bold text-primary">คุณวรวรรณ ศรีศักดิ์</h4>
+                        <p class="text-sm text-secondary">Ms. Worawan Srisak</p>
+                      </div>
+                      <div class="bg-accent/10 rounded-full p-2">
+                        <i class="fas fa-network-wired text-accent"></i>
+                      </div>
+                    </div>
+                    <p class="text-sm text-primary font-medium mb-2">หัวหน้างานพัฒนาเครือข่ายวิจัย</p>
+                    <p class="text-xs text-secondary mb-3">สร้างและขยายเครือข่ายความร่วมมือกับสถาบันต่างๆ</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Thailand Hub of Talents -->
+          <div id="network" class="mb-16">
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8 text-center">ศูนย์รวมผู้เชี่ยวชาญการวิจัยฯ (ศชวซ.)</h3>
+
+              <div class="grid lg:grid-cols-3 gap-8 mb-8">
+                <div class="bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg p-6 border border-primary/20">
+                  <h4 class="font-bold text-primary mb-3">โครงสร้างการบริหาร</h4>
+                  <div class="space-y-3 text-sm">
+                    <div class="flex items-center text-secondary">
+                      <i class="fas fa-user-tie text-primary mr-2"></i>
+                      <span>หัวหน้าศูนย์: ผู้ช่วยศาสตราจารย์ ดร.วราภรณ์ พรหมวิกร</span>
+                    </div>
+                    <div class="flex items-center text-secondary">
+                      <i class="fas fa-user-friends text-primary mr-2"></i>
+                      <span>รองหัวหน้าศูนย์: ดร.สุจิตรา และดร.สุนทร</span>
+                    </div>
+                    <div class="flex items-center text-secondary">
+                      <i class="fas fa-users text-primary mr-2"></i>
+                      <span>เครือข่ายสถาบันการศึกษา 20+ แห่ง</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-accent/5 to-accent/10 rounded-lg p-6 border border-accent/20">
+                  <h4 class="font-bold text-accent mb-3">กลไกการดำเนินงาน</h4>
+                  <div class="space-y-3 text-sm">
+                    <div class="flex items-center text-secondary">
+                      <i class="fas fa-project-diagram text-accent mr-2"></i>
+                      <span>โครงการวิจัยร่วม</span>
+                    </div>
+                    <div class="flex items-center text-secondary">
+                      <i class="fas fa-chalkboard-teacher text-accent mr-2"></i>
+                      <span>การฝึกอบรมและพัฒนาทักษะ</span>
+                    </div>
+                    <div class="flex items-center text-secondary">
+                      <i class="fas fa-comments text-accent mr-2"></i>
+                      <span>เวทีแลกเปลี่ยนความรู้</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-secondary/5 to-secondary/10 rounded-lg p-6 border border-secondary/20">
+                  <h4 class="font-bold text-secondary mb-3">พันธมิตรสถาบัน</h4>
+                  <div class="space-y-2 text-xs">
+                    <div class="text-secondary">• จุฬาลงกรณ์มหาวิทยาลัย</div>
+                    <div class="text-secondary">• มหาวิทยาลัยมหิดล</div>
+                    <div class="text-secondary">• มหาวิทยาลัยเกษตรศาสตร์</div>
+                    <div class="text-secondary">• มหาวิทยาลัยขอนแก่น</div>
+                    <div class="text-secondary">• สถาบันเทคโนโลยีต่างๆ</div>
+                  </div>
+                  <p class="text-xs text-secondary mt-3">
+                    ครอบคลุมทุกภูมิภาคทั่วประเทศ
+                    <a href="https://htcr.ncsa.or.th/partners" class="text-accent hover:underline ml-1" target="_blank">[7]</a>
+                  </p>
+                </div>
+              </div>
+
+              <div class="bg-gray-50 rounded-lg p-6">
+                <h4 class="font-bold text-primary mb-4 text-center">คณะทำงานย่อยด้านต่างๆ</h4>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div class="bg-white rounded p-4 text-center border border-gray-200">
+                    <i class="fas fa-atom text-primary text-xl mb-2"></i>
+                    <p class="text-sm font-medium text-primary">Post-Quantum Cryptography</p>
+                  </div>
+                  <div class="bg-white rounded p-4 text-center border border-gray-200">
+                    <i class="fas fa-brain text-accent text-xl mb-2"></i>
+                    <p class="text-sm font-medium text-accent">AI Security</p>
+                  </div>
+                  <div class="bg-white rounded p-4 text-center border border-gray-200">
+                    <i class="fas fa-microchip text-secondary text-xl mb-2"></i>
+                    <p class="text-sm font-medium text-secondary">IoT and Embedded Systems</p>
+                  </div>
+                  <div class="bg-white rounded p-4 text-center border border-gray-200">
+                    <i class="fas fa-graduation-cap text-primary text-xl mb-2"></i>
+                    <p class="text-sm font-medium text-primary">Cybersecurity Education</p>
+                  </div>
+                </div>
+                <p class="text-xs text-secondary text-center mt-4">
+                  กิจกรรมหลัก: การประชุมหารือ การฝึกอบรม การเจรจาความร่วมมือ และการเผยแพร่ผลงานวิจัย
+                  <a href="https://htcr.ncsa.or.th/about" class="text-accent hover:underline ml-1" target="_blank">[8]</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Future Development -->
+      <section id="future" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4 md:px-8">
+          <div class="text-center mb-16">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-6">ทิศทางการพัฒนา 2024-2026</h2>
+            <p class="text-xl text-secondary max-w-3xl mx-auto">
+              สำหรับช่วงปี พ.ศ. 2567-2569 ศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์ได้วางแผนพัฒนาที่เน้น
+              สี่ประเด็นหลักเพื่อยกระดับความสามารถด้านความมั่นคงปลอดภัยไซเบอร์ของประเทศสู่อนาคต
+            </p>
+          </div>
+
+          <div class="grid lg:grid-cols-2 gap-8 mb-12">
+            <div class="space-y-8">
+              <div class="bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg p-6 border-l-4 border-primary">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-atom text-primary text-xl mr-3"></i>
+                  <h3 class="font-bold text-primary">การวิจัยเชิงลึกด้านเทคโนโลยีใหม่</h3>
+                </div>
+                <p class="text-secondary text-sm mb-4">
+                  สร้างความรู้และขีดความสามารถในด้านควอนตัม ปัญญาประดิษฐ์ และ IoT
+                  โดยเน้นการตีพิมพ์งานวิจัยระดับนานาชาติและพัฒนาเครื่องมือที่ใช้งานจริง
+                </p>
+                <div class="flex space-x-4">
+                  <div class="bg-primary/10 rounded p-3 text-center flex-1">
+                    <i class="fas fa-microscope text-primary text-lg"></i>
+                    <p class="text-xs text-primary mt-1">Quantum Computing</p>
+                  </div>
+                  <div class="bg-primary/10 rounded p-3 text-center flex-1">
+                    <i class="fas fa-brain text-primary text-lg"></i>
+                    <p class="text-xs text-primary mt-1">AI Security</p>
+                  </div>
+                  <div class="bg-primary/10 rounded p-3 text-center flex-1">
+                    <i class="fas fa-network-wired text-primary text-lg"></i>
+                    <p class="text-xs text-primary mt-1">IoT Security</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-gradient-to-r from-accent/5 to-accent/10 rounded-lg p-6 border-l-4 border-accent">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-globe text-accent text-xl mr-3"></i>
+                  <h3 class="font-bold text-accent">การพัฒนามาตรฐานสู่ระดับสากล</h3>
+                </div>
+                <p class="text-secondary text-sm mb-4">
+                  ยกระดับมาตรฐานไทยให้ได้รับการยอมรับในระดับ ASEAN และสากล
+                  โดยเน้นการนำมาตรฐานไปใช้ในหน่วยงานภาครัฐและเอกชน
+                </p>
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="bg-accent/10 rounded p-3">
+                    <i class="fas fa-flag text-accent text-lg mb-2"></i>
+                    <p class="text-xs text-accent">มาตรฐานไทย</p>
+                  </div>
+                  <div class="bg-accent/10 rounded p-3">
+                    <i class="fas fa-handshake text-accent text-lg mb-2"></i>
+                    <p class="text-xs text-accent">ASEAN Standard</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-8">
+              <div class="bg-gradient-to-r from-secondary/5 to-secondary/10 rounded-lg p-6 border-l-4 border-secondary">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-network-wired text-secondary text-xl mr-3"></i>
+                  <h3 class="font-bold text-secondary">การขยายระบบนิเวศการวิจัย</h3>
+                </div>
+                <p class="text-secondary text-sm mb-4">
+                  เพิ่มจำนวนสถาบันพันธมิตรและนักวิจัยในเครือข่าย
+                  โดยเน้นการขยายเครือข่ายความร่วมมือระหว่างสถาบันการศึกษาและภาคเอกชน
+                </p>
+                <div class="bg-secondary/10 rounded p-4">
+                  <div class="flex items-center justify-between text-sm text-secondary mb-2">
+                    <span>สถาบันสมาชิก ศชวซ.</span>
+                    <span class="font-medium">20+ แห่ง</span>
+                  </div>
+                  <div class="flex items-center justify-between text-sm text-secondary">
+                    <span>โครงการวิจัยร่วม</span>
+                    <span class="font-medium">50+ โครงการ</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg p-6 border-l-4 border-primary">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-bullhorn text-primary text-xl mr-3"></i>
+                  <h3 class="font-bold text-primary">การเสริมสร้างความตระหนักรู้</h3>
+                </div>
+                <p class="text-secondary text-sm mb-4">
+                  ขยายการเข้าถึงกลุ่มเป้าหมายให้ครอบคลุมทุกระดับ
+                  โดยเน้นการสร้างความตระหนักรู้ด้านภัยคุกคามไซเบอร์ในหมู่ประชาชน
+                </p>
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="bg-primary/10 rounded p-3 text-center">
+                    <i class="fas fa-users text-primary text-lg mb-2"></i>
+                    <p class="text-xs text-primary">กิจกรรมรับรู้</p>
+                  </div>
+                  <div class="bg-primary/10 rounded p-3 text-center">
+                    <i class="fas fa-chart-line text-primary text-lg mb-2"></i>
+                    <p class="text-xs text-primary">การรับรู้ของประชาชน</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary Metrics -->
+          <div class="bg-gray-50 rounded-2xl p-8">
+            <h4 class="font-serif text-xl font-bold text-primary mb-6 text-center">ตัวชี้วัดความสำเร็จ</h4>
+            <div class="grid md:grid-cols-4 gap-6">
+              <div class="text-center">
+                <div class="bg-primary/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                  <i class="fas fa-file-alt text-primary text-xl"></i>
+                </div>
+                <p class="text-2xl font-bold text-primary">100+</p>
+                <p class="text-sm text-secondary">งานวิจัยระดับนานาชาติ</p>
+              </div>
+              <div class="text-center">
+                <div class="bg-accent/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                  <i class="fas fa-certificate text-accent text-xl"></i>
+                </div>
+                <p class="text-2xl font-bold text-accent">15+</p>
+                <p class="text-sm text-secondary">มาตรฐานที่นำไปใช้</p>
+              </div>
+              <div class="text-center">
+                <div class="bg-secondary/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                  <i class="fas fa-university text-secondary text-xl"></i>
+                </div>
+                <p class="text-2xl font-bold text-secondary">30+</p>
+                <p class="text-sm text-secondary">สถาบันพันธมิตร</p>
+              </div>
+              <div class="text-center">
+                <div class="bg-primary/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                  <i class="fas fa-users text-primary text-xl"></i>
+                </div>
+                <p class="text-2xl font-bold text-primary">10,000+</p>
+                <p class="text-sm text-secondary">ผู้เข้าร่วมกิจกรรม</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-primary text-white py-12">
+        <div class="max-w-6xl mx-auto px-4 md:px-8">
+          <div class="text-center">
+            <h3 class="font-serif text-2xl font-bold mb-4">ศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์</h3>
+            <p class="text-white/80 mb-6">สำนักงานคณะกรรมการการรักษาความมั่นคงปลอดภัยไซเบอร์แห่งชาติ (NCSA)</p>
+            <div class="flex justify-center space-x-6 text-sm text-white/80">
+              <span>ที่ตั้ง: ศูนย์ราชการเฉลิมพระเกียรติ 80 พรรษา 5 ธันวาคม 2550 อาคารซี ชั้น 7-9</span>
+              <span>ถนนแจ้งวัฒนะ กรุงเทพมหานคร</span>
+            </div>
+            <div class="mt-8 pt-8 border-t border-white/20 text-sm text-white/60">
+              <p>ข้อมูลเพิ่มเติม: <a href="https://htcr.ncsa.or.th" class="text-accent hover:underline" target="_blank">https://htcr.ncsa.or.th</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+        // Toggle TOC on mobile
+        const tocToggle = document.getElementById('toc-toggle');
+        const toc = document.getElementById('toc');
+        
+        tocToggle.addEventListener('click', () => {
+            toc.classList.toggle('-translate-x-full');
+        });
+
+        // Close TOC when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth >= 768) return; // Only for mobile
+            if (!toc.contains(e.target) && !tocToggle.contains(e.target) && !toc.classList.contains('-translate-x-full')) {
+                toc.classList.add('-translate-x-full');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close TOC on mobile after clicking
+                    if (window.innerWidth < 768) {
+                        toc.classList.add('-translate-x-full');
+                    }
+                }
+            });
+        });
+
+        // Update active TOC item on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('#toc a[href^="#"]');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('text-primary', 'font-medium');
+                link.classList.add('text-secondary');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.remove('text-secondary');
+                    link.classList.add('text-primary', 'font-medium');
+                }
+            });
+        });
+    </script>
+  
+
+</body></html>
