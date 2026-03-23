@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์ (Cyber Security Research Center)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Required Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        
+        /* Custom Scrollbar for better UX */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Smooth transitions */
+        .transition-all {
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 300ms;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans leading-relaxed selection:bg-blue-200 selection:text-blue-900">
+
+    <!-- Chosen Palette: Slate (Neutrals) and Royal Blue (Accents) to convey security, trust, and professionalism. -->
+    
+    <!-- Application Structure Plan: 
+    The SPA is structured as an interactive dashboard divided into three main sections:
+    1. Executive Summary & Overview Chart: Provides immediate context via a visual breakdown of core functions.
+    2. Interactive Operations Explorer: Replaces a static list with a dynamic selection interface, allowing users to focus on specific duties one at a time. Clicking updates a detail pane.
+    3. Leadership Directory: Presents personnel in a clear grid.
+    This structure was chosen to transform a dense report into a self-paced discovery tool. Users can visually grasp the scope of the center before drilling down into specific operational details or identifying key contacts. 
+    -->
+
+    <!-- Visualization & Content Choices: 
+    - Overview Chart: Polar Area Chart (Chart.js) -> Goal: Show equal importance but distinct areas of the 6 core functions -> Interaction: Hover to see details, click to sync with the Operations Explorer below -> Library: Chart.js.
+    - Functions: Interactive Button Grid & Detail Card -> Goal: Organize text-heavy duties -> Interaction: Click button to update detailed text -> Justification: Prevents cognitive overload by hiding text until requested.
+    - Personnel: Grid Layout -> Goal: Clear directory -> Interaction: Hover effects -> Justification: Simple, effective presentation of hierarchical information.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        
+        <!-- Header Section -->
+        <header class="text-center mb-12 animate-fade-in">
+            <div class="inline-block p-4 rounded-full bg-blue-100 text-blue-700 text-4xl mb-4">
+                🛡️
+            </div>
+            <h1 class="text-3xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">ศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์</h1>
+            <p class="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto">
+                Cyber Security Research Center
+            </p>
+            <p class="mt-4 text-slate-500 max-w-2xl mx-auto">
+                หน่วยงานหลักภายใต้สำนักงานคณะกรรมการการรักษาความมั่นคงปลอดภัยไซเบอร์แห่งชาติ (สกมช. / NCSA) มุ่งเน้นการวิจัย พัฒนา และยกระดับขีดความสามารถด้านความมั่นคงปลอดภัยไซเบอร์ของประเทศไทย
+            </p>
+        </header>
+
+        <!-- Main Dashboard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+            
+            <!-- Left Column: Chart -->
+            <div class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center">
+                <h2 class="text-xl font-bold text-slate-800 mb-2 w-full text-left">สัดส่วนภารกิจหลัก (Core Missions)</h2>
+                <p class="text-sm text-slate-500 mb-6 w-full text-left">
+                    ภาพรวมเชิงสัญลักษณ์ของภารกิจทั้ง 6 ด้านของศูนย์วิจัยฯ (คลิกที่กราฟเพื่อดูรายละเอียด)
+                </p>
+                <!-- Mandatory Chart Container -->
+                <div class="chart-container">
+                    <canvas id="missionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Right Column: Interactive Details -->
+            <div class="lg:col-span-7 bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4 border-b pb-4 border-slate-100">
+                    สำรวจบทบาทและหน้าที่ (Functions & Duties)
+                </h2>
+                <p class="text-slate-600 mb-6">
+                    ศูนย์วิจัยฯ มีภารกิจที่ครอบคลุมตั้งแต่การวิจัยเชิงลึกไปจนถึงการสร้างความตระหนักรู้ เลือกหัวข้อด้านล่างเพื่อศึกษาการดำเนินงานในแต่ละด้าน
+                </p>
+
+                <!-- Interactive Buttons -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6" id="function-buttons">
+                    <!-- Buttons generated by JS -->
+                </div>
+
+                <!-- Dynamic Content Display -->
+                <div id="function-detail-card" class="bg-slate-50 rounded-xl p-6 border border-slate-200 mt-auto min-h-[180px] transition-all">
+                    <div class="flex items-center space-x-4 mb-3">
+                        <span id="detail-icon" class="text-3xl">👈</span>
+                        <h3 id="detail-title" class="text-xl font-bold text-blue-800">โปรดเลือกภารกิจด้านบน</h3>
+                    </div>
+                    <p id="detail-desc" class="text-slate-700 leading-relaxed">
+                        คลิกที่ปุ่มหมวดหมู่หรือบนกราฟเพื่อแสดงรายละเอียดเชิงลึกของแต่ละภารกิจที่ศูนย์วิจัยฯ ดำเนินการ
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personnel Section -->
+        <section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">บุคลากรหลัก (Key Personnel)</h2>
+                <p class="text-slate-600">
+                    รายนามผู้บริหารและหัวหน้างานที่ขับเคลื่อนศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์และศูนย์รวมผู้เชี่ยวชาญ (Hub of Talents)
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="personnel-grid">
+                <!-- Personnel Cards generated by JS -->
+            </div>
+        </section>
+
+        <footer class="text-center mt-12 py-6 text-slate-500 text-sm border-t border-slate-200">
+            ข้อมูลอ้างอิงจากการสำรวจโครงสร้างศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์ (NCSA)
+        </footer>
+
+    </div>
+
+    <script>
+        // Data Structures based on the Source Report
+        const missionsData = [
+            { 
+                id: 'research', 
+                label: 'วิจัย ทดสอบ & วิเคราะห์', 
+                icon: '🔬', 
+                color: '#3b82f6', // blue-500
+                desc: 'จัดหาโครงสร้างพื้นฐาน เครื่องมือ และอุปกรณ์เพื่อรองรับการทดสอบ วิเคราะห์ และวิจัยเทคโนโลยีด้านความมั่นคงปลอดภัยไซเบอร์ เพื่อให้แน่ใจว่าศูนย์ปฏิบัติการวิจัยระดับชาติทำงานได้อย่างมีประสิทธิภาพ' 
+            },
+            { 
+                id: 'standards', 
+                label: 'พัฒนามาตรฐาน', 
+                icon: '📜', 
+                color: '#10b981', // emerald-500
+                desc: 'ทำงานเชิงรุกในการจัดทำกรอบการทำงานระดับชาติ เช่น เป็นฝ่ายเลขานุการร่างมาตรฐานความปลอดภัยเว็บไซต์, พัฒนา "AI Security Guidelines", และจัดทำแนวทางความปลอดภัยสำหรับอุปกรณ์ IoT สำหรับผู้บริโภค' 
+            },
+            { 
+                id: 'ecosystem', 
+                label: 'สร้างระบบนิเวศ', 
+                icon: '🤝', 
+                color: '#f59e0b', // amber-500
+                desc: 'จัดกิจกรรมระดับภูมิภาค ขับเคลื่อนการวิจัย สร้างความร่วมมือระหว่างภาครัฐ เอกชน และวิชาการ เพื่อรวบรวมความเห็นในการปรับปรุง Roadmap การวิจัยด้านความมั่นคงปลอดภัยไซเบอร์ระยะ 5 ปี' 
+            },
+            { 
+                id: 'threats', 
+                label: 'รับมือภัยคุกคามใหม่', 
+                icon: '🔮', 
+                color: '#ef4444', // red-500
+                desc: 'วิจัยเชิงรุกเพื่อเตรียมความพร้อมประเทศสำหรับภัยคุกคามในอนาคต เช่น การประเมินความเสี่ยงยุค Post-Quantum Computing, ความเสี่ยงจาก Deepfake AI และช่องโหว่ของ Embedded System/IoT' 
+            },
+            { 
+                id: 'collab', 
+                label: 'ขยายความร่วมมือ', 
+                icon: '🌐', 
+                color: '#8b5cf6', // violet-500
+                desc: 'สร้างความร่วมมือทั้งในประเทศ (เช่น สมาคมสมองกลฝังตัวไทย - TESA) และระดับนานาชาติ (เช่น การแลกเปลี่ยนนโยบายและสร้างระบบนิเวศร่วมกับหน่วยงานไซเบอร์หลักของมาเลเซีย)' 
+            },
+            { 
+                id: 'awareness', 
+                label: 'สร้างความตระหนักรู้', 
+                icon: '📢', 
+                color: '#ec4899', // pink-500
+                desc: 'เผยแพร่ความรู้สู่สาธารณะและผู้เชี่ยวชาญผ่านนิทรรศการ, งานประชุมระดับชาติ, NCSA Cyber Boardgame สำหรับเยาวชน, และสื่อสารมวลชนผ่านรายการ "สายลับไซเบอร์"' 
+            }
+        ];
+
+        const personnelData = [
+            {
+                name: "พลอากาศตรี เฉลิมชัย วงษ์เกตุ",
+                engName: "Air Vice Marshal Chalermchai Wongket",
+                title: "ผู้อำนวยการศูนย์วิจัยความมั่นคงปลอดภัยไซเบอร์",
+                engTitle: "Director of the Cyber Security Research Center",
+                icon: "👤"
+            },
+            {
+                name: "ผศ. ดร.วราภรณ์ พรหมวิกร",
+                engName: "Asst. Prof. Dr. Waraporn Promwikorn",
+                title: "ผู้ช่วยเลขาธิการ สกมช. และ หัวหน้าศูนย์รวมผู้เชี่ยวชาญฯ",
+                engTitle: "Assistant Secretary-General of NCSC & Head of TH Hub of Talents",
+                icon: "👩‍💼",
+                note: "ผู้นำคณะผู้แทนและโครงการวิจัยหลัก"
+            },
+            {
+                name: "ดร.สุจิตรา พงศ์พิศุทธิ์โสภา",
+                engName: "Dr. Suchitra Pongpitsuthipha",
+                title: "ผู้อำนวยการฝ่ายวิเคราะห์และประมวลผลข้อมูล",
+                engTitle: "Director of Data Analysis and Processing Dept.",
+                icon: "📊"
+            },
+            {
+                name: "ดร.สุนทร ศิระไพศาล",
+                engName: "Dr. Sunthorn Sirapaisan",
+                title: "รักษาการผู้อำนวยการฝ่ายวิจัยและพัฒนาเครือข่ายวิจัย",
+                engTitle: "Acting Director of Research & Network Development Dept.",
+                icon: "🔬"
+            },
+            {
+                name: "คุณนิฑูรย์ มูลวิริยกิจ",
+                engName: "Mr. Nitoon Moonwiriyakit",
+                title: "ผู้อำนวยการฝ่ายทดสอบและรับรอง",
+                engTitle: "Director of Testing and Certification Dept.",
+                icon: "✅"
+            },
+            {
+                name: "คุณวรวรรณ ศรีศักดิ์",
+                engName: "Ms. Worawan Srisak",
+                title: "หัวหน้างานพัฒนาเครือข่ายวิจัย",
+                engTitle: "Head of Research Network Development",
+                icon: "🔗"
+            }
+        ];
+
+        let myChart = null;
+
+        // Initialize UI Elements
+        function initApp() {
+            renderButtons();
+            renderPersonnel();
+            initChart();
+        }
+
+        // Render Interactive Function Buttons
+        function renderButtons() {
+            const container = document.getElementById('function-buttons');
+            missionsData.forEach((mission, index) => {
+                const btn = document.createElement('button');
+                btn.className = `flex items-center justify-center p-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 hover:border-blue-300 transition-all text-sm font-medium text-slate-700 shadow-sm`;
+                btn.innerHTML = `<span class="mr-2 text-lg">${mission.icon}</span> <span class="truncate">${mission.label}</span>`;
+                btn.onclick = () => updateDetailCard(index);
+                // Store index for easy reference
+                btn.dataset.index = index;
+                container.appendChild(btn);
+            });
+        }
+
+        // Render Personnel Grid
+        function renderPersonnel() {
+            const container = document.getElementById('personnel-grid');
+            personnelData.forEach(person => {
+                const noteHtml = person.note ? `<div class="mt-3 text-xs text-blue-600 bg-blue-50 p-2 rounded">${person.note}</div>` : '';
+                const card = `
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
+                        <div class="text-4xl mb-3">${person.icon}</div>
+                        <h3 class="font-bold text-slate-800 text-lg leading-tight mb-1">${person.name}</h3>
+                        <p class="text-xs text-slate-400 mb-3">${person.engName}</p>
+                        <div class="mt-auto">
+                            <p class="text-sm text-slate-700 font-medium">${person.title}</p>
+                            <p class="text-xs text-slate-500 mt-1">${person.engTitle}</p>
+                        </div>
+                        ${noteHtml}
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        // Update the detail card content
+        function updateDetailCard(index) {
+            const mission = missionsData[index];
+            document.getElementById('detail-icon').textContent = mission.icon;
+            document.getElementById('detail-title').textContent = mission.label;
+            document.getElementById('detail-title').style.color = mission.color;
+            document.getElementById('detail-desc').textContent = mission.desc;
+
+            // Highlight corresponding button
+            const buttons = document.getElementById('function-buttons').children;
+            Array.from(buttons).forEach((btn, i) => {
+                if(i === index) {
+                    btn.classList.add('bg-blue-50', 'border-blue-400', 'text-blue-800');
+                    btn.classList.remove('bg-white', 'text-slate-700');
+                } else {
+                    btn.classList.remove('bg-blue-50', 'border-blue-400', 'text-blue-800');
+                    btn.classList.add('bg-white', 'text-slate-700');
+                }
+            });
+
+            // Highlight corresponding chart segment
+            if (myChart) {
+                const activeElements = [{datasetIndex: 0, index: index}];
+                myChart.setActiveElements(activeElements);
+                myChart.tooltip.setActiveElements(activeElements);
+                myChart.update();
+            }
+        }
+
+        // Initialize Chart.js
+        function initChart() {
+            const ctx = document.getElementById('missionChart').getContext('2d');
+            
+            // Equal weights for visual representation
+            const dataValues = Array(missionsData.length).fill(10); 
+            const labels = missionsData.map(m => m.label);
+            const colors = missionsData.map(m => m.color);
+
+            myChart = new Chart(ctx, {
+                type: 'polarArea',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'ความสำคัญ',
+                        data: dataValues,
+                        backgroundColor: colors.map(c => c + '80'), // Add transparency
+                        borderColor: colors,
+                        borderWidth: 2,
+                        hoverBackgroundColor: colors
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Critical for container bounds
+                    scales: {
+                        r: {
+                            ticks: { display: false },
+                            grid: { color: '#e2e8f0' }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // Hide default legend to save space, relies on UI
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + missionsData[context.dataIndex].label;
+                                }
+                            }
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            updateDetailCard(index);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Run on load
+        window.addEventListener('DOMContentLoaded', initApp);
+
+    </script>
+</body>
+</html>
