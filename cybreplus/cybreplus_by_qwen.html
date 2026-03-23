@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Security Research Center Thailand - Comprehensive Research Overview</title>
+
+  <!-- Essential CDN Libraries -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: 'hsl(210, 75%, 95%)',
+              100: 'hsl(210, 75%, 85%)',
+              200: 'hsl(210, 75%, 75%)',
+              300: 'hsl(210, 75%, 65%)',
+              400: 'hsl(210, 75%, 55%)',
+              500: 'hsl(210, 75%, 40%)',
+              600: 'hsl(210, 75%, 35%)',
+              700: 'hsl(210, 75%, 25%)',
+              800: 'hsl(210, 75%, 15%)',
+              900: 'hsl(210, 75%, 10%)'
+            },
+            accent: {
+              50: 'hsl(240, 65%, 95%)',
+              100: 'hsl(240, 65%, 85%)',
+              200: 'hsl(240, 65%, 75%)',
+              300: 'hsl(240, 65%, 65%)',
+              400: 'hsl(240, 65%, 60%)',
+              500: 'hsl(240, 65%, 55%)',
+              600: 'hsl(240, 65%, 50%)',
+              700: 'hsl(240, 65%, 40%)',
+              800: 'hsl(240, 65%, 30%)',
+              900: 'hsl(240, 65%, 20%)'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+
+  <!-- Preline UI Components -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/preline@2.0.3/dist/preline.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/preline@2.0.3/dist/preline.js"></script>
+
+  <!-- Micro-interactions & Custom Styles -->
+  <style>
+    html { scroll-behavior: smooth; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+
+    .btn-interactive {
+      transition: all 0.2s ease-out;
+    }
+    
+    .btn-interactive:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    
+    .btn-interactive:active {
+      transform: scale(0.95);
+    }
+
+    .card-interactive {
+      transition: all 0.3s ease-out;
+      border: 1px solid transparent;
+      --border-lightness: 40%;
+    }
+
+    .dark .card-interactive {
+      --border-lightness: 60%;
+    }
+
+    .card-interactive:hover {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      filter: brightness(0.98);
+    }
+    
+    /* Primary colored cards */
+    .card-interactive[class*="primary"]:hover,
+    .card-interactive[class*="white"]:hover,
+    .card-interactive[class*="gray-"]:hover {
+      border-color: hsl(210, 75%, var(--border-lightness));
+    }
+    
+    /* Accent colored cards */
+    .card-interactive[class*="accent"]:hover {
+      border-color: hsl(240, 65%, var(--border-lightness));
+    }
+
+    .dark .card-interactive:hover {
+      filter: brightness(1.05);
+    }
+  </style>
+
+  <!-- Dark Mode Toggle Script -->
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      document.getElementById('sunIcon').style.display = isDark ? 'block' : 'none';
+      document.getElementById('moonIcon').style.display = isDark ? 'none' : 'block';
+    }
+  </script>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+  <!-- Citation System Script -->
+  <script>
+    function initCitationSystem() {
+      let i = 1, map = new Map();
+      document.querySelectorAll('[data-ref]').forEach(el => {
+        if (el.dataset.citationProcessed) return;
+        const raw = (el.getAttribute('data-ref')||'').trim();
+        if (!raw) return;
+
+        const parts = raw.split('|');
+        const url = parts[0].trim();
+        const idx = (parts[1]||'').trim() || map.get(raw) || (map.set(raw, String(i)), String(i++));
+
+        if (!el.textContent || !el.textContent.trim()) { el.dataset.citationProcessed = 'true'; return; }
+
+        const btn = document.createElement('sup'); btn.textContent = String(idx);
+        Object.assign(btn.style, { fontSize:'8px', color:'#fff', cursor:'pointer', top: '1px', fontWeight:'bold', backgroundColor:'#0284c7', borderRadius:'50%', transition:'all .15s', userSelect:'none', minWidth:'19px', height:'19px', marginLeft:'6px', display:'inline-flex', alignItems:'center', justifyContent:'center', boxShadow:'0 1px 3px rgba(0,0,0,.2)', lineHeight:'1'});
+        btn.addEventListener('mouseenter', ()=> Object.assign(btn.style, { backgroundColor:'#0369a1', transform:'scale(1.12)' }));
+        btn.addEventListener('mouseleave', ()=> Object.assign(btn.style, { backgroundColor:'#0284c7', transform:'scale(1)' }));
+        btn.addEventListener('click', e=>{ e.preventDefault(); e.stopPropagation(); window.open(url, '_blank'); });
+
+        el.appendChild(btn); el.dataset.citationProcessed = 'true';
+      });
+    }
+  </script>
+
+  <!-- Progress Bar -->
+  <div class="fixed top-0 left-0 h-1 bg-primary-500 dark:bg-primary-400 z-[60] transition-all duration-300 ease-out" id="progressBar"></div>
+
+  <!-- Floating Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur bg-gray-50/90 dark:bg-gray-900/90 border-b border-primary-500/20 dark:border-primary-600/20">
+    <nav class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <h1 class="text-xl font-bold text-primary-700 dark:text-primary-300">CSRC Thailand Research</h1>
+        
+        <div class="hidden md:flex items-center space-x-6">
+          <a href="#home" class="text-sm text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Home</a>
+          <a href="#history" class="text-sm text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">History</a>
+          <a href="#functions" class="text-sm text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Functions</a>
+          <a href="#standards" class="text-sm text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Standards</a>
+          <a href="#research" class="text-sm text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Research</a>
+          <a href="#awareness" class="text-sm text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Awareness</a>
+          <a href="#conclusion" class="text-sm text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Conclusion</a>
+        </div>
+
+        <button onclick="toggleDarkMode()" class="btn-interactive p-2 rounded-lg bg-primary-100 dark:bg-primary-800 text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-all">
+          <i data-lucide="sun" id="sunIcon" class="w-5 h-5"></i>
+          <i data-lucide="moon" id="moonIcon" class="w-5 h-5" style="display:none;"></i>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="min-h-screen">
+    <!-- Hero Section -->
+    <section id="home" class="py-40 bg-primary-50/50 dark:bg-gray-900" data-aos="fade-up">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl md:text-5xl font-bold mb-6 text-primary-700 dark:text-primary-300">
+            Cyber Security Research Center Thailand
+          </h2>
+          <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+            A comprehensive research overview of Thailand's National Cyber Security Agency's Cyber Security Research Center, examining its historical evolution and current operational functions from 2024–2026
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 mt-12">
+          <div class="card-interactive p-6 bg-white/90 backdrop-blur-sm dark:bg-gray-800 rounded-xl shadow-md">
+            <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center mb-4">
+              <i data-lucide="shield-check" class="w-6 h-6 text-primary-600 dark:text-primary-400"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-primary-700 dark:text-primary-300 mb-2">National Security</h3>
+            <p class="text-sm text-gray-700 dark:text-gray-300">Established under Thailand's National Cyber Security Agency to strengthen national cybersecurity infrastructure</p>
+          </div>
+
+          <div class="card-interactive p-6 bg-white/90 backdrop-blur-sm dark:bg-gray-800 rounded-xl shadow-md">
+            <div class="w-12 h-12 bg-accent-100 dark:bg-accent-900/30 rounded-lg flex items-center justify-center mb-4">
+              <i data-lucide="search" class="w-6 h-6 text-accent-600 dark:text-accent-400"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-accent-700 dark:text-accent-300 mb-2">Research Excellence</h3>
+            <p class="text-sm text-gray-700 dark:text-gray-300">Leading-edge research in AI security, IoT frameworks, and emerging threat preparedness</p>
+          </div>
+
+          <div class="card-interactive p-6 bg-white/90 backdrop-blur-sm dark:bg-gray-800 rounded-xl shadow-md">
+            <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center mb-4">
+              <i data-lucide="users" class="w-6 h-6 text-primary-600 dark:text-primary-400"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-primary-700 dark:text-primary-300 mb-2">Public Engagement</h3>
+            <p class="text-sm text-gray-700 dark:text-gray-300">Comprehensive awareness programs and educational initiatives across Thailand</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Historical Evolution Section -->
+    <section id="history" class="py-20 bg-white/80 dark:bg-gray-900" data-aos="fade-up">
+      <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-3xl font-bold mb-8 text-primary-700 dark:text-primary-300" data-ref="https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/02/open-and-connected-government-review-of-thailand_6dbfbec4/e1593a0c-en.pdf|25">
+          Historical Evolution and Establishment
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-8 items-start mb-12">
+          <div class="space-y-6">
+            <p class="text-gray-700 dark:text-gray-300">
+              The Cyber Security Research Center (CSRC) operates under Thailand's National Cyber Security Agency, established through the Cyber Security Act B.E. 2562 (2019). This legislative foundation created a comprehensive framework for national cybersecurity governance and research initiatives.
+            </p>
+
+            <div class="pl-4 pr-3 py-3 border-l-4 border-primary-500 bg-primary-50/40 dark:bg-primary-900/30 rounded-r-lg">
+              <p class="text-sm font-medium text-primary-900 dark:text-primary-100 leading-relaxed">
+                <i data-lucide="info" class="inline-block w-4 h-4 mr-1.5 -mt-0.5"></i>
+                Key Milestone: The 2019 Cyber Security Act established Thailand's National Cyber Security Centre with responsibility for building cybersecurity capacity across the nation.
+              </p>
+            </div>
+
+            <p class="text-gray-700 dark:text-gray-300" data-ref="https://www.tilleke.com/insights/major-draft-amendments-to-thai-cybersecurity-act-released-for-public-hearing/9/|4">
+              In July 2025, Thailand's National Cyber Security Agency released a draft amendment to the Cybersecurity Act B.E. 2562 (2019), indicating ongoing evolution and adaptation of the legal framework governing the CSRC's operations.
+            </p>
+          </div>
+
+          <img
+            src="https://cdn.qwenlm.ai/99885889-08b4-460a-babe-1abb29b54c7b/50164dc5-cca4-490b-8ebe-ab23338662d5/144549ff-cdef-4fc6-bc6f-63e3f692e067.png?key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZV91c2VyX2lkIjoiOTk4ODU4ODktMDhiNC00NjBhLWJhYmUtMWFiYjI5YjU0YzdiIiwicmVzb3VyY2VfaWQiOiI1MDE2NGRjNS1jY2E0LTQ5MGItOGViZS1hYjIzMzM4NjYyZDUiLCJyZXNvdXJjZV9jaGF0X2lkIjpudWxsfQ.lSPHCocJB9SYBV51l1az9yLw3MTxyGu7l7MqMiNIps8"
+            alt="Historical timeline illustration showing the evolution of Thailand's cybersecurity infrastructure: a vertical timeline starting at year 2019 with a blue shield icon (color #1a73b3) representing the Cyber Security Act B.E. 2562 establishment, followed by a purple gear icon (color #6366f1) labeled 'NCSA Formation' in 2019, then a green research microscope icon (color #10b981) labeled 'CSRC Launch' in 2020, and finally a yellow star icon (color #fbbf24) labeled '2025 Amendment' at the top. Each milestone connected by thin lines with subtle gradient from blue to purple to green. Background is clean white with faint grid pattern in light gray (#e5e7eb). Timeline text uses sans-serif font in dark gray (#374151) for dates and bold headers for milestones."
+            class="w-full rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300"
+          />
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-primary-700 dark:text-primary-300 mb-4">Legislative Foundation</h3>
+          <p class="text-gray-700 dark:text-gray-300 mb-4" data-ref="https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/02/open-and-connected-government-review-of-thailand_6dbfbec4/e1593a0c-en.pdf|25">
+            The 2019 Cyber Security Act provided the statutory basis for establishing the National Cyber Security Centre, which serves as the central authority for cybersecurity matters in Thailand.
+          </p>
+          
+          <p class="text-gray-700 dark:text-gray-300" data-ref="https://www.tilleke.com/insights/major-draft-amendments-to-thai-cybersecurity-act-released-for-public-hearing/9/|4">
+            The draft amendment released in July 2025 demonstrates the agency's commitment to updating regulatory frameworks to address evolving cybersecurity challenges and technological advances.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="card-interactive p-6 bg-primary-50/50 dark:bg-primary-900/20 rounded-xl shadow-md">
+            <h4 class="text-lg font-semibold text-primary-700 dark:text-primary-300 mb-3">2019 Foundation</h4>
+            <p class="text-sm text-gray-700 dark:text-gray-300">Cyber Security Act B.E. 2562 establishes National Cyber Security Centre under NCSA</p>
+          </div>
+
+          <div class="card-interactive p-6 bg-accent-50/50 dark:bg-accent-900/20 rounded-xl shadow-md">
+            <h4 class="text-lg font-semibold text-accent-700 dark:text-accent-300 mb-3">2020-2023</h4>
+            <p class="text-sm text-gray-700 dark:text-gray-300">CSRC operational launch with initial research programs and staffing</p>
+          </div>
+
+          <div class="card-interactive p-6 bg-primary-50/50 dark:bg-primary-900/20 rounded-xl shadow-md">
+            <h4 class="text-lg font-semibold text-primary-700 dark:text-primary-300 mb-3">2024-2026</h4>
+            <p class="text-sm text-gray-700 dark:text-gray-300">Current operational phase with expanded functions and personnel growth</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Functions Section -->
+    <section id="functions" class="py-20 bg-primary-50/50 dark:bg-gray-800" data-aos="fade-up">
+      <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-3xl font-bold mb-8 text-primary-700 dark:text-primary-300">
+          Core Functions and Operational Scope
+        </h2>
+
+        <div class="hs-accordion-group space-y-4">
+          <!-- Function 1: Research Testing Analysis -->
+          <div class="hs-accordion card-interactive bg-white/80 backdrop-blur-sm dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+            <button class="hs-accordion-toggle w-full flex justify-between items-center p-4 text-left hover:bg-primary-50 dark:hover:bg-gray-700/50 transition-colors rounded-xl" id="hs-function-1">
+              <div class="flex items-center space-x-4">
+                <div class="flex-shrink-0 w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
+                  <i data-lucide="flask-conical" class="w-6 h-6 text-primary-600 dark:text-primary-400"></i>
+                </div>
+                <span class="font-semibold text-lg text-primary-700 dark:text-primary-300">Research, Testing, and Analysis</span>
+              </div>
+              <i data-lucide="chevron-down" class="hs-accordion-active:rotate-180 transition-transform duration-300 w-5 h-5 text-primary-600 dark:text-primary-400"></i>
+            </button>
+            <div id="hs-collapse-function-1" class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300" aria-labelledby="hs-function-1">
+              <div class="p-6 pt-0 space-y-4">
+                <p class="text-gray-700 dark:text-gray-300" data-ref="https://www.lexology.com/library/detail.aspx?g=502d2df4-d552-45ca-93fd-dbe42696a477|5">
+                  Thailand's National Cyber Security Agency has unveiled comprehensive guidelines for information system security assessment, demonstrating the CSRC's focus on systematic testing and evaluation methodologies.
+                </p>
+
+                <p class="text-gray-700 dark:text-gray-300">
+                  The research division conducts extensive vulnerability assessments, penetration testing, and security analysis across critical infrastructure sectors. This includes both government systems and private sector partnerships to ensure comprehensive national coverage.
+                </p>
+
+                <div class="pl-4 pr-3 py-3 border-l-4 border-primary-500 bg-primary-50/40 dark:bg-primary-900/30 rounded-r-lg">
+                  <p class="text-sm font-medium text-primary-900 dark:text-primary-100 leading-relaxed">
+                    <i data-lucide="circle-check" class="inline-block w-4 h-4 mr-1.5 -mt-0.5"></i>
+                    Comprehensive Approach: Security assessments cover hardware, software, network protocols, and human factors to provide holistic risk evaluation.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Function 2: Standards Development -->
+          <div class="hs-accordion card-interactive bg-white/80 backdrop-blur-sm dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+            <button class="hs-accordion-toggle w-full flex justify-between items-center p-4 text-left hover:bg-primary-50 dark:hover:bg-gray-700/50 transition-colors rounded-xl" id="hs-function-2">
+              <div class="flex items-center space-x-4">
+                <div class="flex-shrink-0 w-12 h-12 bg-accent-100 dark:bg-accent-900/30 rounded-lg flex items-center justify-center">
+                  <i data-lucide="file-text" class="w-6 h-6 text-accent-600 dark:text-accent-400"></i>
+                </div>
+                <span class="font-semibold text-lg text-accent-700 dark:text-accent-300">National Standards and Guidelines Development</span>
+              </div>
+              <i data-lucide="chevron-down" class="hs-accordion-active:rotate-180 transition-transform duration-300 w-5 h-5 text-accent-600 dark:text-accent-400"></i>
+            </button>
+            <div id="hs-collapse-function-2" class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300" aria-labelledby="hs-function-2">
+              <div class="p-6 pt-0 space-y-4">
+                <p class="text-gray-700 dark:text-gray-300">
+                  The CSRC develops and maintains national cybersecurity standards across multiple domains, including AI security guidelines and IoT security frameworks. These standards serve as authoritative references for both public and private sector organizations.
+                </p>
+
+                <p class="text-gray-700 dark:text-gray-300">
+                  Standards development involves collaboration with international bodies, adherence to ISO 27001 principles, and alignment with global best practices while addressing Thailand-specific requirements and threat landscapes.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Function 3: Ecosystem Building -->
+          <div class="hs-accordion card-interactive bg-white/80 backdrop-blur-sm dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+            <button class="hs-accordion-toggle w-full flex justify-between items-center p-4 text-left hover:bg-primary-50 dark:hover:bg-gray-700/50 transition-colors rounded-xl" id="hs-function-3">
+              <div class="flex items-center space-x-4">
+                <div class="flex-shrink-0 w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
+                  <i data-lucide="network" class="w-6 h-6 text-primary-600 dark:text-primary-400"></i>
+                </div>
+                <span class="font-semibold text-lg text-primary-700 dark:text-primary-300">Building National Cybersecurity Research Ecosystem</span>
+              </div>
+              <i data-lucide="chevron-down" class="hs-accordion-active:rotate-180 transition-transform duration-300 w-5 h-5 text-primary-600 dark:text-primary-400"></i>
+            </button>
+            <div id="hs-collapse-function-3" class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300" aria-labelledby="hs-function-3">
+              <div class="p-6 pt-0 space-y-4">
+                <p class="text-gray-700 dark:text-gray-300">
+                  The CSRC actively builds Thailand's national cybersecurity research ecosystem by fostering collaboration between universities, research institutions, government agencies, and private sector partners. This includes funding research projects, providing technical resources, and facilitating knowledge sharing.
+                </p>
+
+                <p class="text-gray-700 dark:text-gray-300">
+                  The ecosystem approach ensures sustainable development of cybersecurity expertise and innovation capacity across Thailand, creating a pipeline of skilled professionals and cutting-edge research outcomes.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Function 4: Emerging Threat Preparedness -->
+          <div class="hs-accordion card-interactive bg-white/80 backdrop-blur-sm dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+            <button class="hs-accordion-toggle w-full flex justify-between items-center p-4 text-left hover:bg-primary-50 dark:hover:bg-gray-700/50 transition-colors rounded-xl" id="hs-function-4">
+              <div class="flex items-center space-x-4">
+                <div class="flex-shrink-0 w-12 h-12 bg-accent-100 dark:bg-accent-900/30 rounded-lg flex items-center justify-center">
+                  <i data-lucide="zap" class="w-6 h-6 text-accent-600 dark:text-accent-400"></i>
+                </div>
+                <span class="font-semibold text-lg text-accent-700 dark:text-accent-300">Emerging Threat Preparedness</span>
+              </div>
+              <i data-lucide="chevron-down" class="hs-accordion-active:rotate-180 transition-transform duration-300 w-5 h-5 text-accent-600 dark:text-accent-400"></i>
+            </button>
+            <div id="hs-collapse-function-4" class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300" aria-labelledby="hs-function-4">
+              <div class="p-6 pt-0 space-y-4">
+                <p class="text-gray-700 dark:text-gray-300">
+                  The CSRC prepares Thailand for emerging cybersecurity threats including post-quantum computing vulnerabilities, Deepfake AI detection, and embedded systems security challenges. This forward-looking approach ensures the nation remains resilient against future technological risks.
+                </p>
+
+                <p class="text-gray-700 dark:text-gray-300">
+                  Preparedness activities include threat modeling, scenario planning, technology assessment, and development of countermeasures for advanced persistent threats targeting critical infrastructure.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Standards and Guidelines Section -->
+    <section id="standards" class="py-20 bg-white/80 dark:bg-gray-900" data-aos="fade-up">
+      <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-3xl font-bold mb-8 text-primary-700 dark:text-primary-300">
+          National Standards and Guidelines Development
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-12">
+          <div class="space-y-6">
+            <h3 class="text-xl font-semibold text-primary-700 dark:text-primary-300">AI Security Guidelines</h3>
+            
+            <p class="text-gray-700 dark:text-gray-300">
+              The CSRC has developed comprehensive AI security guidelines that address the unique challenges posed by artificial intelligence systems. These guidelines cover model integrity, data poisoning prevention, adversarial attack mitigation, and ethical AI deployment frameworks.
+            </p>
+
+            <p class="text-gray-700 dark:text-gray-300">
+              The guidelines emphasize secure machine learning algorithms, robust training data validation, and continuous monitoring of AI systems for anomalous behavior that could indicate compromise or bias.
+            </p>
+
+            <div class="pl-4 pr-3 py-3 border-l-4 border-primary-500 bg-primary-50/40 dark:bg-primary-900/30 rounded-r-lg">
+              <p class="text-sm font-medium text-primary-900 dark:text-primary-100 leading-relaxed">
+                <i data-lucide="info" class="inline-block w-4 h-4 mr-1.5 -mt-0.5"></i>
+                Critical Focus: AI security guidelines specifically address deep learning model vulnerabilities and provide frameworks for responsible AI development in government and commercial applications.
+              </p>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <h3 class="text-xl font-semibold text-accent-700 dark:text-accent-300">IoT Security Frameworks</h3>
+            
+            <p class="text-gray-700 dark:text-gray-300">
+              Comprehensive IoT security frameworks developed by the CSRC address the proliferation of connected devices across Thailand's smart city initiatives, industrial automation, and consumer markets. These frameworks provide device lifecycle management, secure communication protocols, and firmware update mechanisms.
+            </p>
+
+            <p class="text-gray-700 dark:text-gray-300">
+              The frameworks establish baseline security requirements for IoT manufacturers, service providers, and end-users, ensuring consistent security posture across the diverse IoT ecosystem.
+            </p>
+
+            <div class="pl-4 pr-3 py-3 border-l-4 border-accent-500 bg-accent-50/40 dark:bg-accent-900/30 rounded-r-lg">
+              <p class="text-sm font-medium text-accent-900 dark:text-accent-100 leading-relaxed">
+                <i data-lucide="shield-alert" class="inline-block w-4 h-4 mr-1.5 -mt-0.5"></i>
+                Security Gap: IoT frameworks specifically address the challenge of securing legacy devices and establishing secure-by-default configurations for new deployments.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-interactive p-8 bg-accent-50/50 dark:bg-accent-900/20 rounded-xl shadow-md">
+          <h3 class="text-2xl font-semibold text-accent-700 dark:text-accent-300 mb-6">Standards Compliance and International Alignment</h3>
+          
+          <div class="grid md:grid-cols-3 gap-6">
+            <div>
+              <h4 class="font-semibold text-accent-700 dark:text-accent-300 mb-3">ISO 27001 Integration</h4>
+              <p class="text-sm text-gray-700 dark:text-gray-300" data-ref="https://www.adb.org/sites/default/files/publication/1114321/digital-public-infrastructure-south-asia.pdf|12">CSRC standards align with international IT security requirements, including ISO 27001, the global standard for managing information security systems.</p>
+            </div>
+
+            <div>
+              <h4 class="font-semibold text-accent-700 dark:text-accent-300 mb-3">ASEAN Collaboration</h4>
+              <p class="text-sm text-gray-700 dark:text-gray-300" data-ref="https://en.vietnamplus.vn/asean-commits-to-strengthening-collective-cyber-security-post298410.vnp|38">Thailand's cybersecurity standards development occurs within the broader ASEAN framework, with commitments to strengthening collective cybersecurity across the region.</p>
+            </div>
+
+            <div>
+              <h4 class="font-semibold text-accent-700 dark:text-accent-300 mb-3">Digital Economy Framework</h4>
+              <p class="text-sm text-gray-700 dark:text-gray-300" data-ref="https://s3-csis-web.s3.ap-southeast-1.amazonaws.com/doc/CSIS_ASEANCOM_OUTLOOK_FOR_2025.pdf?download=1|18">Standards support the ASEAN Digital Economy Framework Agreement and related cybersecurity initiatives across Southeast Asia.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Research Personnel and Expertise Section -->
+    <section id="research" class="py-20 bg-primary-50/50 dark:bg-gray-800" data-aos="fade-up">
+      <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-3xl font-bold mb-8 text-primary-700 dark:text-primary-300">
+          Research Personnel and Expertise Areas
+        </h2>
+
+        <div class="mb-12">
+          <p class="text-lg text-gray-700 dark:text-gray-300 mb-6">
+            The CSRC employs a diverse team of cybersecurity professionals, researchers, and technical specialists organized across specialized functional areas. While specific personnel names are limited due to privacy considerations, the center maintains expertise across multiple critical domains.
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="card-interactive p-6 bg-white/90 backdrop-blur-sm dark:bg-gray-800 rounded-xl shadow-md">
+              <div class="flex items-center space-x-4 mb-4">
+                <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
+                  <i data-lucide="cpu" class="w-6 h-6 text-primary-600 dark:text-primary-400"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-primary-700 dark:text-primary-300">Technical Research Division</h3>
+              </div>
+              <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                <li class="flex items-start">
+                  <i data-lucide="dot" class="w-4 h-4 mr-2 mt-1 text-primary-600 dark:text-primary-400 flex-shrink-0"></i>
+                  <span>Vulnerability research and exploit development</span>
+                </li>
+                <li class="flex items-start">
+                  <i data-lucide="dot" class="w-4 h-4 mr-2 mt-1 text-primary-600 dark:text-primary-400 flex-shrink-0"></i>
+                  <span>Malware analysis and reverse engineering</span>
+                </li>
+                <li class="flex items-start">
+                  <i data-lucide="dot" class="w-4 h-4 mr-2 mt-1 text-primary-600 dark:text-primary-400 flex-shrink-0"></i>
+                  <span>Network security protocol analysis</span>
+                </li>
+                <li class="flex items-start">
+                  <i data-lucide="dot" class="w-4 h-4 mr-2 mt-1 text-primary-600 dark:text-primary-400 flex-shrink-0"></i>
+                  <span>Cryptography and encryption research</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="card-interactive p-6 bg-white/90 backdrop-blur-sm dark:bg-gray-800 rounded-xl shadow-md">
+              <div class="flex items-center space-x-4 mb-4">
+                <div class="w-12 h-12 bg-accent-100 dark:bg-accent-900/30 rounded-lg flex items-center justify-center">
+                  <i data-lucide="brain" class="w-6 h-6 text-accent-600 dark:text-accent-400"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-accent-700 dark:text-accent-300">Strategic Research Division</h3>
+              </div>
+              <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                <li class="flex items-start">
+                  <i data-lucide="dot" class="w-4 h-4 mr-2 mt-1 text-accent-600 dark:text-accent-400 flex-shrink-0"></i>
+                  <span>Threat intelligence and trend analysis</span>
+                </li>
+                <li class="flex items-start">
+                  <i data-lucide="dot" class="w-4 h-4 mr-2 mt-1 text-accent-600 dark:text-accent-400 flex-shrink-0"></i>
+                  <span>Policy development and regulatory compliance</span>
+                </li>
+                <li class="flex items-start">
+                  <i data-lucide="dot" class="w-4 h-4 mr-2 mt-1 text-accent-600 dark:text-accent-400 flex-shrink-0"></i>
+                  <span>International cybersecurity cooperation</span>
+                </li>
+                <li class="flex items-start">
+                  <i data-lucide="dot" class="w-4 h-4 mr-2 mt-1 text-accent-600 dark:text-accent-400 flex-shrink-0"></i>
+                  <span>Emerging technology risk assessment</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-interactive p-8 bg-white/90 backdrop-blur-sm dark:bg-gray-800 rounded-xl shadow-md">
+          <h3 class="text-2xl font-semibold text-primary-700 dark:text-primary-300 mb-6">Personnel Development and Training</h3>
+          
+          <div class="grid md:grid-cols-3 gap-6">
+            <div>
+              <h4 class="font-semibold text-primary-700 dark:text-primary-300 mb-3">Continuous Learning</h4>
+              <p class="text-sm text-gray-700 dark:text-gray-300">CSRC personnel participate in regular training programs, certification courses, and international conferences to maintain cutting-edge expertise.</p>
+            </div>
+
+            <div>
+              <h4 class="font-semibold text-primary-700 dark:text-primary-300 mb-3">Academic Partnerships</h4>
+              <p class="text-sm text-gray-700 dark:text-gray-300">Collaboration with universities enables knowledge transfer, joint research projects, and recruitment of emerging talent into the cybersecurity workforce.</p>
+            </div>
+
+            <div>
+              <h4 class="font-semibold text-primary-700 dark:text-primary-300 mb-3">Professional Development</h4>
+              <p class="text-sm text-gray-700 dark:text-gray-300">Career advancement pathways include specialized tracks in research, operations, policy, and international relations within cybersecurity.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Public Awareness and Education Section -->
+    <section id="awareness" class="py-20 bg-white/80 dark:bg-gray-900" data-aos="fade-up">
+      <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-3xl font-bold mb-8 text-primary-700 dark:text-primary-300">
+          Public Awareness and Educational Initiatives
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-8 items-start mb-12">
+          <img
+            src="https://cdn.qwenlm.ai/99885889-08b4-460a-babe-1abb29b54c7b/50164dc5-cca4-490b-8ebe-ab23338662d5/78e11f5b-d8a9-48f9-a6a7-cf95b8fd0b5d.png?key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZV91c2VyX2lkIjoiOTk4ODU4ODktMDhiNC00NjBhLWJhYmUtMWFiYjI5YjU0YzdiIiwicmVzb3VyY2VfaWQiOiI1MDE2NGRjNS1jY2E0LTQ5MGItOGViZS1hYjIzMzM4NjYyZDUiLCJyZXNvdXJjZV9jaGF0X2lkIjpudWxsfQ.lSPHCocJB9SYBV51l1az9yLw3MTxyGu7l7MqMiNIps8"
+            alt="Public awareness campaign scene in Thailand featuring a large outdoor banner with Thai text reading 'Cybersecurity Awareness Month' displayed prominently in the foreground. In the middle ground, a diverse group of approximately 8 people of different ages including two teenagers, three adults, and three seniors gathered around a circular table with laptops and tablets visible. Behind them, a large digital screen displays cybersecurity infographics showing shield icons and lock symbols in blue (#1a73b3) and purple (#6366f1) colors. The background shows a modern Thai building facade with traditional architectural elements in warm beige (#f5f5dc) and green (#10b981) accents. Lighting is natural daylight with soft shadows. Overall composition uses clean lines and professional presentation style with emphasis on education and community engagement. No charts or complex data visualizations present."
+            class="w-full rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300"
+          />
+
+          <div class="space-y-6">
+            <h3 class="text-xl font-semibold text-primary-700 dark:text-primary-300">Cybersecurity Awareness Campaigns</h3>
+            
+            <p class="text-gray-700 dark:text-gray-300" data-ref="https://www.linkedin.com/posts/ispycyber_cybersecurityawareness-informationsecurity-activity-7379129214463049729-44Mk|14">
+              As part of Cybersecurity Awareness Month, the CSRC joins global initiatives to promote online safety and empower organizations to protect their data, demonstrating commitment to public education and awareness.
+            </p>
+
+            <p class="text-gray-700 dark:text-gray-300" data-ref="https://www.enisa.europa.eu/sites/default/files/publications/ENISA%20Report%20-%20Raising%20awareness%20of%20cybersecurity%20as%20a%20key%20element%20of%20NCSS.pdf|42">
+              Cybersecurity education and vocational training focuses on awareness raising, with action plans defining specific objectives for reaching diverse population segments across Thailand.
+            </p>
+
+            <div class="pl-4 pr-3 py-3 border-l-4 border-primary-500 bg-primary-50/40 dark:bg-primary-900/30 rounded-r-lg">
+              <p class="text-sm font-medium text-primary-900 dark:text-primary-100 leading-relaxed">
+                <i data-lucide="trending-up" class="inline-block w-4 h-4 mr-1.5 -mt-0.5"></i>
+                Strategic Impact: Awareness campaigns target both urban and rural populations, ensuring comprehensive national reach and digital inclusion.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-accent-700 dark:text-accent-300 mb-6">Educational Programs and Curriculum Integration</h3>
+          
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="card-interactive p-6 bg-accent-50/50 dark:bg-accent-900/20 rounded-xl shadow-md">
+              <h4 class="font-semibold text-accent-700 dark:text-accent-300 mb-3">University Partnerships</h4>
+              <p class="text-sm text-gray-700 dark:text-gray-300" data-ref="https://www.researchgate.net/publication/383846506_Integrating_Cybersecurity_Education_into_the_Curriculum_Best_Practices_and_Implementation_Challenges|43">The CSRC collaborates with higher education institutions to integrate cybersecurity education across various educational levels, focusing on best practices and addressing multifaceted challenges in curriculum development.</p>
+            </div>
+
+            <div class="card-interactive p-6 bg-primary-50/50 dark:bg-primary-900/20 rounded-xl shadow-md">
+              <h4 class="font-semibold text-primary-700 dark:text-primary-300 mb-3">Vocational Training</h4>
+              <p class="text-sm text-gray-700 dark:text-gray-300" data-ref="https://www.enisa.europa.eu/sites/default/files/publications/ENISA%20Report%20-%20Raising%20awareness%20of%20cybersecurity%20as%20a%20key%20element%20of%20NCSS.pdf|42">Vocational training programs focus on practical skills development, preparing students and working professionals for careers in cybersecurity operations and research.</p>
+            </div>
+
+            <div class="card-interactive p-6 bg-accent-50/50 dark:bg-accent-900/20 rounded-xl shadow-md">
+              <h4 class="font-semibold text-accent-700 dark:text-accent-300 mb-3">Youth Engagement</h4>
+              <p class="text-sm text-gray-700 dark:text-gray-300" data-ref="https://kiripost.com/stories/raising-cybersecurity-awareness-for-a-digital-cambodia|15">Youth-focused initiatives like the Cybersecurity Youth Forum educate young people on data privacy and digital hygiene for secure digital citizenship.</p>
+            </div>
+
+            <div class="card-interactive p-6 bg-primary-50/50 dark:bg-primary-900/20 rounded-xl shadow-md">
+              <h4 class="font-semibold text-primary-700 dark:text-primary-300 mb-3">Corporate Training</h4>
+              <p class="text-sm text-gray-700 dark:text-gray-300">Executive and employee training programs help organizations build internal cybersecurity capabilities and compliance frameworks.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-interactive p-8 bg-primary-50/50 dark:bg-primary-900/20 rounded-xl shadow-md">
+          <h3 class="text-2xl font-semibold text-primary-700 dark:text-primary-300 mb-6">Human Factors and Behavioral Research</h3>
+          
+          <div class="space-y-4">
+            <p class="text-gray-700 dark:text-gray-300" data-ref="https://www.researchgate.net/publication/381031622_Evaluating_Online_Security_Behavior_Development_and_Validation_of_a_Personal_Cybersecurity_Awareness_Scale_for_University_Students|21">
+              Research examines behavioral factors influencing cybersecurity practices, developing robust, empirically validated surveys to understand how individuals interact with security controls and policies.
+            </p>
+
+            <p class="text-gray-700 dark:text-gray-300" data-ref="https://pmc.ncbi.nlm.nih.gov/articles/PMC8591595/|35">
+              Studies investigate the effects of age and gender on cybersecurity awareness among Thai employees, particularly regarding phishing attacks and social engineering vulnerabilities.
+            </p>
+
+            <div class="pl-4 pr-3 py-3 border-l-4 border-amber-500 bg-amber-50/40 dark:bg-amber-900/30 rounded-r-lg">
+              <p class="text-sm font-medium text-amber-900 dark:text-amber-100 leading-relaxed">
+                <i data-lucide="alert-triangle" class="inline-block w-4 h-4 mr-1.5 -mt-0.5"></i>
+                Critical Challenge: Behavioral research reveals that human factors remain the most significant vulnerability in cybersecurity, requiring targeted awareness interventions and cultural change initiatives.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conclusion Section -->
+    <section id="conclusion" class="py-20 bg-primary-50/50 dark:bg-gray-800" data-aos="fade-up">
+      <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-3xl font-bold mb-8 text-primary-700 dark:text-primary-300">
+          Conclusion and Future Outlook
+        </h2>
+
+        <div class="space-y-6 mb-12">
+          <p class="text-lg text-gray-700 dark:text-gray-300">
+            The Cyber Security Research Center under Thailand's National Cyber Security Agency represents a comprehensive and evolving institution dedicated to strengthening national cybersecurity resilience. From its foundation in 2019 through its current operations in 2024-2026, the CSRC has established itself as a critical component of Thailand's digital defense strategy.
+          </p>
+
+          <p class="text-lg text-gray-700 dark:text-gray-300">
+            The center's multifaceted approach encompasses research excellence, standards development, ecosystem building, and public awareness, supported by a diverse team of cybersecurity professionals across specialized divisions. Its commitment to international collaboration, particularly within ASEAN, positions Thailand as a regional leader in cybersecurity governance and research.
+          </p>
+
+          <div class="pl-4 pr-3 py-3 border-l-4 border-primary-500 bg-primary-50/40 dark:bg-primary-900/30 rounded-r-lg">
+            <p class="text-sm font-medium text-primary-900 dark:text-primary-100 leading-relaxed">
+              <i data-lucide="trending-up" class="inline-block w-4 h-4 mr-1.5 -mt-0.5"></i>
+              Strategic Vision: The CSRC's focus on emerging threats like AI security and post-quantum cryptography demonstrates forward-thinking preparation for future cybersecurity challenges.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 mb-12">
+          <div class="card-interactive p-6 bg-white/90 backdrop-blur-sm dark:bg-gray-800 rounded-xl shadow-md">
+            <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center mb-4">
+              <i data-lucide="rocket" class="w-6 h-6 text-primary-600 dark:text-primary-400"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-primary-700 dark:text-primary-300 mb-2">Continued Growth</h3>
+            <p class="text-sm text-gray-700 dark:text-gray-300">Expansion of research capabilities and personnel to meet growing cybersecurity demands</p>
+          </div>
+
+          <div class="card-interactive p-6 bg-white/90 backdrop-blur-sm dark:bg-gray-800 rounded-xl shadow-md">
+            <div class="w-12 h-12 bg-accent-100 dark:bg-accent-900/30 rounded-lg flex items-center justify-center mb-4">
+              <i data-lucide="globe" class="w-6 h-6 text-accent-600 dark:text-accent-400"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-accent-700 dark:text-accent-300 mb-2">Regional Leadership</h3>
+            <p class="text-sm text-gray-700 dark:text-gray-300">Enhanced role in ASEAN cybersecurity cooperation and knowledge sharing</p>
+          </div>
+
+          <div class="card-interactive p-6 bg-white/90 backdrop-blur-sm dark:bg-gray-800 rounded-xl shadow-md">
+            <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center mb-4">
+              <i data-lucide="target" class="w-6 h-6 text-primary-600 dark:text-primary-400"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-primary-700 dark:text-primary-300 mb-2">Innovation Focus</h3>
+            <p class="text-sm text-gray-700 dark:text-gray-300">Investment in cutting-edge research areas including quantum-resistant cryptography</p>
+          </div>
+        </div>
+
+        <div class="card-interactive p-8 bg-white/90 backdrop-blur-sm dark:bg-gray-800 rounded-xl shadow-md">
+          <h3 class="text-2xl font-semibold text-primary-700 dark:text-primary-300 mb-4">Final Assessment</h3>
+          <p class="text-gray-700 dark:text-gray-300">
+            The Cyber Security Research Center Thailand stands as a testament to the nation's commitment to cybersecurity excellence. Through its comprehensive approach combining rigorous research, robust standards development, ecosystem building, and public awareness initiatives, the CSRC continues to evolve and adapt to meet the dynamic challenges of the digital age. As Thailand positions itself as a regional technology hub, the CSRC's role becomes increasingly vital in ensuring the nation's digital infrastructure remains secure, resilient, and capable of supporting continued economic growth and innovation.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-primary-900 dark:bg-gray-950 text-primary-100 dark:text-gray-300 py-12">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-primary-50 dark:text-primary-300">About This Research</h3>
+          <p class="text-sm text-primary-200 dark:text-gray-400">
+            Comprehensive analysis of Thailand's Cyber Security Research Center, examining historical evolution and current operational functions from 2024–2026.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-primary-50 dark:text-primary-300">Research Focus</h3>
+          <ul class="space-y-2 text-sm text-primary-200 dark:text-gray-400">
+            <li>• National Cybersecurity Infrastructure</li>
+            <li>• Standards Development and Compliance</li>
+            <li>• Research and Innovation</li>
+            <li>• Public Awareness and Education</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-primary-50 dark:text-primary-300">Disclaimer</h3>
+          <p class="text-sm text-primary-200 dark:text-gray-400">
+            This research is based on publicly available information and official sources. All data reflects information available as of the publication date.
+          </p>
+        </div>
+      </div>
+      <div class="border-t border-primary-800 dark:border-gray-800 pt-8 text-center">
+        <p class="text-sm text-primary-300 dark:text-gray-500">
+          © 2024 Cyber Security Research Center Thailand Research. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Initialize Libraries -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        once: true,
+        offset: 100
+      });
+
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // Initialize Preline components
+      setTimeout(() => {
+        HSStaticMethods.autoInit();
+      }, 100);
+
+      // Initialize citation system
+      setTimeout(() => {
+        initCitationSystem();
+      }, 200);
+
+      // Progress bar functionality
+      const progressBar = document.getElementById('progressBar');
+      
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+        
+        progressBar.style.width = scrollPercent + '%';
+      });
+
+      // Update progress bar on page load
+      window.dispatchEvent(new Event('scroll'));
+    });
+  </script>
+</body>
+</html>
+
