@@ -1,0 +1,1785 @@
+<!DOCTYPE html><html lang="th"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>สรุปผลงานวิศวกรรมสำหรับการประเมินวิศวกรมืออาชีพ | Tanat Tonguthaisri</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --emerald: #065f46;
+            --emerald-light: #10b981;
+            --gold: #d97706;
+            --cream: #fef7ed;
+            --charcoal: #1f2937;
+            --stone: #78716c;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--cream) 0%, #ffffff 100%);
+            color: var(--charcoal);
+            line-height: 1.7;
+        }
+        
+        .serif {
+            font-family: 'Crimson Text', serif;
+        }
+        
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid #e5e7eb;
+            z-index: 50;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-light) 50%, var(--gold) 100%);
+        }
+        
+        .accent-emerald { color: var(--emerald); }
+        .accent-gold { color: var(--gold); }
+        .bg-emerald { background-color: var(--emerald); }
+        .bg-gold { background-color: var(--gold); }
+        
+        .citation {
+            position: relative;
+            cursor: pointer;
+            color: var(--emerald);
+            font-weight: 500;
+            border-bottom: 1px dotted var(--emerald);
+        }
+        
+        .citation:hover::after {
+            content: attr(data-citation);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--charcoal);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            z-index: 10;
+        }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 1.5rem;
+            height: 60vh;
+        }
+        
+        .bento-main {
+            grid-row: 1 / -1;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+        }
+        
+        .bento-side-top {
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .bento-side-bottom {
+            background: rgba(217, 119, 6, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+        
+        .project-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-left: 4px solid var(--emerald);
+        }
+        
+        .metric-highlight {
+            background: linear-gradient(135deg, var(--gold), #f59e0b);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0.25rem;
+        }
+        
+        .toc-link {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--stone);
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 1rem;
+            margin-left: -1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .toc-link:hover, .toc-link.active {
+            color: var(--emerald);
+            border-left-color: var(--emerald);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .toc-link.sub {
+            font-size: 0.875rem;
+            margin-left: 1rem;
+        }
+        
+        /* Mermaid Chart Styles */
+        .mermaid-container {
+            display: flex;
+            justify-content: center;
+            min-height: 300px;
+            max-height: 800px;
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mermaid-container .mermaid {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            cursor: grab;
+            transition: transform 0.3s ease;
+            transform-origin: center center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none; /* ป้องกันการ touch behavior บนมือถือ */
+            -webkit-user-select: none; /* ป้องกันการเลือกข้อความ */
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .mermaid-container .mermaid svg {
+            max-width: 100%;
+            height: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .mermaid-container .mermaid:active {
+            cursor: grabbing;
+        }
+
+        .mermaid-container.zoomed .mermaid {
+            height: 100%;
+            width: 100%;
+            cursor: grab;
+        }
+
+        .mermaid-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mermaid-control-btn {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #374151;
+            font-size: 14px;
+            min-width: 36px;
+            height: 36px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mermaid-control-btn:hover {
+            background: #f8fafc;
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        .mermaid-control-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Mermaid theme customization for better contrast */
+        .mermaid .node rect,
+        .mermaid .node circle,
+        .mermaid .node ellipse,
+        .mermaid .node polygon {
+            fill: #ffffff !important;
+            stroke: var(--emerald) !important;
+            stroke-width: 2px !important;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+        }
+        
+        .mermaid .node .label {
+            color: var(--charcoal) !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            fill: var(--charcoal) !important;
+        }
+        
+        .mermaid .edgePath .path {
+            stroke: var(--stone) !important;
+            stroke-width: 2px !important;
+        }
+        
+        .mermaid .edgeLabel {
+            background-color: white !important;
+            color: var(--charcoal) !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 11px !important;
+            font-weight: 500 !important;
+            padding: 2px 6px !important;
+            border-radius: 4px !important;
+            border: 1px solid #e5e7eb !important;
+        }
+        
+        /* Different node colors for better visual hierarchy */
+        .mermaid .node:nth-child(4n+1) rect,
+        .mermaid .node:nth-child(4n+1) circle,
+        .mermaid .node:nth-child(4n+1) ellipse,
+        .mermaid .node:nth-child(4n+1) polygon {
+            fill: #f0fdf4 !important;
+            stroke: #16a34a !important;
+        }
+        
+        .mermaid .node:nth-child(4n+2) rect,
+        .mermaid .node:nth-child(4n+2) circle,
+        .mermaid .node:nth-child(4n+2) ellipse,
+        .mermaid .node:nth-child(4n+2) polygon {
+            fill: #fef3c7 !important;
+            stroke: #d97706 !important;
+        }
+        
+        .mermaid .node:nth-child(4n+3) rect,
+        .mermaid .node:nth-child(4n+3) circle,
+        .mermaid .node:nth-child(4n+3) ellipse,
+        .mermaid .node:nth-child(4n+3) polygon {
+            fill: #dbeafe !important;
+            stroke: #2563eb !important;
+        }
+        
+        .mermaid .node:nth-child(4n+4) rect,
+        .mermaid .node:nth-child(4n+4) circle,
+        .mermaid .node:nth-child(4n+4) ellipse,
+        .mermaid .node:nth-child(4n+4) polygon {
+            fill: #f3e8ff !important;
+            stroke: #9333ea !important;
+        }
+        
+        /* Table of Contents styling */
+        .toc-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 40;
+            display: none;
+        }
+        
+        .toc-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 50;
+            background: var(--emerald);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 1024px) {
+            .toc-fixed {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .toc-fixed.open {
+                transform: translateX(0);
+            }
+            
+            .toc-toggle {
+                display: block;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .bento-grid {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .mermaid-control-btn:not(.reset-zoom) {
+                display: none;
+            }
+            .mermaid-controls {
+                top: auto;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body>
+    <!-- Table of Contents -->
+    <nav class="toc-fixed">
+      <button class="toc-close lg:hidden absolute top-4 right-4 p-2 text-gray-500 hover:text-emerald-600">
+        <i class="fas fa-times"></i>
+      </button>
+      <h3 class="serif text-xl font-semibold accent-emerald mb-6">สารบัญ</h3>
+      <a href="#hero" class="toc-link">บทนำ</a>
+      <a href="#criteria" class="toc-link">เกณฑ์การประเมิน</a>
+      <a href="#project-1" class="toc-link">ผลงานที่ 1: Vectorized CBR</a>
+      <a href="#project-1-role" class="toc-link sub">บทบาทและความรับผิดชอบ</a>
+      <a href="#project-1-scope" class="toc-link sub">ขอบเขตและความสำคัญ</a>
+      <a href="#project-1-complexity" class="toc-link sub">ความซับซ้อนทางวิศวกรรม</a>
+      <a href="#project-2" class="toc-link">ผลงานที่ 2: RoBERTa Fine-tuning</a>
+      <a href="#project-2-role" class="toc-link sub">บทบาทและความรับผิดชอบ</a>
+      <a href="#project-2-scope" class="toc-link sub">ขอบเขตและความสำคัญ</a>
+      <a href="#project-2-complexity" class="toc-link sub">ความซับซ้อนทางวิศวกรรม</a>
+      <a href="#comparison" class="toc-link">การเปรียบเทียบผลงาน</a>
+      <a href="#recommendation" class="toc-link">คำแนะนำ</a>
+    </nav>
+
+    <!-- Toggle button for mobile -->
+    <button class="toc-toggle">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Overlay for mobile menu -->
+    <div class="toc-overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section id="hero" class="relative min-h-screen flex items-center">
+        <div class="container mx-auto px-4 sm:px-8 py-8 sm:py-16">
+          <div class="bento-grid">
+            <!-- Main Hero -->
+            <div class="bento-main hero-gradient flex items-center justify-center relative">
+              <img src="https://kimi-web-img.moonshot.cn/img/www.nokia.com/a2fae3f0a04ae720c086bf8c4b9fbd99bf548c63.jpg" alt="Modern data center infrastructure with network connections" class="absolute inset-0 w-full h-full object-cover opacity-30" size="wallpaper" aspect="wide" color="blue" style="photo" query="modern data center network" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+              <div class="relative z-10 text-center text-white p-8">
+                <h1 class="serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+                  <em class="block text-2xl sm:text-3xl md:text-4xl opacity-90 mb-2">สรุปผลงานวิศวกรรม</em>
+                  สำหรับการประเมิน
+                  <br/>
+                  <span class="text-yellow-300">วิศวกรมืออาชีพ</span>
+                </h1>
+                <p class="text-xl md:text-2xl opacity-90 max-w-2xl mx-auto">
+                  การวิเคราะห์ผลงานของ Tanat Tonguthaisri
+                  ตามเกณฑ์สภาวิศวกรไทยและ ASEAN Chartered Professional Engineer
+                </p>
+              </div>
+            </div>
+
+            <!-- Side Cards -->
+            <div class="bento-side-top">
+              <h3 class="serif text-lg font-semibold accent-emerald mb-3">
+                <i class="fas fa-shield-alt mr-2"></i>
+                โครงสร้างพื้นฐานวิกฤต
+              </h3>
+              <p class="text-sm text-gray-600">
+                ป้องกันภัยคุกคามระบบการเงินระดับชาติ
+                มูลค่ากว่า 200,000 ล้านบาท
+              </p>
+              <div class="metric-highlight mt-3 text-sm">
+                7 ล้านบัญชี
+              </div>
+            </div>
+
+            <div class="bento-side-bottom">
+              <h3 class="serif text-lg font-semibold accent-gold mb-3">
+                <i class="fas fa-brain mr-2"></i>
+                AI/ML Innovation
+              </h3>
+              <p class="text-sm text-gray-600">
+                นวัตกรรม Vectorized Case-Based Reasoning
+                และ Fine-tuned Language Models
+              </p>
+              <div class="metric-highlight mt-3 text-sm bg-gradient-to-r from-red-500 to-orange-500">
+                ลด MTTR 90x
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Criteria Section -->
+      <section id="criteria" class="py-20 bg-white">
+        <div class="container mx-auto px-8">
+          <h2 class="serif text-4xl font-bold accent-emerald mb-12 text-center">
+            เกณฑ์การประเมินวิศวกรมืออาชีพ
+          </h2>
+
+          <div class="grid md:grid-cols-2 gap-12 mb-16">
+            <div class="project-card">
+              <h3 class="serif text-2xl font-semibold mb-6 accent-emerald">
+                <i class="fas fa-graduation-cap mr-3"></i>
+                ประสบการณ์การปฏิบัติงาน
+              </h3>
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <div class="bg-emerald text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1">
+                    <i class="fas fa-check text-sm"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold mb-2">ประสบการณ์ขั้นต่ำ 7 ปี</h4>
+                    <p class="text-gray-600 text-sm">
+                      ต้องมีประสบการณ์การปฏิบัติงานวิศวกรรมที่เรียกใช้
+                      ความรู้ ทักษะ ประสบการณ์ และการตัดสินใจทางวิศวกรรม
+                      <a href="https://acpecc.org/dl/acpecc44-026-th-revised-assessment-statement-2021-bKZSFp7-.pdf" class="citation" data-citation="ACPE Assessment Statement 2021">[23]</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <h3 class="serif text-2xl font-semibold mb-6 accent-gold">
+                <i class="fas fa-user-tie mr-3"></i>
+                การรับผิดชอบหลัก (Responsible Charge)
+              </h3>
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <div class="bg-gold text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1">
+                    <i class="fas fa-star text-sm"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold mb-2">อย่างน้อย 2 ปี</h4>
+                    <p class="text-gray-600 text-sm">
+                      ในตำแหน่งผู้รับผิดชอบหลักของงานวิศวกรรมที่มีความสำคัญ
+                      โดยมีอำนาจและความรับผิดชอบในการตัดสินใจทางวิศวกรรมหลัก
+                      <a href="https://acpecc.org/dl/acpecc48-02-revised-assessment-statement--la-vUvsJwV-.pdf" class="citation" data-citation="ACPE Revised Assessment Statement">[686]</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Responsible Charge Cases -->
+          <div class="bg-gray-50 rounded-2xl p-8 mb-12">
+            <h3 class="serif text-2xl font-semibold mb-8 text-center">สถานการณ์การรับผิดชอบหลักตาม ACPE</h3>
+            <div class="grid md:grid-cols-3 gap-6">
+              <div class="bg-white p-6 rounded-xl border-l-4 border-emerald">
+                <h4 class="font-semibold accent-emerald mb-3">กรณี (a)</h4>
+                <p class="text-sm text-gray-600 mb-3">การวางแผน ออกแบบ และดำเนินการโครงการวิศวกรรมที่สมบูรณ์</p>
+                <div class="text-xs text-emerald font-medium">ผู้รับผิดชอบหลักตั้งแต่ต้นจนจบ</div>
+              </div>
+              <div class="bg-white p-6 rounded-xl border-l-4 border-gold">
+                <h4 class="font-semibold accent-gold mb-3">กรณี (b)</h4>
+                <p class="text-sm text-gray-600 mb-3">การรับผิดชอบส่วนสำคัญของโครงการ พร้อมความเข้าใจแนวคิดรวม</p>
+                <div class="text-xs text-gold font-medium">รับผิดชอบส่วนสำคัญแต่เข้าใจทั้งโครงการ</div>
+              </div>
+              <div class="bg-white p-6 rounded-xl border-l-4 border-purple-600">
+                <h4 class="font-semibold text-purple-600 mb-3">กรณี (c)</h4>
+                <p class="text-sm text-gray-600 mb-3">โครงการที่ต้องใช้ความรับผิดชอบงานที่หลากหลายสาขา มีความซับซ้อน หรือมีลักษณะใหม่</p>
+                <div class="text-xs text-purple-600 font-medium"> multidisciplinary, complex, or novel work</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Project 1 - Vectorized CBR -->
+      <section id="project-1" class="py-20 bg-gradient-to-br from-emerald-50 to-green-50">
+        <div class="container mx-auto px-8">
+          <div class="text-center mb-16">
+            <h2 class="serif text-4xl font-bold accent-emerald mb-6">
+              ผลงานที่ 1: Vectorized Case-Based Reasoning
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+              ระบบป้องกันภัยคุกคามโครงสร้างพื้นฐานทางการเงินวิกฤต
+              ด้วยเทคโนโลยี AI/ML ขั้นสูง
+            </p>
+          </div>
+
+          <!-- Role &amp; Responsibilities -->
+          <div id="project-1-role" class="mb-16">
+            <div class="project-card bg-white/80 backdrop-blur">
+              <h3 class="serif text-2xl font-semibold mb-8 accent-emerald">
+                <i class="fas fa-user-cog mr-3"></i>
+                บทบาทและความรับผิดชอบหลัก
+              </h3>
+
+              <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h4 class="font-semibold text-lg mb-4">Cognitive SOAR Architect</h4>
+                  <p class="text-gray-600 mb-4">
+                    ในฐานะ <strong>ผู้นำทางเทคนิค (Technical Lead)</strong>
+                    ที่รับผิดชอบการออกแบบสถาปัตยกรรมระบบป้องกันภัยคุกคามอัตโนมัติ
+                    ที่ใช้ปัญญาประดิษฐ์ในการวิเคราะห์และตอบสนองภัยคุกคามแบบ real-time
+                    <a href="https://defense.engineer/" class="citation" data-citation="Project Documentation">[482]</a>
+                  </p>
+
+                  <div class="space-y-3">
+                    <div class="flex items-center">
+                      <i class="fas fa-check-circle text-emerald mr-2"></i>
+                      <span class="text-sm">กำหนดวิสัยทัศน์เทคโนโลยีและสถาปัตยกรรมระบบ</span>
+                    </div>
+                    <div class="flex items-center">
+                      <i class="fas fa-check-circle text-emerald mr-2"></i>
+                      <span class="text-sm">นำทีมวิศวกรรมในการพัฒนาและปรับใช้ระบบ</span>
+                    </div>
+                    <div class="flex items-center">
+                      <i class="fas fa-check-circle text-emerald mr-2"></i>
+                      <span class="text-sm">ประสานงานกับหน่วยงานกำกับดูแลและผู้มีส่วนได้ส่วนเสีย</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-lg mb-4">Responsible Charge Type</h4>
+                  <div class="bg-emerald/10 p-4 rounded-lg mb-4">
+                    <span class="bg-emerald text-white px-3 py-1 rounded-full text-sm font-medium">
+                      กรณี (a) - ผู้รับผิดชอบหลักเต็มรูปแบบ
+                    </span>
+                    <p class="text-sm text-gray-600 mt-2">
+                      การวางแผน ออกแบบ และดำเนินการโครงการวิศวกรรมที่สมบูรณ์
+                      ตั้งแต่ต้นจนจบ
+                    </p>
+                  </div>
+
+                  <div class="space-y-2">
+                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                      <span class="text-sm font-medium">การวางแผน</span>
+                      <span class="text-emerald font-bold">✓</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                      <span class="text-sm font-medium">การออกแบบ</span>
+                      <span class="text-emerald font-bold">✓</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                      <span class="text-sm font-medium">การดำเนินการ</span>
+                      <span class="text-emerald font-bold">✓</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                      <span class="text-sm font-medium">การบริหารจัดการ</span>
+                      <span class="text-emerald font-bold">✓</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scope &amp; Significance -->
+          <div id="project-1-scope" class="mb-16">
+            <div class="project-card bg-white/80 backdrop-blur">
+              <h3 class="serif text-2xl font-semibold mb-8 accent-emerald">
+                <i class="fas fa-bullseye mr-3"></i>
+                ขอบเขตและความสำคัญของโครงการ
+              </h3>
+
+              <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="text-center p-6 bg-gradient-to-br from-emerald-100 to-green-100 rounded-xl">
+                  <i class="fas fa-university text-4xl accent-emerald mb-4"></i>
+                  <h4 class="font-semibold mb-2">กองทุน กยศ.</h4>
+                  <div class="metric-highlight">200,000 ล้านบาท</div>
+                  <p class="text-xs text-gray-600 mt-2">มูลค่าการประมวลผล</p>
+                </div>
+
+                <div class="text-center p-6 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl">
+                  <i class="fas fa-users text-4xl text-blue-600 mb-4"></i>
+                  <h4 class="font-semibold mb-2">ผู้ใช้งาน</h4>
+                  <div class="metric-highlight bg-gradient-to-r from-blue-600 to-cyan-600">7 ล้านบัญชี</div>
+                  <p class="text-xs text-gray-600 mt-2">ข้อมูลส่วนบุคคล</p>
+                </div>
+
+                <div class="text-center p-6 bg-gradient-to-br from-red-100 to-orange-100 rounded-xl">
+                  <i class="fas fa-shield-alt text-4xl text-red-600 mb-4"></i>
+                  <h4 class="font-semibold mb-2">สถานะ</h4>
+                  <div class="metric-highlight bg-gradient-to-r from-red-600 to-orange-600">
+                    Critical Infrastructure
+                  </div>
+                  <p class="text-xs text-gray-600 mt-2">ระดับชาติ</p>
+                </div>
+              </div>
+
+              <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg">
+                <h4 class="font-semibold accent-gold mb-3">
+                  <i class="fas fa-exclamation-triangle mr-2"></i>
+                  ความสำคัญต่อความมั่นคงของประเทศ
+                </h4>
+                <p class="text-gray-700 text-sm">
+                  กองทุนเงินกู้นักศึกษาได้รับการจัดประเภทเป็น
+                  &#34;โครงสร้างพื้นฐานทางการเงินวิกฤตของประเทศ&#34;
+                  ตามเกณฑ์ของสำนักงานคณะกรรมการกำกับและส่งเสริมการประกอบธุรกิจประกันภัย (คปภ.)
+                  ซึ่งหากระบบถูกโจมตีหรือหยุดชะงักจะส่งผลกระทบร้ายแรงต่อความมั่นคงทางการเงิน
+                  และการเข้าถึงการศึกษาของเยาวชนไทย
+                  <a href="https://defense.engineer/" class="citation" data-citation="Project Documentation">[482]</a>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Technical Complexity -->
+          <div id="project-1-complexity" class="mb-16">
+            <div class="project-card bg-white/80 backdrop-blur">
+              <h3 class="serif text-2xl font-semibold mb-8 accent-emerald">
+                <i class="fas fa-cogs mr-3"></i>
+                ความซับซ้อนทางวิศวกรรมและนวัตกรรม
+              </h3>
+
+              <!-- System Architecture Diagram -->
+              <div class="mb-10">
+                <h4 class="font-semibold text-lg mb-6 text-center">สถาปัตยกรรมระบบ Vectorized CBR</h4>
+                <div class="mermaid-container">
+                  <div class="mermaid-controls">
+                    <button class="mermaid-control-btn zoom-in" title="Zoom In">
+                      <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button class="mermaid-control-btn zoom-out" title="Zoom Out">
+                      <i class="fas fa-search-minus"></i>
+                    </button>
+                    <button class="mermaid-control-btn reset-zoom" title="Reset">
+                      <i class="fas fa-expand-arrows-alt"></i>
+                    </button>
+                    <button class="mermaid-control-btn fullscreen" title="Fullscreen">
+                      <i class="fas fa-expand"></i>
+                    </button>
+                  </div>
+                  <div class="mermaid">
+                    graph TD
+                    A[&#34;Security Events
+                    <br/>50M events/day&#34;] --&gt; B[&#34;Vector Pipeline
+                    <br/>Apache Kafka + Flink&#34;]
+                    B --&gt; C[&#34;Embedding Engine
+                    <br/>Transformer Models&#34;]
+                    C --&gt; D[&#34;Vector Database
+                    <br/>FAISS + HNSW&#34;]
+                    D --&gt; E[&#34;Similarity Search
+                    <br/>&lt;10ms Response&#34;]
+                    E --&gt; F[&#34;Case-Based Reasoning
+                    <br/>Custom CBR Engine&#34;]
+                    F --&gt; G[&#34;Response Automation
+                    <br/>SOAR Integration&#34;]
+                    F --&gt; H[&#34;Formal Verification
+                    <br/>TLA+ + SMT Solvers&#34;]
+
+                    style A fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#1f2937
+                    style B fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1f2937
+                    style C fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#1f2937
+                    style D fill:#f3e8ff,stroke:#9333ea,stroke-width:2px,color:#1f2937
+                    style E fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#1f2937
+                    style F fill:#fff7ed,stroke:#ea580c,stroke-width:2px,color:#1f2937
+                    style G fill:#ecfdf5,stroke:#059669,stroke-width:2px,color:#1f2937
+                    style H fill:#faf5ff,stroke:#a855f7,stroke-width:2px,color:#1f2937
+                  </div>
+                </div>
+              </div>
+
+              <!-- Technical Components -->
+              <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h4 class="font-semibold text-lg mb-4">เทคโนโลยีหลัก</h4>
+                  <div class="space-y-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                      <h5 class="font-medium mb-2">Vector Pipeline ระดับ Production</h5>
+                      <p class="text-sm text-gray-600 mb-2">
+                        ออกแบบระบบประมวลผลข้อมูลแบบ real-time
+                        รองรับปริมาณข้อมูลสูงถึง <strong>50 ล้านเหตุการณ์ต่อวัน</strong>
+                      </p>
+                      <div class="flex flex-wrap gap-2">
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Apache Kafka</span>
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Apache Flink</span>
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Stream Processing</span>
+                      </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                      <h5 class="font-medium mb-2">Similarity Search ความเร็วสูง</h5>
+                      <p class="text-sm text-gray-600 mb-2">
+                        ค้นหาความคล้ายคลึงในเวกเตอร์ 768 มิติ
+                        ด้วยความเร็วต่ำกว่า <strong>10 มิลลิวินาที</strong>
+                      </p>
+                      <div class="flex flex-wrap gap-2">
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">FAISS</span>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">HNSW</span>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">ANN Algorithms</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-lg mb-4">นวัตกรรมเด่น</h4>
+                  <div class="space-y-4">
+                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg border-l-4 border-purple-500">
+                      <h5 class="font-medium mb-2">Vectorized Case-Based Reasoning</h5>
+                      <p class="text-sm text-gray-600">
+                        พัฒนาเทคนิค AI ใหม่ที่ผสานระหว่าง
+                        Case-Based Reasoning (CBR) แบบดั้งเดิม
+                        กับการแทนความหมายในรูปแบบเวกเตอร์
+                        <a href="https://www.mdpi.com/2076-3417/13/3/1505" class="citation" data-citation="Applied Sciences Journal">[348]</a>
+                      </p>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-orange-50 to-amber-50 p-4 rounded-lg border-l-4 border-orange-500">
+                      <h5 class="font-medium mb-2">Formal Logic Verification</h5>
+                      <p class="text-sm text-gray-600">
+                        นำเทคนิค Formal Methods มาใช้ในการพิสูจน์
+                        ความถูกต้องของระบบ AI ที่ตัดสินใจอัตโนมัติ
+                        ด้วย TLA+ และ SMT solvers
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Results &amp; Impact -->
+          <div class="project-card bg-white/80 backdrop-blur">
+            <h3 class="serif text-2xl font-semibold mb-8 accent-emerald">
+              <i class="fas fa-chart-line mr-3"></i>
+              ผลลัพธ์และผลกระทบ
+            </h3>
+
+            <div class="grid md:grid-cols-3 gap-6">
+              <div class="text-center p-6 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl">
+                <i class="fas fa-clock text-4xl text-green-600 mb-4"></i>
+                <h4 class="font-semibold mb-2">ลดเวลาตอบสนอง</h4>
+                <div class="metric-highlight bg-gradient-to-r from-green-600 to-emerald-600">
+                  47 นาที → 30 วินาที
+                </div>
+                <p class="text-xs text-gray-600 mt-2">ลด MTTR ลงกว่า 90 เท่า</p>
+              </div>
+
+              <div class="text-center p-6 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl">
+                <i class="fas fa-search text-4xl text-purple-600 mb-4"></i>
+                <h4 class="font-semibold mb-2">ตรวจจับ Zero-day Threats</h4>
+                <div class="metric-highlight bg-gradient-to-r from-purple-600 to-pink-600">
+                  เรียนรู้จากประสบการณ์
+                </div>
+                <p class="text-xs text-gray-600 mt-2">ตรวจจับภัยคุกคามที่ไม่เคยพบมาก่อน</p>
+              </div>
+
+              <div class="text-center p-6 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl">
+                <i class="fas fa-shield-alt text-4xl text-blue-600 mb-4"></i>
+                <h4 class="font-semibold mb-2">ความปลอดภัยระดับชาติ</h4>
+                <div class="metric-highlight bg-gradient-to-r from-blue-600 to-cyan-600">
+                  Critical Infrastructure
+                </div>
+                <p class="text-xs text-gray-600 mt-2">ปกป้องระบบที่มีความสำคัญต่อเศรษฐกิจ</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Project 2 - RoBERTa Fine-tuning -->
+      <section id="project-2" class="py-20 bg-gradient-to-br from-amber-50 to-orange-50">
+        <div class="container mx-auto px-8">
+          <div class="text-center mb-16">
+            <h2 class="serif text-4xl font-bold accent-gold mb-6">
+              ผลงานที่ 2: Fine-tuned RoBERTa
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+              โมเดล AI สำหรับการจำแนกช่องโหว่ความปลอดภัยอัตโนมัติ
+              จาก CVE สู่ CWE
+            </p>
+          </div>
+
+          <!-- Role &amp; Responsibilities -->
+          <div id="project-2-role" class="mb-16">
+            <div class="project-card bg-white/80 backdrop-blur border-l-4 border-gold">
+              <h3 class="serif text-2xl font-semibold mb-8 accent-gold">
+                <i class="fas fa-user-cog mr-3"></i>
+                บทบาทและความรับผิดชอบหลัก
+              </h3>
+
+              <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h4 class="font-semibold text-lg mb-4">Lead AI Engineer &amp; Researcher</h4>
+                  <p class="text-gray-600 mb-4">
+                    ในฐานะ <strong>ผู้นำการวิจัยและพัฒนา (Lead AI Engineer)</strong>
+                    ที่รับผิดชอบการออกแบบ ดำเนินการ และเผยแพร่ผลงาน
+                    โมเดล AI สำหรับการจำแนกช่องโหว่ความปลอดภัย
+                  </p>
+
+                  <div class="space-y-3">
+                    <div class="flex items-center">
+                      <i class="fas fa-check-circle text-gold mr-2"></i>
+                      <span class="text-sm">ออกแบบและดำเนินการวิจัยตั้งแต่ต้นจนจบ</span>
+                    </div>
+                    <div class="flex items-center">
+                      <i class="fas fa-check-circle text-gold mr-2"></i>
+                      <span class="text-sm">สร้างชุดข้อมูลขนาดใหญ่ 234,770 รายการ</span>
+                    </div>
+                    <div class="flex items-center">
+                      <i class="fas fa-check-circle text-gold mr-2"></i>
+                      <span class="text-sm">เผยแพร่ผลงานแบบ open-source</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-lg mb-4">Responsible Charge Type</h4>
+                  <div class="bg-gold/10 p-4 rounded-lg mb-4">
+                    <span class="bg-gold text-white px-3 py-1 rounded-full text-sm font-medium">
+                      กรณี (c) - งานหลากหลายสาขา ซับซ้อน และใหม่
+                    </span>
+                    <p class="text-sm text-gray-600 mt-2">
+                      การพัฒนาเทคนิค AI ที่ผสาน NLP, Deep Learning,
+                      และ Cyber Threat Intelligence ในรูปแบบที่ไม่เคยมีมาก่อน
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scope &amp; Significance -->
+          <div id="project-2-scope" class="mb-16">
+            <div class="project-card bg-white/80 backdrop-blur border-l-4 border-gold">
+              <h3 class="serif text-2xl font-semibold mb-8 accent-gold">
+                <i class="fas fa-bullseye mr-3"></i>
+                ขอบเขตและความสำคัญของโครงการ
+              </h3>
+
+              <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                  <h4 class="font-semibold text-lg mb-4">วัตถุประสงค์หลัก</h4>
+                  <div class="space-y-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                      <h5 class="font-medium mb-2">การจำแนกช่องโหว่อัตโนมัติ</h5>
+                      <p class="text-sm text-gray-600 mb-2">
+                        แปลงรายการ <strong>Common Vulnerabilities and Exposures (CVE)</strong>
+                        ให้เป็น <strong>Common Weakness Enumeration (CWE)</strong>
+                        อัตโนมัติด้วยความแม่นยำสูง
+                      </p>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                      <h5 class="font-medium mb-2">การมีส่วนร่วมกับชุมชน</h5>
+                      <p class="text-sm text-gray-600">
+                        เผยแพร่ชุดข้อมูล โมเดล และโค้ดแบบเปิดกว้าง
+                        เพื่อให้ชุมชนวิชาการและอุตสาหกรรมสามารถนำไปใช้ประโยชน์
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-lg mb-4">ผลกระทบต่ออุตสาหกรรม</h4>
+                  <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg">
+                    <h5 class="font-semibold accent-gold mb-3">
+                      <i class="fas fa-industry mr-2"></i>
+                      อุตสาหกรรม Cybersecurity
+                    </h5>
+                    <ul class="text-sm text-gray-700 space-y-2">
+                      <li>• ลดเวลาและต้นทุนในการวิเคราะห์ช่องโหว่</li>
+                      <li>• ปรับปรุงความแม่นยำในการจำแนกประเภทภัยคุกคาม</li>
+                      <li>• ยกระดับมาตรฐานการวิเคราะห์ช่องโหว่ในอุตสาหกรรม</li>
+                      <li>• สร้าง baseline ที่แข็งแกร่งสำหรับการวิจัยต่อเนื่อง</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Technical Complexity -->
+          <div id="project-2-complexity" class="mb-16">
+            <div class="project-card bg-white/80 backdrop-blur border-l-4 border-gold">
+              <h3 class="serif text-2xl font-semibold mb-8 accent-gold">
+                <i class="fas fa-cogs mr-3"></i>
+                ความซับซ้อนทางวิศวกรรมและนวัตกรรม
+              </h3>
+
+              <!-- Model Architecture Diagram -->
+              <div class="mb-10">
+                <h4 class="font-semibold text-lg mb-6 text-center">สถาปัตยกรรมโมเดล Fine-tuned RoBERTa</h4>
+                <div class="mermaid-container">
+                  <div class="mermaid-controls">
+                    <button class="mermaid-control-btn zoom-in" title="Zoom In">
+                      <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button class="mermaid-control-btn zoom-out" title="Zoom Out">
+                      <i class="fas fa-search-minus"></i>
+                    </button>
+                    <button class="mermaid-control-btn reset-zoom" title="Reset">
+                      <i class="fas fa-expand-arrows-alt"></i>
+                    </button>
+                    <button class="mermaid-control-btn fullscreen" title="Fullscreen">
+                      <i class="fas fa-expand"></i>
+                    </button>
+                  </div>
+                  <div class="mermaid">
+                    graph LR
+                    A[&#34;CVE Database
+                    <br/>234,770 entries&#34;] --&gt; B[&#34;Data Preprocessing
+                    <br/>Cleaning &amp; Augmentation&#34;]
+                    B --&gt; C[&#34;RoBERTa-base
+                    <br/>125M parameters&#34;]
+                    C --&gt; D[&#34;Fine-tuning Layer
+                    <br/>Domain-specific training&#34;]
+                    D --&gt; E[&#34;Classification Head
+                    <br/>Multi-class output&#34;]
+                    E --&gt; F[&#34;Evaluation Metrics
+                    <br/>Accuracy, F1 Score&#34;]
+                    F --&gt; G[&#34;CTI-Bench Testing
+                    <br/>Industry standard&#34;]
+                    G --&gt; H[&#34;Open-source Release
+                    <br/>Model &amp; Dataset&#34;]
+
+                    style A fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#1f2937
+                    style B fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1f2937
+                    style C fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#1f2937
+                    style D fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#1f2937
+                    style E fill:#f3e8ff,stroke:#9333ea,stroke-width:2px,color:#1f2937
+                    style F fill:#fff7ed,stroke:#ea580c,stroke-width:2px,color:#1f2937
+                    style G fill:#f0f9ff,stroke:#0284c7,stroke-width:2px,color:#1f2937
+                    style H fill:#ecfdf5,stroke:#059669,stroke-width:2px,color:#1f2937
+                  </div>
+                </div>
+              </div>
+
+              <!-- Technical Components -->
+              <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h4 class="font-semibold text-lg mb-4">เทคโนโลยีหลัก</h4>
+                  <div class="space-y-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                      <h5 class="font-medium mb-2">ชุดข้อมูลขนาดใหญ่</h5>
+                      <p class="text-sm text-gray-600 mb-2">
+                        สร้างชุดข้อมูล <strong>234,770 รายการ CVE descriptions</strong>
+                        พร้อมป้ายกำกับ CWE ที่ปรับปรุงคุณภาพด้วย AI
+                      </p>
+                      <div class="flex flex-wrap gap-2">
+                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Data Cleaning</span>
+                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Data Augmentation</span>
+                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Active Learning</span>
+                      </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                      <h5 class="font-medium mb-2">Transfer Learning &amp; Fine-tuning</h5>
+                      <p class="text-sm text-gray-600 mb-2">
+                        ปรับแต่งโมเดล RoBERTa-base ขนาด 125 ล้านพารามิเตอร์
+                        สำหรับงานเฉพาะทาง
+                      </p>
+                      <div class="flex flex-wrap gap-2">
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Hyperparameter Optimization</span>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Regularization</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-lg mb-4">นวัตกรรมเด่น</h4>
+                  <div class="space-y-4">
+                    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg border-l-4 border-blue-500">
+                      <h5 class="font-medium mb-2">Cyber Threat Intelligence Integration</h5>
+                      <p class="text-sm text-gray-600">
+                        ผสานรวมความรู้ด้าน CTI ในการฝึกสอนโมเดล
+                        เพื่อให้เข้าใจบริบทของภัยคุกคามในโลกความเป็นจริง
+                      </p>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border-l-4 border-green-500">
+                      <h5 class="font-medium mb-2">Open-source Contribution</h5>
+                      <p class="text-sm text-gray-600">
+                        เผยแพร่ชุดข้อมูล โมเดลที่ฝึกสอนแล้ว
+                        และโค้ดการฝึกสอนแบบเปิดกว้างสู่สาธารณะ
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Results &amp; Impact -->
+          <div class="project-card bg-white/80 backdrop-blur border-l-4 border-gold">
+            <h3 class="serif text-2xl font-semibold mb-8 accent-gold">
+              <i class="fas fa-chart-line mr-3"></i>
+              ผลลัพธ์และผลกระทบ
+            </h3>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+              <div class="text-center p-6 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl">
+                <i class="fas fa-bullseye text-4xl text-green-600 mb-4"></i>
+                <h4 class="font-semibold mb-2">ความแม่นยำสูง</h4>
+                <div class="metric-highlight bg-gradient-to-r from-green-600 to-emerald-600">
+                  87.4% Top-1 Accuracy
+                </div>
+                <p class="text-xs text-gray-600 mt-2">บนชุดทดสอบภายใน</p>
+              </div>
+
+              <div class="text-center p-6 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl">
+                <i class="fas fa-balance-scale text-4xl text-purple-600 mb-4"></i>
+                <h4 class="font-semibold mb-2">ประสิทธิภาพเทียบเท่า LLM</h4>
+                <div class="metric-highlight bg-gradient-to-r from-purple-600 to-pink-600">
+                  75.6% CTI-Bench
+                </div>
+                <p class="text-xs text-gray-600 mt-2">เทียบเท่าโมเดลขนาดใหญ่กว่ามาก</p>
+              </div>
+
+              <div class="text-center p-6 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl">
+                <i class="fas fa-globe text-4xl text-blue-600 mb-4"></i>
+                <h4 class="font-semibold mb-2">ผลกระทบสากล</h4>
+                <div class="metric-highlight bg-gradient-to-r from-blue-600 to-cyan-600">
+                  Open-source
+                </div>
+                <p class="text-xs text-gray-600 mt-2">เผยแพร่สู่ชุมชนวิชาชีพ</p>
+              </div>
+            </div>
+
+            <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg">
+              <h4 class="font-semibold accent-gold mb-3">
+                <i class="fas fa-trophy mr-2"></i>
+                การยกระดับมาตรฐานอุตสาหกรรม
+              </h4>
+              <p class="text-gray-700 text-sm">
+                การเผยแพร่ผลงานแบบเปิดกว้างช่วยยกระดับมาตรฐานการวิเคราะห์ช่องโหว่ในอุตสาหกรรม cybersecurity
+                โดยการนำเสนอ baseline ที่แข็งแกร่งและเปิดเผย
+                ซึ่งองค์กรและนักวิจัยสามารถใช้เป็นจุดอ้างอิงสำหรับการพัฒนาวิธีการใหม่ๆ ต่อไป
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Comparison Section -->
+      <section id="comparison" class="py-20 bg-white">
+        <div class="container mx-auto px-8">
+          <h2 class="serif text-4xl font-bold accent-emerald mb-12 text-center">
+            การเปรียบเทียบและสรุปความเหมาะสมของผลงานทั้งสอง
+          </h2>
+
+          <!-- Comparison Grid -->
+          <div class="grid md:grid-cols-2 gap-12 mb-16">
+            <!-- Project 1 Comparison -->
+            <div class="project-card">
+              <h3 class="serif text-2xl font-semibold mb-6 accent-emerald">
+                <i class="fas fa-shield-alt mr-3"></i>
+                ผลงานที่ 1: Vectorized CBR
+              </h3>
+
+              <div class="space-y-6">
+                <div>
+                  <h4 class="font-semibold text-emerald mb-2">Responsible Charge</h4>
+                  <p class="text-sm text-gray-600 mb-2">
+                    <strong>กรณี (a)</strong> - ผู้นำทางเทคนิคและสถาปนิกระบบวิกฤต
+                  </p>
+                  <div class="bg-emerald/10 p-3 rounded text-xs text-emerald">
+                    การวางแผน ออกแบบ และดำเนินการโครงการวิศวกรรมที่สมบูรณ์
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-emerald mb-2">Significant Engineering Work</h4>
+                  <p class="text-sm text-gray-600 mb-2">
+                    <strong>ระดับชาติ</strong> - ผลกระทบต่อเศรษฐกิจและสังคมสูง
+                  </p>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="bg-emerald/20 text-emerald px-2 py-1 rounded text-xs">200,000 ล้านบาท</span>
+                    <span class="bg-emerald/20 text-emerald px-2 py-1 rounded text-xs">7 ล้านบัญชี</span>
+                    <span class="bg-emerald/20 text-emerald px-2 py-1 rounded text-xs">Critical Infrastructure</span>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold text-emerald mb-2">Multidisciplinary Complexity</h4>
+                  <p class="text-sm text-gray-600">
+                    การผสาน AI/ML + Data Engineering + Cybersecurity + Formal Methods
+                    ในระบบ production ระดับองค์กร
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project 2 Comparison -->
+            <div class="project-card border-l-4 border-gold">
+              <h3 class="serif text-2xl font-semibold mb-6 accent-gold">
+                <i class="fas fa-brain mr-3"></i>
+                ผลงานที่ 2: Fine-tuned RoBERTa
+              </h3>
+
+              <div class="space-y-6">
+                <div>
+                  <h4 class="font-semibold accent-gold mb-2">Responsible Charge</h4>
+                  <p class="text-sm text-gray-600 mb-2">
+                    <strong>กรณี (c)</strong> - หัวหน้าทีมวิจัยและพัฒนาโมเดล AI
+                  </p>
+                  <div class="bg-gold/10 p-3 rounded text-xs text-gold">
+                    งานที่หลากหลายสาขา มีความซับซ้อน และมีลักษณะใหม่
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold accent-gold mb-2">Significant Engineering Work</h4>
+                  <p class="text-sm text-gray-600 mb-2">
+                    <strong>ระดับอุตสาหกรรม</strong> - นวัตกรรมเทคนิคที่มีอิทธิพลต่อวิชาชีพ
+                  </p>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="bg-gold/20 text-gold px-2 py-1 rounded text-xs">234,770 รายการ</span>
+                    <span class="bg-gold/20 text-gold px-2 py-1 rounded text-xs">Open-source</span>
+                    <span class="bg-gold/20 text-gold px-2 py-1 rounded text-xs">CTI-Bench</span>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="font-semibold accent-gold mb-2">Multidisciplinary Complexity</h4>
+                  <p class="text-sm text-gray-600">
+                    การผสาน NLP + Deep Learning + Cyber Threat Intelligence
+                    ในรูปแบบที่มีลักษณะใหม่และซับซ้อน
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Competency Coverage -->
+          <div class="bg-gray-50 rounded-2xl p-8">
+            <h3 class="serif text-2xl font-semibold mb-8 text-center">
+              การครอบคลุมสมรรถนะวิศวกรตามเกณฑ์ COE
+            </h3>
+
+            <div class="overflow-x-auto">
+              <table class="w-full bg-white rounded-lg overflow-hidden shadow-lg">
+                <thead class="bg-emerald text-white">
+                  <tr>
+                    <th class="px-6 py-4 text-left">สมรรถนะ COE</th>
+                    <th class="px-6 py-4 text-center">ผลงานที่ 1</th>
+                    <th class="px-6 py-4 text-center">ผลงานที่ 2</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr>
+                    <td class="px-6 py-4 font-medium">ความรู้และทักษะทางวิศวกรรม</td>
+                    <td class="px-6 py-4 text-center">
+                      <span class="bg-emerald/20 text-emerald px-3 py-1 rounded-full text-sm">✓ AI/ML, Data Engineering, Formal Methods</span>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                      <span class="bg-gold/20 text-gold px-3 py-1 rounded-full text-sm">✓ Deep Learning, NLP, CTI</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 font-medium">ประสบการณ์การปฏิบัติงาน</td>
+                    <td class="px-6 py-4 text-center">
+                      <span class="bg-emerald/20 text-emerald px-3 py-1 rounded-full text-sm">✓ ระบบวิกฤต Production Scale</span>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                      <span class="bg-gold/20 text-gold px-3 py-1 rounded-full text-sm">✓ วิจัยและพัฒนาครบวงจร</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 font-medium">ความเป็นผู้นำและการบริหารจัดการ</td>
+                    <td class="px-6 py-4 text-center">
+                      <span class="bg-emerald/20 text-emerald px-3 py-1 rounded-full text-sm">✓ Technical Lead ทีมวิศวกรรม</span>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                      <span class="bg-gold/20 text-gold px-3 py-1 rounded-full text-sm">✓ Lead AI Engineer นำทีมวิจัย</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 font-medium">ความตระหนักรู้ต่อสังคม</td>
+                    <td class="px-6 py-4 text-center">
+                      <span class="bg-emerald/20 text-emerald px-3 py-1 rounded-full text-sm">✓ ปกป้องโครงสร้างพื้นฐานวิกฤต</span>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                      <span class="bg-gold/20 text-gold px-3 py-1 rounded-full text-sm">✓ เผยแพร่ผลงานเพื่อประโยชน์สาธารณะ</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recommendation Section -->
+      <section id="recommendation" class="py-20 bg-gradient-to-br from-emerald-50 to-green-50">
+        <div class="container mx-auto px-8">
+          <h2 class="serif text-4xl font-bold accent-emerald mb-12 text-center">
+            คำแนะนำสำหรับการนำเสนอในวันสอบสัมภาษณ์
+          </h2>
+
+          <div class="grid md:grid-cols-2 gap-8 mb-12">
+            <!-- Project 1 Presentation Tips -->
+            <div class="project-card bg-white/80 backdrop-blur">
+              <h3 class="serif text-xl font-semibold mb-6 accent-emerald">
+                <i class="fas fa-presentation mr-3"></i>
+                การนำเสนอผลงานที่ 1
+              </h3>
+
+              <div class="space-y-4">
+                <div class="bg-emerald/10 p-4 rounded-lg">
+                  <h4 class="font-semibold text-emerald mb-2">1. เน้นความสำคัญของโครงสร้างพื้นฐานวิกฤต</h4>
+                  <p class="text-sm text-gray-600">
+                    เริ่มจากการอธิบายว่าทำไมกยศ. ถือเป็น Financial Critical Infrastructure
+                    และผลกระทบที่อาจเกิดขึ้นหากระบบถูกโจมตี
+                  </p>
+                </div>
+
+                <div class="bg-emerald/10 p-4 rounded-lg">
+                  <h4 class="font-semibold text-emerald mb-2">2. แสดงความซับซ้อนทางเทคนิค</h4>
+                  <p class="text-sm text-gray-600">
+                    อธิบายความท้าทายในการออกแบบ Vector Pipeline
+                    และ Similarity Search ด้วยแผนภาพและตัวเลข
+                  </p>
+                </div>
+
+                <div class="bg-emerald/10 p-4 rounded-lg">
+                  <h4 class="font-semibold text-emerald mb-2">3. ชี้ให้เห็นบทบาทผู้นำ</h4>
+                  <p class="text-sm text-gray-600">
+                    ชี้ให้เห็นบทบาทของตนเองอย่างชัดเจนในฐานะผู้ตัดสินใจทางเทคนิคหลัก
+                    และการประสานงานกับหน่วยงานกำกับดูแล
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project 2 Presentation Tips -->
+            <div class="project-card bg-white/80 backdrop-blur border-l-4 border-gold">
+              <h3 class="serif text-xl font-semibold mb-6 accent-gold">
+                <i class="fas fa-presentation mr-3"></i>
+                การนำเสนอผลงานที่ 2
+              </h3>
+
+              <div class="space-y-4">
+                <div class="bg-gold/10 p-4 rounded-lg">
+                  <h4 class="font-semibold accent-gold mb-2">1. เน้นกระบวนการวิจัยอย่างเป็นระบบ</h4>
+                  <p class="text-sm text-gray-600">
+                    แสดงกระบวนการวิจัยและพัฒนาตั้งแต่ต้นจนจบ
+                    ตั้งแต่การกำหนดปัญหา รวบรวมข้อมูล จนถึงการเผยแพร่
+                  </p>
+                </div>
+
+                <div class="bg-gold/10 p-4 rounded-lg">
+                  <h4 class="font-semibold accent-gold mb-2">2. แสดงผลงานระดับสากล</h4>
+                  <p class="text-sm text-gray-600">
+                    แสดงผลลัพธ์บน CTI-Bench และอธิบายว่าทำไมการบรรลุ
+                    ประสิทธิภาพนี้ด้วยโมเดลขนาดเล็กกว่าถือเป็นความสำเร็จ
+                  </p>
+                </div>
+
+                <div class="bg-gold/10 p-4 rounded-lg">
+                  <h4 class="font-semibold accent-gold mb-2">3. ชี้ให้เห็นการมีส่วนร่วมกับชุมชน</h4>
+                  <p class="text-sm text-gray-600">
+                    เน้นการตัดสินใจเผยแพร่แบบเปิดกว้าง
+                    และผลกระทบที่เกิดขึ้นต่อการพัฒนาวิชาชีพ
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Key Documents -->
+          <div class="bg-white rounded-2xl p-8 shadow-lg">
+            <h3 class="serif text-2xl font-semibold mb-6 text-center accent-emerald">
+              <i class="fas fa-folder-open mr-3"></i>
+              เอกสารสนับสนุนที่ควรเตรียม
+            </h3>
+
+            <div class="grid md:grid-cols-3 gap-6">
+              <div class="text-center p-4 bg-gray-50 rounded-lg">
+                <i class="fas fa-file-alt text-3xl text-emerald mb-3"></i>
+                <h4 class="font-semibold mb-2">รายงานโครงการ</h4>
+                <p class="text-sm text-gray-600">
+                  รายละเอียดบทบาท ความรับผิดชอบ
+                  ขอบเขตโครงการ และผลลัพธ์ที่วัดได้
+                </p>
+              </div>
+
+              <div class="text-center p-4 bg-gray-50 rounded-lg">
+                <i class="fas fa-code text-3xl text-gold mb-3"></i>
+                <h4 class="font-semibold mb-2">เอกสารทางเทคนิค</h4>
+                <p class="text-sm text-gray-600">
+                  แผนภาพสถาปัตยกรรม ผลการทดสอบ
+                  การวิเคราะห์ประสิทธิภาพ และการตัดสินใจ
+                </p>
+              </div>
+
+              <div class="text-center p-4 bg-gray-50 rounded-lg">
+                <i class="fas fa-share-alt text-3xl text-blue-600 mb-3"></i>
+                <h4 class="font-semibold mb-2">หลักฐานการเผยแพร่</h4>
+                <p class="text-sm text-gray-600">
+                  Repository โค้ดเปิดกว้าง เอกสารประกอบ
+                  และบทความวิชาการ (ถ้ามี)
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Final Summary -->
+          <div class="text-center mt-12 p-8 bg-gradient-to-r from-emerald to-green-600 text-white rounded-2xl">
+            <h3 class="serif text-2xl font-bold mb-4">สรุปผลการวิเคราะห์</h3>
+            <p class="text-lg mb-6 max-w-3xl mx-auto">
+              ผลงานทั้งสองครอบคลุมเกณฑ์ <strong>Responsible Charge</strong> ทั้งสองรูปแบบ
+              แสดง <strong>Significant Engineering Work</strong> ในระดับชาติและอุตสาหกรรม
+              และผสาน <strong>เทคโนโลยีหลายสาขา</strong> ที่ซับซ้อนและใหม่
+              ตามที่ ACPE กำหนดอย่างสมบูรณ์
+            </p>
+            <div class="flex justify-center items-center space-x-8">
+              <div class="text-center">
+                <i class="fas fa-check-circle text-3xl mb-2"></i>
+                <div class="text-sm">Responsible Charge</div>
+              </div>
+              <div class="text-center">
+                <i class="fas fa-star text-3xl mb-2"></i>
+                <div class="text-sm">Significant Work</div>
+              </div>
+              <div class="text-center">
+                <i class="fas fa-cogs text-3xl mb-2"></i>
+                <div class="text-sm">Multidisciplinary</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#ffffff',
+                primaryTextColor: '#1f2937',
+                primaryBorderColor: '#065f46',
+                lineColor: '#78716c',
+                secondaryColor: '#f0fdf4',
+                tertiaryColor: '#ffffff',
+                background: '#ffffff',
+                mainBkg: '#ffffff',
+                secondBkg: '#f0fdf4',
+                tertiaryBkg: '#ffffff',
+                // Ensure good contrast for different node types
+                cScale0: '#f0fdf4',
+                cScale1: '#fef3c7', 
+                cScale2: '#dbeafe',
+                cScale3: '#f3e8ff',
+                cScale4: '#fff7ed',
+                cScale5: '#faf5ff',
+                // Text colors for contrast
+                cScale0Text: '#1f2937',
+                cScale1Text: '#1f2937',
+                cScale2Text: '#1f2937',
+                cScale3Text: '#1f2937',
+                cScale4Text: '#1f2937',
+                cScale5Text: '#1f2937'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20
+            },
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '13px'
+        });
+
+        // Initialize Mermaid Controls for zoom and pan
+        function initializeMermaidControls() {
+            const containers = document.querySelectorAll('.mermaid-container');
+
+            containers.forEach(container => {
+            const mermaidElement = container.querySelector('.mermaid');
+            let scale = 1;
+            let isDragging = false;
+            let startX, startY, translateX = 0, translateY = 0;
+
+            // ฟังก์ชันสำหรับอัพเดตการแปลง (transform)
+            function updateTransform() {
+                mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+                if (scale > 1) {
+                container.classList.add('zoomed');
+                } else {
+                container.classList.remove('zoomed');
+                }
+
+                mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+            }
+
+            // Zoom controls
+            const zoomInBtn = container.querySelector('.zoom-in');
+            const zoomOutBtn = container.querySelector('.zoom-out');
+            const resetBtn = container.querySelector('.reset-zoom');
+            const fullscreenBtn = container.querySelector('.fullscreen');
+
+            if (zoomInBtn) {
+                zoomInBtn.addEventListener('click', () => {
+                scale = Math.min(scale * 1.25, 4);
+                updateTransform();
+                });
+            }
+
+            if (zoomOutBtn) {
+                zoomOutBtn.addEventListener('click', () => {
+                scale = Math.max(scale / 1.25, 0.3);
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+                updateTransform();
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+                });
+            }
+
+            if (fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', () => {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
+                }
+                });
+            }
+
+            // Mouse Events
+            mermaidElement.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+                mermaidElement.style.cursor = 'grabbing';
+                updateTransform();
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseleave', () => {
+                if (isDragging) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            // การซูมด้วยเมาส์
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+                // Adjust translation to zoom towards center
+                if (newScale !== scale) {
+                const scaleDiff = newScale / scale;
+                translateX = translateX * scaleDiff;
+                translateY = translateY * scaleDiff;
+                scale = newScale;
+
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+
+                updateTransform();
+                }
+            });
+
+            // Touch Events - การสัมผัสบนหน้าจอ
+            let touchStartTime = 0;
+            mermaidElement.addEventListener('touchstart', (e) => {
+                touchStartTime = Date.now();
+                if (e.touches.length === 1) {
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+
+                } else if (e.touches.length === 2) {
+                isDragging = false;
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isDragging) {
+                const touch = e.touches[0];
+                translateX = touch.clientX - startX;
+                translateY = touch.clientY - startY;
+                updateTransform();
+
+                } else if (e.touches.length === 2) {
+                // การซูมด้วยสองนิ้ว
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const distance = Math.hypot(
+                    touch2.clientX - touch1.clientX,
+                    touch2.clientY - touch1.clientY
+                );
+
+                if (container.lastTouchDistance) {
+                    const delta = distance / container.lastTouchDistance;
+                    const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+                    if (newScale !== scale) {
+                    const scaleDiff = newScale / scale;
+                    translateX = translateX * scaleDiff;
+                    translateY = translateY * scaleDiff;
+                    scale = newScale;
+
+                    if (scale <= 1) {
+                        translateX = 0;
+                        translateY = 0;
+                    }
+
+                    updateTransform();
+                    }
+                }
+                container.lastTouchDistance = distance;
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchend', (e) => {
+                // Reset state
+                if (e.touches.length === 0) {
+                isDragging = false;
+                container.lastTouchDistance = null;
+
+                // Delay to prevent mouse events immediately after touch
+                setTimeout(() => {
+                    touchStartTime = 0;
+                }, 100);
+                } else if (e.touches.length === 1 && isDragging) {
+                // Switch to single touch
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+                }
+
+                updateTransform();
+            });
+
+            mermaidElement.addEventListener('touchcancel', (e) => {
+                isDragging = false;
+                container.lastTouchDistance = null;
+
+                setTimeout(() => {
+                touchStartTime = 0;
+                }, 100);
+
+                updateTransform();
+            });
+
+            // Enhanced wheel zoom with better center point handling
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+                if (newScale !== scale) {
+                // Adjust translation to zoom towards center
+                const scaleDiff = newScale / scale;
+                translateX = translateX * scaleDiff;
+                translateY = translateY * scaleDiff;
+                scale = newScale;
+
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+
+                updateTransform();
+                }
+            });
+
+            // Initialize display
+            updateTransform();
+            });
+        }
+
+        // Call the function to initialize mermaid controls
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMermaidControls();
+        });
+
+        // Table of Contents functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocLinks = document.querySelectorAll('.toc-link');
+            const sections = document.querySelectorAll('section[id]');
+            const tocToggle = document.querySelector('.toc-toggle');
+            const tocFixed = document.querySelector('.toc-fixed');
+            const tocOverlay = document.querySelector('.toc-overlay');
+            const tocClose = document.querySelector('.toc-close');
+
+            // Toggle TOC on mobile
+            if (tocToggle) {
+                tocToggle.addEventListener('click', function() {
+                    tocFixed.classList.add('open');
+                    tocOverlay.style.display = 'block';
+                });
+            }
+
+            // Close TOC when close button is clicked
+            if (tocClose) {
+                tocClose.addEventListener('click', function() {
+                    tocFixed.classList.remove('open');
+                    tocOverlay.style.display = 'none';
+                });
+            }
+
+            // Close TOC when clicking on overlay
+            if (tocOverlay) {
+                tocOverlay.addEventListener('click', function() {
+                    tocFixed.classList.remove('open');
+                    tocOverlay.style.display = 'none';
+                });
+            }
+
+            // Close TOC when a TOC link is clicked (on mobile)
+            tocLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetSection) {
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                    
+                    // Close TOC on mobile after clicking a link
+                    if (window.innerWidth <= 1024) {
+                        tocFixed.classList.remove('open');
+                        tocOverlay.style.display = 'none';
+                    }
+                });
+            });
+
+            // Active section highlighting
+            function updateActiveTocLink() {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    const sectionHeight = section.offsetHeight;
+                    if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateActiveTocLink);
+            updateActiveTocLink(); // Call once to set initial state
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Citation tooltip positioning
+        const citations = document.querySelectorAll('.citation');
+        citations.forEach(citation => {
+            citation.addEventListener('mouseenter', function() {
+                const tooltip = this.querySelector('::after');
+                if (tooltip) {
+                    const rect = this.getBoundingClientRect();
+                    if (rect.top < 50) {
+                        tooltip.style.bottom = 'auto';
+                        tooltip.style.top = '100%';
+                        tooltip.style.marginTop = '5px';
+                    }
+                }
+            });
+        });
+    </script>
+  
+
+</body></html>
