@@ -1,0 +1,1984 @@
+<!DOCTYPE html><html lang="th"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>การวิเคราะห์โครงสร้างและยุทธศาสตร์ด้านไอที: SME D Bank</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;600;700&amp;family=Noto+Sans+Thai:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --accent-light: #5dade2;
+            --accent-dark: #2874a6;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-light: #95a5a6;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-accent: #ecf0f1;
+            --border: #bdc3c7;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        body {
+            font-family: 'Noto Sans Thai', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+        
+        .serif {
+            font-family: 'Noto Serif Thai', serif;
+        }
+        
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            z-index: 1000;
+            padding: 2rem 1.5rem;
+        }
+        
+        .content-offset {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+        
+        .toc-link {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            padding-left: 1rem;
+            margin-left: -1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .toc-link:hover, .toc-link.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: rgba(52, 152, 219, 0.1);
+        }
+        
+        .toc-link.level-2 {
+            margin-left: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .toc-link.level-3 {
+            margin-left: 2rem;
+            font-size: 0.8rem;
+        }
+        
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            min-height: 70vh;
+        }
+        
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-content .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .hero-visual {
+            position: relative;
+            height: 400px;
+            border-radius: 1rem;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+        }
+        
+        .section-header {
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: block;
+        }
+        
+        .mermaid-container {
+            display: flex;
+            justify-content: center;
+            min-height: 300px;
+            max-height: 800px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mermaid-container .mermaid {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            cursor: grab;
+            transition: transform 0.3s ease;
+            transform-origin: center center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none; /* ป้องกันการสัมผัสบนหน้าจอสัมผัส */
+            -webkit-user-select: none; /* ป้องกันการเลือกข้อความ */
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .mermaid-container .mermaid svg {
+            max-width: 100%;
+            height: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .mermaid-container .mermaid:active {
+            cursor: grabbing;
+        }
+
+        .mermaid-container.zoomed .mermaid {
+            height: 100%;
+            width: 100%;
+            cursor: grab;
+        }
+
+        .mermaid-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mermaid-control-btn {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #374151;
+            font-size: 14px;
+            min-width: 36px;
+            height: 36px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mermaid-control-btn:hover {
+            background: #f8fafc;
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        .mermaid-control-btn:active {
+            transform: scale(0.95);
+        }
+        
+.table-container {
+    background: var(--bg-primary);
+    border-radius: 1rem;
+    overflow-x: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    margin: 2rem 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: var(--accent);
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+tr:hover {
+    background: var(--bg-accent);
+}
+
+.chart-container {
+    background: var(--bg-primary);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    margin: 2rem 0;
+}
+
+.section-divider {
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
+    margin: 4rem 0;
+}
+
+.citation {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--accent);
+}
+
+.citation:hover {
+    background: rgba(52, 152, 219, 0.1);
+}
+
+@media (max-width: 768px) {
+    .toc-fixed {
+        display: none;
+    }
+    
+    .content-offset {
+        margin-left: 0;
+    }
+    
+    .hero-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .mermaid-control-btn:not(.reset-zoom) {
+        display: none;
+    }
+    .mermaid-controls {
+        top: auto;
+        bottom: 15px;
+        right: 15px;
+    }
+
+    /* Mobile adjustments for mermaid controls */
+    .mermaid-controls {
+        top: auto;
+        bottom: 60px;
+        right: 10px;
+    }
+
+    /* New hero layout for mobile */
+    .hero-grid {
+        display: flex;
+        flex-direction: column;
+        min-height: auto;
+    }
+    .hero-content {
+        order: 2;
+    }
+    .hero-visual {
+        order: 1;
+        height: 250px;
+        margin-bottom: 2rem;
+    }
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    .hero-content .subtitle {
+        font-size: 1rem;
+    }
+}
+    </style>
+  <base target="_blank">
+</head>
+
+  <body>
+    <!-- Fixed Table of Contents -->
+    <nav class="toc-fixed">
+      <div class="mb-6">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">สารบัญ</h3>
+        <a class="toc-link level-1" href="#introduction">บทนำ</a>
+        <a class="toc-link level-1" href="#departmental-insights">1. ข้อมูลเชิงลึกของหน่วยงาน</a>
+        <a class="toc-link level-2" href="#digital-business">1.1 ฝ่ายพัฒนาธุรกิจดิจิทัล</a>
+        <a class="toc-link level-3" href="#digital-mission">1.1.1 พันธกิจหลัก</a>
+        <a class="toc-link level-3" href="#digital-scope">1.1.2 ขอบเขตงาน</a>
+        <a class="toc-link level-2" href="#support-systems">1.2 ฝ่ายพัฒนาระบบสนับสนุนสารสนเทศ</a>
+        <a class="toc-link level-3" href="#support-mission">1.2.1 พันธกิจหลัก</a>
+        <a class="toc-link level-3" href="#support-scope">1.2.2 ขอบเขตงาน</a>
+        <a class="toc-link level-1" href="#architectural-synergy">2. ความเชื่อมโยงเชิงสถาปัตยกรรม</a>
+        <a class="toc-link level-2" href="#layered-architecture">2.1 ลักษณะสถาปัตยกรรมแบบเลเยอร์</a>
+        <a class="toc-link level-2" href="#data-flow">2.2 กระแสข้อมูลและการทำงานร่วมกัน</a>
+        <a class="toc-link level-2" href="#integration-points">2.3 จุดสำคัญของการบูรณาการ</a>
+        <a class="toc-link level-1" href="#duo-strategy">3. ผลกระทบเชิงบวกจากกลยุทธ์การจ้างงานแบบแพ็คเกจคู่</a>
+        <a class="toc-link level-2" href="#friction-reduction">3.1 การลดรอยต่อในการทำงาน</a>
+        <a class="toc-link level-2" href="#capability-boost">3.2 การยกระดับขีดความสามารถโดยรวม</a>
+        <a class="toc-link level-2" href="#transformation-acceleration">3.3 การขับเคลื่อนการเปลี่ยนผ่านสู่ดิจิทัล</a>
+        <a class="toc-link level-1" href="#conclusion">สรุป</a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="content-offset">
+      <!-- Hero Section -->
+      <section class="bg-gradient-to-br from-gray-50 to-blue-50 py-16 px-6" id="introduction">
+        <div class="max-w-6xl mx-auto">
+          <div class="hero-grid">
+            <div class="hero-content">
+              <h1 class="serif text-gray-900">การวิเคราะห์โครงสร้างและยุทธศาสตร์ด้านไอที</h1>
+              <p class="subtitle serif text-gray-700">การจ้างผู้บริหารไอทีคู่เพื่อยกระดับประสิทธิภาพการทำงานและกระตุ้นการเปลี่ยนผ่านดิจิทัลของ SME D Bank</p>
+              <div class="flex items-center space-x-4 text-sm text-gray-600">
+                <span><i class="fas fa-calendar mr-2"></i>วันที่ 5 มิถุนายน 2567</span>
+                <span><i class="fas fa-clock mr-2"></i>เวลาอ่าน 25 นาที</span>
+              </div>
+            </div>
+            <div class="hero-visual">
+              <img alt="ภาพสถาปัตยกรรมดิจิทัลของธนาคาร" class="w-full h-full object-cover opacity-80" src="https://kimi-web-img.moonshot.cn/img/ak-d.tripcdn.com/dec517f0c38acb4fb28926ac05b351229523075f.jpg" size="large" aspect="wide" color="blue" style="photo" query="digital banking architecture" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Key Highlights -->
+      <section class="py-12 px-6 bg-white">
+        <div class="max-w-6xl mx-auto">
+          <div class="highlight-box">
+            <h3 class="text-2xl font-bold mb-4">สรุปยุทธศาสตร์หลัก</h3>
+            <p class="text-lg">การจ้างผู้บริหารไอทีคู่ที่มีประวัติการทำงานร่วมกันมา 3 ปี ในตำแหน่งผู้อำนวยการฝ่ายพัฒนาธุรกิจดิจิทัลและฝ่ายพัฒนาระบบสนับสนุนสารสนเทศของ SME D Bank เป็นกลยุทธ์ที่มีศักยภาพสูงในการเร่งความเร็วการเปลี่ยนผ่านสู่ดิจิทัล ลดแรงเสียดท้องระหว่างหน่วยงาน และยกระดับขีดความสามารถโดยรวมขององค์กร</p>
+          </div>
+
+          <div class="stat-grid">
+            <div class="stat-card">
+              <span class="stat-number">30-40%</span>
+              <p class="text-gray-700">ลดระยะเวลาพัฒนาผลิตภัณฑ์ดิจิทัลใหม่</p>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">50%</span>
+              <p class="text-gray-700">เพิ่มความเร็วในการตอบสนองต่อความต้องการทางธุรกิจ</p>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">2x</span>
+              <p class="text-gray-700">เพิ่มจำนวนผลิตภัณฑ์ดิจิทัลใหม่ที่เปิดตัว</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Departmental Insights -->
+      <section class="py-16 px-6 bg-gray-50" id="departmental-insights">
+        <div class="max-w-6xl mx-auto">
+          <div class="section-header">
+            <h2 class="serif">1. ข้อมูลเชิงลึกของหน่วยงาน</h2>
+            <p>ความเข้าใจอย่างลึกซึ้งเกี่ยวกับบทบาท หน้าที่ และความสำคัญของทั้งสองฝ่ายในระบบนิเวศของ SME D Bank</p>
+          </div>
+
+          <!-- Digital Business Development Department -->
+          <div class="mb-16" id="digital-business">
+            <h3 class="text-2xl font-bold mb-8 text-gray-800" id="digital-mission">1.1 ฝ่ายพัฒนาธุรกิจดิจิทัล (Digital Business Development Department)</h3>
+
+            <div class="bg-white rounded-xl p-8 mb-8 shadow-sm">
+              <h4 class="text-xl font-semibold mb-4 text-gray-800">1.1.1 พันธกิจหลัก (Core Mission)</h4>
+
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <div class="bg-blue-50 p-6 rounded-lg">
+                  <h5 class="font-semibold text-blue-900 mb-3"><i class="fas fa-building mr-2"></i>บทบาทองค์กร</h5>
+                  <p class="text-blue-800">ฝ่ายพัฒนาธุรกิจดิจิทัลทำหน้าที่เป็น <strong>&#34;ธนาคารเสมือน&#34; (Virtual Bank)</strong> ภายในองค์กร SME D Bank โดยเป็นหน่วยงานที่ขับเคลื่อนการเปลี่ยนผ่านสู่ดิจิทัลจากภายนอกสู่ภายใน</p>
+                </div>
+
+                <div class="bg-green-50 p-6 rounded-lg">
+                  <h5 class="font-semibold text-green-900 mb-3"><i class="fas fa-bullseye mr-2"></i>จุดมุ่งหมายยุทธศาสตร์</h5>
+                  <p class="text-green-800">สร้างและพัฒนาช่องทางดิจิทัลที่ตอบสนองความต้องการของลูกค้า SME อย่างครบวงจร ตั้งแต่การค้นหาข้อมูล การสมัคร จนถึงการได้รับบริการอย่างต่อเนื่อง</p>
+                </div>
+
+                <div class="bg-purple-50 p-6 rounded-lg">
+                  <h5 class="font-semibold text-purple-900 mb-3"><i class="fas fa-trophy mr-2"></i>เป้าหมายการแข่งขัน</h5>
+                  <p class="text-purple-800">ยกระดับประสบการณ์ลูกค้า (Customer Experience) ให้เทียบเท่าธนาคารพาณิชย์ชั้นนำ ภายใต้กรอบของสถาบันการเงินเฉพาะกิจของรัฐ</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-8 shadow-sm" id="digital-scope">
+              <h4 class="text-xl font-semibold mb-6 text-gray-800">1.1.2 ขอบเขตงาน (Scope of Work)</h4>
+
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <div>
+                  <h5 class="font-semibold text-lg mb-4 text-gray-700 border-b pb-2">ระดับกลยุทธ์</h5>
+                  <ul class="space-y-3">
+                    <li class="flex items-start">
+                      <i class="fas fa-chess-king text-blue-500 mr-3 mt-1"></i>
+                      <div>
+                        <strong>การวางแผนดิจิทัล</strong>
+                        <p class="text-sm text-gray-600">กำหนดทิศทางการพัฒนาธุรกิจดิจิทัล 3-5 ปี</p>
+                      </div>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fas fa-chart-line text-green-500 mr-3 mt-1"></i>
+                      <div>
+                        <strong>การบริหารผลงาน</strong>
+                        <p class="text-sm text-gray-600">กำหนดและติดตาม KPI ด้านดิจิทัล</p>
+                      </div>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fas fa-handshake text-purple-500 mr-3 mt-1"></i>
+                      <div>
+                        <strong>การบริหารพันธมิตร</strong>
+                        <p class="text-sm text-gray-600">ประสานงานกับ Third-party Vendors</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h5 class="font-semibold text-lg mb-4 text-gray-700 border-b pb-2">ระดับการดำเนินงาน</h5>
+                  <ul class="space-y-3">
+                    <li class="flex items-start">
+                      <i class="fas fa-mobile-alt text-blue-500 mr-3 mt-1"></i>
+                      <div>
+                        <strong>การพัฒนาส่วนติดต่อผู้ใช้</strong>
+                        <p class="text-sm text-gray-600">UI/UX สำหรับแอปพลิเคชันมือถือ</p>
+                      </div>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fas fa-file-invoice text-green-500 mr-3 mt-1"></i>
+                      <div>
+                        <strong>ระบบสมัครสินเชื่อแบบไร้กระดาษ</strong>
+                        <p class="text-sm text-gray-600">Paperless Online Loan Application</p>
+                      </div>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fas fa-database text-purple-500 mr-3 mt-1"></i>
+                      <div>
+                        <strong>Big Data Analytics</strong>
+                        <p class="text-sm text-gray-600">วิเคราะห์พฤติกรรมลูกค้า SME</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h5 class="font-semibold text-lg mb-4 text-gray-700 border-b pb-2">ระดับนวัตกรรม</h5>
+                  <ul class="space-y-3">
+                    <li class="flex items-start">
+                      <i class="fas fa-rocket text-blue-500 mr-3 mt-1"></i>
+                      <div>
+                        <strong>การทดลองเทคโนโลยีใหม่</strong>
+                        <p class="text-sm text-gray-600">AI/ML, Blockchain, Open API</p>
+                      </div>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fas fa-lightbulb text-green-500 mr-3 mt-1"></i>
+                      <div>
+                        <strong>การพัฒนาผลิตภัณฑ์ดิจิทัลใหม่</strong>
+                        <p class="text-sm text-gray-600">บริการทางการเงินรูปแบบใหม่</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="bg-gray-50 p-6 rounded-lg">
+                <h5 class="font-semibold mb-4">การเชื่อมโยงระบบหลังบ้าน</h5>
+                <p class="text-gray-700">ทำหน้าที่เป็นสะพานเชื่อมระหว่างส่วนติดต่อผู้ใช้กับระบบ Core Banking และระบบสนับสนุน โดยต้องออกแบบและจัดการ API ที่ช่วยให้ข้อมูลไหลเวียนระหว่างระบบต่างๆ ได้อย่างราบรื่น พร้อมคำนึงถึงความปลอดภัย ความน่าเชื่อถือ และประสิทธิภาพ</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Support Information Systems Development Department -->
+          <div class="mb-16" id="support-systems">
+            <h3 class="text-2xl font-bold mb-8 text-gray-800" id="support-mission">1.2 ฝ่ายพัฒนาระบบสนับสนุนสารสนเทศ (Support Information Systems Development Department)</h3>
+
+            <div class="bg-white rounded-xl p-8 mb-8 shadow-sm">
+              <h4 class="text-xl font-semibold mb-4 text-gray-800">1.2.1 พันธกิจหลัก (Core Mission)</h4>
+
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <div class="bg-red-50 p-6 rounded-lg">
+                  <h5 class="font-semibold text-red-900 mb-3"><i class="fas fa-shield-alt mr-2"></i>บทบาทองค์กร</h5>
+                  <p class="text-red-800">เป็นหน่วยงานหลักที่รับผิดชอบ <strong>ความมั่นคงและประสิทธิภาพของโครงสร้างพื้นฐานด้านเทคโนโลยีสารสนเทศทั้งหมดของธนาคาร</strong></p>
+                </div>
+
+                <div class="bg-orange-50 p-6 rounded-lg">
+                  <h5 class="font-semibold text-orange-900 mb-3"><i class="fas fa-cogs mr-2"></i>จุดมุ่งหมายยุทธศาสตร์</h5>
+                  <p class="text-orange-800">สร้างระบบสนับสนุนที่มี <strong>เสถียรภาพ ปลอดภัย และยืดหยุ่น</strong> เพื่อรองรับการเติบโตทางธุรกิจและการเปลี่ยนแปลงทางเทคโนโลยี</p>
+                </div>
+
+                <div class="bg-teal-50 p-6 rounded-lg">
+                  <h5 class="font-semibold text-teal-900 mb-3"><i class="fas fa-clock mr-2"></i>เป้าหมายการดำเนินงาน</h5>
+                  <p class="text-teal-800">ให้บริการระบบสนับสนุนที่ <strong>ไม่มี interruption</strong> รองรับการทำงานของทุกหน่วยงานในธนาคารได้อย่างต่อเนื่อง</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-8 shadow-sm" id="support-scope">
+              <h4 class="text-xl font-semibold mb-6 text-gray-800">1.2.2 ขอบเขตงาน (Scope of Work)</h4>
+
+              <div class="overflow-x-auto">
+                <table class="w-full mb-8">
+                  <thead>
+                    <tr>
+                      <th>ประเภทระบบ</th>
+                      <th>ระบบย่อย</th>
+                      <th>ฟังก์ชันหลัก</th>
+                      <th>ความสำคัญต่อองค์กร</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="4" class="bg-blue-50 font-semibold">ระบบสนับสนุนองค์กร</td>
+                      <td>ระบบจัดการเอกสารและงานสำนักงาน</td>
+                      <td>ECM, สารบรรณอิเล็กทรอนิกส์</td>
+                      <td>ลดการใช้กระดาษ เพิ่มความเร็วในการค้นหาข้อมูล</td>
+                    </tr>
+                    <tr>
+                      <td>ระบบทรัพยากรบุคคล</td>
+                      <td>HRM, บริหารจัดการบุคลากร</td>
+                      <td>พื้นฐานสำคัญสำหรับการบริหารทรัพยากรมนุษย์</td>
+                    </tr>
+                    <tr>
+                      <td>ระบบการเงินและบัญชีภายใน</td>
+                      <td>บัญชีองค์กร, งบประมาณ</td>
+                      <td>สอดคล้องกับมาตรฐานการบัญชีและกฎระเบียบ</td>
+                    </tr>
+                    <tr>
+                      <td>ระบบความรู้และการสื่อสาร</td>
+                      <td>Intranet, Knowledge Management</td>
+                      <td>รักษาการสื่อสารและการถ่ายทอดความรู้</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="3" class="bg-green-50 font-semibold">ระบบปฏิบัติการหลังบ้าน</td>
+                      <td>ระบบประมวลผลธุรกรรมกลาง</td>
+                      <td>เชื่อมโยงข้อมูลสู่ Core Banking</td>
+                      <td>รับประกันความสอดคล้องของข้อมูล</td>
+                    </tr>
+                    <tr>
+                      <td>ระบบรายงานและสารสนเทศผู้บริหาร</td>
+                      <td>MIS, Dashboard ผู้บริหาร</td>
+                      <td>ช่วยให้ผู้บริหารตัดสินใจบนพื้นฐานข้อมูล</td>
+                    </tr>
+                    <tr>
+                      <td>ระบบจัดการข้อมูลกลาง</td>
+                      <td>Data Warehouse, Data Lake</td>
+                      <td>เก็บข้อมูลสำหรับการวิเคราะห์</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-gray-50 p-6 rounded-lg">
+                  <h5 class="font-semibold text-lg mb-4">ระบบโครงสร้างพื้นฐาน</h5>
+                  <div class="space-y-4">
+                    <div class="flex items-start">
+                      <i class="fas fa-network-wired text-blue-500 mr-3 mt-1"></i>
+                      <div>
+                        <strong>ระบบเครือข่ายและความปลอดภัย</strong>
+                        <p class="text-sm text-gray-600 mt-1">Network Infrastructure, Firewall, IDS, SIEM, DLP</p>
+                      </div>
+                    </div>
+                    <div class="flex items-start">
+                      <i class="fas fa-server text-green-500 mr-3 mt-1"></i>
+                      <div>
+                        <strong>ระบบจัดการเซิร์ฟเวอร์และคลาวด์</strong>
+                        <p class="text-sm text-gray-600 mt-1">Server Management, Cloud Infrastructure (Private/Public/Hybrid)</p>
+                      </div>
+                    </div>
+                    <div class="flex items-start">
+                      <i class="fas fa-backup text-purple-500 mr-3 mt-1"></i>
+                      <div>
+                        <strong>ระบบสำรองและกู้คืนข้อมูล</strong>
+                        <p class="text-sm text-gray-600 mt-1">Backup &amp; Disaster Recovery, Business Continuity Planning</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 p-6 rounded-lg">
+                  <h5 class="font-semibold text-lg mb-4">การบำรุงรักษาและพัฒนาระบบ</h5>
+                  <div class="space-y-4">
+                    <div class="flex items-start">
+                      <i class="fas fa-history text-blue-500 mr-3 mt-1"></i>
+                      <div>
+                        <strong>การดูแลระบบ Legacy</strong>
+                        <p class="text-sm text-gray-600 mt-1">บำรุงรักษาและพัฒนาระบบเก่าที่ยังมีความจำเป็น</p>
+                      </div>
+                    </div>
+                    <div class="flex items-start">
+                      <i class="fas fa-sync-alt text-green-500 mr-3 mt-1"></i>
+                      <div>
+                        <strong>การปรับปรุงระบบต่อเนื่อง</strong>
+                        <p class="text-sm text-gray-600 mt-1">Continuous Improvement, Patch Management, Version Control</p>
+                      </div>
+                    </div>
+                    <div class="flex items-start">
+                      <i class="fas fa-headset text-purple-500 mr-3 mt-1"></i>
+                      <div>
+                        <strong>การสนับสนุนทางเทคนิก</strong>
+                        <p class="text-sm text-gray-600 mt-1">Help Desk, Technical Support, User Training</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Architectural Synergy -->
+      <section class="py-16 px-6 bg-white" id="architectural-synergy">
+        <div class="max-w-6xl mx-auto">
+          <div class="section-header">
+            <h2 class="serif">2. ความเชื่อมโยงเชิงสถาปัตยกรรม</h2>
+            <p>การทำงานร่วมกันอย่างมีประสิทธิภาพระหว่างฝ่ายพัฒนาธุรกิจดิจิทัลและฝ่ายพัฒนาระบบสนับสนุนสารสนเทศ</p>
+          </div>
+
+          <!-- Layered Architecture -->
+          <div class="mb-16" id="layered-architecture">
+            <h3 class="text-2xl font-bold mb-8 text-gray-800">2.1 ลักษณะสถาปัตยกรรมแบบเลเยอร์</h3>
+
+            <div class="mermaid-container">
+              <div class="mermaid-controls">
+                <button class="mermaid-control-btn zoom-in" title="Zoom In">
+                  <i class="fas fa-search-plus"></i>
+                </button>
+                <button class="mermaid-control-btn zoom-out" title="Zoom Out">
+                  <i class="fas fa-search-minus"></i>
+                </button>
+                <button class="mermaid-control-btn reset-zoom" title="Reset">
+                  <i class="fas fa-expand-arrows-alt"></i>
+                </button>
+                <button class="mermaid-control-btn fullscreen" title="Fullscreen">
+                  <i class="fas fa-expand"></i>
+                </button>
+              </div>
+              <div class="mermaid" id="architecture-diagram">
+                graph TD
+                A[&#34;Customer Interaction Layer
+                <br/>ชั้นปฏิสัมพันธ์กับลูกค้า&#34;] --&gt; B[&#34;Transaction Processing Layer
+                <br/>ชั้นประมวลผลธุรกรรม&#34;]
+                B --&gt; C[&#34;Data &amp; Information Layer
+                <br/>ชั้นข้อมูลและสารสนเทศ&#34;]
+                C --&gt; D[&#34;Infrastructure Layer
+                <br/>ชั้นโครงสร้างพื้นฐาน&#34;]
+
+                E[&#34;Digital Business Dept.
+                <br/>ฝ่ายพัฒนาธุรกิจดิจิทัล&#34;] --&gt; A
+                F[&#34;Support Systems Dept.
+                <br/>ฝ่ายพัฒนาระบบสนับสนุนสารสนเทศ&#34;] --&gt; B
+                F --&gt; C
+                F --&gt; D
+
+                A --&gt;|&#34;API &amp; Middleware&#34;| B
+                B --&gt;|&#34;Data Integration&#34;| C
+
+                classDef digitalStyle fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+                classDef supportStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
+                classDef layerStyle fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#1b5e20
+
+                class E digitalStyle
+                class F supportStyle
+                class A,B,C,D layerStyle
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+              <div class="bg-blue-50 p-6 rounded-lg">
+                <h4 class="font-semibold text-blue-900 mb-3">ชั้นปฏิสัมพันธ์กับลูกค้า</h4>
+                <p class="text-blue-800 text-sm mb-3">ฝ่ายพัฒนาธุรกิจดิจิทัลเป็นผู้รับผิดชอบหลักในการออกแบบและส่งมอบประสบการณ์ผู้ใช้</p>
+                <div class="text-xs text-blue-700">
+                  <strong>จุดเชื่อมโยง:</strong> ต้องอาศัย API และ Middleware ที่ฝ่ายพัฒนาระบบสนับสนุนสารสนเทศจัดเตรียมไว้
+                </div>
+              </div>
+
+              <div class="bg-green-50 p-6 rounded-lg">
+                <h4 class="font-semibold text-green-900 mb-3">ชั้นประมวลผลธุรกรรม</h4>
+                <p class="text-green-800 text-sm mb-3">บทบาทร่วมกัน: ฝ่ายพัฒนาธุรกิจดิจิทัลกำหนดความต้องการทางธุรกิจ ฝ่ายพัฒนาระบบสนับสนุนสารสนเทศรับประกันความถูกต้องและความปลอดภัยของข้อมูล</p>
+              </div>
+
+              <div class="bg-purple-50 p-6 rounded-lg">
+                <h4 class="font-semibold text-purple-900 mb-3">ชั้นข้อมูลและสารสนเทศ</h4>
+                <p class="text-purple-800 text-sm mb-3">ฝ่ายพัฒนาระบบสนับสนุนสารสนเทศจัดการโครงสร้างพื้นฐานข้อมูลที่ฝ่ายพัฒนาธุรกิจดิจิทัลนำไปใช้วิเคราะห์และสร้าง insights</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Flow &amp; Collaboration Patterns -->
+          <div class="mb-16" id="data-flow">
+            <h3 class="text-2xl font-bold mb-8 text-gray-800">2.2 กระแสข้อมูลและการทำงานร่วมกัน</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <div class="bg-white border rounded-lg p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-gray-800">2.2.1 กระแสข้อมูลจากหน้าบ้านสู่หลังบ้าน (Frontend-to-Backend Flow)</h4>
+
+                <div class="space-y-4">
+                  <div class="flex items-center p-3 bg-blue-50 rounded">
+                    <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold mr-4">1</div>
+                    <div>
+                      <strong>ลูกค้ากรอกข้อมูลผ่านแอปพลิเคชัน</strong>
+                      <p class="text-sm text-gray-600">ผู้รับผิดชอบ: ฝ่ายพัฒนาธุรกิจดิจิทัล</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center p-3 bg-green-50 rounded">
+                    <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold mr-4">2</div>
+                    <div>
+                      <strong>ระบบตรวจสอบอัตโนมัติ</strong>
+                      <p class="text-sm text-gray-600">ผู้รับผิดชอบ: ร่วมกัน</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center p-3 bg-purple-50 rounded">
+                    <div class="w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-bold mr-4">3</div>
+                    <div>
+                      <strong>ส่งต่อระบบพิจารณาสินเชื่อ</strong>
+                      <p class="text-sm text-gray-600">ผู้รับผิดชอบ: ฝ่ายพัฒนาระบบสนับสนุนสารสนเทศ</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400">
+                  <p class="text-sm text-yellow-800"><strong>ความจำเป็นของการประสานงาน:</strong> ทุกจุด handover ต้องมีมาตรฐานข้อมูลและโปรโตคอลที่ตกลงร่วมกัน</p>
+                </div>
+              </div>
+
+              <div class="bg-white border rounded-lg p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-gray-800">2.2.2 กระแสข้อมูลจากหลังบ้านสู่หน้าบ้าน (Backend-to-Frontend Flow)</h4>
+
+                <div class="space-y-4">
+                  <div class="flex items-center p-3 bg-red-50 rounded">
+                    <i class="fas fa-exchange-alt text-red-500 mr-3"></i>
+                    <div>
+                      <strong>การแจ้งเตือนและอัปเดตสถานะ</strong>
+                      <p class="text-sm text-gray-600">ระบบสนับสนุนประมวลผล → ส่งข้อมูลไปยังแพลตฟอร์มดิจิทัล → แสดงผลแก่ลูกค้า</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400">
+                  <p class="text-sm text-blue-800"><strong>ความจำเป็นของ real-time integration:</strong> ลูกค้าคาดหวังข้อมูลที่ทันสมัย ไม่ใช่ข้อมูลย้อนหลัง</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-green-100 to-blue-100 p-6 rounded-lg">
+              <h4 class="font-semibold text-lg mb-4">2.2.3 กระแสข้อมูลวิเคราะห์ (Analytics Flow)</h4>
+
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <i class="fas fa-database text-green-600 text-2xl mr-4"></i>
+                  <span class="text-gray-700">ข้อมูลจากระบบสนับสนุน</span>
+                </div>
+                <i class="fas fa-arrow-right text-gray-400"></i>
+                <div class="flex items-center">
+                  <i class="fas fa-chart-bar text-blue-600 text-2xl mr-4"></i>
+                  <span class="text-gray-700">ฝ่ายพัฒนาธุรกิจดิจิทัลวิเคราะห์</span>
+                </div>
+                <i class="fas fa-arrow-right text-gray-400"></i>
+                <div class="flex items-center">
+                  <i class="fas fa-lightbulb text-purple-600 text-2xl mr-4"></i>
+                  <span class="text-gray-700">สร้างโมเดล SMEs Intelligence</span>
+                </div>
+                <i class="fas fa-arrow-right text-gray-400"></i>
+                <div class="flex items-center">
+                  <i class="fas fa-sync text-green-600 text-2xl mr-4"></i>
+                  <span class="text-gray-700">ปรับปรุงบริการ</span>
+                </div>
+              </div>
+
+              <div class="mt-4 text-center">
+                <p class="text-sm text-gray-700">กระแสนี้สร้าง <strong class="text-green-700">วงจรการปรับปรุงอย่างต่อเนื่อง (continuous improvement cycle)</strong> ที่ช่วยให้บริการดีขึ้นเรื่อยๆ ตามข้อมูลจริง</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Critical Integration Points -->
+          <div class="mb-16" id="integration-points">
+            <h3 class="text-2xl font-bold mb-8 text-gray-800">2.3 จุดสำคัญของการบูรณาการ</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div class="bg-white border rounded-lg p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-blue-800">
+                  <i class="fas fa-code mr-2"></i>การบูรณาการระบบ
+                </h4>
+
+                <div class="space-y-4">
+                  <div class="border-l-4 border-blue-400 pl-4">
+                    <h5 class="font-semibold text-gray-800">API Management</h5>
+                    <p class="text-sm text-gray-600 mt-1">การออกแบบและจัดการ API ที่เชื่อมระหว่างระบบดิจิทัลและระบบสนับสนุน</p>
+                    <p class="text-xs text-gray-500 mt-1">ผู้รับผิดชอบ: ร่วมกัน</p>
+                  </div>
+
+                  <div class="border-l-4 border-green-400 pl-4">
+                    <h5 class="font-semibold text-gray-800">Middleware Layer</h5>
+                    <p class="text-sm text-gray-600 mt-1">ระบบกลางที่รองรับการแลกเปลี่ยนข้อมูลแบบ asynchronous และ synchronous</p>
+                    <p class="text-xs text-gray-500 mt-1">ผู้รับผิดชอบ: ฝ่ายพัฒนาระบบสนับสนุนสารสนเทศ</p>
+                  </div>
+
+                  <div class="border-l-4 border-purple-400 pl-4">
+                    <h5 class="font-semibold text-gray-800">Event-Driven Architecture</h5>
+                    <p class="text-sm text-gray-600 mt-1">การออกแบบระบบที่ตอบสนองต่อเหตุการณ์แบบ real-time</p>
+                    <p class="text-xs text-gray-500 mt-1">ผู้รับผิดชอบ: ร่วมกัน</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white border rounded-lg p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-green-800">
+                  <i class="fas fa-database mr-2"></i>การบูรณาการข้อมูล
+                </h4>
+
+                <div class="space-y-4">
+                  <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">Data Consistency</h5>
+                      <p class="text-sm text-gray-600 mt-1">การรับประกันความสอดคล้องของข้อมูลระหว่างระบบ</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start">
+                    <i class="fas fa-sitemap text-green-500 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">Master Data Management</h5>
+                      <p class="text-sm text-gray-600 mt-1">การจัดการข้อมูลหลักที่ใช้ร่วมกัน</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start">
+                    <i class="fas fa-shield-alt text-green-500 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">Data Governance</h5>
+                      <p class="text-sm text-gray-600 mt-1">กรอบการกำกับดูแลข้อมูลที่ทั้งสองฝ่ายต้องปฏิบัติตาม</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white border rounded-lg p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-purple-800">
+                  <i class="fas fa-project-diagram mr-2"></i>การบูรณาการกระบวนการ
+                </h4>
+
+                <table class="text-sm">
+                  <thead>
+                    <tr class="border-b">
+                      <th class="text-left py-2">ด้าน</th>
+                      <th class="text-left py-2">รายละเอียด</th>
+                      <th class="text-left py-2">ผลลัพธ์ที่คาดหวัง</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border-b">
+                      <td class="py-2 font-semibold">End-to-End Process Design</td>
+                      <td class="py-2">การออกแบบกระบวนการทำงานที่ครอบคลุมทั้งส่วนติดต่อลูกค้าและส่วนปฏิบัติการหลังบ้าน</td>
+                      <td class="py-2">ประสบการณ์ลูกค้าที่ราบรื่น ไม่มีรอยต่อ</td>
+                    </tr>
+                    <tr class="border-b">
+                      <td class="py-2 font-semibold">SLA Alignment</td>
+                      <td class="py-2">การกำหนดข้อตกลงระดับการบริการที่สอดคล้องกันระหว่างสองฝ่าย</td>
+                      <td class="py-2">ความคาดหวังที่ชัดเจน ลดความขัดแย้ง</td>
+                    </tr>
+                    <tr>
+                      <td class="py-2 font-semibold">Incident Management</td>
+                      <td class="py-2">กระบวนการจัดการเหตุการณ์ที่ต้องประสานงานร่วมกัน</td>
+                      <td class="py-2">การแก้ไขปัญหาที่รวดเร็วและมีประสิทธิภาพ</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Impact on Organizational Efficiency -->
+          <div class="mb-16">
+            <h3 class="text-2xl font-bold mb-8 text-gray-800">2.4 ผลกระทบต่อประสิทธิภาพองค์กร</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-lg">
+                <h4 class="font-semibold text-lg mb-4 text-green-800">
+                  <i class="fas fa-check-circle mr-2"></i>เมื่อการบูรณาการมีประสิทธิภาพ
+                </h4>
+
+                <div class="space-y-4">
+                  <div class="flex items-start">
+                    <i class="fas fa-tachometer-alt text-green-600 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">ลดเวลาตอบสนอง</h5>
+                      <p class="text-sm text-gray-600">การตัดสินใจและดำเนินการเร็วขึ้นเนื่องจากข้อมูลไหลเวียนได้อย่างราบรื่น</p>
+                      <p class="text-xs text-green-700 mt-1"><strong>ตัวอย่าง:</strong> การอนุมัติสินเชื่อลดจาก 7 วันเหลือ 1 วัน</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start">
+                    <i class="fas fa-dollar-sign text-green-600 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">ลดต้นทุน</h5>
+                      <p class="text-sm text-gray-600">ไม่ต้องสร้างระบบซ้ำซ้อน ลดการแก้ไขข้อผิดพลาดจากการสื่อสารที่คลาดเคลื่อน</p>
+                      <p class="text-xs text-green-700 mt-1"><strong>ตัวอย่าง:</strong> ประหยัดค่าใช้จ่ายด้านไอที 15-20%</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start">
+                    <i class="fas fa-bolt text-green-600 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">เพิ่มความคล่องตัว</h5>
+                      <p class="text-sm text-gray-600">สามารถตอบสนองต่อความต้องการทางธุรกิจใหม่ได้อย่างรวดเร็ว</p>
+                      <p class="text-xs text-green-700 mt-1"><strong>ตัวอย่าง:</strong> เปิดตัวผลิตภัณฑ์ใหม่ได้ใน 3 เดือนแทน 6 เดือน</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-lg">
+                <h4 class="font-semibold text-lg mb-4 text-red-800">
+                  <i class="fas fa-times-circle mr-2"></i>เมื่อการบูรณาการมีปัญหา
+                </h4>
+
+                <div class="space-y-4">
+                  <div class="flex items-start">
+                    <i class="fas fa-clock text-red-600 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">ความล่าช้าในการเปิดตัวผลิตภัณฑ์</h5>
+                      <p class="text-sm text-gray-600">การทดสอบและแก้ไขข้อบกพร่องใช้เวลานาน เนื่องจากต้องประสานงานหลายรอบ</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start">
+                    <i class="fas fa-user-times text-red-600 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">ประสบการณ์ลูกค้าที่ไม่สม่ำเสมอ</h5>
+                      <p class="text-sm text-gray-600">ข้อมูลไม่ตรงกันระหว่างช่องทางต่างๆ สร้างความสับสนและความไม่พึงพอใจ</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start">
+                    <i class="fas fa-money-bill-wave text-red-600 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">ต้นทุนการบำรุงรักษาสูง</h5>
+                      <p class="text-sm text-gray-600">ระบบที่เชื่อมโยงกันอย่างหละหลวมต้องใช้ทรัพยากรในการดูแลมาก</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Duo Hiring Strategy Impact -->
+      <section class="py-16 px-6 bg-gray-50" id="duo-strategy">
+        <div class="max-w-6xl mx-auto">
+          <div class="section-header">
+            <h2 class="serif">3. ผลกระทบเชิงบวกจากกลยุทธ์การจ้างงานแบบแพ็คเกจคู่</h2>
+            <p>การวิเคราะห์ผลกระทบเชิงบวกจากการจ้างผู้บริหารไอทีที่มีประวัติการทำงานร่วมกัน</p>
+          </div>
+
+          <!-- Friction Reduction -->
+          <div class="mb-16" id="friction-reduction">
+            <h3 class="text-2xl font-bold mb-8 text-gray-800">3.1 การลดรอยต่อในการทำงาน</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+              <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-blue-800">
+                  <i class="fas fa-cogs mr-2"></i>รอยต่อเชิงกระบวนการ
+                </h4>
+
+                <div class="space-y-4">
+                  <div class="border-l-4 border-blue-400 pl-4">
+                    <h5 class="font-semibold text-gray-800">ลดขั้นตอนการประสานงาน</h5>
+                    <p class="text-sm text-gray-600 mt-1">ผู้นำทั้งสองที่รู้จักวิธีการทำงานของกันและกัน สามารถตัดขั้นตอนการทำความเข้าใจเบื้องต้นลงได้อย่างมาก</p>
+                    <div class="mt-2 text-xs text-blue-700 bg-blue-50 p-2 rounded">
+                      <strong>ลดเวลา:</strong> จาก 3-6 เดือน เหลือ 1-2 เดือน หรือน้อยกว่า
+                    </div>
+                  </div>
+
+                  <div class="border-l-4 border-green-400 pl-4">
+                    <h5 class="font-semibold text-gray-800">การตัดสินใจที่เร็วขึ้น</h5>
+                    <p class="text-sm text-gray-600 mt-1">การประชุมเชิงกลยุทธ์ระหว่างสองฝ่ายใช้เวลาน้อยลง เนื่องจากมีภาษาร่วมกัน</p>
+                  </div>
+
+                  <div class="border-l-4 border-purple-400 pl-4">
+                    <h5 class="font-semibold text-gray-800">การแก้ไขปัญหาที่มีประสิทธิภาพ</h5>
+                    <p class="text-sm text-gray-600 mt-1">เมื่อเกิดปัญหาข้ามฝ่าย สามารถหาทางออกได้โดยตรงโดยไม่ต้องผ่านชั้นบริหาร</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-green-800">
+                  <i class="fas fa-code mr-2"></i>รอยต่อเชิงเทคนิค
+                </h4>
+
+                <table class="text-sm">
+                  <thead>
+                    <tr class="border-b">
+                      <th class="text-left py-2">ด้าน</th>
+                      <th class="text-left py-2">กรณีไม่มีประวัติร่วมกัน</th>
+                      <th class="text-left py-2">กรณีมีประวัติร่วมกัน 3 ปี</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border-b">
+                      <td class="py-2 font-semibold">มาตรฐานการพัฒนา</td>
+                      <td class="py-2 text-gray-600">ต้องเจรจาตกลงใหม่ ใช้เวลา 2-3 เดือน</td>
+                      <td class="py-2 text-green-600">มีมาตรฐานร่วมกันอยู่แล้ว ปรับเล็กน้อย</td>
+                    </tr>
+                    <tr class="border-b">
+                      <td class="py-2 font-semibold">รูปแบบ API</td>
+                      <td class="py-2 text-gray-600">อาจมีความเห็นไม่ตรงกัน ต้องทดสอบหลายรอบ</td>
+                      <td class="py-2 text-green-600">รู้ว่าอีกฝ่ายต้องการอะไร ออกแบบได้ถูกต้องตั้งแต่ต้น</td>
+                    </tr>
+                    <tr>
+                      <td class="py-2 font-semibold">การทดสอบ integration</td>
+                      <td class="py-2 text-gray-600">วางแผนหลังการพัฒนา พบปัญหาซ้ำๆ</td>
+                      <td class="py-2 text-green-600">วางแผนล่วงหน้า พบและแก้ไขปัญหาเร็ว</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-purple-800">
+                  <i class="fas fa-users mr-2"></i>รอยต่อเชิงวัฒนธรรม
+                </h4>
+
+                <div class="space-y-4">
+                  <div class="flex items-start">
+                    <i class="fas fa-handshake text-purple-600 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">การสร้างวัฒนธรรมการทำงานร่วมกัน</h5>
+                      <p class="text-sm text-gray-600 mt-1">ทีมงานทั้งสองฝ่ายเห็นตัวอย่างจากผู้นำที่มีความสัมพันธ์ที่ดี ส่งผลให้เกิด culture ของการร่วมมือกันแก้ปัญหา</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start">
+                    <i class="fas fa-balance-scale text-purple-600 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">การลดการแข่งขันเชิงลบ</h5>
+                      <p class="text-sm text-gray-600 mt-1">ผู้นำที่ไว้วางใจกัน ลดการปกป้องอาณาเขต (silo mentality) ของแต่ละฝ่าย</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start">
+                    <i class="fas fa-comments text-purple-600 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">การสื่อสารที่เปิดเผย</h5>
+                      <p class="text-sm text-gray-600 mt-1">สร้างบรรยากาศที่กล้าพูดคุยปัญหาและข้อกังวลตั้งแต่เนิ่นๆ</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Overall IT Capability Boost -->
+          <div class="mb-16" id="capability-boost">
+            <h3 class="text-2xl font-bold mb-8 text-gray-800">3.2 การยกระดับขีดความสามารถโดยรวม</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+              <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h4 class="font-semibold text-xl mb-6 text-blue-800">
+                  <i class="fas fa-rocket mr-2"></i>การเร่งความเร็วในการเปิดตัวผลิตภัณฑ์
+                </h4>
+
+                <div class="mb-6">
+                  <h5 class="font-semibold text-gray-800 mb-3">การลดระยะเวลาพัฒนา</h5>
+                  <div class="space-y-3">
+                    <div class="flex justify-between items-center p-3 bg-blue-50 rounded">
+                      <span class="text-sm font-medium">การวางแผนร่วมกันตั้งแต่ต้น</span>
+                      <span class="text-sm text-blue-700 font-semibold">ลดเวลา 30%</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-green-50 rounded">
+                      <span class="text-sm font-medium">การทำงานแบบขนาน</span>
+                      <span class="text-sm text-green-700 font-semibold">ลดเวลา 40%</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-purple-50 rounded border-2 border-purple-300">
+                      <span class="text-sm font-medium">ตัวชี้วัดรวม</span>
+                      <span class="text-sm text-purple-700 font-bold">ลดเวลา 30-40%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h5 class="font-semibold text-gray-800 mb-3">การลดความล่าช้าจากการทดสอบ</h5>
+                  <div class="space-y-2">
+                    <div class="flex items-start">
+                      <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                      <span class="text-sm">การทดสอบ integration ที่วางแผนล่วงหน้า</span>
+                    </div>
+                    <div class="flex items-start">
+                      <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                      <span class="text-sm">การแก้ไขข้อบกพร่องที่รวดเร็ว</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h4 class="font-semibold text-xl mb-6 text-green-800">
+                  <i class="fas fa-user-check mr-2"></i>การยกระดับประสบการณ์ผู้ใช้
+                </h4>
+
+                <div class="mb-6">
+                  <h5 class="font-semibold text-gray-800 mb-3">ความสม่ำเสมอของประสบการณ์</h5>
+                  <div class="space-y-3">
+                    <div class="bg-green-50 p-3 rounded">
+                      <h6 class="font-semibold text-green-800 text-sm">การออกแบบที่คำนึงถึงข้อจำกัดของระบบสนับสนุน</h6>
+                      <p class="text-xs text-green-700 mt-1">ฝ่ายพัฒนาธุรกิจดิจิทัลเข้าใจความเป็นไปได้ของระบบหลังบ้าน</p>
+                      <p class="text-xs text-green-600 mt-1 font-medium">ผลลัพธ์: ไม่มีสัญญาที่ไม่สามารถทำได้จริง</p>
+                    </div>
+                    <div class="bg-blue-50 p-3 rounded">
+                      <h6 class="font-semibold text-blue-800 text-sm">การตอบสนองที่รวดเร็ว</h6>
+                      <p class="text-xs text-blue-700 mt-1">ระบบสนับสนุนที่ถูกออกแบบมารองรับความต้องการของผู้ใช้หน้าบ้านโดยเฉพาะ</p>
+                      <p class="text-xs text-blue-600 mt-1 font-medium">ผลลัพธ์: ลูกค้าได้รับข้อมูลทันที ไม่ต้องรอ</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h5 class="font-semibold text-gray-800 mb-3">การบุกเบิกฟีเจอร์ใหม่</h5>
+                  <div class="space-y-2">
+                    <div class="flex items-start">
+                      <i class="fas fa-lightbulb text-yellow-500 mr-2 mt-1"></i>
+                      <span class="text-sm">การทดลองที่มีความเสี่ยงต่ำ</span>
+                    </div>
+                    <div class="flex items-start">
+                      <i class="fas fa-sync text-blue-500 mr-2 mt-1"></i>
+                      <span class="text-sm">การตอบสนองต่อ feedback ของลูกค้า</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h4 class="font-semibold text-xl mb-6 text-purple-800">
+                  <i class="fas fa-chart-line mr-2"></i>การปรับปรุงประสิทธิภาพการดำเนินงานภายใน
+                </h4>
+
+                <div class="mb-6">
+                  <h5 class="font-semibold text-gray-800 mb-3">การใช้ทรัพยากรอย่างมีประสิทธิภาพ</h5>
+                  <div class="overflow-x-auto">
+                    <table class="text-sm">
+                      <thead>
+                        <tr class="border-b">
+                          <th class="text-left py-2">ด้าน</th>
+                          <th class="text-left py-2">ก่อนมีคู่ผู้บริหาร</th>
+                          <th class="text-left py-2">หลังมีคู่ผู้บริหาร</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="border-b">
+                          <td class="py-2">การจัดสรรงบประมาณ</td>
+                          <td class="py-2 text-gray-600">แต่ละฝ่ายแข่งขันกันเพื่องบประมาณ</td>
+                          <td class="py-2 text-purple-600">วางแผนการลงทุนเป็นภาพรวม ลดการซ้ำซ้อน</td>
+                        </tr>
+                        <tr>
+                          <td class="py-2">การพัฒนาบุคลากร</td>
+                          <td class="py-2 text-gray-600">แต่ละฝ่ายพัฒนาทีมของตนเอง</td>
+                          <td class="py-2 text-purple-600">สร้าง career path และการฝึกอบรมที่ส่งเสริมทักษะข้ามสายงาน</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div>
+                  <h5 class="font-semibold text-gray-800 mb-3">การลดต้นทุนการดำเนินงาน</h5>
+                  <div class="space-y-2">
+                    <div class="flex justify-between items-center p-2 bg-red-50 rounded">
+                      <span class="text-sm">การลดระบบที่ซ้ำซ้อน</span>
+                      <span class="text-sm text-red-600 font-semibold">ลด 15-20%</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-orange-50 rounded">
+                      <span class="text-sm">การลดค่าใช้จ่ายด้านการบำรุงรักษา</span>
+                      <span class="text-sm text-orange-600 font-semibold">ลด 10-15%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Digital Transformation Acceleration -->
+          <div class="mb-16" id="transformation-acceleration">
+            <h3 class="text-2xl font-bold mb-8 text-gray-800">3.3 การขับเคลื่อนการเปลี่ยนผ่านสู่ดิจิทัล</h3>
+
+            <div class="highlight-box mb-8">
+              <h4 class="text-xl font-bold mb-4">วิสัยทัศน์เชิงกลยุทธ์ที่เป็นเอกภาพ</h4>
+              <p class="text-lg">การมีผู้นำที่มีประวัติการทำงานร่วมกันมาอย่างยาวนานช่วยสร้างวิสัยทัศน์ที่ชัดเจนและเป็นเอกภาพ ซึ่งเป็นพื้นฐานสำคัญในการขับเคลื่อนการเปลี่ยนผ่านสู่ดิจิทัลอย่างมีประสิทธิภาพ</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-blue-800">
+                  <i class="fas fa-compass mr-2"></i>วางแผนระยะยาวที่สอดคล้องกัน
+                </h4>
+
+                <div class="space-y-4">
+                  <div class="p-4 bg-blue-50 rounded-lg">
+                    <h5 class="font-semibold text-blue-800 mb-2">แผนแม่บทดิจิทัลที่เป็นหนึ่งเดียว</h5>
+                    <p class="text-sm text-blue-700">ทั้งสองฝ่ายมุ่งไปสู่เป้าหมายเดียวกัน ไม่ใช่แผนที่ขัดแย้งกัน</p>
+                  </div>
+
+                  <div class="p-4 bg-green-50 rounded-lg">
+                    <h5 class="font-semibold text-green-800 mb-2">การจัดลำดับความสำคัญของโครงการที่เหมาะสม</h5>
+                    <p class="text-sm text-green-700">ตัดสินใจร่วมกันว่าโครงการใดควรทำก่อน-หลัง โดยคำนึงถึงความสามารถของทั้งสองฝ่าย</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-green-800">
+                  <i class="fas fa-sync-alt mr-2"></i>การปรับตัวต่อการเปลี่ยนแปลงของเทคโนโลยี
+                </h4>
+
+                <div class="space-y-4">
+                  <div class="flex items-start">
+                    <i class="fas fa-search text-green-600 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">การประเมินเทคโนโลยีใหม่ร่วมกัน</h5>
+                      <p class="text-sm text-gray-600 mt-1">ผู้นำทั้งสองประเมินว่าเทคโนโลยีใดเหมาะสมกับบริบทของธนาคาร โดยพิจารณาทั้งมุมมองด้านธุรกิจและด้านเทคนิค</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start">
+                    <i class="fas fa-shield-alt text-green-600 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">การบริหารความเสี่ยงทางเทคโนโลยี</h5>
+                      <p class="text-sm text-gray-600 mt-1">ตัดสินใจร่วมกันในการนำเทคโนโลยีใหม่เข้ามาใช้ พร้อมวางแผนรับมือกับความล้มเหลวและเตรียมพร้อมสำหรับการขยายตัว</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-purple-800">
+                  <i class="fas fa-trophy mr-2"></i>การสร้างความสามารถในการแข่งขัน
+                </h4>
+
+                <div class="space-y-4">
+                  <div class="p-4 bg-purple-50 rounded-lg">
+                    <h5 class="font-semibold text-purple-800 mb-2">การตอบสนองต่อตลาดที่รวดเร็ว</h5>
+                    <p class="text-sm text-purple-700">ทั้งสองฝ่ายแลกเปลี่ยนข้อมูลเชิงลึกเกี่ยวกับตลาดและเทคโนโลยี ช่วยให้เห็นโอกาสที่อาจพลาดไปหากมองเพียงด้านเดียว</p>
+                  </div>
+
+                  <div class="p-4 bg-orange-50 rounded-lg">
+                    <h5 class="font-semibold text-orange-800 mb-2">การปรับตัวต่อกฎระเบียบใหม่</h5>
+                    <p class="text-sm text-orange-700">ประสานงานในการปรับระบบให้สอดคล้องกับข้อกำหนดของธนาคารแห่งประเทศไทยได้เร็วขึ้น</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-orange-800">
+                  <i class="fas fa-star mr-2"></i>การสร้างความแตกต่างทางธุรกิจ
+                </h4>
+
+                <div class="space-y-4">
+                  <div class="flex items-start">
+                    <i class="fas fa-gem text-orange-600 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">การพัฒนาขีดความสามารถเฉพาะทาง</h5>
+                      <p class="text-sm text-gray-600 mt-1">สร้างระบบและบริการที่ยากให้คู่แข่งเลียนแบบได้ เกิดจากการผสมผสานระหว่างความเข้าใจลูกค้าที่ลึกซึ้งและเทคโนโลยีที่เหมาะสม</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start">
+                    <i class="fas fa-expand-arrows-alt text-orange-600 mr-3 mt-1"></i>
+                    <div>
+                      <h5 class="font-semibold text-gray-800">การขยาย ecosystem</h5>
+                      <p class="text-sm text-gray-600 mt-1">ประสานงานกับพันธมิตรภายนอกได้อย่างมีประสิทธิภาพ ทั้งการออกแบบประสบการณ์และการเชื่อมต่อระบบ</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Success Metrics -->
+          <div class="mb-16">
+            <h3 class="text-2xl font-bold mb-8 text-gray-800">3.4 ตัวชี้วัดความสำเร็จที่คาดหวัง</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-blue-800">
+                  <i class="fas fa-clock mr-2"></i>ตัวชี้วัดด้านเวลา
+                </h4>
+
+                <div class="space-y-4">
+                  <div class="p-4 bg-blue-50 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                      <h5 class="font-semibold text-gray-800 text-sm">ระยะเวลาพัฒนาผลิตภัณฑ์ดิจิทัลใหม่</h5>
+                      <span class="text-blue-600 font-bold">ลดลง 30-40%</span>
+                    </div>
+                    <p class="text-xs text-gray-600">ระยะเวลา: 12 เดือนแรก</p>
+                  </div>
+
+                  <div class="p-4 bg-green-50 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                      <h5 class="font-semibold text-gray-800 text-sm">เวลาตอบสนองต่อความต้องการทางธุรกิจ</h5>
+                      <span class="text-green-600 font-bold">ลดลง 50%</span>
+                    </div>
+                    <p class="text-xs text-gray-600">สำหรับการปรับปรุงเล็กน้อย</p>
+                  </div>
+
+                  <div class="p-4 bg-purple-50 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                      <h5 class="font-semibold text-gray-800 text-sm">ระยะเวลาแก้ไขปัญหาระบบข้ามฝ่าย</h5>
+                      <span class="text-purple-600 font-bold">ลดลง 60%</span>
+                    </div>
+                    <p class="text-xs text-gray-600">ทันทีที่เริ่มงาน</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-green-800">
+                  <i class="fas fa-award mr-2"></i>ตัวชี้วัดด้านคุณภาพ
+                </h4>
+
+                <div class="space-y-4">
+                  <div class="p-4 bg-green-50 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                      <h5 class="font-semibold text-gray-800 text-sm">คะแนนความพึงพอใจของลูกค้าด้านดิจิทัล</h5>
+                      <span class="text-green-600 font-bold">เพิ่มขึ้น 20%</span>
+                    </div>
+                    <p class="text-xs text-gray-600">ภายในปีแรก</p>
+                  </div>
+
+                  <div class="p-4 bg-red-50 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                      <h5 class="font-semibold text-gray-800 text-sm">อัตราข้อผิดพลาดของระบบ integration</h5>
+                      <span class="text-red-600 font-bold">ลดลง 40%</span>
+                    </div>
+                    <p class="text-xs text-gray-600">ภายใน 12 เดือนแรก</p>
+                  </div>
+
+                  <div class="p-4 bg-teal-50 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                      <h5 class="font-semibold text-gray-800 text-sm">ความพร้อมใช้งานของระบบ (Uptime)</h5>
+                      <span class="text-teal-600 font-bold">เพิ่มเป็น 99.9%</span>
+                    </div>
+                    <p class="text-xs text-gray-600">ภายใน 18 เดือน</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h4 class="font-semibold text-lg mb-4 text-purple-800">
+                  <i class="fas fa-chart-line mr-2"></i>ตัวชี้วัดด้านธุรกิจ
+                </h4>
+
+                <div class="space-y-4">
+                  <div class="p-4 bg-purple-50 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                      <h5 class="font-semibold text-gray-800 text-sm">จำนวนผลิตภัณฑ์ดิจิทัลใหม่ที่เปิดตัว</h5>
+                      <span class="text-purple-600 font-bold">เพิ่มขึ้น 2 เท่า</span>
+                    </div>
+                    <p class="text-xs text-gray-600">ภายใน 18 เดือน</p>
+                  </div>
+
+                  <div class="p-4 bg-orange-50 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                      <h5 class="font-semibold text-gray-800 text-sm">มูลค่าธุรกรรมผ่านช่องทางดิจิทัล</h5>
+                      <span class="text-orange-600 font-bold">เติบโต 50% ต่อปี</span>
+                    </div>
+                    <p class="text-xs text-gray-600">ภายใน 3 ปี</p>
+                  </div>
+
+                  <div class="p-4 bg-blue-50 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                      <h5 class="font-semibold text-gray-800 text-sm">ต้นทุนการดำเนินงานด้านไอทีต่อธุรกรรม</h5>
+                      <span class="text-blue-600 font-bold">ลดลง 15%</span>
+                    </div>
+                    <p class="text-xs text-gray-600">ภายใน 2 ปี</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Conclusion -->
+      <section class="py-16 px-6 bg-white" id="conclusion">
+        <div class="max-w-6xl mx-auto">
+          <div class="section-header">
+            <h2 class="serif">สรุป</h2>
+            <p>การวิเคราะห์ผลกระทบและข้อเสนอแนะเชิงยุทธศาสตร์</p>
+          </div>
+
+          <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-xl mb-8">
+            <h3 class="text-2xl font-bold mb-4 text-gray-800">ข้อสรุปหลัก</h3>
+            <p class="text-lg text-gray-700 leading-relaxed">
+              การจ้างผู้บริหารไอทีคู่ที่มีประวัติการทำงานร่วมกันมา 3 ปี ในตำแหน่งผู้อำนวยการฝ่ายพัฒนาธุรกิจดิจิทัลและฝ่ายพัฒนาระบบสนับสนุนสารสนเทศของ SME D Bank 
+              เป็นกลยุทธ์ที่มีศักยภาพสูงในการเร่งความเร็วการเปลี่ยนผ่านสู่ดิจิทัล ลดแรงเสียดท้องระหว่างหน่วยงาน 
+              และยกระดับขีดความสามารถโดยรวมขององค์กร
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white border rounded-lg p-6 shadow-sm">
+              <h4 class="font-semibold text-lg mb-4 text-blue-800">
+                <i class="fas fa-key mr-2"></i>ปัจจัยสำคัญแห่งความสำเร็จ
+              </h4>
+
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <i class="fas fa-handshake text-blue-500 mr-3 mt-1"></i>
+                  <div>
+                    <h5 class="font-semibold text-gray-800">ความไว้วางใจและความเข้าใจซึ่งกันและกัน</h5>
+                    <p class="text-sm text-gray-600 mt-1">จากประวัติการทำงานร่วมกันมา 3 ปี ช่วยลดระยะเวลาในการปรับตัวและสร้างความเข้าใจ</p>
+                  </div>
+                </div>
+
+                <div class="flex items-start">
+                  <i class="fas fa-language text-green-500 mr-3 mt-1"></i>
+                  <div>
+                    <h5 class="font-semibold text-gray-800">ภาษาและมาตรฐานร่วมกัน</h5>
+                    <p class="text-sm text-gray-600 mt-1">มีมาตรฐานการพัฒนา รูปแบบ API และวิธีการทำงานที่ตรงกัน ลดเวลาในการเจรจาและตกลง</p>
+                  </div>
+                </div>
+
+                <div class="flex items-start">
+                  <i class="fas fa-users text-purple-500 mr-3 mt-1"></i>
+                  <div>
+                    <h5 class="font-semibold text-gray-800">การสร้างวัฒนธรรมองค์กร</h5>
+                    <p class="text-sm text-gray-600 mt-1">เป็นตัวอย่างที่ดีในการทำงานร่วมกัน ส่งเสริมวัฒนธรรมแห่งการร่วมมือและการสื่อสารที่เปิดเผย</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white border rounded-lg p-6 shadow-sm">
+              <h4 class="font-semibold text-lg mb-4 text-green-800">
+                <i class="fas fa-chart-bar mr-2"></i>ผลลัพธ์ที่คาดหวัง
+              </h4>
+
+              <div class="space-y-4">
+                <div class="p-3 bg-green-50 rounded">
+                  <h5 class="font-semibold text-green-800 text-sm mb-1">การลดเวลาในการพัฒนาผลิตภัณฑ์ใหม่</h5>
+                  <p class="text-2xl font-bold text-green-600">30-40%</p>
+                  <p class="text-xs text-gray-600">ภายใน 12 เดือนแรก</p>
+                </div>
+
+                <div class="p-3 bg-blue-50 rounded">
+                  <h5 class="font-semibold text-blue-800 text-sm mb-1">การเพิ่มความพึงพอใจของลูกค้า</h5>
+                  <p class="text-2xl font-bold text-blue-600">20%</p>
+                  <p class="text-xs text-gray-600">ภายในปีแรก</p>
+                </div>
+
+                <div class="p-3 bg-purple-50 rounded">
+                  <h5 class="font-semibold text-purple-800 text-sm mb-1">การเพิ่มจำนวนผลิตภัณฑ์ใหม่</h5>
+                  <p class="text-2xl font-bold text-purple-600">2 เท่า</p>
+                  <p class="text-xs text-gray-600">ภายใน 18 เดือน</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-r from-gray-800 to-blue-800 text-white p-8 rounded-xl">
+            <h4 class="text-xl font-bold mb-4">ข้อเสนอแนะเชิงยุทธศาสตร์</h4>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div>
+                <h5 class="font-semibold mb-2">
+                  <i class="fas fa-search mr-2"></i>การคัดเลือกผู้บริหาร
+                </h5>
+                <p class="text-sm text-gray-200">ควรมองหาผู้บริหารที่ไม่เพียงมีทักษะทางเทคนิค แต่ยังมีความสามารถในการทำงานร่วมกัน สื่อสารได้ดี และมีวิสัยทัศน์ที่สอดคล้องกับ SME D Bank</p>
+              </div>
+              <div>
+                <h5 class="font-semibold mb-2">
+                  <i class="fas fa-handshake mr-2"></i>การสนับสนุนจากผู้บริหารระดับสูง
+                </h5>
+                <p class="text-sm text-gray-200">การสนับสนุนจากคณะกรรมการและผู้บริหารระดับสูงเป็นสิ่งสำคัญในการสร้างสภาพแวดล้อมที่เอื้อต่อการทำงานร่วมกันของทั้งสองฝ่าย</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-gray-900 text-white py-8 px-6">
+        <div class="max-w-6xl mx-auto text-center">
+          <p class="text-gray-400"> 2027 SME D Bank - การวิเคราะห์โครงสร้างและยุทธศาสตร์ด้านไอที</p>
+          <div class="mt-4 flex justify-center space-x-4">
+            <a class="text-gray-400 hover:text-white" href="#">
+              <i class="fas fa-envelope"></i> ติดต่อเรา
+            </a>
+            <a class="text-gray-400 hover:text-white" href="#">
+              <i class="fas fa-phone"></i> สายด่วน
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                // Primary colors with high contrast
+                primaryColor: '#ffffff',
+                primaryTextColor: '#2c3e50',
+                primaryBorderColor: '#2c3e50',
+                
+                // Secondary colors with good contrast
+                secondaryColor: '#f8f9fa',
+                secondaryTextColor: '#34495e',
+                secondaryBorderColor: '#34495e',
+                
+                // Tertiary colors for variety
+                tertiaryColor: '#e9ecef',
+                tertiaryTextColor: '#495057',
+                tertiaryBorderColor: '#495057',
+                
+                // Line and edge styling
+                lineColor: '#34495e',
+                edgeLabelBackground: '#ffffff',
+                
+                // Background colors with good contrast ratios
+                background: '#ffffff',
+                mainBkg: '#ffffff',
+                secondBkg: '#f8f9fa',
+                tertiaryBkg: '#e9ecef',
+                
+                // Node-specific colors with high contrast
+                c0: '#ffffff', // White background, dark text
+                c1: '#f8f9fa', // Light gray background, dark text  
+                c2: '#e3f2fd', // Light blue background, dark text
+                c3: '#f3e5f5', // Light purple background, dark text
+                c4: '#e8f5e8', // Light green background, dark text
+                c5: '#fff3e0', // Light orange background, dark text
+                c6: '#fce4ec', // Light pink background, dark text
+                c7: '#f1f8e9', // Light lime background, dark text
+                
+                // Text colors for different node types
+                cLabel0: '#2c3e50',
+                cLabel1: '#34495e', 
+                cLabel2: '#1e3a8a',
+                cLabel3: '#7c2d12',
+                cLabel4: '#14532d',
+                cLabel5: '#9a3412',
+                cLabel6: '#9f1239',
+                cLabel7: '#4c7c0d',
+                
+                // Border colors with good contrast
+                nodeBorder: '#2c3e50',
+                clusterBkg: '#f8f9fa',
+                clusterBorder: '#34495e',
+                
+                // Specific element styling
+                defaultLinkColor: '#34495e',
+                titleColor: '#1a202c',
+                
+                // Font settings
+                fontFamily: 'Noto Sans Thai, sans-serif',
+                fontSize: '14px',
+                fontWeight: '500'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20,
+                nodeSpacing: 50,
+                rankSpacing: 80,
+                diagramPadding: 20
+            },
+            fontFamily: 'Noto Sans Thai, sans-serif',
+            fontSize: 14,
+            fontWeight: 500
+        });
+
+        // Initialize Mermaid Controls for zoom and pan
+        function initializeMermaidControls() {
+            const containers = document.querySelectorAll('.mermaid-container');
+
+            containers.forEach(container => {
+            const mermaidElement = container.querySelector('.mermaid');
+            let scale = 1;
+            let isDragging = false;
+            let startX, startY, translateX = 0, translateY = 0;
+
+            // ฟังก์ชันสำหรับอัพเดตการแปลงภาพ
+            function updateTransform() {
+                mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+                if (scale > 1) {
+                container.classList.add('zoomed');
+                } else {
+                container.classList.remove('zoomed');
+                }
+
+                mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+            }
+
+            // Zoom controls
+            const zoomInBtn = container.querySelector('.zoom-in');
+            const zoomOutBtn = container.querySelector('.zoom-out');
+            const resetBtn = container.querySelector('.reset-zoom');
+            const fullscreenBtn = container.querySelector('.fullscreen');
+
+            if (zoomInBtn) {
+                zoomInBtn.addEventListener('click', () => {
+                scale = Math.min(scale * 1.25, 4);
+                updateTransform();
+                });
+            }
+
+            if (zoomOutBtn) {
+                zoomOutBtn.addEventListener('click', () => {
+                scale = Math.max(scale / 1.25, 0.3);
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+                updateTransform();
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+                });
+            }
+
+            if (fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', () => {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
+                }
+                });
+            }
+
+            // Mouse Events
+            mermaidElement.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+                mermaidElement.style.cursor = 'grabbing';
+                updateTransform();
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseleave', () => {
+                if (isDragging) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            // Enhanced wheel zoom with better center point handling
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+                // Adjust translation to zoom towards center
+                if (newScale !== scale) {
+                const scaleDiff = newScale / scale;
+                translateX = translateX * scaleDiff;
+                translateY = translateY * scaleDiff;
+                scale = newScale;
+
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+
+                updateTransform();
+                }
+            });
+
+            // Touch Events - ปรับปรุงการรองรับการสัมผัส
+            let touchStartTime = 0;
+            let initialDistance = 0;
+            let initialScale = 1;
+            let isPinching = false;
+
+            // ฟังก์ชันคำนวณระยะห่างระหว่างสองนิ้ว
+            function getTouchDistance(touch1, touch2) {
+                return Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+                );
+            }
+
+            mermaidElement.addEventListener('touchstart', (e) => {
+                touchStartTime = Date.now();
+                if (e.touches.length === 1) {
+                // ลากด้วยนิ้วเดียว
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+
+                } else if (e.touches.length === 2) {
+                // ซูมด้วยสองนิ้ว
+                isPinching = true;
+                isDragging = false;
+
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialDistance = getTouchDistance(touch1, touch2);
+                initialScale = scale;
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isDragging && !isPinching) {
+                // ลากด้วยนิ้วเดียว
+                const touch = e.touches[0];
+                translateX = touch.clientX - startX;
+                translateY = touch.clientY - startY;
+                updateTransform();
+
+                } else if (e.touches.length === 2 && isPinching) {
+                // ซูมด้วยสองนิ้ว
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = getTouchDistance(touch1, touch2);
+
+                if (initialDistance > 0) {
+                    const newScale = Math.min(Math.max(
+                    initialScale * (currentDistance / initialDistance),
+                    0.3
+                    ), 4);
+                    scale = newScale;
+                    updateTransform();
+                }
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchend', (e) => {
+                // รีเซ็ตสถานะเมื่อเลิกสัมผัส
+                if (e.touches.length === 0) {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                    updateTransform();
+                }
+                } else if (e.touches.length === 1 && isPinching) {
+                // เปลี่ยนจากสองนิ้วเป็นนิ้วเดียว เปลี่ยนโหมดเป็นลาก
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+                }
+
+                updateTransform();
+            });
+
+            mermaidElement.addEventListener('touchcancel', (e) => {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                if (scale <= 1) {
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+                }
+            });
+
+            // Initialize display
+            updateTransform();
+            });
+        }
+
+        // Table of Contents Active Link
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocLinks = document.querySelectorAll('.toc-link');
+            const sections = document.querySelectorAll('section[id], div[id]');
+            
+            function updateActiveLink() {
+                let current = '';
+                sections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top <= 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            // Smooth scrolling for TOC links
+            tocLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Update active link on scroll
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink(); // Initial call
+
+            // Initialize mermaid controls
+            initializeMermaidControls();
+        });
+
+        // Smooth reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.stat-card, .bg-white, .highlight-box').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+
+  
+
+</body></html>
