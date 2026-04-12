@@ -1,0 +1,1335 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Native macOS AI Collaboration: GPT-5.4 Codex, Claude Opus 4.6, and Extended Multi-Model Integration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tiempos+Headline:wght@400;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <style>
+        :root {
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-400: #94a3b8;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --emerald-600: #059669;
+            --emerald-500: #10b981;
+            --emerald-400: #34d399;
+            --emerald-100: #d1fae5;
+            --amber-600: #d97706;
+            --amber-500: #f59e0b;
+            --amber-400: #fbbf24;
+            --amber-100: #fef3c7;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--slate-50) 0%, #ffffff 100%);
+            color: var(--slate-900);
+            line-height: 1.7;
+        }
+        
+        .font-tiempos {
+            font-family: 'Tiempos Headline', serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-700) 50%, var(--emerald-600) 100%);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, var(--emerald-400), var(--amber-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .toc-fixed {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            width: 280px;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+            z-index: 50;
+            background: rgba(248, 250, 252, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--slate-200);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .content-main {
+            margin-left: 320px;
+            max-width: 900px;
+            padding: 2rem;
+        }
+        
+        .citation {
+            display: inline-block;
+            background: var(--emerald-100);
+            color: var(--emerald-700);
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-decoration: none;
+            margin-left: 0.125rem;
+            transition: all 0.2s;
+        }
+        
+        .citation:hover {
+            background: var(--emerald-200);
+            transform: translateY(-1px);
+        }
+        
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, var(--emerald-400), transparent);
+            margin: 3rem 0;
+        }
+        
+        .insight-highlight {
+            background: linear-gradient(135deg, var(--amber-100), var(--emerald-100));
+            border-left: 4px solid var(--amber-500);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+        
+        @media (max-width: 1280px) {
+            .toc-fixed {
+                display: none;
+            }
+            .content-main {
+                margin-left: 0;
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .content-main {
+                overflow-wrap: break-word;
+            }
+            .hero-gradient .text-6xl {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            .hero-gradient .text-xl {
+                font-size: 1rem;
+            }
+            .hero-gradient .p-8 {
+                padding: 1.5rem;
+            }
+            .hero-gradient .grid.grid-cols-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-gradient .max-w-7xl.mx-auto {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-gradient .text-6xl {
+                font-size: 1.8rem;
+            }
+            .hero-gradient .text-xl {
+                font-size: 0.9rem;
+            }
+        }
+        
+        .grid-bento {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .grid-bento .main {
+            grid-row: 1 / 3;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-bento {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+            .grid-bento .main {
+                grid-row: auto;
+            }
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body>
+    <!-- Table of Contents -->
+    <nav class="toc-fixed">
+      <h3 class="font-tiempos text-lg font-semibold text-slate-900 mb-4">Contents</h3>
+      <ul class="space-y-2 text-sm">
+        <li>
+          <a href="#executive-summary" class="text-slate-600 hover:text-emerald-600 transition-colors">Executive Summary</a>
+        </li>
+        <li>
+          <a href="#core-architecture" class="text-slate-600 hover:text-emerald-600 transition-colors">Core Architecture</a>
+        </li>
+        <li>
+          <a href="#implementation-path" class="text-slate-600 hover:text-emerald-600 transition-colors">Implementation Path</a>
+        </li>
+        <li>
+          <a href="#native-applications" class="text-slate-600 hover:text-emerald-600 transition-colors">Native Applications</a>
+        </li>
+        <li>
+          <a href="#extended-integration" class="text-slate-600 hover:text-emerald-600 transition-colors">Extended Integration</a>
+        </li>
+        <li>
+          <a href="#use-cases" class="text-slate-600 hover:text-emerald-600 transition-colors">Use Case Workflows</a>
+        </li>
+        <li>
+          <a href="#deployment" class="text-slate-600 hover:text-emerald-600 transition-colors">Deployment Strategies</a>
+        </li>
+        <li>
+          <a href="#extensibility" class="text-slate-600 hover:text-emerald-600 transition-colors">Extensibility</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="content-main">
+      <!-- Hero Section -->
+      <section class="hero-gradient rounded-2xl p-8 mb-12 text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-600/20 to-amber-600/20"></div>
+        <div class="relative z-10">
+          <div class="grid-bento">
+            <div class="main">
+              <h1 class="font-tiempos text-6xl font-bold mb-6 leading-tight">
+                Native macOS AI Collaboration
+              </h1>
+              <p class="text-xl text-slate-200 mb-8 max-w-2xl">
+                GPT-5.4 Codex, Claude Opus 4.6, and Extended Multi-Model Integration
+              </p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+              <div class="flex items-center mb-4">
+                <i class="fas fa-cogs text-emerald-400 text-2xl mr-3"></i>
+                <h3 class="font-semibold text-lg">Core Framework</h3>
+              </div>
+              <p class="text-sm text-slate-200">Model Context Protocol (MCP) with ARIS cross-model review loops</p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+              <div class="flex items-center mb-4">
+                <i class="fas fa-expand-arrows-alt text-amber-400 text-2xl mr-3"></i>
+                <h3 class="font-semibold text-lg">Extended Support</h3>
+              </div>
+              <p class="text-sm text-slate-200">Kimi Claw, Yutori Computer, Manus.im, and Bud integration</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Executive Summary -->
+      <section id="executive-summary" class="mb-16">
+        <h2 class="font-tiempos text-3xl font-bold text-slate-900 mb-8">Executive Summary</h2>
+
+        <div class="insight-highlight">
+          <h3 class="font-tiempos text-xl font-semibold text-slate-900 mb-4">
+            <i class="fas fa-lightbulb text-amber-500 mr-2"></i>
+            Key Finding: MCP as Foundational Standard
+          </h3>
+          <p class="text-lg font-medium text-slate-800 mb-4">
+            The Model Context Protocol (MCP) has emerged as the critical enabling technology for direct AI-to-AI collaboration on macOS,
+            with Apple&#39;s native integration in Xcode 26.3 marking a watershed moment for multi-model development workflows.
+          </p>
+        </div>
+
+        <div class="prose prose-lg max-w-none">
+          <p class="text-slate-700 mb-6">
+            The most effective approach for native macOS collaboration between <strong>GPT-5.4 Codex</strong> and
+            <strong>Claude Opus 4.6</strong> leverages the <strong>Model Context Protocol (MCP)</strong> as the foundational
+            interoperability layer, implemented through the <strong>ARIS framework</strong> for cross-model review loops or
+            custom MCP bridging for direct tool invocation.
+          </p>
+
+          <p class="text-slate-700 mb-6">
+            <strong>Xcode 26.3&#39;s native MCP support</strong> provides the most polished integration for developers,
+            while <strong>Claude Cowork</strong> and <strong>Codex CLI</strong> serve as capable host applications.
+            Extension to <strong>Kimi Claw</strong> is well-supported through <strong>OpenClaw</strong> with explicit
+            GPT-5.4 integration; <strong>Manus.im</strong>, <strong>Yutori Computer</strong>, and <strong>Bud</strong>
+            require API-first integration or custom MCP adapter development.
+          </p>
+
+          <p class="text-slate-700">
+            For production deployment, prioritize <strong>local-first architectures</strong> with
+            <strong>Apple Silicon optimization</strong> for sensitive workloads, or
+            <strong>hybrid cloud-local setups</strong> for cost efficiency.
+          </p>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Core Architecture -->
+      <section id="core-architecture" class="mb-16">
+        <h2 class="font-tiempos text-3xl font-bold text-slate-900 mb-8">Core Collaboration Architecture</h2>
+
+        <h3 class="font-tiempos text-2xl font-semibold text-slate-800 mb-6">Model Context Protocol (MCP)</h3>
+
+        <div class="bg-slate-50 rounded-xl p-8 mb-8">
+          <h4 class="font-semibold text-lg text-slate-900 mb-4">MCP Architecture Principles</h4>
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-lg p-6 shadow-sm">
+              <i class="fas fa-network-wired text-emerald-600 text-2xl mb-3"></i>
+              <h5 class="font-semibold text-slate-900 mb-2">JSON-RPC 2.0</h5>
+              <p class="text-sm text-slate-600">Standardized communication layer enabling cross-language compatibility</p>
+            </div>
+            <div class="bg-white rounded-lg p-6 shadow-sm">
+              <i class="fas fa-layer-group text-emerald-600 text-2xl mb-3"></i>
+              <h5 class="font-semibold text-slate-900 mb-2">Separation of Concerns</h5>
+              <p class="text-sm text-slate-600">LLM reasoning decoupled from tool execution for flexibility</p>
+            </div>
+            <div class="bg-white rounded-lg p-6 shadow-sm">
+              <i class="fas fa-shield-alt text-emerald-600 text-2xl mb-3"></i>
+              <h5 class="font-semibold text-slate-900 mb-2">Secure Sandboxing</h5>
+              <p class="text-sm text-slate-600">macOS security framework integration for safe automation</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="insight-highlight">
+          <h4 class="font-tiempos text-lg font-semibold text-slate-900 mb-4">
+            <i class="fas fa-apple-alt text-amber-500 mr-2"></i>
+            Apple&#39;s Xcode 26.3 Integration
+          </h4>
+          <p class="text-slate-800">
+            Apple&#39;s February 2026 integration of MCP into Xcode 26.3 marks a watershed moment,
+            with the IDE acting as a host for multiple AI agents, providing unified orchestration
+            of GPT-5.4, Claude, and other models with debugging tools and secure sandboxing.
+            <a href="#ref-4" class="citation">[4]</a>
+            <a href="#ref-262" class="citation">[262]</a>
+          </p>
+        </div>
+
+        <h4 class="font-semibold text-lg text-slate-900 mb-4">MCP Server-Client Topology</h4>
+        <div class="overflow-x-auto">
+          <table class="w-full bg-white rounded-lg shadow-sm border border-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Role</th>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Examples</th>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Function</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">Host Applications</td>
+                <td class="px-6 py-4 text-slate-600">Claude Cowork, Codex CLI, Claude Desktop</td>
+                <td class="px-6 py-4 text-slate-600">Orchestrate multiple models, manage context</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">MCP Servers</td>
+                <td class="px-6 py-4 text-slate-600">llm-chat, Zotero, GitHub, macos-automator-mcp</td>
+                <td class="px-6 py-4 text-slate-600">Provide specialized capabilities and tools</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">Clients</td>
+                <td class="px-6 py-4 text-slate-600">Language models, automation scripts</td>
+                <td class="px-6 py-4 text-slate-600">Consume services, execute tasks</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-sm text-slate-500 mt-2">
+          Source: <a href="#ref-334" class="citation">[334]</a>
+        </p>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Implementation Path -->
+      <section id="implementation-path" class="mb-16">
+        <h2 class="font-tiempos text-3xl font-bold text-slate-900 mb-8">Primary Implementation Path</h2>
+
+        <h3 class="font-tiempos text-2xl font-semibold text-slate-800 mb-6">ARIS Framework</h3>
+
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-8 mb-8">
+          <h4 class="font-semibold text-lg text-slate-900 mb-4">
+            <i class="fas fa-sync-alt text-emerald-600 mr-2"></i>
+            Cross-Model Review Loop Architecture
+          </h4>
+          <p class="text-slate-700 mb-6">
+            ARIS&#39;s core innovation implements a structured four-round autonomous review process that elevates
+            work quality from initial ratings of 5/10 to 7.5/10 &#34;overnight with 20+ GPU experiments&#34;
+            for research workflows.
+            <a href="#ref-334" class="citation">[334]</a>
+          </p>
+
+          <div class="grid md:grid-cols-4 gap-4">
+            <div class="bg-white rounded-lg p-4 shadow-sm">
+              <div class="text-center">
+                <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">1</div>
+                <h5 class="font-semibold text-sm text-slate-900">Initial Generation</h5>
+                <p class="text-xs text-slate-600 mt-1">Claude Code executes</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg p-4 shadow-sm">
+              <div class="text-center">
+                <div class="w-8 h-8 bg-amber-600 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">2</div>
+                <h5 class="font-semibold text-sm text-slate-900">Critical Review</h5>
+                <p class="text-xs text-slate-600 mt-1">GPT-5.4 critiques</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg p-4 shadow-sm">
+              <div class="text-center">
+                <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">3</div>
+                <h5 class="font-semibold text-sm text-slate-900">Revision Synthesis</h5>
+                <p class="text-xs text-slate-600 mt-1">Claude incorporates feedback</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg p-4 shadow-sm">
+              <div class="text-center">
+                <div class="w-8 h-8 bg-slate-600 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">4</div>
+                <h5 class="font-semibold text-sm text-slate-900">Final Verification</h5>
+                <p class="text-xs text-slate-600 mt-1">Quality assessment</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="font-semibold text-lg text-slate-900 mb-4">Skill-Based Workflow Orchestration</h4>
+        <div class="overflow-x-auto mb-8">
+          <table class="w-full bg-white rounded-lg shadow-sm border border-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Skill</th>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Purpose</th>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Model Assignment</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">/idea-discovery</td>
+                <td class="px-6 py-4 text-slate-600">Literature survey → brainstorm → novelty check → pilot experiments → ranked report</td>
+                <td class="px-6 py-4 text-slate-600">Claude executor, GPT-5.4 reviewer</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">/auto-review-loop</td>
+                <td class="px-6 py-4 text-slate-600">4-round autonomous quality improvement with structured scoring</td>
+                <td class="px-6 py-4 text-slate-600">Alternating by round</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">/paper-writing</td>
+                <td class="px-6 py-4 text-slate-600">Narrative → outline → figures → LaTeX → PDF → auto-review</td>
+                <td class="px-6 py-4 text-slate-600">Claude primary, GPT-5.4 citation verification</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">/research-lit</td>
+                <td class="px-6 py-4 text-slate-600">Multi-source paper search (Zotero + Obsidian + local PDFs + arXiv/Scholar)</td>
+                <td class="px-6 py-4 text-slate-600">Either, with Zotero MCP</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-sm text-slate-500">
+          Source: <a href="#ref-334" class="citation">[334]</a>
+        </p>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Native Applications -->
+      <section id="native-applications" class="mb-16">
+        <h2 class="font-tiempos text-3xl font-bold text-slate-900 mb-8">Native macOS Application Layer</h2>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-8">
+            <h3 class="font-tiempos text-xl font-semibold text-slate-900 mb-4">
+              <i class="fas fa-desktop text-emerald-600 mr-2"></i>
+              Claude Cowork
+            </h3>
+            <p class="text-slate-700 mb-4">
+              Anthropic&#39;s flagship desktop application for sustained, autonomous AI work with
+              Opus 4.6&#39;s 1M token context and Extended Thinking mode.
+            </p>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center">
+                <i class="fas fa-check text-emerald-600 mr-2"></i>
+                <span>Computer use capabilities (March 2026)</span>
+              </div>
+              <div class="flex items-center">
+                <i class="fas fa-check text-emerald-600 mr-2"></i>
+                <span>Deep macOS file system integration</span>
+              </div>
+              <div class="flex items-center">
+                <i class="fas fa-check text-emerald-600 mr-2"></i>
+                <span>Plugin architecture with MCP support</span>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500 mt-4">
+              <a href="#ref-344" class="citation">[344]</a>
+              <a href="#ref-345" class="citation">[345]</a>
+            </p>
+          </div>
+
+          <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-8">
+            <h3 class="font-tiempos text-xl font-semibold text-slate-900 mb-4">
+              <i class="fas fa-code text-amber-600 mr-2"></i>
+              GPT-5.4 Codex
+            </h3>
+            <p class="text-slate-700 mb-4">
+              OpenAI&#39;s code-focused model with native computer use capabilities and
+              superior cost efficiency (6× cheaper than Opus 4.6).
+            </p>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center">
+                <i class="fas fa-check text-amber-600 mr-2"></i>
+                <span>75.0% OSWorld-Verified score (exceeds human baseline)</span>
+              </div>
+              <div class="flex items-center">
+                <i class="fas fa-check text-amber-600 mr-2"></i>
+                <span>Native Codex CLI with MCP integration</span>
+              </div>
+              <div class="flex items-center">
+                <i class="fas fa-check text-amber-600 mr-2"></i>
+                <span>Xcode 26.3 native agent support</span>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500 mt-4">
+              <a href="#ref-309" class="citation">[309]</a>
+              <a href="#ref-311" class="citation">[311]</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="insight-highlight">
+          <h4 class="font-tiempos text-lg font-semibold text-slate-900 mb-4">
+            <i class="fas fa-trophy text-amber-500 mr-2"></i>
+            Performance Benchmarks: GPT-5.4 vs Claude Opus 4.6
+          </h4>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-lg p-4">
+              <h5 class="font-semibold text-slate-900 mb-2">OSWorld-Verified</h5>
+              <div class="text-2xl font-bold text-emerald-600 mb-1">75.0%</div>
+              <p class="text-sm text-slate-600">GPT-5.4 exceeds human baseline (72.4%)</p>
+            </div>
+            <div class="bg-white rounded-lg p-4">
+              <h5 class="font-semibold text-slate-900 mb-2">SWE-Bench Pro</h5>
+              <div class="text-2xl font-bold text-emerald-600 mb-1">57.7%</div>
+              <p class="text-sm text-slate-600">vs Claude Opus 4.6 ~45%</p>
+            </div>
+            <div class="bg-white rounded-lg p-4">
+              <h5 class="font-semibold text-slate-900 mb-2">Cost Efficiency</h5>
+              <div class="text-2xl font-bold text-amber-600 mb-1">6×</div>
+              <p class="text-sm text-slate-600">cheaper than Claude Opus 4.6</p>
+            </div>
+          </div>
+          <p class="text-sm text-slate-500 mt-4">
+            Sources: <a href="#ref-309" class="citation">[309]</a>
+            <a href="#ref-311" class="citation">[311]</a>
+          </p>
+        </div>
+
+        <h4 class="font-semibold text-lg text-slate-900 mb-4">Unified Multi-Model Clients</h4>
+        <div class="overflow-x-auto">
+          <table class="w-full bg-white rounded-lg shadow-sm border border-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Client</th>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Architecture</th>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Model Support</th>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Best For</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">macai</td>
+                <td class="px-6 py-4 text-slate-600">Native Swift/SwiftUI</td>
+                <td class="px-6 py-4 text-slate-600">15+ providers including OpenAI, Anthropic, Ollama</td>
+                <td class="px-6 py-4 text-slate-600">Native macOS experience, unified chat</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">TypingMind</td>
+                <td class="px-6 py-4 text-slate-600">Web-based/PWA</td>
+                <td class="px-6 py-4 text-slate-600">15+ AI providers</td>
+                <td class="px-6 py-4 text-slate-600">One-time purchase, cross-platform</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">BoltAI</td>
+                <td class="px-6 py-4 text-slate-600">Native macOS</td>
+                <td class="px-6 py-4 text-slate-600">Multiple with MCP</td>
+                <td class="px-6 py-4 text-slate-600">Coding workflows, file system access</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-sm text-slate-500 mt-2">
+          Source: <a href="#ref-148" class="citation">[148]</a>
+          <a href="#ref-253" class="citation">[253]</a>
+          <a href="#ref-270" class="citation">[270]</a>
+        </p>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Extended Integration -->
+      <section id="extended-integration" class="mb-16">
+        <h2 class="font-tiempos text-3xl font-bold text-slate-900 mb-8">Extended Model Integration</h2>
+
+        <h3 class="font-tiempos text-2xl font-semibold text-slate-800 mb-6">Kimi Claw / OpenClaw Integration</h3>
+
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 mb-8">
+          <h4 class="font-semibold text-lg text-slate-900 mb-4">
+            <i class="fas fa-rocket text-blue-600 mr-2"></i>
+            OpenClaw Self-Hosted Framework
+          </h4>
+          <p class="text-slate-700 mb-6">
+            OpenClaw provides explicit support for Kimi integration alongside GPT-5.4 and other models,
+            with self-hosted deployment on macOS preserving data privacy and enabling customization.
+            <a href="#ref-242" class="citation">[242]</a>
+          </p>
+
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-lg p-4">
+              <h5 class="font-semibold text-slate-900 mb-2">One-line Installer</h5>
+              <code class="text-xs bg-slate-100 p-2 rounded block">curl -fsSL https://openclaw.ai/install.sh | bash</code>
+              <p class="text-xs text-slate-600 mt-2">Quick start, automatic dependencies</p>
+            </div>
+            <div class="bg-white rounded-lg p-4">
+              <h5 class="font-semibold text-slate-900 mb-2">Homebrew</h5>
+              <code class="text-xs bg-slate-100 p-2 rounded block">brew install openclaw</code>
+              <p class="text-xs text-slate-600 mt-2">Existing Homebrew workflows</p>
+            </div>
+            <div class="bg-white rounded-lg p-4">
+              <h5 class="font-semibold text-slate-900 mb-2">Manual Build</h5>
+              <code class="text-xs bg-slate-100 p-2 rounded block">Swift 6.2, Node.js 24</code>
+              <p class="text-xs text-slate-600 mt-2">Maximum control, customization</p>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="font-semibold text-lg text-slate-900 mb-4">Kimi K2.5 Local Deployment</h4>
+        <div class="overflow-x-auto mb-8">
+          <table class="w-full bg-white rounded-lg shadow-sm border border-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Quantization</th>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">File Size</th>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Memory Required</th>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Inference Speed</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">UD-TQ1_0 (1.8-bit)</td>
+                <td class="px-6 py-4 text-slate-600">240GB</td>
+                <td class="px-6 py-4 text-slate-600">240GB+</td>
+                <td class="px-6 py-4 text-slate-600">5-15 tok/s</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">UD-Q2_K_XL (2-bit)</td>
+                <td class="px-6 py-4 text-slate-600">375GB</td>
+                <td class="px-6 py-4 text-slate-600">380GB+</td>
+                <td class="px-6 py-4 text-slate-600">5-15 tok/s</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">UD-Q4_K_XL (4-bit)</td>
+                <td class="px-6 py-4 text-slate-600">~600GB</td>
+                <td class="px-6 py-4 text-slate-600">600GB+</td>
+                <td class="px-6 py-4 text-slate-600">5-15 tok/s</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-sm text-slate-500">
+          Mac Studio M3 Ultra with 512GB unified memory can accommodate these configurations.
+          Four-Mac Studio cluster (1.5TB total memory) achieved 28 tokens/second in distributed configurations.
+          <a href="#ref-341" class="citation">[341]</a>
+        </p>
+
+        <h3 class="font-tiempos text-2xl font-semibold text-slate-800 mb-6 mt-12">Manus.im Desktop Integration</h3>
+
+        <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-8">
+          <h4 class="font-semibold text-lg text-slate-900 mb-4">
+            <i class="fas fa-cloud text-purple-600 mr-2"></i>
+            Cloud-Native with Desktop Companion
+          </h4>
+          <p class="text-slate-700 mb-6">
+            Manus.im represents a different integration pattern: a cloud-native AI service developing
+            desktop companion capabilities with &#34;My Computer&#34; feature and menubar companion application.
+            <a href="#ref-5" class="citation">[5]</a>
+          </p>
+
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-lg p-4">
+              <h5 class="font-semibold text-slate-900 mb-2">My Computer</h5>
+              <p class="text-sm text-slate-600">Local file and terminal access (launched March 2026)</p>
+            </div>
+            <div class="bg-white rounded-lg p-4">
+              <h5 class="font-semibold text-slate-900 mb-2">Menubar Companion</h5>
+              <p class="text-sm text-slate-600">Persistent presence, quick task initiation</p>
+            </div>
+            <div class="bg-white rounded-lg p-4">
+              <h5 class="font-semibold text-slate-900 mb-2">Multi-Model Orchestration</h5>
+              <p class="text-sm text-slate-600">Claimed capability, external integration unclear</p>
+            </div>
+          </div>
+
+          <div class="mt-4 p-4 bg-amber-100 rounded-lg">
+            <p class="text-sm text-amber-800">
+              <i class="fas fa-exclamation-triangle mr-2"></i>
+              <strong>Critical Uncertainty:</strong> MCP support remains unverified, requiring custom API
+              development or webhook-based bridging for integration.
+            </p>
+          </div>
+        </div>
+
+        <h3 class="font-tiempos text-2xl font-semibold text-slate-800 mb-6 mt-12">Yutori Computer and Bud by Orchids.app</h3>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-6">
+            <h4 class="font-semibold text-lg text-slate-900 mb-4">
+              <i class="fas fa-compass text-teal-600 mr-2"></i>
+              Yutori Computer
+            </h4>
+            <p class="text-slate-700 text-sm mb-4">
+              &#34;Scouts by Yutori&#34; platform for dev-focused AI products, including &#34;Littlebird — AI Work Assistant&#34;
+              with cross-application integration and context capture.
+              <a href="#ref-135" class="citation">[135]</a>
+              <a href="#ref-181" class="citation">[181]</a>
+            </p>
+            <div class="bg-white rounded-lg p-3">
+              <p class="text-xs text-slate-600">Integration Assessment: API-first approach likely; MCP adapter development required</p>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-br from-rose-50 to-pink-50 rounded-xl p-6">
+            <h4 class="font-semibold text-lg text-slate-900 mb-4">
+              <i class="fas fa-seedling text-rose-600 mr-2"></i>
+              Bud by Orchids.app
+            </h4>
+            <p class="text-slate-700 text-sm mb-4">
+              Related to Orchids AI app builder platform, enabling &#34;build and deploy any app, any stack&#34;
+              with AI subscription integration for multiple models.
+              <a href="#ref-186" class="citation">[186]</a>
+              <a href="#ref-187" class="citation">[187]</a>
+              <a href="#ref-188" class="citation">[188]</a>
+            </p>
+            <div class="bg-white rounded-lg p-3">
+              <p class="text-xs text-slate-600">Integration Assessment: Positioned as orchestration layer; potential for multi-model workflow integration</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="insight-highlight mt-8">
+          <h4 class="font-tiempos text-lg font-semibold text-slate-900 mb-4">
+            <i class="fas fa-route text-amber-500 mr-2"></i>
+            Recommended Integration Path
+          </h4>
+          <p class="text-slate-800">
+            For both Yutori Computer and Bud, <strong>API-first investigation</strong> followed by
+            <strong>custom MCP adapter development</strong> if native support is unavailable. The pattern
+            established with other cloud services—MCP server implementation translating between standardized
+            requests and service-specific formats—applies.
+          </p>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Use Cases -->
+      <section id="use-cases" class="mb-16">
+        <h2 class="font-tiempos text-3xl font-bold text-slate-900 mb-8">Use Case-Specific Collaboration Workflows</h2>
+
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+          <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6">
+            <div class="flex items-center mb-4">
+              <i class="fas fa-code text-blue-600 text-2xl mr-3"></i>
+              <h3 class="font-tiempos text-xl font-semibold text-slate-900">Coding</h3>
+            </div>
+            <p class="text-slate-700 text-sm mb-4">Adversarial review pipelines with automated quality improvement from 5/10 to 7.5/10</p>
+            <div class="space-y-2">
+              <div class="flex items-center text-xs">
+                <i class="fas fa-arrow-right text-blue-600 mr-2"></i>
+                <span>Requirements analysis (Claude)</span>
+              </div>
+              <div class="flex items-center text-xs">
+                <i class="fas fa-arrow-right text-blue-600 mr-2"></i>
+                <span>Implementation (GPT-5.4 Codex)</span>
+              </div>
+              <div class="flex items-center text-xs">
+                <i class="fas fa-arrow-right text-blue-600 mr-2"></i>
+                <span>Adversarial review (cross-model)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6">
+            <div class="flex items-center mb-4">
+              <i class="fas fa-balance-scale text-emerald-600 text-2xl mr-3"></i>
+              <h3 class="font-tiempos text-xl font-semibold text-slate-900">Legal Writing</h3>
+            </div>
+            <p class="text-slate-700 text-sm mb-4">Jurisdiction-aware drafting with multi-model citation verification</p>
+            <div class="space-y-2">
+              <div class="flex items-center text-xs">
+                <i class="fas fa-flag text-emerald-600 mr-2"></i>
+                <span>CN: Kimi K2.5 (SIPO practice)</span>
+              </div>
+              <div class="flex items-center text-xs">
+                <i class="fas fa-flag text-emerald-600 mr-2"></i>
+                <span>US: Claude Opus 4.6 (USPTO)</span>
+              </div>
+              <div class="flex items-center text-xs">
+                <i class="fas fa-flag text-emerald-600 mr-2"></i>
+                <span>EP: GPT-5.4 (EPO guidelines)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6">
+            <div class="flex items-center mb-4">
+              <i class="fas fa-flask text-purple-600 text-2xl mr-3"></i>
+              <h3 class="font-tiempos text-xl font-semibold text-slate-900">Research</h3>
+            </div>
+            <p class="text-slate-700 text-sm mb-4">Autonomous experiment automation with multi-perspective synthesis</p>
+            <div class="space-y-2">
+              <div class="flex items-center text-xs">
+                <i class="fas fa-lightbulb text-purple-600 mr-2"></i>
+                <span>Idea discovery (/idea-discovery)</span>
+              </div>
+              <div class="flex items-center text-xs">
+                <i class="fas fa-book text-purple-600 mr-2"></i>
+                <span>Literature review (Zotero MCP)</span>
+              </div>
+              <div class="flex items-center text-xs">
+                <i class="fas fa-chart-line text-purple-600 mr-2"></i>
+                <span>Experiment automation (GPT-5.4)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 rounded-xl p-8">
+          <h4 class="font-semibold text-lg text-slate-900 mb-6">
+            <i class="fas fa-code-branch text-slate-600 mr-2"></i>
+            Coding: Adversarial Review Pipeline Detail
+          </h4>
+          <div class="overflow-x-auto">
+            <table class="w-full bg-white rounded-lg shadow-sm border border-slate-200">
+              <thead class="bg-slate-50">
+                <tr>
+                  <th class="px-6 py-4 text-left font-semibold text-slate-900">Phase</th>
+                  <th class="px-6 py-4 text-left font-semibold text-slate-900">Primary Agent</th>
+                  <th class="px-6 py-4 text-left font-semibold text-slate-900">Secondary Agent</th>
+                  <th class="px-6 py-4 text-left font-semibold text-slate-900">Output</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                <tr>
+                  <td class="px-6 py-4 font-medium text-slate-900">Requirements analysis</td>
+                  <td class="px-6 py-4 text-slate-600">Claude Opus 4.6 (Extended Thinking)</td>
+                  <td class="px-6 py-4 text-slate-600">—</td>
+                  <td class="px-6 py-4 text-slate-600">Structured specification</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 font-medium text-slate-900">Architecture design</td>
+                  <td class="px-6 py-4 text-slate-600">Claude Opus 4.6</td>
+                  <td class="px-6 py-4 text-slate-600">GPT-5.4 (consultation)</td>
+                  <td class="px-6 py-4 text-slate-600">Design document, interfaces</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 font-medium text-slate-900">Implementation</td>
+                  <td class="px-6 py-4 text-slate-600">GPT-5.4 Codex (Computer Use)</td>
+                  <td class="px-6 py-4 text-slate-600">Claude (complex algorithms)</td>
+                  <td class="px-6 py-4 text-slate-600">Source files, tests</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 font-medium text-slate-900">Review</td>
+                  <td class="px-6 py-4 text-slate-600">GPT-5.4 Codex (analysis)</td>
+                  <td class="px-6 py-4 text-slate-600">Claude (architectural consistency)</td>
+                  <td class="px-6 py-4 text-slate-600">Classified findings</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-sm text-slate-500 mt-4">
+            Quality improvement: 5/10 → 7.5/10 through automated adversarial review
+            <a href="#ref-259" class="citation">[259]</a>
+            <a href="#ref-334" class="citation">[334]</a>
+          </p>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Deployment -->
+      <section id="deployment" class="mb-16">
+        <h2 class="font-tiempos text-3xl font-bold text-slate-900 mb-8">Deployment and Configuration Strategies</h2>
+
+        <h3 class="font-tiempos text-2xl font-semibold text-slate-800 mb-6">Local-First Architecture</h3>
+
+        <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-8 mb-8">
+          <h4 class="font-semibold text-lg text-slate-900 mb-4">
+            <i class="fas fa-server text-emerald-600 mr-2"></i>
+            Apple Silicon Optimization
+          </h4>
+          <p class="text-slate-700 mb-6">
+            M3/M4 unified memory architecture eliminates CPU-GPU transfer bottlenecks. MLX framework
+            provides Apple-optimized inference, with 96GB configurations enabling substantial local models.
+            <a href="#ref-292" class="citation">[292]</a>
+          </p>
+
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-lg p-4">
+              <h5 class="font-semibold text-slate-900 mb-2">Model Hosting</h5>
+              <ul class="text-xs text-slate-600 space-y-1">
+                <li>• LM Studio</li>
+                <li>• Ollama</li>
+                <li>• vLLM</li>
+              </ul>
+            </div>
+            <div class="bg-white rounded-lg p-4">
+              <h5 class="font-semibold text-slate-900 mb-2">Quantization</h5>
+              <ul class="text-xs text-slate-600 space-y-1">
+                <li>• 1.8-bit to 8-bit options</li>
+                <li>• Quality vs. hardware tradeoffs</li>
+                <li>• Apple Silicon kernels</li>
+              </ul>
+            </div>
+            <div class="bg-white rounded-lg p-4">
+              <h5 class="font-semibold text-slate-900 mb-2">Hardware</h5>
+              <ul class="text-xs text-slate-600 space-y-1">
+                <li>• Mac Studio M3/M4</li>
+                <li>• MacBook Pro</li>
+                <li>• Unified memory capacity</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="font-tiempos text-2xl font-semibold text-slate-800 mb-6">Hybrid Cloud-Local Setups</h3>
+
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+          <div class="bg-white border border-slate-200 rounded-xl p-6">
+            <h4 class="font-semibold text-slate-900 mb-3">
+              <i class="fas fa-globe text-blue-600 mr-2"></i>
+              GlobalGPT / APIYI
+            </h4>
+            <p class="text-sm text-slate-600 mb-3">Unified API access, simplified billing</p>
+            <p class="text-xs text-slate-500">MCP bridge or direct client configuration</p>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-xl p-6">
+            <h4 class="font-semibold text-slate-900 mb-3">
+              <i class="fas fa-network-wired text-amber-600 mr-2"></i>
+              Proxy Services
+            </h4>
+            <p class="text-sm text-slate-600 mb-3">Region-unrestricted access</p>
+            <p class="text-xs text-slate-500">Environment variable or app-specific config</p>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-xl p-6">
+            <h4 class="font-semibold text-slate-900 mb-3">
+              <i class="fas fa-users text-emerald-600 mr-2"></i>
+              Shared Subscriptions
+            </h4>
+            <p class="text-sm text-slate-600 mb-3">Cost optimization for teams</p>
+            <p class="text-xs text-slate-500">Usage-based routing, caching, batching</p>
+          </div>
+        </div>
+
+        <h3 class="font-tiempos text-2xl font-semibold text-slate-800 mb-6">Security and Permission Management</h3>
+
+        <div class="overflow-x-auto">
+          <table class="w-full bg-white rounded-lg shadow-sm border border-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Concern</th>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Mitigation</th>
+                <th class="px-6 py-4 text-left font-semibold text-slate-900">Implementation</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">Accessibility API access</td>
+                <td class="px-6 py-4 text-slate-600">Principle of least privilege</td>
+                <td class="px-6 py-4 text-slate-600">Grant per-application, review regularly</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">File system sandboxing</td>
+                <td class="px-6 py-4 text-slate-600">Scoped directory access</td>
+                <td class="px-6 py-4 text-slate-600">MCP server policies, audit logging</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">API key exposure</td>
+                <td class="px-6 py-4 text-slate-600">Keychain integration, rotation</td>
+                <td class="px-6 py-4 text-slate-600">macOS Keychain, environment isolation</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 font-medium text-slate-900">Model output verification</td>
+                <td class="px-6 py-4 text-slate-600">Human checkpoints, automation control</td>
+                <td class="px-6 py-4 text-slate-600">Configurable automation levels</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-sm text-slate-500 mt-2">
+          Sources: <a href="#ref-334" class="citation">[334]</a>
+          <a href="#ref-345" class="citation">[345]</a>
+          <a href="#ref-347" class="citation">[347]</a>
+        </p>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Extensibility -->
+      <section id="extensibility" class="mb-16">
+        <h2 class="font-tiempos text-3xl font-bold text-slate-900 mb-8">Extensibility and Future-Proofing</h2>
+
+        <h3 class="font-tiempos text-2xl font-semibold text-slate-800 mb-6">Alternative Model Combinations</h3>
+
+        <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-8 mb-8">
+          <h4 class="font-semibold text-lg text-slate-900 mb-4">
+            <i class="fas fa-layer-group text-indigo-600 mr-2"></i>
+            ARIS Tested Configurations
+          </h4>
+          <p class="text-slate-700 mb-6">
+            ARIS explicitly documents tested alternative configurations beyond the default Claude + GPT-5.4 pairing,
+            providing flexibility and avoiding vendor lock-in.
+            <a href="#ref-334" class="citation">[334]</a>
+          </p>
+
+          <div class="overflow-x-auto">
+            <table class="w-full bg-white rounded-lg shadow-sm border border-slate-200">
+              <thead class="bg-slate-50">
+                <tr>
+                  <th class="px-6 py-4 text-left font-semibold text-slate-900">Configuration</th>
+                  <th class="px-6 py-4 text-left font-semibold text-slate-900">Models</th>
+                  <th class="px-6 py-4 text-left font-semibold text-slate-900">Requirements</th>
+                  <th class="px-6 py-4 text-left font-semibold text-slate-900">Notes</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                <tr>
+                  <td class="px-6 py-4 font-medium text-slate-900">Alt A (default)</td>
+                  <td class="px-6 py-4 text-slate-600">Claude executor, GPT-5.4 reviewer</td>
+                  <td class="px-6 py-4 text-slate-600">Claude API + OpenAI API</td>
+                  <td class="px-6 py-4 text-slate-600">Most tested, highest quality</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 font-medium text-slate-900">Alt B</td>
+                  <td class="px-6 py-4 text-slate-600">GLM-5/MiniMax-M2.7 both roles</td>
+                  <td class="px-6 py-4 text-slate-600">Zhipu API + MiniMax API</td>
+                  <td class="px-6 py-4 text-slate-600">Prompt tuning needed</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 font-medium text-slate-900">Alt D</td>
+                  <td class="px-6 py-4 text-slate-600">Kimi-K2.5/Qwen3.5+ executor, GL-5/MiniMax-M2.7 reviewer</td>
+                  <td class="px-6 py-4 text-slate-600">Moonshot API + Zhipu/MiniMax API</td>
+                  <td class="px-6 py-4 text-slate-600">No Claude/OpenAI required</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 font-medium text-slate-900">Alt E</td>
+                  <td class="px-6 py-4 text-slate-600">DeepSeek-V3.1/Qwen3-Coder with DeepSeek-R1/Qwen3-235B reviewer</td>
+                  <td class="px-6 py-4 text-slate-600">ModelScope (free tier, 2000 calls/day)</td>
+                  <td class="px-6 py-4 text-slate-600">Zero cost, zero lock-in</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h3 class="font-tiempos text-2xl font-semibold text-slate-800 mb-6">Emerging Standards and Interoperability</h3>
+
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+          <div class="bg-white border-l-4 border-emerald-500 rounded-lg p-6 shadow-sm">
+            <h4 class="font-semibold text-slate-900 mb-3">
+              <i class="fas fa-network-wired text-emerald-600 mr-2"></i>
+              MCP
+            </h4>
+            <p class="text-sm text-slate-600 mb-2"><strong>Status:</strong> Mature, industry-adopted</p>
+            <p class="text-sm text-slate-600"><strong>Relevance:</strong> Current foundation for all recommended approaches</p>
+          </div>
+          <div class="bg-white border-l-4 border-amber-500 rounded-lg p-6 shadow-sm">
+            <h4 class="font-semibold text-slate-900 mb-3">
+              <i class="fas fa-handshake text-amber-600 mr-2"></i>
+              A2A (Agent-to-Agent)
+            </h4>
+            <p class="text-sm text-slate-600 mb-2"><strong>Status:</strong> Emerging</p>
+            <p class="text-sm text-slate-600"><strong>Relevance:</strong> Potential complement for direct negotiation</p>
+          </div>
+          <div class="bg-white border-l-4 border-blue-500 rounded-lg p-6 shadow-sm">
+            <h4 class="font-semibold text-slate-900 mb-3">
+              <i class="fas fa-certificate text-blue-600 mr-2"></i>
+              IEEE P3123
+            </h4>
+            <p class="text-sm text-slate-600 mb-2"><strong>Status:</strong> In development</p>
+            <p class="text-sm text-slate-600"><strong>Relevance:</strong> Future formalization, compliance requirement</p>
+          </div>
+        </div>
+
+        <h3 class="font-tiempos text-2xl font-semibold text-slate-800 mb-6">Cross-Platform Portability Considerations</h3>
+
+        <div class="bg-slate-50 rounded-xl p-8">
+          <p class="text-slate-700 mb-6">
+            ARIS&#39;s <strong>&#34;no framework, no lock-in&#34; philosophy</strong> and <strong>experimental Windows support</strong> (v0.3.10)
+            suggest awareness of portability value. For macOS-specific deployments, this provides optionality;
+            for heterogeneous environments, it enables consistent tooling.
+            <a href="#ref-334" class="citation">[334]</a>
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-white rounded-lg p-6">
+              <h4 class="font-semibold text-slate-900 mb-3">
+                <i class="fas fa-universal-access text-emerald-600 mr-2"></i>
+                Platform-Agnostic Benefits
+              </h4>
+              <ul class="text-sm text-slate-600 space-y-2">
+                <li>• MCP&#39;s platform-agnostic design ensures workflow investments transfer</li>
+                <li>• Consistent tooling across operating systems</li>
+                <li>• Reduced vendor and platform lock-in</li>
+              </ul>
+            </div>
+            <div class="bg-white rounded-lg p-6">
+              <h4 class="font-semibold text-slate-900 mb-3">
+                <i class="fas fa-apple-alt text-slate-600 mr-2"></i>
+                macOS-Specific Optimizations
+              </h4>
+              <ul class="text-sm text-slate-600 space-y-2">
+                <li>• Apple Silicon kernels for performance</li>
+                <li>• Accessibility API integration</li>
+                <li>• Unified memory architecture benefits</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- References -->
+      <section class="mb-16">
+        <h2 class="font-tiempos text-3xl font-bold text-slate-900 mb-8">References</h2>
+        <div class="bg-slate-50 rounded-xl p-8">
+          <div class="grid gap-4 text-sm">
+            <div id="ref-5" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[5]</span>
+              <a href="https://www.chatai.com/posts/anthropic-expands-claude-cowork-to-windows-users" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Anthropic Expands Claude Cowork to Windows Users
+              </a>
+            </div>
+            <div id="ref-47" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[47]</span>
+              <a href="https://maccopilot.co/" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                MacCopilot - Native macOS AI Assistant
+              </a>
+            </div>
+            <div id="ref-148" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[148]</span>
+              <a href="https://blog.csdn.net/2301_78755287/article/details/146162424" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                macai: Open-source Native macOS AI Client
+              </a>
+            </div>
+            <div id="ref-156" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[156]</span>
+              <a href="https://skywork.ai/skypage/en/ultimate-guide-openclaw-macos/2037077555334168576" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Ultimate Guide to OpenClaw on macOS
+              </a>
+            </div>
+            <div id="ref-186" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[186]</span>
+              <a href="https://www.orchids.app/blog/introducing-orchids-1-0" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Introducing Orchids 1.0
+              </a>
+            </div>
+            <div id="ref-187" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[187]</span>
+              <a href="https://docs.orchids.app/faq" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Orchids FAQ Documentation
+              </a>
+            </div>
+            <div id="ref-188" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[188]</span>
+              <a href="https://www.orchids.app/" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Orchids.app Official Website
+              </a>
+            </div>
+            <div id="ref-211" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[211]</span>
+              <a href="https://www.apple.com/newsroom/2026/02/xcode-26-point-3-unlocks-the-power-of-agentic-coding/" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Xcode 26.3 Unlocks Agentic Coding
+              </a>
+            </div>
+            <div id="ref-220" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[220]</span>
+              <a href="https://www.alphamatch.ai/blog/manus-my-computer-ai-agent-desktop-2026" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Manus &#34;My Computer&#34; AI Agent Desktop
+              </a>
+            </div>
+            <div id="ref-242" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[242]</span>
+              <a href="https://www.kimi.com/resources/how-to-install-openclaw-on-mac" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                How to Install OpenClaw on Mac
+              </a>
+            </div>
+            <div id="ref-253" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[253]</span>
+              <a href="https://www.macaiapps.com/blog/best-ai-chat-apps-for-macos/" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Best AI Chat Apps for macOS
+              </a>
+            </div>
+            <div id="ref-259" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[259]</span>
+              <a href="https://dev.to/tsunamayo7/how-i-made-claude-code-and-gpt-54-review-each-others-code-i74" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                How I Made Claude Code and GPT-5.4 Review Each Other&#39;s Code
+              </a>
+            </div>
+            <div id="ref-261" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[261]</span>
+              <a href="https://www.jetbrains.com/help/ai-assistant/mcp.html" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                JetBrains AI Assistant MCP Documentation
+              </a>
+            </div>
+            <div id="ref-262" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[262]</span>
+              <a href="https://taoofmac.com/space/ai/mcp" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Model Context Protocol Overview
+              </a>
+            </div>
+            <div id="ref-270" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[270]</span>
+              <a href="https://usevoicy.com/blog/best-ai-apps-for-mac" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Best AI Apps for Mac
+              </a>
+            </div>
+            <div id="ref-272" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[272]</span>
+              <a href="https://the-decoder.com/openai-launches-codex-app-for-macos-to-manage-multiple-ai-agents/" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                OpenAI Launches Codex App for macOS
+              </a>
+            </div>
+            <div id="ref-292" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[292]</span>
+              <a href="https://dev.to/brunocerberus/running-local-llms-on-apple-silicon-2ecm" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Running Local LLMs on Apple Silicon
+              </a>
+            </div>
+            <div id="ref-309" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[309]</span>
+              <a href="https://www.glbgpt.com/hub/gpt-5-4-vs-claude-opus-4-6/" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                GPT-5.4 vs Claude Opus 4.6 Comparison
+              </a>
+            </div>
+            <div id="ref-311" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[311]</span>
+              <a href="https://www.nxcode.io/resources/news/gpt-5-4-vs-claude-opus-4-6-coding-comparison-2026" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                GPT-5.4 vs Claude Opus 4.6 Coding Comparison 2026
+              </a>
+            </div>
+            <div id="ref-334" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[334]</span>
+              <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                ARIS Framework: Auto-Research-In-Sleep
+              </a>
+            </div>
+            <div id="ref-335" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[335]</span>
+              <a href="https://zhuanlan.zhihu.com/p/2013247998507911117" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Tool Search Efficiency Analysis
+              </a>
+            </div>
+            <div id="ref-336" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[336]</span>
+              <a href="https://help.apiyi.com/gpt-5-4-vs-claude-opus-4-6-comparison-2026.html" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                GPT-5.4 vs Claude Opus 4.6 API Comparison
+              </a>
+            </div>
+            <div id="ref-341" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[341]</span>
+              <a href="https://developer.tenten.co/how-to-run-kimi-k25-locally-on-mac-studio-m3-ultra-with-512gb" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Running Kimi K2.5 Locally on Mac Studio M3 Ultra
+              </a>
+            </div>
+            <div id="ref-342" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[342]</span>
+              <a href="https://blog.fsck.com/2025/07/13/claude-code-with-kimi-k2/" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Claude Code with Kimi K2 Integration
+              </a>
+            </div>
+            <div id="ref-344" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[344]</span>
+              <a href="https://www.the-ai-corner.com/p/everything-claude-shipped-2026-complete-guide" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Everything Claude Shipped 2026: Complete Guide
+              </a>
+            </div>
+            <div id="ref-345" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[345]</span>
+              <a href="https://www.eweek.com/news/anthropic-claude-computer-control-agentic-desktop/" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Anthropic Claude Computer Control Agentic Desktop
+              </a>
+            </div>
+            <div id="ref-346" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[346]</span>
+              <a href="https://aibreakfast.beehiiv.com/p/anthropic-launches-their-own-version-of-openclaw" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                Anthropic Launches Their Own Version of OpenClaw
+              </a>
+            </div>
+            <div id="ref-347" class="p-4 bg-white rounded-lg shadow-sm">
+              <span class="font-semibold text-slate-900">[347]</span>
+              <a href="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/tree/main/docs" class="text-emerald-600 hover:text-emerald-700 ml-2">
+                ARIS Framework Documentation
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Highlight active section in TOC
+        const sections = document.querySelectorAll('section[id]');
+        const tocLinks = document.querySelectorAll('.toc-fixed a[href^="#"]');
+
+        function highlightActiveSection() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('text-emerald-600', 'font-semibold');
+                link.classList.add('text-slate-600');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.remove('text-slate-600');
+                    link.classList.add('text-emerald-600', 'font-semibold');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', highlightActiveSection);
+        highlightActiveSection(); // Initial call
+    </script>
+  
+
+</body></html>
