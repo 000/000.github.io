@@ -1,0 +1,1676 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Comprehensive Comparison of Agentic Swarm AI Platforms</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --secondary: #64748b;
+            --accent: #dc2626;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .serif {
+            font-family: 'Crimson Text', serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #1e40af 0%, #3730a3 50%, #581c87 100%);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #1e40af, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid #e2e8f0;
+            z-index: 50;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+        
+        .toc-link {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .toc-link:hover,
+        .toc-link.active {
+            color: var(--primary);
+            border-left-color: var(--primary);
+            background: rgba(30, 64, 175, 0.05);
+        }
+        
+        .section-header {
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .comparison-card {
+            background: var(--surface);
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+        
+        .comparison-card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .performance-bar {
+            height: 0.5rem;
+            background: #e2e8f0;
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+        
+        .performance-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+        }
+        
+        .citation {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dotted var(--primary);
+        }
+        
+        .citation:hover {
+            background: rgba(30, 64, 175, 0.1);
+        }
+        
+        @media (max-width: 1024px) {
+            .toc-fixed {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .toc-fixed.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .bento-item {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .bento-hero {
+            grid-row: span 2;
+            background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bento-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                overflow-x: hidden;
+            }
+            .bento-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+            }
+            .bento-hero {
+                grid-row: span 1;
+            }
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body>
+    <!-- Mobile TOC Toggle -->
+    <button id="tocToggle" class="lg:hidden fixed top-4 left-4 z-50 bg-white p-2 rounded-lg shadow-lg">
+      <i class="fas fa-bars text-gray-600"></i>
+    </button>
+
+    <!-- Fixed Table of Contents -->
+    <nav id="toc" class="toc-fixed">
+      <div class="mb-6">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Table of Contents</h3>
+      </div>
+
+      <div class="space-y-1 text-sm">
+        <a href="#executive-summary" class="toc-link">Executive Summary</a>
+        <a href="#coding-platforms" class="toc-link">Coding-Focused Platforms</a>
+        <a href="#litigation-platforms" class="toc-link">Litigation-Focused Platforms</a>
+        <a href="#cross-analysis" class="toc-link">Cross-Platform Analysis</a>
+        <a href="#vendor-ecosystems" class="toc-link">Vendor Ecosystems</a>
+        <a href="#open-source" class="toc-link">Open-Source &amp; Managed Services</a>
+        <a href="#recommendations" class="toc-link">Strategic Recommendations</a>
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-gray-200">
+        <div class="text-xs text-gray-500 space-y-2">
+          <div><i class="fas fa-calendar mr-2"></i>Updated: April 2026</div>
+          <div><i class="fas fa-chart-bar mr-2"></i>Comprehensive Analysis</div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section class="bento-grid max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        <div class="bento-item bento-hero">
+          <div class="relative z-10">
+            <h1 class="serif text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
+              <em class="block text-xl sm:text-2xl lg:text-3xl font-normal opacity-90 mb-1 sm:mb-2">Agentic Swarm AI</em>
+              Platform Comparison
+            </h1>
+            <p class="text-base sm:text-xl opacity-90 max-w-2xl">
+              Comprehensive analysis of coding and litigation-focused agentic AI platforms for strategic decision-making
+            </p>
+          </div>
+        </div>
+
+        <div class="bento-item">
+          <h3 class="text-xl font-bold mb-4 text-gray-900">Key Findings</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex items-start">
+              <i class="fas fa-code text-blue-600 mt-1 mr-3"></i>
+              <div>
+                <strong>Claude Code</strong> leads complex reasoning with 80.8% SWE-Bench score
+              </div>
+            </div>
+            <div class="flex items-start">
+              <i class="fas fa-gavel text-red-600 mt-1 mr-3"></i>
+              <div>
+                <strong>V7 Go</strong> dominates litigation with 99% extraction accuracy
+              </div>
+            </div>
+            <div class="flex items-start">
+              <i class="fas fa-memory text-purple-600 mt-1 mr-3"></i>
+              <div>
+                Rust frameworks achieve 5× memory efficiency over Python
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bento-item">
+          <h3 class="text-xl font-bold mb-4 text-gray-900">Decision Framework</h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-center">
+              <span>Complex Coding</span>
+              <span class="text-blue-600 font-semibold">Claude Code</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span>IDE Experience</span>
+              <span class="text-green-600 font-semibold">Cursor</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span>Litigation Extraction</span>
+              <span class="text-red-600 font-semibold">V7 Go</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span>Government Use</span>
+              <span class="text-purple-600 font-semibold">Everlaw</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Executive Summary -->
+      <section id="executive-summary" class="max-w-7xl mx-auto px-6 py-12">
+        <div class="section-header">
+          <h2 class="serif text-3xl font-bold text-gray-900">Executive Summary</h2>
+        </div>
+
+        <div class="prose prose-lg max-w-none">
+          <p class="text-xl text-gray-700 mb-8 leading-relaxed">
+            The agentic AI platform ecosystem has matured into distinct specializations for software development and litigation support, with clear leaders emerging in each domain. <strong>Claude Code leads complex coding tasks with 80.8% SWE-Bench performance</strong>, while <strong>V7 Go dominates litigation document processing with 99% extraction accuracy and AI Citations for evidence provenance</strong>.
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-8 mb-12">
+            <div class="comparison-card">
+              <h3 class="text-xl font-bold mb-4 text-blue-600">
+                <i class="fas fa-code mr-2"></i>Coding Platforms
+              </h3>
+              <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                  <span><strong>Claude Code</strong></span>
+                  <span class="text-sm text-gray-600">80.8% SWE-Bench</span>
+                </div>
+                <div class="performance-bar">
+                  <div class="performance-fill" style="width: 81%"></div>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <span><strong>Cursor</strong></span>
+                  <span class="text-sm text-gray-600">Best IDE Experience</span>
+                </div>
+                <div class="performance-bar">
+                  <div class="performance-fill" style="width: 75%"></div>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <span><strong>GitHub Copilot</strong></span>
+                  <span class="text-sm text-gray-600">Ecosystem Integration</span>
+                </div>
+                <div class="performance-bar">
+                  <div class="performance-fill" style="width: 70%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="comparison-card">
+              <h3 class="text-xl font-bold mb-4 text-red-600">
+                <i class="fas fa-gavel mr-2"></i>Litigation Platforms
+              </h3>
+              <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                  <span><strong>V7 Go</strong></span>
+                  <span class="text-sm text-gray-600">99% Accuracy</span>
+                </div>
+                <div class="performance-bar">
+                  <div class="performance-fill" style="width: 99%"></div>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <span><strong>Syllo AI</strong></span>
+                  <span class="text-sm text-gray-600">Discovery Review</span>
+                </div>
+                <div class="performance-bar">
+                  <div class="performance-fill" style="width: 85%"></div>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <span><strong>Landing AI ADE</strong></span>
+                  <span class="text-sm text-gray-600">Visual Document Understanding</span>
+                </div>
+                <div class="performance-bar">
+                  <div class="performance-fill" style="width: 78%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <blockquote class="border-l-4 border-blue-600 pl-6 italic text-lg text-gray-700 my-8">
+            &#34;Rust-based agent frameworks demonstrate approximately 5× memory efficiency versus Python equivalents—1,046 MB peak memory versus 5,146 MB average—with corresponding advantages in cold start latency and throughput under concurrent load.&#34;
+            <cite class="block text-sm text-gray-500 mt-2">
+              — <a href="https://dev.to/saivishwak/benchmarking-ai-agent-frameworks-in-2026-autoagents-rust-vs-langchain-langgraph-llamaindex-338f" class="citation">Performance Benchmark Analysis, 2026</a>
+            </cite>
+          </blockquote>
+        </div>
+      </section>
+
+      <!-- Coding Platforms -->
+      <section id="coding-platforms" class="max-w-7xl mx-auto px-6 py-12">
+        <div class="section-header">
+          <h2 class="serif text-3xl font-bold text-gray-900">Coding-Focused Agentic AI Platforms</h2>
+        </div>
+
+        <!-- Tier 1 Platforms -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800">Tier 1: Leading Commercial Platforms</h3>
+
+          <div class="grid lg:grid-cols-2 gap-8">
+            <!-- Claude Code -->
+            <div class="comparison-card">
+              <div class="flex items-start justify-between mb-4">
+                <h4 class="text-xl font-bold text-gray-900">Claude Code</h4>
+                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">SWE-Bench Leader</span>
+              </div>
+
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-gray-600">Complex Reasoning</span>
+                  <span class="text-sm font-bold text-blue-600">80.8%</span>
+                </div>
+                <div class="performance-bar">
+                  <div class="performance-fill" style="width: 81%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-3 text-sm text-gray-700">
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>200K-1M token context window</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Subagent orchestration with dependency tracking</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Terminal-native interface with MCP support</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Strong Rust/Python/SQL support</span>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="text-xs text-gray-500">
+                  Pricing: <span class="font-medium">$20-200/month</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- GitHub Copilot -->
+            <div class="comparison-card">
+              <div class="flex items-start justify-between mb-4">
+                <h4 class="text-xl font-bold text-gray-900">GitHub Copilot / Codex</h4>
+                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Ecosystem Leader</span>
+              </div>
+
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-gray-600">Token Efficiency</span>
+                  <span class="text-sm font-bold text-green-600">3-4× vs Claude</span>
+                </div>
+                <div class="performance-bar">
+                  <div class="performance-fill" style="width: 75%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-3 text-sm text-gray-700">
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Deep IDE integration across multiple editors</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Parallel subagent execution with isolated contexts</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Native GitHub workflow integration</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Enterprise security and compliance features</span>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="text-xs text-gray-500">
+                  Pricing: <span class="font-medium">$10-39/user/month</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cursor -->
+            <div class="comparison-card">
+              <div class="flex items-start justify-between mb-4">
+                <h4 class="text-xl font-bold text-gray-900">Cursor</h4>
+                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">IDE Experience</span>
+              </div>
+
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-gray-600">Multi-Model Flexibility</span>
+                  <span class="text-sm font-bold text-purple-600">Excellent</span>
+                </div>
+                <div class="performance-bar">
+                  <div class="performance-fill" style="width: 85%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-3 text-sm text-gray-700">
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>VS Code fork with deep AI integration</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Composer feature for multi-file agentic editing</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Multiple model backends (GPT, Claude, Gemini)</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>SOC 2 Type 2 certified with privacy mode</span>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="text-xs text-gray-500">
+                  Pricing: <span class="font-medium">$20-200/month</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Google Antigravity -->
+            <div class="comparison-card">
+              <div class="flex items-start justify-between mb-4">
+                <h4 class="text-xl font-bold text-gray-900">Google Antigravity IDE</h4>
+                <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">AI Ultra Bundle</span>
+              </div>
+
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-gray-600">SWE-Bench Performance</span>
+                  <span class="text-sm font-bold text-orange-600">76.2%</span>
+                </div>
+                <div class="performance-bar">
+                  <div class="performance-fill" style="width: 76%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-3 text-sm text-gray-700">
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Manager View for multi-agent orchestration</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>1M+ token context with Gemini 3 Pro</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Third-party model support including Claude</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+                  <span>Occasional agent drift and performance issues</span>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="text-xs text-gray-500">
+                  Pricing: <span class="font-medium">AI Ultra $249.99/month</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance Benchmarks -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800">Performance Benchmarks</h3>
+
+          <div class="grid lg:grid-cols-2 gap-8">
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-gray-900">SWE-Bench Verified Scores</h4>
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm">Claude Code (Opus 4.6)</span>
+                  <div class="flex items-center">
+                    <div class="performance-bar w-32 mr-3">
+                      <div class="performance-fill" style="width: 81%"></div>
+                    </div>
+                    <span class="text-sm font-bold">80.8%</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <span class="text-sm">Google Antigravity</span>
+                  <div class="flex items-center">
+                    <div class="performance-bar w-32 mr-3">
+                      <div class="performance-fill" style="width: 76%"></div>
+                    </div>
+                    <span class="text-sm font-bold">76.2%</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <span class="text-sm">OpenAI Codex</span>
+                  <div class="flex items-center">
+                    <div class="performance-bar w-32 mr-3">
+                      <div class="performance-fill" style="width: 49%"></div>
+                    </div>
+                    <span class="text-sm font-bold">~49%</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <span class="text-sm">Cursor (estimated)</span>
+                  <div class="flex items-center">
+                    <div class="performance-bar w-32 mr-3">
+                      <div class="performance-fill" style="width: 70%"></div>
+                    </div>
+                    <span class="text-sm font-bold">65-75%</span>
+                  </div>
+                </div>
+              </div>
+
+              <p class="text-xs text-gray-500 mt-4">
+                <a href="https://onyx.app/best-llm-for-coding" class="citation">Source: SWE-Bench Benchmark Analysis, 2026</a>
+              </p>
+            </div>
+
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-gray-900">Memory Efficiency: Rust vs Python</h4>
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm">AutoAgents (Rust)</span>
+                  <div class="flex items-center">
+                    <div class="performance-bar w-32 mr-3">
+                      <div class="performance-fill" style="width: 90%"></div>
+                    </div>
+                    <span class="text-sm font-bold">1,046 MB</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <span class="text-sm">Rig (Rust)</span>
+                  <div class="flex items-center">
+                    <div class="performance-bar w-32 mr-3">
+                      <div class="performance-fill" style="width: 90%"></div>
+                    </div>
+                    <span class="text-sm font-bold">1,019 MB</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <span class="text-sm">LangChain (Python)</span>
+                  <div class="flex items-center">
+                    <div class="performance-bar w-32 mr-3">
+                      <div class="performance-fill" style="width: 20%"></div>
+                    </div>
+                    <span class="text-sm font-bold">5,706 MB</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <span class="text-sm">PydanticAI (Python)</span>
+                  <div class="flex items-center">
+                    <div class="performance-bar w-32 mr-3">
+                      <div class="performance-fill" style="width: 25%"></div>
+                    </div>
+                    <span class="text-sm font-bold">4,875 MB</span>
+                  </div>
+                </div>
+              </div>
+
+              <p class="text-xs text-gray-500 mt-4">
+                <a href="https://dev.to/saivishwak/benchmarking-ai-agent-frameworks-in-2026-autoagents-rust-vs-langchain-langgraph-llamaindex-338f" class="citation">Source: Framework Performance Benchmark, 2026</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Litigation Platforms -->
+      <section id="litigation-platforms" class="max-w-7xl mx-auto px-6 py-12">
+        <div class="section-header">
+          <h2 class="serif text-3xl font-bold text-gray-900">Litigation-Focused Agentic AI Platforms</h2>
+        </div>
+
+        <!-- Tier 1 Legal Platforms -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800">Tier 1: Purpose-Built Legal Agentic Systems</h3>
+
+          <div class="grid lg:grid-cols-2 gap-8">
+            <!-- V7 Go -->
+            <div class="comparison-card">
+              <div class="flex items-start justify-between mb-4">
+                <h4 class="text-xl font-bold text-gray-900">V7 Go</h4>
+                <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">Litigation Leader</span>
+              </div>
+
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-gray-600">Extraction Accuracy</span>
+                  <span class="text-sm font-bold text-red-600">95-99%</span>
+                </div>
+                <div class="performance-bar">
+                  <div class="performance-fill" style="width: 97%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-3 text-sm text-gray-700">
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>AI Citations with pixel-level source verification</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Multimodal processing of scanned images and complex layouts</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>ISO 27001, HIPAA, SOC 2, GDPR compliance</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>On-premises deployment option for government</span>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="text-xs text-gray-500">
+                  Pricing: <span class="font-medium">Enterprise contracts</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Syllo AI -->
+            <div class="comparison-card">
+              <div class="flex items-start justify-between mb-4">
+                <h4 class="text-xl font-bold text-gray-900">Syllo AI</h4>
+                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">Discovery Focus</span>
+              </div>
+
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-gray-600">Review Cost Reduction</span>
+                  <span class="text-sm font-bold text-blue-600">40-60%</span>
+                </div>
+                <div class="performance-bar">
+                  <div class="performance-fill" style="width: 50%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-3 text-sm text-gray-700">
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Multi-agent orchestration for document review</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Recall optimization for discovery obligations</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Active learning with human review integration</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Defensible documentation for court approval</span>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="text-xs text-gray-500">
+                  Pricing: <span class="font-medium">Enterprise contracts</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Landing AI ADE -->
+            <div class="comparison-card">
+              <div class="flex items-start justify-between mb-4">
+                <h4 class="text-xl font-bold text-gray-900">Landing AI ADE</h4>
+                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Visual Prompting</span>
+              </div>
+
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-gray-600">Visual Grounding</span>
+                  <span class="text-sm font-bold text-green-600">Excellent</span>
+                </div>
+                <div class="performance-bar">
+                  <div class="performance-fill" style="width: 85%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-3 text-sm text-gray-700">
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Visual prompting for intuitive document annotation</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Bounding box references for verification</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Open-source agentic-doc library for self-hosting</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+                  <span>Less established legal workflow integration</span>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="text-xs text-gray-500">
+                  Pricing: <span class="font-medium">Enterprise sales only</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Everlaw -->
+            <div class="comparison-card">
+              <div class="flex items-start justify-between mb-4">
+                <h4 class="text-xl font-bold text-gray-900">Everlaw</h4>
+                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">FedRAMP Authorized</span>
+              </div>
+
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-gray-600">Government Compliance</span>
+                  <span class="text-sm font-bold text-purple-600">FedRAMP</span>
+                </div>
+                <div class="performance-bar">
+                  <div class="performance-fill" style="width: 95%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-3 text-sm text-gray-700">
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>AWS GovCloud availability for federal work</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Storybuilder for collaborative case narrative</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check text-green-600 mr-2"></i>
+                  <span>Predictive coding for document prioritization</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+                  <span>Steep learning curve and high pricing</span>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="text-xs text-gray-500">
+                  Pricing: <span class="font-medium">Custom enterprise</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Critical Capabilities -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800">Critical Capabilities for Litigation Use Cases</h3>
+
+          <div class="grid lg:grid-cols-2 gap-8">
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-gray-900">Document Processing Accuracy</h4>
+              <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">OCR Engine Quality</span>
+                  <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">V7 Go Leading</span>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Table Structure Recognition</span>
+                  <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">V7 Go Excellent</span>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Handwritten Text Recognition</span>
+                  <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Variable</span>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Degraded Document Handling</span>
+                  <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">V7 Go Robust</span>
+                </div>
+              </div>
+
+              <p class="text-xs text-gray-500 mt-4">
+                <a href="https://www.v7labs.com/blog/v7-go-agentic-legal-ai-software" class="citation">Source: V7 Go Technical Documentation</a>
+              </p>
+            </div>
+
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-gray-900">Evidence Chain of Custody</h4>
+              <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Click-to-Source Verification</span>
+                  <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">V7 Go AI Citations</span>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Page Coordinates</span>
+                  <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Pixel-Level Precision</span>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Confidence Scoring</span>
+                  <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Available</span>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Human Review Routing</span>
+                  <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Conditional Logic</span>
+                </div>
+              </div>
+
+              <p class="text-xs text-gray-500 mt-4">
+                <a href="https://www.v7labs.com/blog/v7-go-agentic-legal-ai-software" class="citation">Source: V7 Go Compliance Architecture</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cross-Analysis -->
+      <section id="cross-analysis" class="max-w-7xl mx-auto px-6 py-12">
+        <div class="section-header">
+          <h2 class="serif text-3xl font-bold text-gray-900">Cross-Platform Analysis</h2>
+        </div>
+
+        <!-- Feature Comparison Matrix -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800">Feature Comparison Matrix</h3>
+
+          <div class="overflow-x-auto">
+            <table class="w-full bg-white rounded-lg shadow-sm border border-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Capability</th>
+                  <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">Claude Code</th>
+                  <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">GitHub Copilot</th>
+                  <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">Cursor</th>
+                  <th class="px-6 py-4 text-center text-sm font-semibold text-gray-900">V7 Go</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr>
+                  <td class="px-6 py-4 text-sm font-medium text-gray-900">Context Window</td>
+                  <td class="px-6 py-4 text-center text-sm text-green-600">200K-1M</td>
+                  <td class="px-6 py-4 text-center text-sm text-green-600">400K</td>
+                  <td class="px-6 py-4 text-center text-sm text-green-600">200K-1M</td>
+                  <td class="px-6 py-4 text-center text-sm text-gray-500">N/A</td>
+                </tr>
+                <tr class="bg-gray-50">
+                  <td class="px-6 py-4 text-sm font-medium text-gray-900">Agent Orchestration</td>
+                  <td class="px-6 py-4 text-center text-sm text-green-600">✓ Coordinated Teams</td>
+                  <td class="px-6 py-4 text-center text-sm text-green-600">✓ Parallel Agents</td>
+                  <td class="px-6 py-4 text-center text-sm text-yellow-600">~ Limited</td>
+                  <td class="px-6 py-4 text-center text-sm text-green-600">✓ Multi-Agent</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 text-sm font-medium text-gray-900">MCP Support</td>
+                  <td class="px-6 py-4 text-center text-sm text-green-600">✓ 97M+ installs</td>
+                  <td class="px-6 py-4 text-center text-sm text-yellow-600">~ Limited</td>
+                  <td class="px-6 py-4 text-center text-sm text-yellow-600">~ Growing</td>
+                  <td class="px-6 py-4 text-center text-sm text-gray-500">N/A</td>
+                </tr>
+                <tr class="bg-gray-50">
+                  <td class="px-6 py-4 text-sm font-medium text-gray-900">Rust Support</td>
+                  <td class="px-6 py-4 text-center text-sm text-green-600">✓ Strong</td>
+                  <td class="px-6 py-4 text-center text-sm text-yellow-600">~ Good</td>
+                  <td class="px-6 py-4 text-center text-sm text-yellow-600">~ Good</td>
+                  <td class="px-6 py-4 text-center text-sm text-gray-500">N/A</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 text-sm font-medium text-gray-900">Source Verification</td>
+                  <td class="px-6 py-4 text-center text-sm text-gray-500">N/A</td>
+                  <td class="px-6 py-4 text-center text-sm text-gray-500">N/A</td>
+                  <td class="px-6 py-4 text-center text-sm text-gray-500">N/A</td>
+                  <td class="px-6 py-4 text-center text-sm text-green-600">✓ AI Citations</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Pricing Analysis -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800">Pricing Structure Comparison</h3>
+
+          <div class="grid lg:grid-cols-3 gap-8">
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-blue-600">Per-Seat Subscriptions</h4>
+              <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">GitHub Copilot Pro</span>
+                  <span class="text-sm font-bold">$10/month</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Claude Code Pro</span>
+                  <span class="text-sm font-bold">$20/month</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Cursor Pro</span>
+                  <span class="text-sm font-bold">$20/month</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Windsurf Pro</span>
+                  <span class="text-sm font-bold">$15/month</span>
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-4">Best for: Individual developers and small teams</p>
+            </div>
+
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-green-600">Usage-Based Metering</h4>
+              <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Claude Opus API</span>
+                  <span class="text-sm font-bold">$5-25/MTok</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">OpenAI Codex API</span>
+                  <span class="text-sm font-bold">$1.25-10/MTok</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Aider/Cline (API keys)</span>
+                  <span class="text-sm font-bold">$2-50/month</span>
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-4">Best for: Intermittent use and cost optimization</p>
+            </div>
+
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-purple-600">Enterprise Contracts</h4>
+              <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">V7 Go</span>
+                  <span class="text-sm font-bold">$50K-500K/year</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Everlaw</span>
+                  <span class="text-sm font-bold">$100K-1M+/year</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Harvey AI</span>
+                  <span class="text-sm font-bold">$500K-5M+/year</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm">Epiq Managed</span>
+                  <span class="text-sm font-bold">$250K-10M+/matter</span>
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-4">Best for: Large enterprises and government</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Vendor Ecosystems -->
+      <section id="vendor-ecosystems" class="max-w-7xl mx-auto px-6 py-12">
+        <div class="section-header">
+          <h2 class="serif text-3xl font-bold text-gray-900">Specific Vendor Ecosystem Analysis</h2>
+        </div>
+
+        <!-- Google AI Ultra -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800">Google AI Ultra Subscriber Options</h3>
+
+          <div class="grid lg:grid-cols-2 gap-8">
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-blue-600">Current Recommendation</h4>
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <i class="fas fa-check-circle text-green-600 mt-1 mr-3"></i>
+                  <div>
+                    <strong>Gemini CLI + Cursor Pro</strong>
+                    <p class="text-sm text-gray-600 mt-1">Leverage Ultra&#39;s model access while avoiding Antigravity limitations</p>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <i class="fas fa-dollar-sign text-green-600 mt-1 mr-3"></i>
+                  <div>
+                    <strong>Incremental Cost: $20/month</strong>
+                    <p class="text-sm text-gray-600 mt-1">For Cursor Pro subscription</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-orange-600">Antigravity IDE Limitations</h4>
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <i class="fas fa-exclamation-triangle text-yellow-600 mt-1 mr-3"></i>
+                  <div>
+                    <strong>Moderate Rust Support</strong>
+                    <p class="text-sm text-gray-600 mt-1">Less Rust-heavy training data than Claude</p>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <i class="fas fa-exclamation-triangle text-yellow-600 mt-1 mr-3"></i>
+                  <div>
+                    <strong>76.2% SWE-Bench Score</strong>
+                    <p class="text-sm text-gray-600 mt-1">Trails Claude Code&#39;s 80.8%</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AWS Ecosystem -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800">Amazon Web Services: Platform vs Product</h3>
+
+          <div class="comparison-card">
+            <div class="grid lg:grid-cols-2 gap-8">
+              <div>
+                <h4 class="text-lg font-bold mb-4 text-green-600">Bedrock Agent Framework</h4>
+                <div class="space-y-3 text-sm text-gray-700">
+                  <div class="flex items-center">
+                    <i class="fas fa-check text-green-600 mr-2"></i>
+                    <span>Multi-agent orchestration and collaboration</span>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="fas fa-check text-green-600 mr-2"></i>
+                    <span>Integration with AWS legal/compliance services</span>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="fas fa-check text-green-600 mr-2"></i>
+                    <span>GovCloud and FedRAMP authorization</span>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+                    <span>Requires substantial integration engineering</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 class="text-lg font-bold mb-4 text-blue-600">Strategic Assessment</h4>
+                <div class="space-y-3">
+                  <div class="bg-blue-50 p-3 rounded">
+                    <strong class="text-sm text-blue-800">High Implementation Effort (3-6 months)</strong>
+                    <p class="text-xs text-blue-600 mt-1">For custom agent development</p>
+                  </div>
+                  <div class="bg-green-50 p-3 rounded">
+                    <strong class="text-sm text-green-800">Maximum Customization Flexibility</strong>
+                    <p class="text-xs text-green-600 mt-1">For unique requirements</p>
+                  </div>
+                  <div class="bg-orange-50 p-3 rounded">
+                    <strong class="text-sm text-orange-800">Longer Time-to-Value</strong>
+                    <p class="text-xs text-orange-600 mt-1">Compared to purpose-built platforms</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- You.com ARI -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800">You.com ARI Agents: Research vs Execution</h3>
+
+          <div class="grid lg:grid-cols-3 gap-6">
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-purple-600">Research Strengths</h4>
+              <div class="space-y-2 text-sm">
+                <div class="flex items-center">
+                  <i class="fas fa-search text-purple-600 mr-2"></i>
+                  <span>400+ source processing</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-check-double text-purple-600 mr-2"></i>
+                  <span>Cross-source verification</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-database text-purple-600 mr-2"></i>
+                  <span>Academic and technical databases</span>
+                </div>
+              </div>
+              <div class="mt-4 text-xs text-gray-500">
+                <strong>80% FRAMES benchmark score</strong>
+              </div>
+            </div>
+
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-red-600">Execution Gaps</h4>
+              <div class="space-y-2 text-sm">
+                <div class="flex items-center">
+                  <i class="fas fa-times text-red-600 mr-2"></i>
+                  <span>No code execution environment</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-times text-red-600 mr-2"></i>
+                  <span>No document processing pipeline</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-times text-red-600 mr-2"></i>
+                  <span>No legal workflow integration</span>
+                </div>
+              </div>
+              <div class="mt-4 text-xs text-gray-500">
+                <strong>Cannot substitute for specialized platforms</strong>
+              </div>
+            </div>
+
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-blue-600">Competitive Positioning</h4>
+              <div class="space-y-2 text-sm">
+                <div class="flex items-center">
+                  <i class="fas fa-plus text-blue-600 mr-2"></i>
+                  <span>Preliminary research augmentation</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-plus text-blue-600 mr-2"></i>
+                  <span>Cost-effective investigation</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-minus text-orange-600 mr-2"></i>
+                  <span>Limited production utility</span>
+                </div>
+              </div>
+              <div class="mt-4 text-xs text-gray-500">
+                <strong>Complementary but not replacement</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Open-Source Ecosystem -->
+      <section id="open-source" class="max-w-7xl mx-auto px-6 py-12">
+        <div class="section-header">
+          <h2 class="serif text-3xl font-bold text-gray-900">Open-Source Ecosystem and Managed Services</h2>
+        </div>
+
+        <!-- Claw-Code -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800">Claw-Code: Rust Port and Managed Services</h3>
+
+          <div class="grid lg:grid-cols-2 gap-8">
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-red-600">Technical Architecture</h4>
+              <div class="space-y-4">
+                <div class="bg-red-50 p-4 rounded">
+                  <div class="flex items-center mb-2">
+                    <i class="fas fa-memory text-red-600 mr-2"></i>
+                    <strong class="text-red-800">5.5× Memory Efficiency</strong>
+                  </div>
+                  <div class="text-sm text-red-700">1,046 MB peak vs 5,706 MB for Python frameworks</div>
+                </div>
+
+                <div class="bg-blue-50 p-4 rounded">
+                  <div class="flex items-center mb-2">
+                    <i class="fas fa-bolt text-blue-600 mr-2"></i>
+                    <strong class="text-blue-800">25% Latency Advantage</strong>
+                  </div>
+                  <div class="text-sm text-blue-700">Sub-10ms cold starts vs 54-138ms for Python</div>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <h5 class="text-sm font-bold mb-2">Key Features:</h5>
+                <ul class="text-xs space-y-1 text-gray-600">
+                  <li>• Terminal-native interface with git-native operation</li>
+                  <li>• Multi-model support (OpenAI, Anthropic, Google)</li>
+                  <li>• Subagent orchestration with dependency tracking</li>
+                  <li>• Skill library system for custom tools</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-green-600">Kimi Claw Managed Service</h4>
+              <div class="space-y-4">
+                <div class="bg-green-50 p-4 rounded">
+                  <div class="flex items-center mb-2">
+                    <i class="fas fa-cloud text-green-600 mr-2"></i>
+                    <strong class="text-green-800">24/7 Uptime SLA</strong>
+                  </div>
+                  <div class="text-sm text-green-700">99.9% availability with persistent memory</div>
+                </div>
+
+                <div class="bg-purple-50 p-4 rounded">
+                  <div class="flex items-center mb-2">
+                    <i class="fas fa-cog text-purple-600 mr-2"></i>
+                    <strong class="text-purple-800">Zero Configuration</strong>
+                  </div>
+                  <div class="text-sm text-purple-700">Web-based terminal with pre-configured APIs</div>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <h5 class="text-sm font-bold mb-2">Managed Features:</h5>
+                <ul class="text-xs space-y-1 text-gray-600">
+                  <li>• Automatic model updates and security patching</li>
+                  <li>• Team-wide knowledge sharing with project isolation</li>
+                  <li>• SOC 2, ISO 27001 compliance documentation</li>
+                  <li>• Usage-based pricing with volume tiers</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance Comparison Chart -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800">Framework Performance Comparison</h3>
+
+          <div class="comparison-card">
+            <div class="grid lg:grid-cols-4 gap-6">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-red-600 mb-2">5.5×</div>
+                <div class="text-sm font-medium text-gray-700">Memory Efficiency</div>
+                <div class="text-xs text-gray-500 mt-1">Rust vs Python frameworks</div>
+              </div>
+
+              <div class="text-center">
+                <div class="text-2xl font-bold text-blue-600 mb-2">36%</div>
+                <div class="text-sm font-medium text-gray-700">Throughput Improvement</div>
+                <div class="text-xs text-gray-500 mt-1">Higher requests per second</div>
+              </div>
+
+              <div class="text-center">
+                <div class="text-2xl font-bold text-green-600 mb-2">80%</div>
+                <div class="text-sm font-medium text-gray-700">Infrastructure Cost Reduction</div>
+                <div class="text-xs text-gray-500 mt-1">For 50+ concurrent agents</div>
+              </div>
+
+              <div class="text-center">
+                <div class="text-2xl font-bold text-purple-600 mb-2">4ms</div>
+                <div class="text-sm font-medium text-gray-700">Cold Start Time</div>
+                <div class="text-xs text-gray-500 mt-1">vs 54-138ms for Python</div>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-gray-200">
+              <p class="text-sm text-gray-600">
+                <strong>Key Insight:</strong> Rust frameworks enable serverless deployment patterns and high-density agent hosting impossible with heavier Python frameworks. For organizations operating at scale, the infrastructure cost savings alone justify the Rust expertise investment.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Strategic Recommendations -->
+      <section id="recommendations" class="max-w-7xl mx-auto px-6 py-12">
+        <div class="section-header">
+          <h2 class="serif text-3xl font-bold text-gray-900">Strategic Recommendations</h2>
+        </div>
+
+        <!-- Decision Framework -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800">Decision Framework for Platform Selection</h3>
+
+          <div class="grid lg:grid-cols-2 gap-8">
+            <!-- Coding Decision Tree -->
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-blue-600">Coding Platform Decision Tree</h4>
+
+              <div class="space-y-4">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                  <div class="flex items-start">
+                    <i class="fas fa-question-circle text-blue-600 mt-1 mr-3"></i>
+                    <div>
+                      <strong>Complex Architectural Reasoning?</strong>
+                      <div class="text-sm text-gray-600 mt-1">→ <strong>Claude Code</strong> (80.8% SWE-Bench)</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-green-50 p-4 rounded-lg">
+                  <div class="flex items-start">
+                    <i class="fas fa-question-circle text-green-600 mt-1 mr-3"></i>
+                    <div>
+                      <strong>IDE Integration Priority?</strong>
+                      <div class="text-sm text-gray-600 mt-1">→ <strong>Cursor</strong> (VS Code fork, multi-model)</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-purple-50 p-4 rounded-lg">
+                  <div class="flex items-start">
+                    <i class="fas fa-question-circle text-purple-600 mt-1 mr-3"></i>
+                    <div>
+                      <strong>Ecosystem Integration?</strong>
+                      <div class="text-sm text-gray-600 mt-1">→ <strong>GitHub Copilot</strong> (Native GitHub workflow)</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-orange-50 p-4 rounded-lg">
+                  <div class="flex items-start">
+                    <i class="fas fa-question-circle text-orange-600 mt-1 mr-3"></i>
+                    <div>
+                      <strong>Cost-Effective Alternative?</strong>
+                      <div class="text-sm text-gray-600 mt-1">→ <strong>Windsurf</strong> ($15/month, Cascade flow)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Litigation Decision Tree -->
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-red-600">Litigation Platform Decision Tree</h4>
+
+              <div class="space-y-4">
+                <div class="bg-red-50 p-4 rounded-lg">
+                  <div class="flex items-start">
+                    <i class="fas fa-question-circle text-red-600 mt-1 mr-3"></i>
+                    <div>
+                      <strong>Evidence Chain of Custody Required?</strong>
+                      <div class="text-sm text-gray-600 mt-1">→ <strong>V7 Go</strong> (AI Citations, pixel-level provenance)</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-blue-50 p-4 rounded-lg">
+                  <div class="flex items-start">
+                    <i class="fas fa-question-circle text-blue-600 mt-1 mr-3"></i>
+                    <div>
+                      <strong>Government/FedRAMP Required?</strong>
+                      <div class="text-sm text-gray-600 mt-1">→ <strong>Everlaw</strong> (AWS GovCloud, FedRAMP)</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-green-50 p-4 rounded-lg">
+                  <div class="flex items-start">
+                    <i class="fas fa-question-circle text-green-600 mt-1 mr-3"></i>
+                    <div>
+                      <strong>Discovery-Phase Recall Optimization?</strong>
+                      <div class="text-sm text-gray-600 mt-1">→ <strong>Syllo AI</strong> (Ensemble agent architecture)</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-purple-50 p-4 rounded-lg">
+                  <div class="flex items-start">
+                    <i class="fas fa-question-circle text-purple-600 mt-1 mr-3"></i>
+                    <div>
+                      <strong>Managed Service Preference?</strong>
+                      <div class="text-sm text-gray-600 mt-1">→ <strong>Epiq</strong> (Technology + personnel)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Implementation Roadmap -->
+        <div class="mb-12">
+          <h3 class="text-2xl font-bold mb-6 text-gray-800">Implementation Roadmap</h3>
+
+          <div class="grid lg:grid-cols-3 gap-8">
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-blue-600">Phase 1: Foundation (0-3 months)</h4>
+              <div class="space-y-3">
+                <div class="flex items-center">
+                  <i class="fas fa-code text-blue-600 mr-2"></i>
+                  <span class="text-sm">Deploy <strong>Claude Code</strong> for complex development</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-gavel text-blue-600 mr-2"></i>
+                  <span class="text-sm">Implement <strong>V7 Go</strong> for document extraction</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-graduation-cap text-blue-600 mr-2"></i>
+                  <span class="text-sm">Team training and workflow integration</span>
+                </div>
+              </div>
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="text-sm font-bold text-blue-600">Investment: $20-50K</div>
+                <div class="text-xs text-gray-500">Immediate capability deployment</div>
+              </div>
+            </div>
+
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-green-600">Phase 2: Scale (3-12 months)</h4>
+              <div class="space-y-3">
+                <div class="flex items-center">
+                  <i class="fas fa-users text-green-600 mr-2"></i>
+                  <span class="text-sm">Enterprise licensing and team rollout</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-plug text-green-600 mr-2"></i>
+                  <span class="text-sm">Custom integrations with existing systems</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-chart-line text-green-600 mr-2"></i>
+                  <span class="text-sm">Performance monitoring and optimization</span>
+                </div>
+              </div>
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="text-sm font-bold text-green-600">Investment: $100-500K</div>
+                <div class="text-xs text-gray-500">Organization-wide deployment</div>
+              </div>
+            </div>
+
+            <div class="comparison-card">
+              <h4 class="text-lg font-bold mb-4 text-purple-600">Phase 3: Optimization (12+ months)</h4>
+              <div class="space-y-3">
+                <div class="flex items-center">
+                  <i class="fas fa-cogs text-purple-600 mr-2"></i>
+                  <span class="text-sm">Custom agent development for specialized tasks</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-shield-alt text-purple-600 mr-2"></i>
+                  <span class="text-sm">Advanced security and compliance features</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-rocket text-purple-600 mr-2"></i>
+                  <span class="text-sm">Performance optimization at scale</span>
+                </div>
+              </div>
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="text-sm font-bold text-purple-600">Investment: $500K+</div>
+                <div class="text-xs text-gray-500">Advanced capabilities and scale</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Final Recommendations -->
+        <div class="comparison-card bg-gradient-to-r from-blue-50 to-purple-50">
+          <h3 class="text-2xl font-bold mb-6 text-gray-900">Executive Summary &amp; Final Recommendations</h3>
+
+          <div class="prose prose-lg max-w-none">
+            <p class="text-lg text-gray-700 mb-6">
+              Based on comprehensive analysis of the agentic AI platform ecosystem as of April 2026, we recommend a <strong>dual-platform strategy</strong> that leverages specialized tools for each domain rather than pursuing a single unified solution.
+            </p>
+
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+              <div>
+                <h4 class="text-xl font-bold mb-4 text-blue-600">
+                  <i class="fas fa-code mr-2"></i>Coding Platform Strategy
+                </h4>
+                <div class="space-y-3">
+                  <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <strong>Primary: Claude Code</strong>
+                    <p class="text-sm text-gray-600 mt-1">For complex reasoning and architectural tasks (80.8% SWE-Bench)</p>
+                  </div>
+                  <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <strong>Alternative: Cursor</strong>
+                    <p class="text-sm text-gray-600 mt-1">For IDE-native development with multi-model flexibility</p>
+                  </div>
+                  <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <strong>Ecosystem: GitHub Copilot</strong>
+                    <p class="text-sm text-gray-600 mt-1">For seamless GitHub workflow integration</p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 class="text-xl font-bold mb-4 text-red-600">
+                  <i class="fas fa-gavel mr-2"></i>Litigation Platform Strategy
+                </h4>
+                <div class="space-y-3">
+                  <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <strong>Primary: V7 Go</strong>
+                    <p class="text-sm text-gray-600 mt-1">For evidence extraction with AI Citations (99% accuracy)</p>
+                  </div>
+                  <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <strong>Government: Everlaw</strong>
+                    <p class="text-sm text-gray-600 mt-1">For FedRAMP-authorized cloud deployment</p>
+                  </div>
+                  <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <strong>Discovery: Syllo AI</strong>
+                    <p class="text-sm text-gray-600 mt-1">For recall-optimized document review</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <blockquote class="border-l-4 border-blue-600 pl-6 italic text-lg text-gray-700 my-8">
+              &#34;The critical constraint for government legal work emerged from United States v. Heppner (February 2026), which mandates architectural separation between coding and legal agent instances, with legal workflows requiring documented enterprise confidentiality safeguards, zero data retention policies, and formal AI-as-counsel&#39;s-agent protocols.&#34;
+              <cite class="block text-sm text-gray-500 mt-2">
+                — <a href="https://www.kallam.ai/blog/legal-ai-tools-compared-a-decision-framework-for-disputes-practices" class="citation">Legal Precedent Analysis, 2026</a>
+              </cite>
+            </blockquote>
+
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+              <h4 class="text-lg font-bold mb-4">Key Success Factors:</h4>
+              <div class="grid md:grid-cols-2 gap-4 text-sm">
+                <div class="flex items-start">
+                  <i class="fas fa-check-circle text-green-600 mt-1 mr-2"></i>
+                  <span>Start with specialized platforms rather than general-purpose tools</span>
+                </div>
+                <div class="flex items-start">
+                  <i class="fas fa-check-circle text-green-600 mt-1 mr-2"></i>
+                  <span>Consider Rust-based frameworks for infrastructure cost savings</span>
+                </div>
+                <div class="flex items-start">
+                  <i class="fas fa-check-circle text-green-600 mt-1 mr-2"></i>
+                  <span>Ensure legal compliance with attorney-client privilege requirements</span>
+                </div>
+                <div class="flex items-start">
+                  <i class="fas fa-check-circle text-green-600 mt-1 mr-2"></i>
+                  <span>Plan for phased implementation with clear success metrics</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+        // Table of Contents functionality
+        const tocLinks = document.querySelectorAll('.toc-link');
+        const sections = document.querySelectorAll('section[id]');
+        
+        // Smooth scrolling for TOC links
+        tocLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                
+                if (targetSection) {
+                    const offsetTop = targetSection.offsetTop - 20;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Update active TOC link on scroll
+        function updateActiveTocLink() {
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', updateActiveTocLink);
+        updateActiveTocLink(); // Initial call
+        
+        // Mobile TOC toggle
+        const tocToggle = document.getElementById('tocToggle');
+        const toc = document.getElementById('toc');
+        
+        tocToggle.addEventListener('click', () => {
+            toc.classList.toggle('open');
+        });
+        
+        // Close TOC when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 1024 && !toc.contains(e.target) && !tocToggle.contains(e.target)) {
+                toc.classList.remove('open');
+            }
+        });
+        
+        // Performance bar animations
+        const performanceBars = document.querySelectorAll('.performance-fill');
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bar = entry.target;
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 100);
+                }
+            });
+        }, observerOptions);
+        
+        performanceBars.forEach(bar => observer.observe(bar));
+    </script>
+  
+
+</body></html>
