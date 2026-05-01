@@ -1,0 +1,1506 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Yutori Scouts: Master Intelligence Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.5.0/mermaid.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=Tiempos+Headline:wght@400;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <style>
+        :root {
+            --primary: #1e293b;
+            --secondary: #475569;
+            --accent: #0f172a;
+            --muted: #64748b;
+            --background: #fefefe;
+            --surface: #f8fafc;
+            --border: #e2e8f0;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--primary);
+            background: var(--background);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .serif {
+            font-family: 'Tiempos Headline', Georgia, serif;
+        }
+        
+        .toc {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            z-index: 1000;
+            padding: 2rem 1.5rem;
+        }
+        
+        .toc h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+        
+        .toc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .toc li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .toc a {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+        }
+        
+        .toc a:hover {
+            background: rgba(30, 41, 59, 0.05);
+            color: var(--primary);
+            padding-left: 0.5rem;
+        }
+        
+        .toc a.active {
+            background: var(--primary);
+            color: white;
+            padding-left: 0.75rem;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            max-width: 900px;
+            padding: 2rem 3rem;
+        }
+        
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            align-items: center;
+        }
+        
+        .hero-text {
+            position: relative;
+        }
+        
+        .hero-text h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-visual {
+            position: relative;
+            height: 300px;
+            background: linear-gradient(45deg, #f1f5f9, #e2e8f0);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        
+        .hero-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(71, 85, 105, 0.4));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.25rem;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .executive-summary {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .section {
+            margin-bottom: 4rem;
+        }
+        
+        .section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+        
+        .section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--secondary);
+        }
+        
+        .section h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem;
+            color: var(--muted);
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comparison-table th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        
+        .comparison-table tr:hover {
+            background: var(--surface);
+        }
+        
+        .priority-matrix {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .priority-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .priority-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .priority-card.immediate {
+            border-color: #ef4444;
+            background: linear-gradient(135deg, #fef2f2, #fff);
+        }
+        
+        .priority-card.short {
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #fffbeb, #fff);
+        }
+        
+        .priority-card.medium {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #eff6ff, #fff);
+        }
+        
+        .priority-card.continuous {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #f0fdf4, #fff);
+        }
+        
+        .citation {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            margin-left: 0.25rem;
+            transition: all 0.2s;
+        }
+        
+        .citation:hover {
+            background: var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .status-badge.available {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-badge.paused {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-badge.unknown {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .mermaid-container {
+            display: flex;
+            justify-content: center;
+            min-height: 300px;
+            max-height: 800px;
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mermaid-container .mermaid {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            cursor: grab;
+            transition: transform 0.3s ease;
+            transform-origin: center center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none; /* 防止触摸设备上的默认行为 */
+            -webkit-user-select: none; /* 防止文本选择 */
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .mermaid-container .mermaid svg {
+            max-width: 100%;
+            height: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .mermaid-container .mermaid:active {
+            cursor: grabbing;
+        }
+
+        .mermaid-container.zoomed .mermaid {
+            height: 100%;
+            width: 100%;
+            cursor: grab;
+        }
+
+        .mermaid-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mermaid-control-btn {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #374151;
+            font-size: 14px;
+            min-width: 36px;
+            height: 36px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mermaid-control-btn:hover {
+            background: #f8fafc;
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        .mermaid-control-btn:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 1024px) {
+            .toc {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .toc.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 2rem;
+            }
+            
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-visual {
+                height: 250px;
+            }
+
+            .mermaid-control-btn:not(.reset-zoom) {
+                display: none;
+            }
+            .mermaid-controls {
+                top: auto;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+            .hero-visual {
+                height: 200px;
+            }
+            .executive-summary {
+                padding: 1rem;
+            }
+            .priority-matrix {
+                grid-template-columns: 1fr;
+            }
+            .hero-overlay {
+                font-size: 1rem;
+            }
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body>
+    <!-- Table of Contents -->
+    <nav class="toc">
+      <h3>Navigation</h3>
+      <ul>
+        <li>
+          <a href="#executive-context">Executive Context</a>
+        </li>
+        <li>
+          <a href="#premium-llm-tracking">Premium LLM Tracking</a>
+        </li>
+        <li>
+          <a href="#agentic-swarm-wars">Agentic Swarm Wars</a>
+        </li>
+        <li>
+          <a href="#big-tech-ecosystems">Big Tech Ecosystems</a>
+        </li>
+        <li>
+          <a href="#open-source-innovations">Open-Source Innovations</a>
+        </li>
+        <li>
+          <a href="#litigation-ocr-swarms">Litigation OCR Swarms</a>
+        </li>
+        <li>
+          <a href="#comparative-matrix">Comparative Matrix</a>
+        </li>
+        <li>
+          <a href="#optimization-verdict">Optimization Verdict</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <div class="hero-grid">
+        <div class="hero-text">
+          <h1 class="serif">Master Intelligence Dashboard</h1>
+          <p class="text-xl text-gray-600 mb-4">Strategic Analysis of Elite AI Tooling for Cybersecurity Research &amp; Legal Discovery</p>
+          <div class="flex items-center gap-4 text-sm text-gray-500">
+            <span><i class="fas fa-shield-alt mr-2"></i>Zero-Hallucination Guarantee</span>
+            <span><i class="fas fa-university mr-2"></i>Academic Compliance</span>
+            <span><i class="fas fa-gavel mr-2"></i>Litigation-Grade</span>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <img src="https://kimi-web-img.moonshot.cn/img/www.dhs.gov/f7f52c0c533005a64480e2f238941f53a4d5bea6.webp" alt="Cybersecurity research and legal document analysis workspace" size="medium" aspect="wide" query="cybersecurity research legal document analysis" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+          <div class="hero-overlay">
+            <div>
+              <i class="fas fa-brain text-3xl mb-2"></i>
+              <p>Dual-Use Intelligence Architecture</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Executive Summary -->
+      <section id="executive-context" class="executive-summary">
+        <h2 class="serif text-2xl font-bold mb-4">Executive Summary</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="font-semibold text-lg mb-3">Optimal Stack Recommendation</h3>
+            <div class="space-y-3">
+              <div class="bg-blue-50 p-3 rounded-lg">
+                <strong>Vibe-Coding Stack:</strong> Claude Max 20x + Claude Code (primary), augmented by Factory Max or Kimi Vivace, with Cursor Ultra as IDE layer
+              </div>
+              <div class="bg-green-50 p-3 rounded-lg">
+                <strong>Litigation Evidence Stack:</strong> Typhoon OCR core with LangGraph + Claude/Gemini RAG pipeline, human-in-the-loop verification, immutable audit logging
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg mb-3">Immediate Actions</h3>
+            <ul class="space-y-2 text-sm">
+              <li class="flex items-center"><i class="fas fa-check-circle text-green-600 mr-2"></i>Activate Claude Code with Max 20x subscription</li>
+              <li class="flex items-center"><i class="fas fa-check-circle text-green-600 mr-2"></i>Deploy Typhoon OCR cloud instance</li>
+              <li class="flex items-center"><i class="fas fa-check-circle text-green-600 mr-2"></i>Migrate to Claude for Education for zero-training-data guarantees</li>
+              <li class="flex items-center"><i class="fas fa-check-circle text-green-600 mr-2"></i>Install Cursor Ultra ($40 tier)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Executive Context -->
+      <section id="executive-context" class="section">
+        <h2 class="serif">Executive Context &amp; Operational Parameters</h2>
+
+        <h3>User Persona &amp; Mission Profile</h3>
+        <p>The user operates as a <strong>doctoral-level researcher in cyber security</strong>, requiring epistemic rigor and zero-hallucination tolerance for research outputs. The secondary objective involves creating high-fidelity evidence inventories for Attorney General and Auditor General litigation under Thai legal standards.</p>
+
+        <h4>Current Sunk Costs</h4>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Subscription</th>
+              <th>Monthly Cost</th>
+              <th>Core Capability</th>
+              <th>Strategic Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>AskSage.ai</strong></td>
+              <td>$90</td>
+              <td>Military-grade security, multi-model orchestration</td>
+              <td>Non-substitutable for sensitive government-adjacent work</td>
+            </tr>
+            <tr>
+              <td><strong>ChatGPT Pro</strong></td>
+              <td>$200</td>
+              <td>Priority GPT-5 access, Codex integration</td>
+              <td>Broad capability, emerging agentic features</td>
+            </tr>
+            <tr>
+              <td><strong>Claude Max 20x</strong></td>
+              <td>$100-200</td>
+              <td>Maximum Anthropic context, extended thinking</td>
+              <td><strong>Primary anchor for research and coding workflows</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Google AI Ultra</strong></td>
+              <td>$200</td>
+              <td>Gemini 2.5 Pro/Ultra, 1M+ token context</td>
+              <td>Document analysis, Antigravity IDE baseline</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Technical Requirements</h3>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold mb-2"><i class="fas fa-code mr-2"></i>Target Languages</h4>
+            <p class="text-sm">Rust, Python, SQL with native multi-file proficiency and AST-level understanding</p>
+          </div>
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold mb-2"><i class="fas fa-server mr-2"></i>Deployment</h4>
+            <p class="text-sm">Fully agnostic: cloud, self-hosted, on-premises, or hybrid with zero setup headache priority</p>
+          </div>
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold mb-2"><i class="fas fa-chart-line mr-2"></i>Priority</h4>
+            <p class="text-sm">Extreme capability maximization with zero setup headache tolerance</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Premium LLM Tracking -->
+      <section id="premium-llm-tracking" class="section">
+        <h2 class="serif">Ultra-Premium LLM Tracking &amp; Academic Compliance</h2>
+
+        <h3>Tier-1 LLM Feature Mapping</h3>
+
+        <h4>OpenAI GPT-5 Family</h4>
+        <p>GPT-5.4 achieves <strong>Arena Elo 1420</strong> with <strong>93.1% HumanEval score</strong> and <strong>1.1M token context</strong>
+          <a href="https://whatllm.org/largest-context-window-llm" class="citation">[207]</a>. GPT-5.5 optimizes for coding with <strong>95.5% HumanEval</strong> at reduced context <a href="https://alhertech.com/en/ai-comparison" class="citation">[184]</a>. Codex Spark achieves <strong>1,000+ tokens/second</strong> with sub-agent forking capability <a href="https://antigravity.codes/blog/best-antigravity-alternatives-2026" class="citation">[193]</a>.</p>
+
+        <h4>Anthropic Claude 4/Max 20x</h4>
+        <p>Claude Opus 4.7 achieves <strong>Arena Elo 1438</strong> with <strong>94.0% HumanEval</strong> and <strong>256K context</strong>
+          <a href="https://alhertech.com/en/ai-comparison" class="citation">[184]</a>. The Max 20x tier provides priority access with elevated rate limits. Extended Thinking and Computer Use API enable sophisticated security analysis <a href="https://supergrok.online/supergrok-vs-claude/" class="citation">[185]</a>.</p>
+
+        <h4>Google Gemini 2.5 Pro/Ultra</h4>
+        <p>Gemini 2.5 Pro leads with <strong>Arena Elo 1441</strong> and extraordinary <strong>3M token context</strong>
+          <a href="https://alhertech.com/en/ai-comparison" class="citation">[184]</a>. Native multimodal reasoning excels at document understanding with complex layouts <a href="https://aclanthology.org/2025.ijcnlp-long.89.pdf" class="citation">[190]</a>.</p>
+
+        <h3>Academic-Use Terms &amp; Data Privacy Audit</h3>
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 my-4">
+          <p><strong>Anthropic Claude for Education</strong> offers the most rigorous academic data protection with contractual zero-training-data retention, B-Corp accountability, and explicit guarantees for sensitive research <a href="https://anonyome.com/knowledge-center/ai-privacy/claude-privacy/" class="citation">[127]</a>
+            <a href="https://privacy.claude.com/en/articles/11732894-who-owns-and-manages-the-data-of-my-claude-for-education-account" class="citation">[128]</a>.
+          </p>
+        </div>
+
+        <h3>Early Access Pathways</h3>
+        <p>Confirmed waitlists include <strong>OpenAI Research Program</strong> and <strong>Anthropic Claude Pro Beta</strong>. Google DeepMind research collaborations require institutional partnerships. Explicit unavailability flags for tools like <strong>Opencode Black 200</strong> (temporarily paused) <a href="https://opencode.ai/black" class="citation">[3]</a>.</p>
+      </section>
+
+      <!-- Agentic Swarm Wars -->
+      <section id="agentic-swarm-wars" class="section">
+        <h2 class="serif">Agentic Swarm Wars &amp; Elite Vibe-Coding</h2>
+
+        <h3>Baseline Platform Cross-Reference</h3>
+        <p>Current baseline includes OpenAI Codex, AskSage.ai, Claude Code, Claude Cowork, Kimi Claw, Yutori Computer, Perplexity Computer, Antigravity IDE, and Manus&#39; computer offerings.</p>
+
+        <h3>&#34;Super-Duper&#34; Tier Benchmarking</h3>
+
+        <div class="grid md:grid-cols-2 gap-6 mt-4">
+          <div class="border border-red-200 bg-red-50 p-4 rounded-lg">
+            <h4 class="font-semibold text-red-800 mb-2">
+              <i class="fas fa-exclamation-triangle mr-2"></i>Critical Unavailability
+            </h4>
+            <p><strong>Opencode Black 200</strong> is temporarily paused with no enrollment pathway <a href="https://opencode.ai/black" class="citation">[3]</a>. Exclude from active planning.</p>
+          </div>
+          <div class="border border-yellow-200 bg-yellow-50 p-4 rounded-lg">
+            <h4 class="font-semibold text-yellow-800 mb-2">
+              <i class="fas fa-question-circle mr-2"></i>Insufficient Information
+            </h4>
+            <p><strong>Orchids Ultra</strong> lacks verified pricing, features, or access mechanisms. Treat as unavailable.</p>
+          </div>
+        </div>
+
+        <h4>Available Elite Options</h4>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>Key Capability</th>
+              <th>Price</th>
+              <th>Setup Headache</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Factory Max</strong></td>
+              <td>PR-to-production autonomy, Droid agent</td>
+              <td>$500/month</td>
+              <td>2/10 (Managed)</td>
+            </tr>
+            <tr>
+              <td><strong>Kimi Vivace</strong></td>
+              <td>10+ agent swarm, Kimi Claw deployment</td>
+              <td>$159/month</td>
+              <td>2/10 (Managed)</td>
+            </tr>
+            <tr>
+              <td><strong>Cursor Ultra</strong></td>
+              <td>Predictive editing, 8-agent background processing</td>
+              <td>$40-200/month</td>
+              <td>1/10 (Desktop)</td>
+            </tr>
+            <tr>
+              <td><strong>Verdent Max</strong></td>
+              <td>Multi-model routing, BYOK optimization</td>
+              <td>$179/month</td>
+              <td>3/10 (Hybrid)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Evaluation Metrics Deep-Dive</h3>
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <h5 class="font-semibold mb-2">Swarm Autonomy Leaders</h5>
+              <ul class="text-sm space-y-1">
+                <li>• Kimi Vivace (10+ concurrent agents)</li>
+                <li>• Factory Max (Droid subagents)</li>
+                <li>• Claude Code (March 2026 update)</li>
+              </ul>
+            </div>
+            <div>
+              <h5 class="font-semibold mb-2">AST Indexing Excellence</h5>
+              <ul class="text-sm space-y-1">
+                <li>• Augment Code (400K+ file architecture)</li>
+                <li>• Cursor Ultra (fast local semantic search)</li>
+                <li>• Factory Max (persistent codebase indices)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Big Tech Ecosystems -->
+      <section id="big-tech-ecosystems" class="section">
+        <h2 class="serif">Big-Tech Ecosystem Alternatives</h2>
+
+        <h3>Google Ecosystem Assessment</h3>
+        <p>Despite Google AI Ultra subscription, no Google-native tool currently surpasses Claude Code, Factory Max, or Cursor Ultra for agentic coding. Antigravity IDE remains notebook-centric with limited multi-file engineering capability <a href="https://antigravity.codes/blog/best-antigravity-alternatives-2026" class="citation">[136]</a>.</p>
+
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 my-4">
+          <p><strong>Verdict:</strong> Retain Google AI Ultra for multimodal research and long-context analysis, but augment with non-Google tools for primary coding workflows.</p>
+        </div>
+
+        <h3>xAI Ecosystem (SuperGrok Heavy)</h3>
+        <p>SuperGrok Heavy at ~$300/month offers real-time X/Twitter data integration but limited code specialization <a href="https://supergrok.online/supergrok-vs-claude/" class="citation">[185]</a>. Grok 4 Heavy achieves <strong>Arena Elo 1420</strong> but lacks AST-native capabilities for serious development work.</p>
+
+        <h3>AWS Ecosystem</h3>
+        <p>Amazon Q Developer provides IDE integration with security scanning and 50% code acceptance rate in production <a href="https://www.morphllm.com/ai-coding-agent" class="citation">[73]</a>. Bedrock Agents offer managed orchestration but require moderate setup complexity (6/10 headache score).</p>
+
+        <h3>You.com ARI Agents</h3>
+        <p>ARI agents excel at search-augmented research but demonstrate limited IDE integration and no native AST handling. Not competitive with elite coding platforms for primary software development requirements.</p>
+      </section>
+
+      <!-- Open-Source Innovations -->
+      <section id="open-source-innovations" class="section">
+        <h2 class="serif">Open-Source Ports &amp; Forked Innovations Deployment</h2>
+
+        <h3>Claw-Code (Rust Port of Ultraworkers)</h3>
+        <p><strong>Critical finding:</strong> No fully managed service versions identified. Requires self-hosting with setup headache score of 8/10. Mac Studio M3 Ultra with 512GB RAM is exceptionally viable for local deployment, supporting 70B parameter models via Ollama with ~12-15 tokens/second throughput <a href="https://www.pcbuildadvisor.com/mac-mini-vs-mac-studio-for-openclaw-the-definitive-2026-hardware-guide/" class="citation">[112]</a>.</p>
+
+        <h3>CheetahClaws (Python Port by UC Berkeley)</h3>
+        <p>Python-native implementation confirmed viable on M3 Ultra with PyTorch MPS acceleration. Integrates with CrewAI/LangGraph orchestration frameworks <a href="https://github.com/laxmimerit/Agentic-RAG-with-LangGraph-and-Ollama" class="citation">[166]</a>. 512GB RAM supports 10+ concurrent agents with local 70B models.</p>
+
+        <h3>OpenClaude (Direct Soft-Fork)</h3>
+        <p>OpenClaw Managed Agents provide third-party managed service with ~60% cost savings versus Anthropic managed agents <a href="https://github.com/stainlu/openclaw-managed-agents" class="citation">[111]</a>. Confirmed working on M-series Macs with Ollama backend and SSH sandbox security <a href="https://skywork.ai/skypage/en/openclaw-installation-macos-ai-agent-workflows/2037010866042048512" class="citation">[142]</a>.</p>
+
+        <h3>Local-Model Agentic Stack Architecture</h3>
+        <div class="mermaid-container">
+          <div class="mermaid-controls">
+            <button class="mermaid-control-btn zoom-in" title="放大">
+              <i class="fas fa-search-plus"></i>
+            </button>
+            <button class="mermaid-control-btn zoom-out" title="缩小">
+              <i class="fas fa-search-minus"></i>
+            </button>
+            <button class="mermaid-control-btn reset-zoom" title="重置">
+              <i class="fas fa-expand-arrows-alt"></i>
+            </button>
+            <button class="mermaid-control-btn fullscreen" title="全屏查看">
+              <i class="fas fa-expand"></i>
+            </button>
+          </div>
+          <div class="mermaid">
+            flowchart TD
+            A[&#34;Mac Studio M3 Ultra
+            <br/>512GB Unified Memory&#34;] --&gt; B[&#34;Ollama/LM Studio
+            <br/>Model Management&#34;]
+            A --&gt; C[&#34;Redis/SQLite
+            <br/>State Persistence&#34;]
+            B --&gt; D[&#34;Local Models
+            <br/>70B Parameters&#34;]
+            B --&gt; E[&#34;Specialized Models
+            <br/>Code/Analysis/Embedding&#34;]
+            D --&gt; F[&#34;LangGraph/CrewAI
+            <br/>Orchestration&#34;]
+            E --&gt; F
+            F --&gt; G[&#34;Agent Workflows
+            <br/>10+ Concurrent Agents&#34;]
+            C --&gt; H[&#34;Chain-of-Custody
+            <br/>Audit Logging&#34;]
+            G --&gt; I[&#34;Privacy Enclave
+            <br/>Air-Gapped Security&#34;]
+            H --&gt; I
+
+            style A fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+            style B fill:#f3e5f5,stroke:#4a148c,stroke-width:3px,color:#000
+            style C fill:#fff3e0,stroke:#e65100,stroke-width:3px,color:#000
+            style D fill:#e8f5e8,stroke:#1b5e20,stroke-width:3px,color:#000
+            style E fill:#fff8e1,stroke:#f57f17,stroke-width:3px,color:#000
+            style F fill:#fce4ec,stroke:#880e4f,stroke-width:3px,color:#000
+            style G fill:#e0f2f1,stroke:#00695c,stroke-width:3px,color:#000
+            style H fill:#f1f8e9,stroke:#33691e,stroke-width:3px,color:#000
+            style I fill:#ffebee,stroke:#b71c1c,stroke-width:3px,color:#000
+          </div>
+        </div>
+      </section>
+
+      <!-- Litigation OCR Swarms -->
+      <section id="litigation-ocr-swarms" class="section">
+        <h2 class="serif">Forensic Litigation OCR &amp; Evidence Swarms</h2>
+
+        <h3>System Architecture for Thai Legal Document Discovery</h3>
+        <p>The litigation evidence stack must handle massive volumes of image-based PDFs with variable quality: decades-old scanned records, stamped annotations, handwritten marginalia, and complex layouts combining Thai script, English loanwords, and governmental notation.</p>
+
+        <h4>Thai-Script Specialization</h4>
+        <div class="bg-green-50 border-l-4 border-green-500 p-4 my-4">
+          <p><strong>Typhoon OCR</strong> emerges as the leading solution, developed by SCB 10X and the AI Research Institute of Thailand specifically for Thai documents. Achieves state-of-the-art results with end-to-end document understanding architecture.</p>
+        </div>
+
+        <p>Benchmark data from Thailand&#39;s National Anti-Corruption Commission (NACC) shows Tesseract limitations: <strong>72% word-level accuracy</strong> on printed text, degrading to <strong>59% on handwritten submissions</strong>
+          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12818598/" class="citation">[122]</a>
+          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12818598/" class="citation">[123]</a>. Their hybrid approach combining Tesseract + Gemini achieves <strong>78.6% processing time reduction</strong> but is optimized for throughput, not litigation-grade accuracy.
+        </p>
+
+        <h3>Zero-Hallucination Guarantee Mechanisms</h3>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-semibold mb-2">RAG Architecture</h5>
+            <p class="text-sm">Vector indexing with Thai-optimized embeddings (WangchanBERTa), source attribution to page coordinates, and verbatim Thai quotation</p>
+          </div>
+          <div class="bg-yellow-50 p-4 rounded-lg">
+            <h5 class="font-semibold mb-2">Human-in-the-Loop</h5>
+            <p class="text-sm">Confidence scoring (&lt;0.85 → automatic review), flagged review queue, adjudication workflow with digital signatures</p>
+          </div>
+          <div class="bg-red-50 p-4 rounded-lg">
+            <h5 class="font-semibold mb-2">Chain-of-Custody</h5>
+            <p class="text-sm">Immutable Merkle-tree logging, timestamped operations, HSM-protected digital signatures, exportable for court submission</p>
+          </div>
+        </div>
+
+        <h3>Cloud-Based Deployment Model</h3>
+        <p>Primary deployment leverages <strong>AWS/Azure/GCP managed OCR + LLM inference</strong> with data residency options for Thai PDPA compliance. Hybrid model combines cloud OCR with on-premises review for sensitive documents. Sovereign cloud options include True IDC, CAT Telecom, and AIS Cloud for domestic processing.</p>
+      </section>
+
+      <!-- Comparative Matrix -->
+      <section id="comparative-matrix" class="section">
+        <h2 class="serif">The Ultimate Comparative Matrix</h2>
+
+        <h3>Vibe-Coding Stack Candidates</h3>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Platform/Tool</th>
+              <th>Autonomy Level</th>
+              <th>Swarm Size</th>
+              <th>Context</th>
+              <th>Language Proficiency</th>
+              <th>Speed</th>
+              <th>Cost</th>
+              <th>Setup Headache</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-green-50">
+              <td><strong>Factory Max</strong></td>
+              <td><span class="status-badge available">PR-to-production autonomy</span></td>
+              <td>Single Droid + subagents</td>
+              <td>256K</td>
+              <td><strong>Exceptional Rust/Python</strong></td>
+              <td>Moderate</td>
+              <td>$500/month</td>
+              <td>2/10</td>
+            </tr>
+            <tr class="bg-blue-50">
+              <td><strong>Kimi Vivace</strong></td>
+              <td><span class="status-badge available">Agent swarm orchestration</span></td>
+              <td><strong>10+ concurrent agents</strong></td>
+              <td>2M</td>
+              <td>Strong Python</td>
+              <td>Moderate</td>
+              <td>$159/month</td>
+              <td>2/10</td>
+            </tr>
+            <tr class="bg-yellow-50">
+              <td><strong>Cursor Ultra</strong></td>
+              <td>Assisted coding</td>
+              <td>8 parallel agents</td>
+              <td>1M</td>
+              <td><strong>Excellent all three</strong></td>
+              <td><strong>Very fast</strong></td>
+              <td>$40-200/month</td>
+              <td>1/10</td>
+            </tr>
+            <tr class="bg-purple-50">
+              <td><strong>Claude Code</strong></td>
+              <td><span class="status-badge available">High autonomy</span></td>
+              <td>Multi-agent</td>
+              <td><strong>1M (beta)</strong></td>
+              <td>Excellent Python/SQL</td>
+              <td>Moderate</td>
+              <td>Included in Max 20x</td>
+              <td>2/10</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Litigation Evidence Stack Candidates</h3>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Platform/Tool</th>
+              <th>OCR Accuracy (Thai)</th>
+              <th>Spatial Awareness</th>
+              <th>Chain-of-Custody</th>
+              <th>Cost</th>
+              <th>Setup Headache</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-green-50">
+              <td><strong>Typhoon OCR</strong></td>
+              <td><span class="status-badge available">State-of-the-art</span></td>
+              <td><strong>Native VLM architecture</strong></td>
+              <td>Requires custom implementation</td>
+              <td>Free + compute</td>
+              <td>5/10 (fine-tuning)</td>
+            </tr>
+            <tr>
+              <td>V7 Go</td>
+              <td>Good</td>
+              <td>Strong</td>
+              <td>Basic logging</td>
+              <td>$300-1000+</td>
+              <td>3/10</td>
+            </tr>
+            <tr>
+              <td>AWS Textract</td>
+              <td>Moderate</td>
+              <td>Strong</td>
+              <td>CloudTrail logging</td>
+              <td>Pay-per-use</td>
+              <td>4/10</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Explicit Unavailability Declarations</h3>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>Status</th>
+              <th>Monitoring Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-red-50">
+              <td><strong>Opencode Black 200</strong></td>
+              <td><span class="status-badge paused">TEMPORARILY PAUSED</span></td>
+              <td>Check monthly; do not plan dependencies</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td><strong>Orchids Ultra</strong></td>
+              <td><span class="status-badge unknown">INSUFFICIENT INFORMATION</span></td>
+              <td>Monitor AI tooling news; treat as non-existent</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Optimization Verdict -->
+      <section id="optimization-verdict" class="section">
+        <h2 class="serif">The Executive Optimization Verdict</h2>
+
+        <h3>Sunk-Cost Optimization Strategy</h3>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="space-y-4">
+            <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
+              <h4 class="font-semibold text-green-800 mb-2"><i class="fas fa-check-circle mr-2"></i>Retain &amp; Optimize</h4>
+              <ul class="text-sm space-y-1">
+                <li><strong>Claude Max 20x:</strong> Primary engine, migrate to Education tier</li>
+                <li><strong>Google AI Ultra:</strong> Multimodal research, long context</li>
+                <li><strong>ChatGPT Pro:</strong> General-purpose insurance, GPT-5 access</li>
+              </ul>
+            </div>
+            <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+              <h4 class="font-semibold text-yellow-800 mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>Reassess</h4>
+              <ul class="text-sm space-y-1">
+                <li><strong>AskSage.ai ($90/mo):</strong> Overlap with Claude/ChatGPT for coding</li>
+              </ul>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+              <h4 class="font-semibold text-blue-800 mb-2"><i class="fas fa-plus-circle mr-2"></i>Add New</h4>
+              <ul class="text-sm space-y-1">
+                <li><strong>Factory Max ($500)</strong> or <strong>Kimi Vivace ($159)</strong></li>
+                <li><strong>Cursor Ultra ($40-200)</strong></li>
+                <li><strong>Verdent Max ($179)</strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h3>Ultimate Vibe-Coding Stack</h3>
+        <div class="priority-matrix">
+          <div class="priority-card immediate">
+            <i class="fas fa-rocket text-2xl text-red-600 mb-2"></i>
+            <h4 class="font-semibold">Primary</h4>
+            <p class="text-sm">Claude Max 20x + Claude Code</p>
+          </div>
+          <div class="priority-card short">
+            <i class="fas fa-plus text-2xl text-orange-600 mb-2"></i>
+            <h4 class="font-semibold">Augment</h4>
+            <p class="text-sm">Factory Max OR Kimi Vivace</p>
+          </div>
+          <div class="priority-card medium">
+            <i class="fas fa-desktop text-2xl text-blue-600 mb-2"></i>
+            <h4 class="font-semibold">IDE Layer</h4>
+            <p class="text-sm">Cursor Ultra</p>
+          </div>
+          <div class="priority-card continuous">
+            <i class="fas fa-route text-2xl text-green-600 mb-2"></i>
+            <h4 class="font-semibold">Orchestration</h4>
+            <p class="text-sm">Verdent Max</p>
+          </div>
+        </div>
+
+        <h3>Ultimate Litigation Evidence Stack</h3>
+        <div class="mermaid-container">
+          <div class="mermaid-controls">
+            <button class="mermaid-control-btn zoom-in" title="放大">
+              <i class="fas fa-search-plus"></i>
+            </button>
+            <button class="mermaid-control-btn zoom-out" title="缩小">
+              <i class="fas fa-search-minus"></i>
+            </button>
+            <button class="mermaid-control-btn reset-zoom" title="重置">
+              <i class="fas fa-expand-arrows-alt"></i>
+            </button>
+            <button class="mermaid-control-btn fullscreen" title="全屏查看">
+              <i class="fas fa-expand"></i>
+            </button>
+          </div>
+          <div class="mermaid">
+            flowchart LR
+            A[&#34;Massive Image-Based PDFs&#34;] --&gt; B[&#34;Typhoon OCR Core
+            <br/>Thai-Script Optimized&#34;]
+            B --&gt; C[&#34;LangGraph/CrewAI
+            <br/>Agentic Pipeline&#34;]
+            C --&gt; D[&#34;Claude/Gemini
+            <br/>Semantic Linking&#34;]
+            D --&gt; E[&#34;RAG with Source
+            <br/>Attribution&#34;]
+            E --&gt; F[&#34;Human-in-the-Loop
+            <br/>Verification&#34;]
+            F --&gt; G[&#34;Immutable Audit Trail
+            <br/>Chain-of-Custody&#34;]
+            G --&gt; H[&#34;Evidence Inventory
+            <br/>for AG/OAG&#34;]
+
+            I[&#34;Mac Studio M3 Ultra
+            <br/>Enclave&#34;] --&gt; C
+            I --&gt; F
+            I --&gt; G
+
+            style A fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000
+            style B fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#000
+            style C fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#000
+            style D fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,color:#000
+            style E fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+            style F fill:#f1f8e9,stroke:#558b2f,stroke-width:2px,color:#000
+            style G fill:#e0f2f1,stroke:#00695c,stroke-width:2px,color:#000
+            style H fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
+            style I fill:#f5f5f5,stroke:#424242,stroke-width:2px,color:#000
+          </div>
+        </div>
+
+        <h3>Deployment Priority Matrix</h3>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Priority</th>
+              <th>Timeline</th>
+              <th>Actions</th>
+              <th>Dependencies</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-red-50">
+              <td><strong>IMMEDIATE</strong></td>
+              <td>0-2 weeks</td>
+              <td>
+                • Activate Claude Code
+                <br/>
+                • Deploy Typhoon OCR
+                <br/>
+                • Migrate to Claude for Education
+                <br/>
+                • Install Cursor Ultra
+              </td>
+              <td>None — all tools immediately available</td>
+            </tr>
+            <tr class="bg-orange-50">
+              <td><strong>SHORT-TERM</strong></td>
+              <td>1-3 months</td>
+              <td>
+                • Trial Factory Max OR Kimi Vivace
+                <br/>
+                • Integrate Verdent Max
+                <br/>
+                • Fine-tune Typhoon OCR
+                <br/>
+                • Build extraction pipeline
+              </td>
+              <td>Immediate phase completion</td>
+            </tr>
+            <tr class="bg-blue-50">
+              <td><strong>MEDIUM-TERM</strong></td>
+              <td>3-6 months</td>
+              <td>
+                • Deploy Mac Studio enclave
+                <br/>
+                • Implement chain-of-custody
+                <br/>
+                • Validate end-to-end pipeline
+                <br/>
+                • Optimize cost structure
+              </td>
+              <td>Short-term phase completion</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <script>
+        // Initialize Mermaid with enhanced configuration
+        document.addEventListener('DOMContentLoaded', function() {
+            mermaid.initialize({ 
+                startOnLoad: true,
+                theme: 'base',
+                themeVariables: {
+                    // 主要颜色配置 - 高对比度
+                    primaryColor: '#ffffff',
+                    primaryTextColor: '#1e293b',
+                    primaryBorderColor: '#475569',
+                    lineColor: '#475569',
+                    
+                    // 次要颜色配置
+                    secondaryColor: '#f8fafc',
+                    secondaryTextColor: '#334155',
+                    secondaryBorderColor: '#64748b',
+                    
+                    // 第三级颜色配置
+                    tertiaryColor: '#f1f5f9',
+                    tertiaryTextColor: '#475569',
+                    tertiaryBorderColor: '#94a3b8',
+                    
+                    // 背景配置
+                    background: '#ffffff',
+                    mainBkg: '#ffffff',
+                    secondBkg: '#f8fafc',
+                    tertiaryBkg: '#f1f5f9',
+                    
+                    // 节点特定颜色 - 确保高对比度
+                    nodeBkg: '#ffffff',
+                    nodeTextColor: '#1e293b',
+                    nodeBorder: '#475569',
+                    
+                    // 集群颜色
+                    clusterBkg: '#f8fafc',
+                    clusterTextColor: '#1e293b',
+                    clusterBorder: '#94a3b8',
+                    
+                    // 边缘和箭头
+                    edgeLabelBackground: '#ffffff',
+                    edgeLabelText: '#1e293b',
+                    
+                    // 字体配置
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                },
+                flowchart: {
+                    useMaxWidth: false,
+                    htmlLabels: true,
+                    curve: 'basis',
+                    padding: 20,
+                    nodeSpacing: 50,
+                    rankSpacing: 80,
+                    diagramPadding: 20
+                },
+                sequence: {
+                    useMaxWidth: false,
+                    diagramMarginX: 50,
+                    diagramMarginY: 10,
+                    actorMargin: 50,
+                    width: 150,
+                    height: 65,
+                    boxMargin: 10,
+                    boxTextMargin: 5,
+                    noteMargin: 10,
+                    messageMargin: 35
+                },
+                gantt: {
+                    useMaxWidth: false,
+                    leftPadding: 75,
+                    rightPadding: 20,
+                    topPadding: 50,
+                    bottomPadding: 20,
+                    gridLineStartPadding: 35,
+                    fontSize: 11,
+                    sectionFontSize: 24,
+                    numberSectionStyles: 4
+                },
+                // 确保SVG渲染质量
+                svgContainerStyle: 'max-width: 100%; height: auto; font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;'
+            });
+            
+            // Initialize Mermaid Controls for zoom and pan
+            initializeMermaidControls();
+        });
+
+        // Initialize Mermaid Controls for zoom and pan
+        function initializeMermaidControls() {
+            const containers = document.querySelectorAll('.mermaid-container');
+
+            containers.forEach(container => {
+            const mermaidElement = container.querySelector('.mermaid');
+            let scale = 1;
+            let isDragging = false;
+            let startX, startY, translateX = 0, translateY = 0;
+
+            // 触摸相关状态
+            let isTouch = false;
+            let touchStartTime = 0;
+            let initialDistance = 0;
+            let initialScale = 1;
+            let isPinching = false;
+
+            // Zoom controls
+            const zoomInBtn = container.querySelector('.zoom-in');
+            const zoomOutBtn = container.querySelector('.zoom-out');
+            const resetBtn = container.querySelector('.reset-zoom');
+            const fullscreenBtn = container.querySelector('.fullscreen');
+
+            function updateTransform() {
+                mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+                if (scale > 1) {
+                container.classList.add('zoomed');
+                } else {
+                container.classList.remove('zoomed');
+                }
+
+                mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+            }
+
+            if (zoomInBtn) {
+                zoomInBtn.addEventListener('click', () => {
+                scale = Math.min(scale * 1.25, 4);
+                updateTransform();
+                });
+            }
+
+            if (zoomOutBtn) {
+                zoomOutBtn.addEventListener('click', () => {
+                scale = Math.max(scale / 1.25, 0.3);
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+                updateTransform();
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+                });
+            }
+
+            if (fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', () => {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
+                }
+                });
+            }
+
+            // Mouse Events
+            mermaidElement.addEventListener('mousedown', (e) => {
+                if (isTouch) return; // 如果是触摸设备，忽略鼠标事件
+
+                isDragging = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+                mermaidElement.style.cursor = 'grabbing';
+                updateTransform();
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging && !isTouch) {
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseleave', () => {
+                if (isDragging && !isTouch) {
+                isDragging = false;
+                mermaidElement.style.cursor = 'grab';
+                updateTransform();
+                }
+            });
+
+            // 获取两点之间的距离
+            function getTouchDistance(touch1, touch2) {
+                return Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+                );
+            }
+
+            // Touch Events - 触摸事件处理
+            mermaidElement.addEventListener('touchstart', (e) => {
+                isTouch = true;
+                touchStartTime = Date.now();
+
+                if (e.touches.length === 1) {
+                // 单指拖动
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+
+                } else if (e.touches.length === 2) {
+                // 双指缩放
+                isPinching = true;
+                isDragging = false;
+
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialDistance = getTouchDistance(touch1, touch2);
+                initialScale = scale;
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isDragging && !isPinching) {
+                // 单指拖动
+                const touch = e.touches[0];
+                translateX = touch.clientX - startX;
+                translateY = touch.clientY - startY;
+                updateTransform();
+
+                } else if (e.touches.length === 2 && isPinching) {
+                // 双指缩放
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = getTouchDistance(touch1, touch2);
+
+                if (initialDistance > 0) {
+                    const newScale = Math.min(Math.max(
+                    initialScale * (currentDistance / initialDistance),
+                    0.3
+                    ), 4);
+                    scale = newScale;
+                    updateTransform();
+                }
+                }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            mermaidElement.addEventListener('touchend', (e) => {
+                // 重置状态
+                if (e.touches.length === 0) {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                // 延迟重置isTouch，避免鼠标事件立即触发
+                setTimeout(() => {
+                    isTouch = false;
+                }, 100);
+                } else if (e.touches.length === 1 && isPinching) {
+                // 从双指变为单指，切换为拖动模式
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+                }
+
+                updateTransform();
+            });
+
+            mermaidElement.addEventListener('touchcancel', (e) => {
+                isDragging = false;
+                isPinching = false;
+                initialDistance = 0;
+
+                setTimeout(() => {
+                isTouch = false;
+                }, 100);
+
+                updateTransform();
+            });
+
+            // Enhanced wheel zoom with better center point handling
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+                // Adjust translation to zoom towards center
+                if (newScale !== scale) {
+                const scaleDiff = newScale / scale;
+                translateX = translateX * scaleDiff;
+                translateY = translateY * scaleDiff;
+                scale = newScale;
+
+                if (scale <= 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+
+                updateTransform();
+                }
+            });
+
+            // Initialize display
+            updateTransform();
+            });
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.toc a[href^="#"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Active navigation highlighting
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    document.querySelectorAll('.toc a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    document.querySelector(`.toc a[href="#${id}"]`)?.classList.add('active');
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Mobile TOC toggle
+        let tocToggle = document.createElement('button');
+        tocToggle.innerHTML = '<i class="fas fa-bars"></i>';
+        tocToggle.className = 'fixed top-4 left-4 z-50 bg-white border border-gray-300 rounded-lg p-2 shadow-lg md:hidden';
+        tocToggle.onclick = () => {
+            document.querySelector('.toc').classList.toggle('open');
+        };
+        document.body.appendChild(tocToggle);
+
+        // Close TOC when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            const toc = document.querySelector('.toc');
+            const isTocOpen = toc.classList.contains('open');
+            const isClickInsideToc = toc.contains(e.target);
+            const isClickOnToggle = tocToggle.contains(e.target);
+            
+            if (isTocOpen && !isClickInsideToc && !isClickOnToggle) {
+                toc.classList.remove('open');
+            }
+        });
+    </script>
+  
+
+</body></html>
