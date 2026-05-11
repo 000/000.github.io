@@ -1,0 +1,1143 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Effective Solutions for On-Screen Text OCR on macOS with Screen Capture Protection Bypass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Canela:wght@300;400;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'serif': ['Canela', 'serif'],
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'editorial': {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        'accent': {
+                            400: '#3b82f6',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        }
+        .text-shadow {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .backdrop-blur-subtle {
+            backdrop-filter: blur(8px);
+        }
+        .citation-link {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dotted #3b82f6;
+        }
+        .citation-link:hover {
+            color: #1d4ed8;
+            border-bottom-style: solid;
+        }
+        .toc-fixed {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            width: 280px;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+            z-index: 50;
+        }
+        .content-offset {
+            margin-left: 320px;
+        }
+        @media (max-width: 1280px) {
+            .toc-fixed {
+                display: none;
+            }
+            .content-offset {
+                margin-left: 0;
+            }
+        }
+        @media (max-width: 768px) {
+            .toc-fixed {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                max-height: 100vh;
+                z-index: 100;
+                background: rgba(15, 23, 42, 0.95);
+                backdrop-filter: blur(10px);
+                padding: 1rem;
+                display: none;
+            }
+            .toc-fixed.active {
+                display: block;
+            }
+            .content-offset {
+                margin-left: 0;
+            }
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body class="bg-editorial-50 text-editorial-900 font-sans overflow-x-hidden">
+    <!-- Fixed Table of Contents -->
+    <nav class="toc-fixed bg-white/80 backdrop-blur-subtle rounded-lg shadow-lg border border-editorial-200 p-6">
+      <h3 class="font-serif font-bold text-lg mb-4 text-editorial-800">Table of Contents</h3>
+      <ul class="space-y-2 text-sm">
+        <li>
+          <a href="#introduction" class="text-editorial-600 hover:text-accent-500 transition-colors">Introduction</a>
+        </li>
+        <li>
+          <a href="#understanding-challenge" class="text-editorial-600 hover:text-accent-500 transition-colors">Understanding the Technical Challenge</a>
+        </li>
+        <li>
+          <a href="#accessibility-solutions" class="text-editorial-600 hover:text-accent-500 transition-colors">Accessibility API-Based Solutions</a>
+        </li>
+        <li>
+          <a href="#voiceover-solutions" class="text-editorial-600 hover:text-accent-500 transition-colors">VoiceOver-Integrated Solutions</a>
+        </li>
+        <li>
+          <a href="#advanced-ocr" class="text-editorial-600 hover:text-accent-500 transition-colors">Advanced OCR Tools</a>
+        </li>
+        <li>
+          <a href="#browser-techniques" class="text-editorial-600 hover:text-accent-500 transition-colors">Browser-Specific Techniques</a>
+        </li>
+        <li>
+          <a href="#emerging-approaches" class="text-editorial-600 hover:text-accent-500 transition-colors">Emerging Approaches</a>
+        </li>
+        <li>
+          <a href="#implementation-guide" class="text-editorial-600 hover:text-accent-500 transition-colors">Implementation Guide</a>
+        </li>
+        <li>
+          <a href="#security-permissions" class="text-editorial-600 hover:text-accent-500 transition-colors">Security &amp; Permissions</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Mobile TOC Toggle Button -->
+    <button id="toc-toggle" class="fixed top-4 left-4 z-50 bg-accent-500 text-white p-3 rounded-full shadow-lg md:hidden">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Main Content -->
+    <div class="content-offset">
+      <!-- Hero Section -->
+      <header class="hero-gradient text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+          <img src="https://kimi-web-img.moonshot.cn/img/media.idownloadblog.com/aee9148ffd9ef677e9de8c829bc709e1b3e58ab1.jpg" alt="Abstract technology background representing macOS screen capture protection" class="w-full h-full object-cover" size="wallpaper" aspect="wide" query="macos screen capture protection abstract background" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+        </div>
+        <div class="relative z-10 max-w-6xl mx-auto px-4 md:px-8 py-16">
+          <div class="grid grid-cols-1 gap-8 items-center">
+            <div>
+              <h1 class="font-serif text-3xl md:text-4xl lg:text-6xl font-light leading-tight mb-6 text-shadow">
+                <em class="block text-accent-400 font-light">Effective Solutions for</em>
+                On-Screen Text OCR on macOS
+              </h1>
+              <p class="text-base md:text-xl text-editorial-200 leading-relaxed mb-8">
+                Comprehensive strategies to bypass screen capture protection and extract text from protected applications using accessibility APIs, AI agents, and advanced OCR techniques.
+              </p>
+              <div class="flex flex-wrap gap-4 text-sm text-editorial-300">
+                <span class="flex items-center"><i class="fas fa-shield-alt mr-2"></i>NSWindowSharingNone Bypass</span>
+                <span class="flex items-center"><i class="fas fa-robot mr-2"></i>AI Agent Integration</span>
+                <span class="flex items-center"><i class="fas fa-universal-access mr-2"></i>Accessibility API</span>
+              </div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-subtle rounded-lg p-4 md:p-6 border border-white/20">
+              <h3 class="font-serif text-lg font-bold mb-4">Key Finding</h3>
+              <p class="text-editorial-100 text-sm leading-relaxed">
+                Your existing tools (SnagIt, CleanShot, TextSniper) cannot bypass macOS screen capture protection because they rely on pixel capture that the OS blocks at the compositor level. The most effective solutions use the <strong class="text-accent-400">Accessibility API</strong> to extract text directly from applications&#39; UI element trees without capturing pixels.
+              </p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Introduction -->
+      <section id="introduction" class="max-w-6xl mx-auto px-8 py-16">
+        <div class="prose prose-lg max-w-none">
+          <h2 class="font-serif text-3xl font-bold mb-8 text-editorial-800">The Challenge of Protected Content</h2>
+          <div class="bg-accent-50 border-l-4 border-accent-500 p-6 mb-8">
+            <p class="text-editorial-700 font-medium mb-2">TL;DR</p>
+            <p class="text-editorial-600 leading-relaxed">
+              Your existing tools (SnagIt, CleanShot, TextSniper) cannot bypass macOS screen capture protection (<code>NSWindowSharingNone</code>) because they rely on pixel capture that the OS blocks at the compositor level. The most effective solutions use the <strong>Accessibility API</strong> to extract text directly from applications&#39; UI element trees without capturing pixels. Top recommendations: <strong>Py2Mac</strong> or <strong>macapptree</strong> for programmatic extraction, <strong>VOCR</strong> for VoiceOver-integrated manual workflows, and <strong>browser Developer Tools</strong> for web-based content. For AI-enhanced workflows, combine <strong>LangChain + Py2Mac + local LLM</strong>. These approaches work on all macOS versions and require only Accessibility permissions, not Screen Recording.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div class="bg-white rounded-lg shadow-md p-6 border border-editorial-200">
+              <div class="text-accent-500 text-2xl mb-4">
+                <i class="fas fa-lock"></i>
+              </div>
+              <h3 class="font-serif text-xl font-bold mb-3">The Protection Barrier</h3>
+              <p class="text-editorial-600 text-sm leading-relaxed">
+                macOS
+                <code>NSWindowSharingNone</code> blocks pixel capture at the compositor level, making conventional OCR tools ineffective.
+              </p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 border border-editorial-200">
+              <div class="text-accent-500 text-2xl mb-4">
+                <i class="fas fa-route"></i>
+              </div>
+              <h3 class="font-serif text-xl font-bold mb-3">The Bypass Path</h3>
+              <p class="text-editorial-600 text-sm leading-relaxed">
+                Accessibility APIs provide direct access to application UI elements, bypassing the need for pixel capture entirely.
+              </p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 border border-editorial-200">
+              <div class="text-accent-500 text-2xl mb-4">
+                <i class="fas fa-rocket"></i>
+              </div>
+              <h3 class="font-serif text-xl font-bold mb-3">AI Enhancement</h3>
+              <p class="text-editorial-600 text-sm leading-relaxed">
+                Local LLMs combined with accessibility APIs enable intelligent, privacy-preserving text extraction with natural language interfaces.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Understanding the Technical Challenge -->
+      <section id="understanding-challenge" class="max-w-6xl mx-auto px-8 py-16 bg-editorial-100">
+        <h2 class="font-serif text-3xl font-bold mb-12 text-editorial-800">Understanding the Technical Challenge</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+          <div>
+            <h3 class="font-serif text-2xl font-bold mb-6 text-editorial-700">NSWindowSharingNone Protection</h3>
+            <p class="text-editorial-600 leading-relaxed mb-6">
+              The primary obstacle is <code>NSWindowSharingNone</code>, a window attribute that serves as the macOS equivalent to Windows&#39; <code>SetWindowDisplayAffinity</code> API. When an application sets <code>window.sharingType = .none</code>, the macOS WindowServer excludes that window&#39;s backing store from every screen capture API <a href="#ref-307" class="citation-link">[307]</a>
+              <a href="#ref-348" class="citation-link">[348]</a>.
+            </p>
+            <div class="bg-white rounded-lg p-4 border-l-4 border-accent-500">
+              <p class="text-sm text-editorial-700 font-medium">Key Insight</p>
+              <p class="text-sm text-editorial-600">This protection operates at the compositor level, meaning no user-space application can override it through conventional means.</p>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-serif text-2xl font-bold mb-6 text-editorial-700">Electron Framework Implementation</h3>
+            <p class="text-editorial-600 leading-relaxed mb-6">
+              Many modern protected applications use Electron&#39;s <code>BrowserWindow.setContentProtection(enable)</code> API, which translates to <code>[window setSharingType:NSWindowSharingNone]</code> on macOS <a href="#ref-327" class="citation-link">[327]</a>
+              <a href="#ref-333" class="citation-link">[333]</a>.
+            </p>
+            <div class="bg-white rounded-lg p-4 border-l-4 border-editorial-400">
+              <p class="text-sm text-editorial-700 font-medium">Impact</p>
+              <p class="text-sm text-editorial-600">Popular apps like Slack, Discord, and Microsoft Teams gain capture protection with minimal developer effort.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-12">
+          <h3 class="font-serif text-2xl font-bold mb-6 text-editorial-700">Why Standard OCR Tools Fail</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-editorial-100">
+                <tr>
+                  <th class="px-4 py-3 text-left font-medium text-editorial-700">Tool</th>
+                  <th class="px-4 py-3 text-left font-medium text-editorial-700">Capture API</th>
+                  <th class="px-4 py-3 text-left font-medium text-editorial-700">Failure Mode</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-editorial-200">
+                <tr>
+                  <td class="px-4 py-3 font-medium text-editorial-800">SnagIt</td>
+                  <td class="px-4 py-3 text-editorial-600">CGWindowListCreateImage, ScreenCaptureKit</td>
+                  <td class="px-4 py-3 text-editorial-600">Black rectangle or transparent region in captured image</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 font-medium text-editorial-800">CleanShot X</td>
+                  <td class="px-4 py-3 text-editorial-600">CGWindowListCreateImage, SCStream</td>
+                  <td class="px-4 py-3 text-editorial-600">Capture succeeds but excludes protected window</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 font-medium text-editorial-800">TextSniper</td>
+                  <td class="px-4 py-3 text-editorial-600">SCStream (ScreenCaptureKit)</td>
+                  <td class="px-4 py-3 text-editorial-600">No text detected; empty clipboard output <a href="#ref-330" class="citation-link">[330]</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Accessibility API Solutions -->
+      <section id="accessibility-solutions" class="max-w-6xl mx-auto px-8 py-16">
+        <h2 class="font-serif text-3xl font-bold mb-12 text-editorial-800">Accessibility API-Based Solutions</h2>
+
+        <div class="bg-gradient-to-r from-accent-50 to-editorial-50 rounded-lg p-8 mb-12">
+          <h3 class="font-serif text-2xl font-bold mb-4 text-editorial-700">The Primary Bypass Vector</h3>
+          <p class="text-editorial-600 leading-relaxed mb-4">
+            The macOS Accessibility API operates through a fundamentally different channel than screen capture: it queries applications directly for their semantic UI structure without ever requesting pixel data from the WindowServer <a href="#ref-353" class="citation-link">[353]</a>.
+          </p>
+          <div class="flex items-center text-accent-600">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span class="font-medium">Remains fully available even when windows are protected from capture</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          <div class="bg-white rounded-lg shadow-md p-6 border border-editorial-200">
+            <h3 class="font-serif text-xl font-bold mb-4 text-editorial-700">Py2Mac</h3>
+            <p class="text-editorial-600 text-sm leading-relaxed mb-4">
+              Python interface for UI automation and AI agent integration, specifically designed for &#34;data extraction, automation, and autonomous AI agents&#34; <a href="#ref-321" class="citation-link">[321]</a>
+              <a href="#ref-356" class="citation-link">[356]</a>.
+            </p>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center text-editorial-600">
+                <i class="fas fa-code mr-2 text-accent-500"></i>
+                <span>Frontmost app targeting</span>
+              </div>
+              <div class="flex items-center text-editorial-600">
+                <i class="fas fa-tree mr-2 text-accent-500"></i>
+                <span>Complete UI tree extraction</span>
+              </div>
+              <div class="flex items-center text-editorial-600">
+                <i class="fas fa-brain mr-2 text-accent-500"></i>
+                <span>LangChain integration</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md p-6 border border-editorial-200">
+            <h3 class="font-serif text-xl font-bold mb-4 text-editorial-700">macapptree</h3>
+            <p class="text-editorial-600 text-sm leading-relaxed mb-4">
+              JSON-based accessibility tree extraction by MacPaw, optimized for complete, reproducible extraction of entire application UI structures <a href="#ref-305" class="citation-link">[305]</a>
+              <a href="#ref-316" class="citation-link">[316]</a>.
+            </p>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center text-editorial-600">
+                <i class="fas fa-sitemap mr-2 text-accent-500"></i>
+                <span>Complete hierarchy extraction</span>
+              </div>
+              <div class="flex items-center text-editorial-600">
+                <i class="fas fa-terminal mr-2 text-accent-500"></i>
+                <span>CLI interface</span>
+              </div>
+              <div class="flex items-center text-editorial-600">
+                <i class="fas fa-layer-group mr-2 text-accent-500"></i>
+                <span>Multi-app capture</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-8">
+          <h3 class="font-serif text-2xl font-bold mb-6 text-editorial-700">Core Accessibility API Functions</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-medium text-editorial-700 mb-3">AXUIElementCopyAttributeValue</h4>
+              <p class="text-sm text-editorial-600 leading-relaxed mb-3">
+                Retrieves specified attributes from accessibility elements without any pixel-based intermediate step <a href="#ref-354" class="citation-link">[354]</a>.
+              </p>
+              <div class="bg-editorial-50 rounded p-3 text-xs font-mono">
+                AXUIElementCopyAttributeValue(
+                <br/>
+                  element,
+                <br/>
+                  kAXValueAttribute,
+                <br/>
+                  &amp;value
+                <br/>
+                )
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-editorial-700 mb-3">AXUIElementCreateSystemWide</h4>
+              <p class="text-sm text-editorial-600 leading-relaxed mb-3">
+                Provides access to whichever UI element currently has keyboard focus, enabling hotkey-triggered extraction.
+              </p>
+              <div class="bg-editorial-50 rounded p-3 text-xs font-mono">
+                AXUIElementCreateSystemWide()
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VoiceOver Solutions -->
+      <section id="voiceover-solutions" class="max-w-6xl mx-auto px-8 py-16 bg-editorial-100">
+        <h2 class="font-serif text-3xl font-bold mb-12 text-editorial-800">VoiceOver-Integrated Solutions</h2>
+
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-12">
+          <h3 class="font-serif text-2xl font-bold mb-6 text-editorial-700">VOCR: VoiceOver OCR Tool</h3>
+          <p class="text-editorial-600 leading-relaxed mb-6">
+            VOCR integrates with macOS VoiceOver to provide OCR capabilities specifically designed for accessibility users, with architecture that provides relevant capabilities for capture-protection bypass <a href="#ref-26" class="citation-link">[26]</a>.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="bg-editorial-50 rounded-lg p-4">
+              <h4 class="font-medium text-editorial-700 mb-2">Window Scan</h4>
+              <p class="text-sm text-editorial-600">Captures and recognizes entire active window</p>
+              <div class="text-xs text-editorial-500 mt-2">⌘+⇧+⌃+W</div>
+            </div>
+            <div class="bg-editorial-50 rounded-lg p-4">
+              <h4 class="font-medium text-editorial-700 mb-2">Cursor Scan</h4>
+              <p class="text-sm text-editorial-600">Recognizes region around VoiceOver cursor</p>
+              <div class="text-xs text-editorial-500 mt-2">⌘+⇧+⌃+V</div>
+            </div>
+            <div class="bg-editorial-50 rounded-lg p-4">
+              <h4 class="font-medium text-editorial-700 mb-2">Real-Time OCR</h4>
+              <p class="text-sm text-editorial-600">Continuously monitors and reports new content</p>
+              <div class="text-xs text-editorial-500 mt-2">⌘+⇧+⌃+R</div>
+            </div>
+          </div>
+
+          <div class="bg-accent-50 rounded-lg p-4">
+            <h4 class="font-medium text-accent-700 mb-2">Required Permissions</h4>
+            <ul class="text-sm text-accent-600 space-y-1">
+              <li>• Accessibility (primary bypass mechanism)</li>
+              <li>• Screen Recording (may fail for protected windows)</li>
+              <li>• VoiceOver Automation (privileged text access)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="font-serif text-xl font-bold mb-4 text-editorial-700">VoiceOver Native Capabilities</h3>
+            <p class="text-editorial-600 text-sm leading-relaxed mb-4">
+              VoiceOver itself provides direct text access through keyboard commands, operating through accessibility APIs completely unaffected by NSWindowSharingNone <a href="#ref-365" class="citation-link">[365]</a>.
+            </p>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="text-editorial-600">Read All</span>
+                <span class="font-mono text-editorial-500">VO + A</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-editorial-600">Read Paragraph</span>
+                <span class="font-mono text-editorial-500">VO + P</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-editorial-600">Read Line</span>
+                <span class="font-mono text-editorial-500">VO + L</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-editorial-600">Read Word</span>
+                <span class="font-mono text-editorial-500">VO + W</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="font-serif text-xl font-bold mb-4 text-editorial-700">Hybrid Technique</h3>
+            <p class="text-editorial-600 text-sm leading-relaxed mb-4">
+              Combine VoiceOver&#39;s text reading with delayed screenshot capture of VoiceOver&#39;s output displays.
+            </p>
+            <div class="bg-editorial-50 rounded p-3 text-xs font-mono mb-3">
+              screencapture -T 10 voiceover_output.png
+            </div>
+            <p class="text-xs text-editorial-500">
+              During the 10-second delay, activate VoiceOver and navigate to desired content.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Advanced OCR Tools -->
+      <section id="advanced-ocr" class="max-w-6xl mx-auto px-8 py-16">
+        <h2 class="font-serif text-3xl font-bold mb-12 text-editorial-800">Advanced OCR Tools with AI Enhancement</h2>
+
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-12">
+          <div class="flex items-center mb-2">
+            <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+            <h3 class="font-medium text-yellow-800">Important Limitation</h3>
+          </div>
+          <p class="text-yellow-700 text-sm leading-relaxed">
+            These tools require successful text/image acquisition first. They enhance processing quality but provide no capture protection bypass. Use them as processing stages in hybrid workflows.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+          <div class="bg-white rounded-lg shadow-md p-6 border border-editorial-200">
+            <h3 class="font-serif text-xl font-bold mb-4 text-editorial-700">ScreenScribe</h3>
+            <p class="text-editorial-600 text-sm leading-relaxed mb-4">
+              Apple Vision Framework + Google Gemini API integration for intelligent text extraction and formatting <a href="#ref-247" class="citation-link">[247]</a>.
+            </p>
+            <div class="bg-editorial-50 rounded p-3 text-xs mb-3">
+              <strong>Requirements:</strong> macOS 14.0+, Gemini API key
+            </div>
+            <div class="text-xs text-editorial-500">
+              Best for: LaTeX conversion, Markdown formatting
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md p-6 border border-editorial-200">
+            <h3 class="font-serif text-xl font-bold mb-4 text-editorial-700">OwlOCR</h3>
+            <p class="text-editorial-600 text-sm leading-relaxed mb-4">
+              On-device neural network processing with M-Series optimization, complete privacy with no cloud dependency <a href="#ref-266" class="citation-link">[266]</a>.
+            </p>
+            <div class="bg-editorial-50 rounded p-3 text-xs mb-3">
+              <strong>Price:</strong> Free tier / $9.99 Pro
+            </div>
+            <div class="text-xs text-editorial-500">
+              Best for: Messy screenshots, low-quality scans
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md p-6 border border-editorial-200">
+            <h3 class="font-serif text-xl font-bold mb-4 text-editorial-700">TRex</h3>
+            <p class="text-editorial-600 text-sm leading-relaxed mb-4">
+              Open-source menubar OCR with global hotkey support, customizable for accessibility integration <a href="#ref-359" class="citation-link">[359]</a>.
+            </p>
+            <div class="bg-editorial-50 rounded p-3 text-xs mb-3">
+              <strong>Hotkey:</strong> Cmd+F1 (single), Cmd+F2 (multiple)
+            </div>
+            <div class="text-xs text-editorial-500">
+              Best for: Custom development, hybrid approaches
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-8">
+          <h3 class="font-serif text-2xl font-bold mb-6 text-editorial-700">Cloud OCR Services Comparison</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-editorial-100">
+                <tr>
+                  <th class="px-4 py-3 text-left font-medium text-editorial-700">Service</th>
+                  <th class="px-4 py-3 text-left font-medium text-editorial-700">Strength</th>
+                  <th class="px-4 py-3 text-left font-medium text-editorial-700">Pricing</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-editorial-200">
+                <tr>
+                  <td class="px-4 py-3 font-medium text-editorial-800">Google Cloud Vision</td>
+                  <td class="px-4 py-3 text-editorial-600">200+ languages, document structure preservation</td>
+                  <td class="px-4 py-3 text-editorial-600">~$1.50/1,000 pages</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 font-medium text-editorial-800">Amazon Textract</td>
+                  <td class="px-4 py-3 text-editorial-600">Table/form extraction, key-value pair identification</td>
+                  <td class="px-4 py-3 text-editorial-600">AWS pay-per-use</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 font-medium text-editorial-800">Veryfi</td>
+                  <td class="px-4 py-3 text-editorial-600">Real-time document AI, financial document specialization</td>
+                  <td class="px-4 py-3 text-editorial-600">Enterprise pricing</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Browser Techniques -->
+      <section id="browser-techniques" class="max-w-6xl mx-auto px-8 py-16 bg-editorial-100">
+        <h2 class="font-serif text-3xl font-bold mb-12 text-editorial-800">Browser-Specific Techniques</h2>
+
+        <div class="bg-gradient-to-r from-green-50 to-editorial-50 rounded-lg p-8 mb-12">
+          <h3 class="font-serif text-2xl font-bold mb-4 text-editorial-700">Web Content Advantage</h3>
+          <p class="text-editorial-600 leading-relaxed mb-4">
+            For web-based protected content—including Electron applications and websites—the browser itself provides extraction opportunities unavailable for native applications.
+          </p>
+          <div class="flex items-center text-green-600">
+            <i class="fas fa-globe mr-2"></i>
+            <span class="font-medium">Exploit the browser&#39;s rendering and scripting capabilities</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="font-serif text-xl font-bold mb-4 text-editorial-700">Developer Tools Methods</h3>
+            <div class="space-y-4">
+              <div class="bg-editorial-50 rounded-lg p-4">
+                <h4 class="font-medium text-editorial-700 mb-2">View Page Source</h4>
+                <p class="text-sm text-editorial-600 mb-2">Raw HTML before JavaScript execution</p>
+                <div class="text-xs font-mono bg-white rounded p-2 border">Cmd+Option+U</div>
+              </div>
+              <div class="bg-editorial-50 rounded-lg p-4">
+                <h4 class="font-medium text-editorial-700 mb-2">DOM Inspection</h4>
+                <p class="text-sm text-editorial-600 mb-2">Live access to rendered content</p>
+                <div class="text-xs font-mono bg-white rounded p-2 border">Cmd+Option+I</div>
+              </div>
+              <div class="bg-editorial-50 rounded-lg p-4">
+                <h4 class="font-medium text-editorial-700 mb-2">Console Extraction</h4>
+                <p class="text-sm text-editorial-600 mb-2">JavaScript-based text access</p>
+                <div class="text-xs font-mono bg-white rounded p-2 border">document.body.innerText</div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="font-serif text-xl font-bold mb-4 text-editorial-700">Browser Automation</h3>
+            <p class="text-editorial-600 text-sm leading-relaxed mb-4">
+              Puppeteer and Playwright enable programmatic browser control with DOM-level access <a href="#ref-363" class="citation-link">[363]</a>.
+            </p>
+            <div class="bg-editorial-50 rounded-lg p-4">
+              <div class="text-xs font-mono bg-white rounded p-3 border mb-2">
+                const browser = await puppeteer.launch();
+                <br/>
+                const page = await browser.newPage();
+                <br/>
+                await page.goto(&#39;https://protected-site.example&#39;);
+                <br/>
+                const text = await page.evaluate(() =&gt; document.body.innerText);
+              </div>
+              <p class="text-xs text-editorial-500">For Electron apps, special connection protocols allow attaching to the internal browser process.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-8">
+          <h3 class="font-serif text-2xl font-bold mb-6 text-editorial-700">JavaScript Bypass Techniques</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <h4 class="font-medium text-editorial-700 mb-3">User Scripts</h4>
+              <p class="text-sm text-editorial-600 leading-relaxed mb-3">
+                Tampermonkey/Greasemonkey scripts disable copy protection <a href="#ref-361" class="citation-link">[361]</a>.
+              </p>
+              <div class="text-xs font-mono bg-editorial-50 rounded p-2">
+                document.addEventListener(&#39;copy&#39;, e =&gt; e.stopPropagation(), true);
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-editorial-700 mb-3">Print-to-PDF</h4>
+              <p class="text-sm text-editorial-600 leading-relaxed mb-3">
+                Browser print-to-PDF often bypasses JavaScript restrictions.
+              </p>
+              <div class="text-xs font-mono bg-editorial-50 rounded p-2">
+                Cmd+P → &#34;Save as PDF&#34;
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-editorial-700 mb-3">Proxy Services</h4>
+              <p class="text-sm text-editorial-600 leading-relaxed mb-3">
+                Services like AllowCopy.com strip copy protection.
+              </p>
+              <div class="text-xs text-red-600 bg-red-50 rounded p-2">
+                ⚠️ Privacy &amp; security concerns
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Emerging Approaches -->
+      <section id="emerging-approaches" class="max-w-6xl mx-auto px-8 py-16">
+        <h2 class="font-serif text-3xl font-bold mb-12 text-editorial-800">Specialized and Emerging Approaches</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          <div class="bg-white rounded-lg shadow-lg p-8">
+            <h3 class="font-serif text-2xl font-bold mb-6 text-editorial-700">ScreenCaptureKit Framework</h3>
+            <p class="text-editorial-600 leading-relaxed mb-6">
+              macOS 15 Sequoia introduced significant changes to ScreenCaptureKit behavior regarding protected windows <a href="#ref-308" class="citation-link">[308]</a>
+              <a href="#ref-344" class="citation-link">[344]</a>.
+            </p>
+
+            <div class="bg-accent-50 rounded-lg p-4 mb-6">
+              <h4 class="font-medium text-accent-700 mb-2">Key Change</h4>
+              <p class="text-sm text-accent-600">
+                Applications using ScreenCaptureKit with
+                <code>com.apple.developer.screen-capture.unrestricted</code> entitlement can potentially capture protected windows with user approval.
+              </p>
+            </div>
+
+            <div class="space-y-3">
+              <div class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                <div>
+                  <div class="font-medium text-editorial-700">Enterprise Opportunity</div>
+                  <div class="text-sm text-editorial-600">Developers can request persistent content capture entitlements</div>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <i class="fas fa-exclamation-triangle text-yellow-500 mr-2 mt-1"></i>
+                <div>
+                  <div class="font-medium text-editorial-700">Consumer Limitation</div>
+                  <div class="text-sm text-editorial-600">Standard third-party tools without entitlement continue to fail</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-lg p-8">
+            <h3 class="font-serif text-2xl font-bold mb-6 text-editorial-700">AI Agent Platforms</h3>
+            <p class="text-editorial-600 leading-relaxed mb-6">
+              The convergence of AI agent architectures with accessibility-based UI interaction represents a significant advancement for capture-protection bypass scenarios <a href="#ref-294" class="citation-link">[294]</a>
+              <a href="#ref-317" class="citation-link">[317]</a>.
+            </p>
+
+            <div class="space-y-4">
+              <div class="bg-editorial-50 rounded-lg p-4">
+                <h4 class="font-medium text-editorial-700 mb-2">macOS Visual Agent</h4>
+                <p class="text-sm text-editorial-600">
+                  Accessibility-first architecture with local LLM support for privacy-preserving semantic processing <a href="#ref-364" class="citation-link">[364]</a>.
+                </p>
+              </div>
+              <div class="bg-editorial-50 rounded-lg p-4">
+                <h4 class="font-medium text-editorial-700 mb-2">macos-control-mcp</h4>
+                <p class="text-sm text-editorial-600">
+                  MCP server for AI-driven UI element discovery with adaptive strategy selection <a href="#ref-318" class="citation-link">[318]</a>.
+                </p>
+              </div>
+              <div class="bg-editorial-50 rounded-lg p-4">
+                <h4 class="font-medium text-editorial-700 mb-2">DirectShell Concept</h4>
+                <p class="text-sm text-editorial-600">
+                  Universal app interface treating accessibility tree as canonical application state <a href="#ref-320" class="citation-link">[320]</a>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Implementation Guide -->
+      <section id="implementation-guide" class="max-w-6xl mx-auto px-8 py-16 bg-editorial-100">
+        <h2 class="font-serif text-3xl font-bold mb-12 text-editorial-800">Implementation Recommendations</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="text-accent-500 text-3xl mb-4">
+              <i class="fas fa-globe"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold mb-4 text-editorial-700">Web-Based Content</h3>
+            <div class="space-y-3">
+              <div class="flex items-start">
+                <div class="bg-accent-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-0.5">1</div>
+                <div>
+                  <div class="font-medium text-editorial-700">Developer Tools</div>
+                  <div class="text-sm text-editorial-600">DOM inspection (Cmd+Option+I)</div>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <div class="bg-editorial-400 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-0.5">2</div>
+                <div>
+                  <div class="font-medium text-editorial-700">JavaScript Extraction</div>
+                  <div class="text-sm text-editorial-600">document.body.innerText</div>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <div class="bg-editorial-400 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-0.5">3</div>
+                <div>
+                  <div class="font-medium text-editorial-700">Browser Automation</div>
+                  <div class="text-sm text-editorial-600">Puppeteer/Playwright</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="text-accent-500 text-3xl mb-4">
+              <i class="fas fa-desktop"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold mb-4 text-editorial-700">Native Applications</h3>
+            <div class="space-y-3">
+              <div class="flex items-start">
+                <div class="bg-accent-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-0.5">1</div>
+                <div>
+                  <div class="font-medium text-editorial-700">Py2Mac</div>
+                  <div class="text-sm text-editorial-600">Python accessibility interface</div>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <div class="bg-editorial-400 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-0.5">2</div>
+                <div>
+                  <div class="font-medium text-editorial-700">macapptree</div>
+                  <div class="text-sm text-editorial-600">JSON tree extraction</div>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <div class="bg-editorial-400 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-0.5">3</div>
+                <div>
+                  <div class="font-medium text-editorial-700">VOCR</div>
+                  <div class="text-sm text-editorial-600">VoiceOver integration</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="text-accent-500 text-3xl mb-4">
+              <i class="fas fa-brain"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold mb-4 text-editorial-700">AI-Enhanced Workflows</h3>
+            <div class="space-y-3">
+              <div class="flex items-start">
+                <div class="bg-accent-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-0.5">1</div>
+                <div>
+                  <div class="font-medium text-editorial-700">LangChain</div>
+                  <div class="text-sm text-editorial-600">Agent orchestration</div>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <div class="bg-editorial-400 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-0.5">2</div>
+                <div>
+                  <div class="font-medium text-editorial-700">Local LLM</div>
+                  <div class="text-sm text-editorial-600">Ollama/MLX/llama.cpp</div>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <div class="bg-editorial-400 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-0.5">3</div>
+                <div>
+                  <div class="font-medium text-editorial-700">Py2Mac</div>
+                  <div class="text-sm text-editorial-600">Accessibility interface</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-8">
+          <h3 class="font-serif text-2xl font-bold mb-6 text-editorial-700">Premium AI Agent Integration</h3>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+              <h4 class="font-medium text-editorial-700 mb-4">Architecture</h4>
+              <div class="space-y-3">
+                <div class="flex items-center">
+                  <div class="w-3 h-3 bg-accent-500 rounded-full mr-3"></div>
+                  <span class="text-sm text-editorial-600">Natural language request</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-3 h-3 bg-editorial-400 rounded-full mr-3"></div>
+                  <span class="text-sm text-editorial-600">Accessibility operations (Py2Mac)</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-3 h-3 bg-editorial-400 rounded-full mr-3"></div>
+                  <span class="text-sm text-editorial-600">Text extraction &amp; processing</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-3 h-3 bg-accent-500 rounded-full mr-3"></div>
+                  <span class="text-sm text-editorial-600">Formatted output</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-editorial-700 mb-4">Advantages</h4>
+              <div class="space-y-2 text-sm">
+                <div class="flex items-center">
+                  <i class="fas fa-shield-alt text-green-500 mr-2"></i>
+                  <span class="text-editorial-600">Complete privacy (local processing)</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-lock-open text-green-500 mr-2"></i>
+                  <span class="text-editorial-600">Capture protection immunity</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-comments text-green-500 mr-2"></i>
+                  <span class="text-editorial-600">Natural language interaction</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-dollar-sign text-green-500 mr-2"></i>
+                  <span class="text-editorial-600">No cloud API costs</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Security &amp; Permissions -->
+      <section id="security-permissions" class="max-w-6xl mx-auto px-8 py-16">
+        <h2 class="font-serif text-3xl font-bold mb-12 text-editorial-800">Security &amp; Permissions Configuration</h2>
+
+        <div class="bg-red-50 border-l-4 border-red-400 p-6 mb-12">
+          <div class="flex items-center mb-2">
+            <i class="fas fa-exclamation-triangle text-red-600 mr-2"></i>
+            <h3 class="font-medium text-red-800">Critical Permission Requirements</h3>
+          </div>
+          <p class="text-red-700 text-sm leading-relaxed">
+            Successful implementation requires careful permission management. The distinction between <strong>Accessibility</strong> (needed for bypass) and <strong>Screen Recording</strong> (blocked for protected content) is critical.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          <div class="bg-white rounded-lg shadow-lg p-8">
+            <h3 class="font-serif text-2xl font-bold mb-6 text-editorial-700">Required Permissions</h3>
+            <div class="space-y-6">
+              <div class="border-l-4 border-accent-500 pl-4">
+                <h4 class="font-medium text-editorial-700 mb-2">Accessibility</h4>
+                <p class="text-sm text-editorial-600 mb-3">
+                  Essential enabler for all bypass techniques. Grant in System Settings &gt; Privacy &amp; Security &gt; Accessibility.
+                </p>
+                <div class="bg-editorial-50 rounded p-3 text-xs">
+                  <strong>Required for:</strong> Python interpreter, Terminal app, custom scripts, VOCR
+                </div>
+              </div>
+              <div class="border-l-4 border-yellow-400 pl-4">
+                <h4 class="font-medium text-editorial-700 mb-2">Screen Recording</h4>
+                <p class="text-sm text-editorial-600 mb-3">
+                  Required for pixel-based OCR tools but does not enable capture of protected windows.
+                </p>
+                <div class="bg-yellow-50 rounded p-3 text-xs text-yellow-700">
+                  ⚠️ Does not solve capture protection—WindowServer still excludes protected windows
+                </div>
+              </div>
+              <div class="border-l-4 border-editorial-400 pl-4">
+                <h4 class="font-medium text-editorial-700 mb-2">Automation</h4>
+                <p class="text-sm text-editorial-600">
+                  Enables one application to control another via Apple Events. Required for VOCR controlling VoiceOver.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-lg p-8">
+            <h3 class="font-serif text-2xl font-bold mb-6 text-editorial-700">Enterprise Deployment</h3>
+            <div class="space-y-6">
+              <div class="bg-editorial-50 rounded-lg p-4">
+                <h4 class="font-medium text-editorial-700 mb-2">MDM-Based PPPC</h4>
+                <p class="text-sm text-editorial-600">
+                  Mobile Device Management solutions can pre-approve permissions through Privacy Preferences Policy Control profiles.
+                </p>
+              </div>
+              <div class="bg-editorial-50 rounded-lg p-4">
+                <h4 class="font-medium text-editorial-700 mb-2">Pre-Approved Access</h4>
+                <p class="text-sm text-editorial-600">
+                  Include extraction tools in standard software images with pre-configured PPPC profiles.
+                </p>
+              </div>
+              <div class="bg-editorial-50 rounded-lg p-4">
+                <h4 class="font-medium text-editorial-700 mb-2">TCC Policy</h4>
+                <p class="text-sm text-editorial-600">
+                  com.apple.TCC.configuration-profile-policy payload enables comprehensive policy specification.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-8">
+          <h3 class="font-serif text-2xl font-bold mb-6 text-editorial-700">Implementation Checklist</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="font-medium text-editorial-700 mb-4">Initial Setup</h4>
+              <div class="space-y-2">
+                <label class="flex items-center">
+                  <input type="checkbox" class="mr-2 text-accent-500"/>
+                  <span class="text-sm text-editorial-600">Install Xcode for Accessibility Inspector</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" class="mr-2 text-accent-500"/>
+                  <span class="text-sm text-editorial-600">Install Python 3.11+ for Py2Mac</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" class="mr-2 text-accent-500"/>
+                  <span class="text-sm text-editorial-600">Configure Accessibility permissions</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" class="mr-2 text-accent-500"/>
+                  <span class="text-sm text-editorial-600">Test target app with Accessibility Inspector</span>
+                </label>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-medium text-editorial-700 mb-4">Advanced Configuration</h4>
+              <div class="space-y-2">
+                <label class="flex items-center">
+                  <input type="checkbox" class="mr-2 text-accent-500"/>
+                  <span class="text-sm text-editorial-600">Set up global hotkey triggers</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" class="mr-2 text-accent-500"/>
+                  <span class="text-sm text-editorial-600">Configure local LLM integration</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" class="mr-2 text-accent-500"/>
+                  <span class="text-sm text-editorial-600">Test enterprise deployment scenarios</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" class="mr-2 text-accent-500"/>
+                  <span class="text-sm text-editorial-600">Implement fallback mechanisms</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- References -->
+      <section class="max-w-6xl mx-auto px-8 py-16 bg-editorial-100">
+        <h2 class="font-serif text-3xl font-bold mb-12 text-editorial-800">References</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div class="space-y-2">
+            <div id="ref-26" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[26]</strong>
+              <a href="https://research.macpaw.com/publications/how-to-parse-macos-app-ui" class="citation-link">How to Parse macOS App UI - MacPaw Research</a>
+            </div>
+            <div id="ref-196" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[196]</strong>
+              <a href="https://www.screensnap.pro/blog/best-ocr-software-mac" class="citation-link">Best OCR Software for Mac - ScreenSnap Pro</a>
+            </div>
+            <div id="ref-226" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[226]</strong>
+              <a href="https://github.com/SamuelZ12/laTeX-OCR/" class="citation-link">LaTeX OCR - GitHub Repository</a>
+            </div>
+            <div id="ref-238" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[238]</strong>
+              <a href="https://developer.apple.com/forums/tags/screencapturekit" class="citation-link">ScreenCaptureKit - Apple Developer Forums</a>
+            </div>
+            <div id="ref-247" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[247]</strong>
+              <a href="https://github.com/SamuelZ12/laTeX-OCR/" class="citation-link">ScreenScribe - LaTeX OCR Integration</a>
+            </div>
+            <div id="ref-266" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[266]</strong>
+              <a href="https://www.owlocr.com/" class="citation-link">OwlOCR - On-Device OCR Solution</a>
+            </div>
+            <div id="ref-283" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[283]</strong>
+              <a href="https://bypasscore.com/blog/setwindowdisplayaffinity-bypass-guide" class="citation-link">SetWindowDisplayAffinity Bypass Guide</a>
+            </div>
+            <div id="ref-294" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[294]</strong>
+              <a href="https://www.linkedin.com/posts/sanojdoddapaneni_ai-buildinpublic-macos-activity-7416722247018565632-us3r" class="citation-link">AI Agent Platforms - LinkedIn Article</a>
+            </div>
+            <div id="ref-305" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[305]</strong>
+              <a href="https://github.com/MacPaw/macapptree" class="citation-link">macapptree - MacPaw GitHub Repository</a>
+            </div>
+            <div id="ref-307" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[307]</strong>
+              <a href="https://pdfcoffee.com/all-the-electron-docs-electron-pdf-free.html" class="citation-link">Electron Documentation - PDF Coffee</a>
+            </div>
+            <div id="ref-308" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[308]</strong>
+              <a href="https://electronjs.org/docs/latest/api/browser-window" class="citation-link">Electron BrowserWindow API</a>
+            </div>
+            <div id="ref-311" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[311]</strong>
+              <a href="https://arxiv.org/html/2507.16704v1" class="citation-link">Screen2AX Project - arXiv Paper</a>
+            </div>
+            <div id="ref-314" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[314]</strong>
+              <a href="https://arxiv.org/html/2507.16704v1" class="citation-link">Accessibility Metadata Research - arXiv</a>
+            </div>
+            <div id="ref-316" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[316]</strong>
+              <a href="https://github.com/MacPaw/macapptree" class="citation-link">macapptree Documentation - GitHub</a>
+            </div>
+            <div id="ref-317" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[317]</strong>
+              <a href="https://juejin.cn/post/7627720938670260251" class="citation-link">AI Agent Implementation - Juejin</a>
+            </div>
+            <div id="ref-318" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[318]</strong>
+              <a href="https://github.com/PeterHdd/macos-control-mcp" class="citation-link">macos-control-mcp - GitHub Repository</a>
+            </div>
+            <div id="ref-319" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[319]</strong>
+              <a href="https://arxiv.org/abs/2507.16704" class="citation-link">Screen2AX Dataset - arXiv Abstract</a>
+            </div>
+            <div id="ref-320" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[320]</strong>
+              <a href="https://dev.to/tlrag/-directshell-i-turned-the-accessibility-layer-into-a-universal-app-interface-no-screenshots-no-2457" class="citation-link">DirectShell Concept - Dev.to</a>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div id="ref-321" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[321]</strong>
+              <a href="https://github.com/rafalwytrykus/py2mac" class="citation-link">Py2Mac - GitHub Repository</a>
+            </div>
+            <div id="ref-327" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[327]</strong>
+              <a href="https://zeke.github.io/electron.atom.io/docs/all/" class="citation-link">Electron Documentation - Zeke&#39;s Archive</a>
+            </div>
+            <div id="ref-330" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[330]</strong>
+              <a href="https://www.screensnap.pro/blog/copy-text-from-screenshot-mac" class="citation-link">Copy Text from Screenshot Mac - ScreenSnap Pro</a>
+            </div>
+            <div id="ref-333" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[333]</strong>
+              <a href="https://github.com/electron/electron/blob/main/docs/api/base-window.md" class="citation-link">Electron BaseWindow API - GitHub</a>
+            </div>
+            <div id="ref-344" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[344]</strong>
+              <a href="https://github.com/tauri-apps/tauri/issues/14200" class="citation-link">Tauri Issue #14200 - GitHub</a>
+            </div>
+            <div id="ref-345" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[345]</strong>
+              <a href="https://github.com/electron/electron/issues/14415" class="citation-link">Electron Issue #14415 - GitHub</a>
+            </div>
+            <div id="ref-348" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[348]</strong>
+              <a href="https://habr.com/ru/articles/1025310/" class="citation-link">macOS Screen Capture Protection - Habr</a>
+            </div>
+            <div id="ref-353" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[353]</strong>
+              <a href="https://research.macpaw.com/publications/how-to-parse-macos-app-ui" class="citation-link">How to Parse macOS App UI - MacPaw</a>
+            </div>
+            <div id="ref-354" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[354]</strong>
+              <a href="https://macdevelopers.wordpress.com/2014/01/31/accessing-text-value-from-any-system-wide-application-via-accessibility-api/" class="citation-link">Accessibility API Text Access - Mac Developers</a>
+            </div>
+            <div id="ref-356" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[356]</strong>
+              <a href="https://github.com/rafalwytrykus/py2mac" class="citation-link">Py2Mac Documentation - GitHub</a>
+            </div>
+            <div id="ref-357" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[357]</strong>
+              <a href="https://github.com/steipete/AXorcist" class="citation-link">AXorcist - GitHub Repository</a>
+            </div>
+            <div id="ref-359" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[359]</strong>
+              <a href="https://medevel.com/screen-ocr-tools-1700/" class="citation-link">Screen OCR Tools - Medevel</a>
+            </div>
+            <div id="ref-360" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[360]</strong>
+              <a href="https://pdf.wondershare.com/pdf-editor-mac/ocr-screenshot-mac.html" class="citation-link">ABBYY FineReader PDF - Wondershare</a>
+            </div>
+            <div id="ref-361" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[361]</strong>
+              <a href="https://www.tenorshare.com/image-translator/copy-text-from-protected-websites.html" class="citation-link">Copy Text from Protected Websites - Tenorshare</a>
+            </div>
+            <div id="ref-363" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[363]</strong>
+              <a href="https://superuser.com/questions/1682471/capture-text-from-website-thats-disabled-copy-paste-printing-and-viewing-sourc" class="citation-link">Capture Text from Protected Websites - SuperUser</a>
+            </div>
+            <div id="ref-364" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[364]</strong>
+              <a href="https://github.com/peakmojo/macos-visual-agent" class="citation-link">macOS Visual Agent - GitHub Repository</a>
+            </div>
+            <div id="ref-365" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[365]</strong>
+              <a href="https://support.apple.com/guide/voiceover/read-text-vo2706/mac" class="citation-link">VoiceOver Text Reading Commands - Apple Support</a>
+            </div>
+            <div id="ref-370" class="bg-white rounded p-3 border-l-4 border-editorial-200">
+              <strong>[370]</strong>
+              <a href="https://techdocs.broadcom.com/us/en/symantec-security-software/information-security/data-loss-prevention/25-1/about-data-loss-prevention-policy-authoring/about-content-detection-with-on-premises-ocr.html" class="citation-link">Symantec DLP On-Premises OCR - Broadcom</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Mobile TOC toggle
+        document.getElementById('toc-toggle').addEventListener('click', function() {
+            const toc = document.querySelector('.toc-fixed');
+            toc.classList.toggle('active');
+        });
+    </script>
+  
+
+</body></html>
