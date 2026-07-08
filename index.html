@@ -10,40 +10,38 @@
 
     <!--
       ═══════════════════════════════════════════════════════════════════
-      TANAT TONGUTHAISRI — PROFILE ARTIFACT  v2.0  ("Aurora-Prime")
-      Built to the Nexus-Architect Web Development Protocol v19.0
+      TANAT TONGUTHAISRI — PROFILE ARTIFACT  v3.0  ("Aurora-Zenith")
+      Built to the Nexus-Architect Web Development Protocol v18.0
       ───────────────────────────────────────────────────────────────────
-      v1 → v2 changelog
-      • Doctoral status corrected everywhere: the Ph.D. / DSc programme
-        has NOT yet commenced and will not for some time. All "Pursuing /
-        Candidate / Enrolled" claims are reframed as independent research
-        in preparation for FUTURE doctoral study.
-      • Migrated to Aurora Glass (bright, porcelain) palette — dark-void
-        starfield theme removed per Protocol v19 Iron Rule 2.
-      • Dual-tier Antigravity Halo engine (65,536 particles): three.js
-        GPGPU Tier A with Canvas 2D full-population fallback (?halo=2d).
-      • Custom CSS micro-framework in @layer; no external CSS/icon kits.
-      • Filter-Flow: live range sliders + type pills filtering the career
-        grid and re-rendering the Chart.js trajectory in real time.
-      • Polymorphic D3 v7 topology (circle / rect / diamond nodes) with
-        drag, zoom, click-to-open glass slide panel.
-      • Resilient loader: CDN retry loop, importmap settlement shim with
-        4 s timeout, WebGL-context-loss fallback, image onerror fallback,
-        graceful empty states, reduced-motion support.
+      v2 → v3 changelog
+      • ROOT-CAUSE FIX for the "brief flash then permanently blank page"
+        failure seen on defense.engineer: v2 mirrored the persisted UI
+        language onto <html lang="...">, and the unscoped i18n rule
+        [lang="th"] { display: none; } then hid the <html> element itself
+        — unrecoverable across reloads because the choice lived in
+        localStorage. All i18n rules are now scoped under `body`.
+      • Retargeted from Protocol v19 to v18 ("somewhat lower spec"):
+        three.js / importmap / GPGPU Tier A removed entirely; the
+        Antigravity Halo is the v18 dependency-free Canvas 2D engine at
+        N = clamp(area/300, 2200, 6000) grains, DPR cap 2 — far lighter
+        on low-end devices while reading identically at UI scale.
+      • Halo home-position rejection sampler is attempt-capped so it can
+        never spin forever on a degenerate viewport.
+      • Profile photo now loads over https (the http:// URL was blocked
+        as mixed content on the https site, forcing the monogram
+        fallback); onerror fallback retained.
+      • All v2 content corrections retained: the doctoral programme is
+        described as planned for the future and NOT yet commenced.
+      • Everything else (Aurora Glass @layer micro-framework, Filter-Flow
+        sliders, Chart.js theming, polymorphic D3 topology, EN/TH i18n,
+        resilient CDN loader, empty states, reduced-motion support) is
+        carried forward unchanged.
       ═══════════════════════════════════════════════════════════════════
     -->
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Sarabun:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-    <script type="importmap">
-    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
-    </script>
-    <script type="module">
-        try { window.THREE = await import('three'); }
-        catch (e) { console.warn('three module unavailable — Halo falls back to Canvas tier', e); }
-        window.HALO_SETTLED = true; dispatchEvent(new Event('halo-libs-settled'));
-    </script>
 
     <style>
         @layer base, layout, components, utilities, animations;
@@ -83,8 +81,13 @@
                 *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
             }
 
-            /* i18n — CSS-based language toggling (Protocol v19 Rule 6) */
-            [lang="th"] { display: none; }
+            /* i18n — CSS-based language toggling (Protocol v18 Rule 6).
+               v3 ROOT-CAUSE FIX: every rule is scoped under `body`, so the
+               <html>/<body> elements' own lang attributes can never match
+               the hide rule. (v2's unscoped [lang="th"] hid <html> itself
+               once setLang() mirrored the saved language onto the root
+               element — a permanently blank page on every reload.) */
+            body [lang="th"] { display: none; }
             body[data-lang="th"] [lang="en"] { display: none; }
             body[data-lang="th"] [lang="th"] { display: revert; }
         }
@@ -520,7 +523,7 @@
     </style>
 </head>
 <body data-lang="en">
-    <!-- Antigravity Halo — dual-tier engine target -->
+    <!-- Antigravity Halo — Canvas 2D engine (Protocol v18) -->
     <canvas id="halo-canvas" class="fixed inset-0 w-screen h-screen z-bg pointer-none" aria-hidden="true"></canvas>
 
     <!-- Loading overlay -->
@@ -629,7 +632,7 @@
                 </div>
                 <div class="hero-photo-wrap">
                     <div class="hero-photo">
-                        <img src="http://defense.engineer/Tanat-FullBody.jpg"
+                        <img src="https://defense.engineer/Tanat-FullBody.jpg"
                              alt="Tanat Tonguthaisri — Cybersecurity Visionary" loading="eager"
                              onerror="this.outerHTML='&lt;div class=&quot;hero-photo-fallback hero-title&quot;&gt;TT&lt;/div&gt;'">
                     </div>
@@ -1372,8 +1375,8 @@
             </a>
         </div>
         <p class="footer-note">
-            <span lang="en">© 2026 Tanat Tonguthaisri · Profile artifact v2.0 · Built to Nexus-Architect Protocol v19.0 ("Aurora-Prime")</span>
-            <span lang="th">© 2569 ธนัท ทองอุทัยศรี · Profile artifact v2.0 · สร้างตาม Nexus-Architect Protocol v19.0 ("Aurora-Prime")</span>
+            <span lang="en">© 2026 Tanat Tonguthaisri · Profile artifact v3.0 · Built to Nexus-Architect Protocol v18.0 ("Aurora-Zenith")</span>
+            <span lang="th">© 2569 ธนัท ทองอุทัยศรี · Profile artifact v3.0 · สร้างตาม Nexus-Architect Protocol v18.0 ("Aurora-Zenith")</span>
         </p>
     </footer>
 
@@ -1382,7 +1385,7 @@
 
         // ════════════════════════════════════════════
         // 1. ASSETS — Native inline SVG icon registry
-        //    (Protocol v19 Iron Rule 1: no icon frameworks;
+        //    (Protocol v18 Iron Rule 1: no icon frameworks;
         //     stroke="currentColor", 1.5px, SF-Symbols feel)
         // ════════════════════════════════════════════
         const svg = (inner, vb = '0 0 24 24') =>
@@ -1426,553 +1429,146 @@
         };
 
         // ════════════════════════════════════════════
-        // 2. NOISE (Simplex — JS, used by home-sampling and Tier B)
+        // 2. NOISE (Simplex — powers the Halo fields)
         // ════════════════════════════════════════════
         class SimplexNoise{constructor(){this.p=new Uint8Array(256);for(let i=0;i<256;i++)this.p[i]=Math.floor(256*Math.random());this.perm=new Uint8Array(512);for(let i=0;i<512;i++)this.perm[i]=this.p[i&255]}dot(g,x,y){return g[0]*x+g[1]*y}noise(xin,yin){const F2=.5*(Math.sqrt(3)-1),G2=(3-Math.sqrt(3))/6;let i=Math.floor(xin+((xin+yin)*F2)),j=Math.floor(yin+((xin+yin)*F2)),t=(i+j)*G2,X0=i-t,Y0=j-t,x0=xin-X0,y0=yin-Y0;let i1,j1;if(x0>y0){i1=1;j1=0}else{i1=0;j1=1}let x1=x0-i1+G2,y1=y0-j1+G2,x2=x0-1+2*G2,y2=y0-1+2*G2,ii=i&255,jj=j&255,gi0=this.perm[ii+this.perm[jj]]%12,gi1=this.perm[ii+i1+this.perm[jj+j1]]%12,gi2=this.perm[ii+1+this.perm[jj+1]]%12,t0=.5-x0*x0-y0*y0,n0=t0<0?0:Math.pow(t0,4)*this.dot([Math.cos(gi0),Math.sin(gi0)],x0,y0),t1=.5-x1*x1-y1*y1,n1=t1<0?0:Math.pow(t1,4)*this.dot([Math.cos(gi1),Math.sin(gi1)],x1,y1),t2=.5-x2*x2-y2*y2,n2=t2<0?0:Math.pow(t2,4)*this.dot([Math.cos(gi2),Math.sin(gi2)],x2,y2);return 70*(n0+n1+n2)}n3(x,y,z){return this.noise(x+z*.7,y-z*.7)}}
 
         // ════════════════════════════════════════════
-        // 3. SHARED HALO CONSTANTS + FAST HOME SAMPLER (O(N), both tiers)
+        // 3. THE ANTIGRAVITY HALO ENGINE (Protocol v18 §5 —
+        //    dependency-free Canvas 2D port of antigravity.google's
+        //    GPGPU sim; N = clamp(area/300, 2200, 6000), DPR cap 2)
         // ════════════════════════════════════════════
-        const HALO = {
-            N: 65536, SIM: 256,                       // 256×256 = complete original population
-            C1: [0,113,227], C2: [191,90,242], C3: [255,55,95], H: 0.8,
-            RING_SHARE: 0.9,                           // annulus vs ambient dust split
-            pScale(pxR) { return Math.min(1.15, Math.max(.6, pxR / 420)); },   // grain-to-ring proportion
-            sampleHomes(N, R, bx, by, noise) {         // → Float32Array [x,y]×N (ring-centered coords)
-                const out = new Float32Array(N * 2);
-                const w1 = 0.12 * R, w2 = 0.055 * R, rMax = R + 2 * w1;
-                const ss = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
-                const profile = r =>
-                    Math.max(0, ss(R - 2 * w1, R, r) - ss(R, R + w1, r)) ** 2
-                  + Math.max(0, ss(R - 2 * w2, R, r) - ss(R, R + w2, r)) ** 3 * 3
-                  + ss(R + w2, R, r) * 0.15;           // brightness 0.4 rescaled for sampling
-                for (let i = 0; i < N; i++) {
-                    let x, y;
-                    if (i < N * this.RING_SHARE) {     // 1D radial rejection + area-element correction
-                        let r;
-                        do { r = Math.random() * rMax; }
-                        while (Math.random() * 3.2 > profile(r) * (0.2 + 0.8 * r / rMax));
-                        const a = Math.random() * Math.PI * 2;
-                        x = Math.cos(a) * r; y = Math.sin(a) * r;
-                    } else {                           // ambient dust: field noise ×0.04 (rescaled from 0.6)
-                        do { x = (Math.random() - .5) * 2 * bx; y = (Math.random() - .5) * 2 * by; }
-                        while (Math.random() > Math.pow((noise.noise(x * 2.5 / R, y * 2.5 / R) + 1.5) * .5, 2) * 0.55);
-                    }
-                    out[i * 2] = x; out[i * 2 + 1] = y;
-                }
-                return out;
-            }
-        };
-
-        // ════════════════════════════════════════════
-        // 4a. TIER A — HaloGL (three.js GPGPU FBO ping-pong, literal parity)
-        // ════════════════════════════════════════════
-        const GLSL_SNOISE = `
-            vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
-            vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
-            vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}
-            vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
-            float snoise(vec3 v){
-                const vec2 C=vec2(1.0/6.0,1.0/3.0); const vec4 D=vec4(0.0,0.5,1.0,2.0);
-                vec3 i=floor(v+dot(v,C.yyy)); vec3 x0=v-i+dot(i,C.xxx);
-                vec3 g=step(x0.yzx,x0.xyz); vec3 l=1.0-g;
-                vec3 i1=min(g.xyz,l.zxy); vec3 i2=max(g.xyz,l.zxy);
-                vec3 x1=x0-i1+C.xxx; vec3 x2=x0-i2+C.yyy; vec3 x3=x0-D.yyy;
-                i=mod289(i);
-                vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
-                float n_=0.142857142857; vec3 ns=n_*D.wyz-D.xzx;
-                vec4 j=p-49.0*floor(p*ns.z*ns.z);
-                vec4 x_=floor(j*ns.z); vec4 y_=floor(j-7.0*x_);
-                vec4 x=x_*ns.x+ns.yyyy; vec4 y=y_*ns.x+ns.yyyy;
-                vec4 h=1.0-abs(x)-abs(y);
-                vec4 b0=vec4(x.xy,y.xy); vec4 b1=vec4(x.zw,y.zw);
-                vec4 s0=floor(b0)*2.0+1.0; vec4 s1=floor(b1)*2.0+1.0;
-                vec4 sh=-step(h,vec4(0.0));
-                vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy; vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-                vec3 p0=vec3(a0.xy,h.x); vec3 p1=vec3(a0.zw,h.y); vec3 p2=vec3(a1.xy,h.z); vec3 p3=vec3(a1.zw,h.w);
-                vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
-                p0*=norm.x; p1*=norm.y; p2*=norm.z; p3*=norm.w;
-                vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0); m=m*m;
-                return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
-            }`;
-
-        class HaloGL {
-            constructor(canvas) {
-                const T = window.THREE;
-                if (!T) throw new Error('three missing');
-                this.T = T; this.cv = canvas; this.js = new SimplexNoise();
-                this.renderer = new T.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
-                if (!this.renderer.capabilities.isWebGL2) { this.renderer.dispose(); throw new Error('WebGL2 required'); }
-                this.dpr = Math.min(devicePixelRatio || 1, 2);
-                this.renderer.setPixelRatio(this.dpr);
-                this.rtType = this.renderer.extensions.get('EXT_color_buffer_float') ? T.FloatType : T.HalfFloatType;
-
-                this.camera = new T.PerspectiveCamera(40, 1, 0.1, 1000);   // parity
-                this.camera.position.z = 3.1;                              // parity
-                this.scene = new T.Scene();
-                this.hover = 0; this.hoverTarget = 0; this.pulse = 1e9;
-                this.mouse = new T.Vector2(1e4, 1e4);
-                this.reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-                this.computeView(); this.initSim(); this.initPoints();
-                addEventListener('resize', () => this.onResize());
-                addEventListener('pointermove', e => this.onPointer(e));
-                addEventListener('pointerleave', () => this.hoverTarget = 0);
-                addEventListener('click', () => this.pulse = 0);
-                canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); this.dead = true; this.onContextLost && this.onContextLost(); });
-
-                this.t = 0; this.frames = 0; this.last = performance.now();
-                requestAnimationFrame(ts => this.loop(ts));
-            }
-            computeView() {
-                const w = innerWidth, h = innerHeight;
-                this.renderer.setSize(w, h, false);
-                this.camera.aspect = w / h; this.camera.updateProjectionMatrix();
-                this.visH = 2 * Math.tan(20 * Math.PI / 180) * 3.1;         // 40° fov @ z 3.1
-                this.visW = this.visH * this.camera.aspect;
-                this.R = 0.36 * Math.min(this.visW, this.visH);
-                this.yOff = 0.06 * this.visH;                               // halo at 44% viewport height
-                this.pScale = HALO.pScale(innerHeight * this.R / this.visH);
-            }
-            makeHomesTexture() {
-                const T = this.T, S = HALO.SIM;
-                const homes = HALO.sampleHomes(HALO.N, this.R, this.visW / 2, this.visH / 2 + this.yOff, this.js);
-                const refs = new Float32Array(S * S * 4), pos = new Float32Array(S * S * 4);
-                for (let i = 0; i < HALO.N; i++) {
-                    refs[i * 4] = homes[i * 2];     refs[i * 4 + 1] = homes[i * 2 + 1];
-                    refs[i * 4 + 2] = Math.random(); refs[i * 4 + 3] = Math.random();   // seeds
-                    pos[i * 4] = homes[i * 2];      pos[i * 4 + 1] = homes[i * 2 + 1];
-                }
-                const mk = data => { const t = new T.DataTexture(data, S, S, T.RGBAFormat, T.FloatType);
-                    t.minFilter = t.magFilter = T.NearestFilter; t.needsUpdate = true; return t; };
-                this.refsTex = mk(refs); this.posTex = mk(pos);
-            }
-            initSim() {
-                const T = this.T, S = HALO.SIM;
-                this.makeHomesTexture();
-                const rt = () => new T.WebGLRenderTarget(S, S, { type: this.rtType,
-                    minFilter: T.NearestFilter, magFilter: T.NearestFilter, depthBuffer: false });
-                this.rtA = rt(); this.rtB = rt(); this.flip = false;
-                this.simMat = new T.ShaderMaterial({
-                    uniforms: {
-                        uPosition: { value: this.posTex }, uPosRefs: { value: this.refsTex },
-                        uTime: { value: 0 }, uHover: { value: 0 }, uMouse: { value: this.mouse },
-                        uRingPos: { value: new T.Vector2(0, 0) }, uRingRadius: { value: this.R },
-                        uRingWidth: { value: 0.12 * this.R }, uRingWidth2: { value: 0.055 * this.R },
-                        uGather: { value: 0.15 * Math.min(this.visW, this.visH) }
-                    },
-                    vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0., 1.); }`,
-                    fragmentShader: `
-                        precision highp float;
-                        uniform sampler2D uPosition; uniform sampler2D uPosRefs;
-                        uniform float uTime, uHover, uRingRadius, uRingWidth, uRingWidth2, uGather;
-                        uniform vec2 uMouse, uRingPos;
-                        varying vec2 vUv;
-                        ${GLSL_SNOISE}
-                        void main() {
-                            vec4 p = texture2D(uPosition, vUv);
-                            vec4 r = texture2D(uPosRefs, vUv);
-                            vec2 ref = r.xy; float seed = r.z, seed2 = r.w;
-                            float scale = p.z;
-                            float time = uTime * .5;
-
-                            // life cycle (parity)
-                            float lifeEnd = 3. + sin(seed2 * 100.);
-                            float lifeTime = mod(seed * 100. + time, lifeEnd);
-
-                            // ring mask at ref (parity: brightness weights .4/.6 modulate displacement)
-                            float d = distance(ref, uRingPos);
-                            float n0 = snoise(vec3(ref * .2 + vec2(18.49, 72.97), time * .5));
-                            float d1 = distance(ref + n0 * .005, uRingPos);
-                            float t  = smoothstep(uRingRadius - uRingWidth * 2., uRingRadius, d)  - smoothstep(uRingRadius, uRingRadius + uRingWidth,  d1);
-                            float t2 = smoothstep(uRingRadius - uRingWidth2 * 2., uRingRadius, d) - smoothstep(uRingRadius, uRingRadius + uRingWidth2, d1);
-                            float t3 = smoothstep(uRingRadius + uRingWidth2, uRingRadius, d);
-                            t = pow(max(t, 0.), 2.); t2 = pow(max(t2, 0.), 3.);
-                            float mask = t + t2 * 3. + t3 * .4;
-                            float nS = snoise(vec3(ref * 2. + vec2(18.49, 72.97), time * .5));
-                            mask += pow((nS + 1.5) * .5, 2.) * .6;
-
-                            // layered displacement (parity freqs/amps, scaled by ring radius)
-                            float k = 1. / uRingRadius;
-                            vec2 disp = vec2(
-                                snoise(vec3(ref * k * 4. + vec2(88.49, 32.44), time * .35)),
-                                snoise(vec3(ref * k * 4. + vec2(50.90, 120.94), time * .35))) * .03 * uRingRadius;
-                            disp += vec2(
-                                snoise(vec3(ref * k * 20. + vec2(18.49, 72.97), time * .5)),
-                                snoise(vec3(ref * k * 20. + vec2(50.90, 120.94), time * .5))) * .005 * uRingRadius;
-                            vec2 target = ref + disp * min(mask, 1.6);
-
-                            // cursor gather (parity: seek + velocity = proximity × hover)
-                            float md = distance(uMouse, p.xy);
-                            float pull = smoothstep(uGather, 0., md) * uHover;
-                            target = mix(target, uMouse, pull * pull * .85);
-                            float velocity = pull;
-
-                            vec2 pos = p.xy + (target - p.xy) * .2;
-                            if (lifeTime < .02) { pos = ref; scale = 0.; }
-
-                            float targetScale = smoothstep(.01, .5, lifeTime) - smoothstep(.5, 1., lifeTime / lifeEnd);
-                            targetScale += pull * 1.5;
-                            scale += (targetScale - scale) * .1;
-
-                            gl_FragColor = vec4(pos, scale, velocity);
-                        }`
-                });
-                this.simScene = new T.Scene();
-                this.simCam = new T.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-                this.simScene.add(new T.Mesh(new T.PlaneGeometry(2, 2), this.simMat));
-            }
-            makePointsMaterial(glowPass) {
-                const T = this.T;
-                return new T.ShaderMaterial({
-                    transparent: true, depthTest: false, depthWrite: false,
-                    uniforms: {
-                        uPosition: { value: this.posTex },
-                        uTime: { value: 0 }, uHover: { value: 0 }, uPulse: { value: 1e3 },
-                        uPixelRatio: { value: this.dpr }, uParticleScale: { value: this.pScale },
-                        uSizeMul: { value: glowPass ? 2.8 : 1 }, uAlpha: { value: glowPass ? .05 : .55 },
-                        uGlow: { value: glowPass ? 1 : 0 },
-                        uRingPos: { value: new T.Vector2(0, 0) }, uRingRadius: { value: this.R },
-                        uColor1: { value: new T.Color('#0071e3') },
-                        uColor2: { value: new T.Color('#bf5af2') },
-                        uColor3: { value: new T.Color('#ff375f') }
-                    },
-                    vertexShader: `
-                        attribute vec4 seeds;
-                        uniform sampler2D uPosition;
-                        uniform float uTime, uHover, uPulse, uPixelRatio, uParticleScale, uSizeMul, uRingRadius;
-                        varying float vVel; varying float vScale; varying vec2 vLocalPos;
-                        ${GLSL_SNOISE}
-                        void main() {
-                            vec4 pos = texture2D(uPosition, uv);
-                            float k = 1. / uRingRadius;
-                            // (parity) hover turbulence + ambient drift
-                            float noiseX  = snoise(vec3(pos.xy * k * 10., uTime * .2 + 100.));
-                            float noiseY  = snoise(vec3(pos.xy * k * 10., uTime * .2));
-                            float noiseX2 = snoise(vec3(pos.xy * k * .5,  uTime * .15 + 45.));
-                            float noiseY2 = snoise(vec3(pos.xy * k * .5,  uTime * .15 + 87.));
-                            // (parity) click pulse disc
-                            float cDist = length(pos.xy) / (uRingRadius * 2.2);
-                            float pt = smoothstep(uPulse - .25, uPulse, cDist) - smoothstep(uPulse, uPulse + .25, cDist);
-                            pt *= smoothstep(1., 0., cDist);
-                            pos.xy *= 1. + (pt * .02);
-
-                            float dist = smoothstep(0., .9, pos.w); dist = mix(0., dist, uHover);
-                            pos.x += noiseX * .005 * uRingRadius * dist;
-                            pos.y += noiseY * .005 * uRingRadius * dist;
-                            pos.x += noiseX2 * .02 * uRingRadius;
-                            pos.y += noiseY2 * .02 * uRingRadius;
-
-                            vVel = pos.w; vScale = pos.z; vLocalPos = pos.xy;
-                            vec4 mv = modelViewMatrix * vec4(pos.xy, 0., 1.);
-                            gl_Position = projectionMatrix * mv;
-                            gl_PointSize = (((vScale * 7.) * (uPixelRatio * .5) * uParticleScale) + .25 * uPixelRatio) * uSizeMul;
-                        }`,
-                    fragmentShader: `
-                        precision highp float;
-                        varying float vVel; varying float vScale; varying vec2 vLocalPos;
-                        uniform vec3 uColor1, uColor2, uColor3;
-                        uniform vec2 uRingPos;
-                        uniform float uTime, uAlpha, uGlow, uRingRadius;
-                        ${GLSL_SNOISE}
-                        float sdRoundBox(in vec2 p, in vec2 b, in vec4 r) {
-                            r.xy = (p.x > 0.) ? r.xy : r.zw; r.x = (p.y > 0.) ? r.x : r.y;
-                            vec2 q = abs(p) - b + r.x;
-                            return min(max(q.x, q.y), 0.) + length(max(q, 0.)) - r.x;
-                        }
-                        vec2 rotate(vec2 v, float a) { float s = sin(a), c = cos(a); return mat2(c, s, -s, c) * v; }
-                        void main() {
-                            float k = 1. / uRingRadius;
-                            // (parity) grain rotation + color noise
-                            float noiseAngle = snoise(vec3(vLocalPos * k * 10. + vec2(18.49, 72.97), uTime * .85));
-                            float noiseColor = snoise(vec3(vLocalPos * k * 2. + vec2(74.66, 91.55), uTime * .5));
-                            noiseColor = (noiseColor + 1.) * .5;
-                            float angle = atan(vLocalPos.y - uRingPos.y, vLocalPos.x - uRingPos.x);
-
-                            vec2 uv = gl_PointCoord.xy - .5; uv.y *= -1.;
-                            uv = rotate(uv, -angle + noiseAngle * .5);
-
-                            // (parity) 3-stop ramp, mid-stop h = 0.8; gathered grains heat toward C3
-                            float h = .8;
-                            float progress = smoothstep(0., .75, pow(noiseColor, 2.));
-                            progress = min(progress + vVel, 1.);
-                            vec3 col = mix(mix(uColor1, uColor2, progress / h),
-                                           mix(uColor2, uColor3, (progress - h) / (1. - h)), step(h, progress));
-
-                            float a;
-                            if (uGlow > .5) {          // chromatic under-glow: soft radial disc
-                                a = uAlpha * smoothstep(.5, .05, length(uv)) * smoothstep(.1, .2, vScale);
-                            } else {                    // sharp grain: (parity) sdRoundBox pill
-                                float rounded = sdRoundBox(uv, vec2(.5, .2), vec4(.25));
-                                rounded = smoothstep(.1, 0., rounded);
-                                a = uAlpha * rounded * smoothstep(.1, .2, vScale);
-                            }
-                            if (a < .01) discard;
-                            gl_FragColor = vec4(col, a);
-                        }`
-                });
-            }
-            initPoints() {
-                const T = this.T, S = HALO.SIM, N = HALO.N;
-                const geo = new T.BufferGeometry();
-                const posAttr = new Float32Array(N * 3), uvAttr = new Float32Array(N * 2), seeds = new Float32Array(N * 4);
-                for (let i = 0; i < N; i++) {
-                    uvAttr[i * 2] = ((i % S) + .5) / S; uvAttr[i * 2 + 1] = (Math.floor(i / S) + .5) / S;
-                    for (let j = 0; j < 4; j++) seeds[i * 4 + j] = Math.random();
-                }
-                geo.setAttribute('position', new T.BufferAttribute(posAttr, 3));
-                geo.setAttribute('uv', new T.BufferAttribute(uvAttr, 2));
-                geo.setAttribute('seeds', new T.BufferAttribute(seeds, 4));
-                this.glowMat = this.makePointsMaterial(true);
-                this.coreMat = this.makePointsMaterial(false);
-                this.glowPts = new T.Points(geo, this.glowMat); this.glowPts.renderOrder = 0;
-                this.corePts = new T.Points(geo, this.coreMat); this.corePts.renderOrder = 1;
-                this.glowPts.frustumCulled = this.corePts.frustumCulled = false;
-                this.glowPts.position.y = this.corePts.position.y = this.yOff;
-                this.scene.add(this.glowPts, this.corePts);
-            }
-            onResize() {
-                this.computeView();
-                this.makeHomesTexture();
-                this.simMat.uniforms.uPosRefs.value = this.refsTex;
-                this.simMat.uniforms.uPosition.value = this.posTex; this.flip = false; this.started = false;
-                this.simMat.uniforms.uRingRadius.value = this.R;
-                this.simMat.uniforms.uRingWidth.value = .12 * this.R;
-                this.simMat.uniforms.uRingWidth2.value = .055 * this.R;
-                this.simMat.uniforms.uGather.value = .15 * Math.min(this.visW, this.visH);
-                this.glowMat.uniforms.uRingRadius.value = this.coreMat.uniforms.uRingRadius.value = this.R;
-                this.glowMat.uniforms.uParticleScale.value = this.coreMat.uniforms.uParticleScale.value = this.pScale;
-                this.glowPts.position.y = this.corePts.position.y = this.yOff;
-            }
-            onPointer(e) {
-                this.mouse.set((e.clientX / innerWidth * 2 - 1) * this.visW / 2,
-                              -(e.clientY / innerHeight * 2 - 1) * this.visH / 2 - this.yOff);
-                this.hoverTarget = 1;
-            }
-            loop(ts) {
-                if (this.dead) return;
-                const dt = Math.min(.05, (ts - this.last) / 1000); this.last = ts;
-                if (!document.hidden) { this.t += dt; this.stepAndRender(dt); }
-                if (!this.reduced || this.frames++ < 30) requestAnimationFrame(t2 => this.loop(t2));
-            }
-            stepAndRender(dt) {
-                this.hover += (this.hoverTarget - this.hover) * Math.min(1, dt / .4);
-                if (this.pulse < 1.6) this.pulse += dt / 1.2;
-                // Ring Breathing: center drift ±0.03R @ ~0.05 Hz, radius ±1.5%
-                const rp = this.simMat.uniforms.uRingPos.value;
-                rp.set(this.js.noise(this.t * .05, 7.3) * .03 * this.R,
-                       this.js.noise(this.t * .05, 91.7) * .03 * this.R);
-                this.coreMat.uniforms.uRingPos.value.copy(rp);
-                this.glowMat.uniforms.uRingPos.value.copy(rp);
-                this.simMat.uniforms.uRingRadius.value = this.R * (1 + this.js.noise(this.t * .07, 41.1) * .015);
-
-                const su = this.simMat.uniforms;
-                su.uTime.value = this.t; su.uHover.value = this.hover;
-                const read = this.flip ? this.rtB : this.rtA, write = this.flip ? this.rtA : this.rtB;
-                if (this.started) su.uPosition.value = read.texture;   // first frame reads DataTexture
-                this.renderer.setRenderTarget(write);
-                this.renderer.render(this.simScene, this.simCam);
-                this.renderer.setRenderTarget(null);
-                this.flip = !this.flip; this.started = true;
-
-                for (const m of [this.glowMat, this.coreMat]) {
-                    m.uniforms.uPosition.value = write.texture;
-                    m.uniforms.uTime.value = this.t;
-                    m.uniforms.uHover.value = this.hover;
-                    m.uniforms.uPulse.value = Math.min(this.pulse, 1e3);
-                }
-                this.renderer.render(this.scene, this.camera);
-            }
-        }
-
-        // ════════════════════════════════════════════
-        // 4b. TIER B — HaloCanvas (Canvas 2D fallback, FULL 65,536 population)
-        // ════════════════════════════════════════════
-        class HaloCanvas {
+        class HaloEngine {
             constructor(canvas) {
                 this.cv = canvas; this.ctx = canvas.getContext('2d');
                 this.noise = new SimplexNoise();
-                this.BUCKETS = 24; this.ANGLES = 32;
-                this.hover = 0; this.hoverTarget = 0; this.pulse = 1e9;
-                this.pointer = { x: -1e4, y: -1e4 };
+                this.C1 = [0,113,227]; this.C2 = [191,90,242]; this.C3 = [255,55,95]; // spectrum ramp
+                this.BUCKETS = 24; this.hover = 0; this.pulse = 1e9;
+                this.pointer = { x: -1e4, y: -1e4, over: false };
                 this.reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-                this.renderScale = 1; this.frameEMA = 16;
-                this.G = 40; this.grid = new Float32Array(this.G * this.G * 5); this.gridClock = 0;
-                this.resize(); this.buildAtlas(); this.seed();
+                this.resize(); this.buildSprites(); this.seed();
                 addEventListener('resize', () => { this.resize(); this.seed(); });
-                addEventListener('pointermove', e => { this.pointer.x = e.clientX; this.pointer.y = e.clientY; this.hoverTarget = 1; });
-                addEventListener('pointerleave', () => this.hoverTarget = 0);
+                addEventListener('pointermove', e => { this.pointer.x = e.clientX; this.pointer.y = e.clientY; this.pointer.over = e.clientY < innerHeight; });
+                addEventListener('pointerleave', () => this.pointer.over = false);
                 addEventListener('click', () => this.pulse = 0);
+                document.addEventListener('visibilitychange', () => { this.last = performance.now(); });
                 this.t = 0; this.last = performance.now();
-                this.reduced ? (this.updateGrid(), this.step(1 / 60), this.draw())
-                             : requestAnimationFrame(ts => this.loop(ts));
+                this.reduced ? (this.step(1/60), this.draw()) : requestAnimationFrame(ts => this.loop(ts));
             }
             resize() {
                 this.dpr = Math.min(devicePixelRatio || 1, 2);
-                this.applyScale();
+                this.cv.width = innerWidth * this.dpr; this.cv.height = innerHeight * this.dpr;
                 this.R = Math.min(innerWidth, innerHeight) * 0.36;
                 this.cx = innerWidth * 0.5; this.cy = innerHeight * 0.44;
-                this.pScale = HALO.pScale(this.R);
-            }
-            applyScale() {
-                const s = this.dpr * this.renderScale;
-                this.cv.width = Math.round(innerWidth * s); this.cv.height = Math.round(innerHeight * s);
-                this.pxScale = s;
-                this.ctx.imageSmoothingEnabled = this.renderScale >= 1;
             }
             mix(a, b, t) { return a + (b - a) * t; }
             smooth(e0, e1, x) { const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); }
-            ramp(p) {
-                const h = HALO.H, [A, B] = p < h ? [HALO.C1, HALO.C2] : [HALO.C2, HALO.C3];
+            ramp(p) { // 3-stop, mid-stop h = 0.8 (as original shader)
+                const h = 0.8, [A, B] = p < h ? [this.C1, this.C2] : [this.C2, this.C3];
                 const t = p < h ? p / h : (p - h) / (1 - h);
                 return A.map((c, i) => Math.round(this.mix(c, B[i], t)));
             }
-            buildAtlas() { // 24 colors × 32 angles, pill 22×9 in 26×26 cells
-                const CELL = this.CELL = 26;
-                const atlas = this.atlas = document.createElement('canvas');
-                atlas.width = CELL * this.BUCKETS; atlas.height = CELL * this.ANGLES;
-                const c = atlas.getContext('2d');
+            buildSprites() { // pre-rendered pill grains, one per color bucket
+                this.sprites = [];
+                const W = 22, H = 9;
                 for (let b = 0; b < this.BUCKETS; b++) {
-                    const [r, g, bl] = this.ramp(b / (this.BUCKETS - 1));
-                    for (let a = 0; a < this.ANGLES; a++) {
-                        c.save();
-                        c.translate(b * CELL + CELL / 2, a * CELL + CELL / 2);
-                        c.rotate(a / this.ANGLES * Math.PI);          // pill is 180°-symmetric
-                        c.fillStyle = `rgb(${r},${g},${bl})`;
-                        c.beginPath(); c.roundRect(-11, -4.5, 22, 9, 4.5); c.fill();
-                        c.restore();
+                    const s = document.createElement('canvas'); s.width = W; s.height = H;
+                    const c = s.getContext('2d'), [r, g, bl] = this.ramp(b / (this.BUCKETS - 1));
+                    c.fillStyle = `rgb(${r},${g},${bl})`;
+                    c.beginPath(); c.roundRect(1, 1, W - 2, H - 2, H / 2); c.fill();
+                    this.sprites.push(s);
+                }
+            }
+            density(x, y) { // ring-mask density field from the original sim shader
+                const d = Math.hypot(x - this.cx, y - this.cy), R = this.R;
+                const j = this.noise.noise(x * 0.002, y * 0.002) * 0.005 * R;
+                const w1 = 0.12 * R, w2 = 0.05 * R;
+                let t1 = this.smooth(R - 2 * w1, R, d) - this.smooth(R, R + w1, d + j);
+                let t2 = this.smooth(R - 2 * w2, R, d) - this.smooth(R, R + w2, d + j);
+                const t3 = this.smooth(R + w2, R, d) * 0.15;
+                t1 = Math.max(0, t1) ** 2; t2 = Math.max(0, t2) ** 3 * 3;
+                const field = Math.pow((this.noise.noise(x * 0.004, y * 0.004) + 1.5) * 0.5, 2) * 0.04;
+                return t1 + t2 + t3 + field;
+            }
+            seed() { // rejection-sample home positions (attempt-capped so a
+                     // degenerate viewport can never spin this loop forever)
+                const N = Math.round(Math.min(6000, Math.max(2200, innerWidth * innerHeight / 300)));
+                this.pts = [];
+                let guard = N * 400;
+                while (this.pts.length < N && guard-- > 0) {
+                    const x = Math.random() * innerWidth, y = Math.random() * innerHeight;
+                    if (Math.random() < this.density(x, y) * 0.9) {
+                        this.pts.push({ hx: x, hy: y, x, y, scale: 0, seed: Math.random(),
+                                        life: 3 + (Math.random() * 2 - 1), heat: 0 });
                     }
-                }
-            }
-            seed() {
-                const N = HALO.N;
-                const homes = HALO.sampleHomes(N, this.R, innerWidth / 2, innerHeight / 2, this.noise);
-                this.hx = new Float32Array(N); this.hy = new Float32Array(N);
-                this.x = new Float32Array(N);  this.y = new Float32Array(N);
-                this.sc = new Float32Array(N); this.sd = new Float32Array(N);
-                this.lf = new Float32Array(N); this.ht = new Float32Array(N);
-                this.wb = new Float32Array(N); this.cn = new Float32Array(N);   // cached wobble + color noise
-                for (let i = 0; i < N; i++) {
-                    this.hx[i] = homes[i * 2] + this.cx; this.hy[i] = homes[i * 2 + 1] + this.cy;
-                    this.x[i] = this.hx[i]; this.y[i] = this.hy[i];
-                    this.sd[i] = Math.random(); this.lf[i] = 3 + (Math.random() * 2 - 1);
-                }
-            }
-            updateGrid() { // 40×40 field @ 30 Hz: [dx, dy, wobble, colorNoise, _]
-                const n = this.noise, t = this.t, R = this.R, G = this.G, k = 1 / R;
-                for (let gy = 0; gy < G; gy++) for (let gx = 0; gx < G; gx++) {
-                    const wx = (gx + .5) / G * innerWidth, wy = (gy + .5) / G * innerHeight;
-                    const o = (gy * G + gx) * 5;
-                    this.grid[o]     = (n.n3(wx * k * 4, wy * k * 4, t * .35) * .03
-                                      + n.n3(wx * k * .5, wy * k * .5, t * .15) * .025) * R;
-                    this.grid[o + 1] = (n.n3(wx * k * 4 + 33, wy * k * 4 + 33, t * .35) * .03
-                                      + n.n3(wx * k * .5 + 87, wy * k * .5 + 87, t * .15) * .025) * R;
-                    this.grid[o + 2] = n.n3(wx * k * 10, wy * k * 10, t * .85) * .5;
-                    this.grid[o + 3] = this.smooth(0, .75, ((n.n3(wx * k * 2, wy * k * 2, t * .5) + 1) / 2) ** 2);
-                }
-            }
-            sampleGrid(x, y, out) { // bilinear
-                const G = this.G;
-                const fx = Math.min(G - 1.001, Math.max(0, x / innerWidth * G - .5));
-                const fy = Math.min(G - 1.001, Math.max(0, y / innerHeight * G - .5));
-                const x0 = fx | 0, y0 = fy | 0, tx = fx - x0, ty = fy - y0;
-                const o00 = (y0 * G + x0) * 5, o10 = o00 + 5, o01 = o00 + G * 5, o11 = o01 + 5;
-                for (let c = 0; c < 4; c++) {
-                    const a = this.grid[o00 + c] + (this.grid[o10 + c] - this.grid[o00 + c]) * tx;
-                    const b = this.grid[o01 + c] + (this.grid[o11 + c] - this.grid[o01 + c]) * tx;
-                    out[c] = a + (b - a) * ty;
                 }
             }
             loop(ts) {
-                const raw = ts - this.last, dt = Math.min(.05, raw / 1000); this.last = ts;
-                if (!document.hidden) {
-                    this.t += dt;
-                    this.frameEMA = this.frameEMA * .95 + raw * .05;
-                    this.govern();
-                    if ((this.gridClock += dt) >= 1 / 30) { this.gridClock = 0; this.updateGrid(); }
-                    this.step(dt); this.draw();
-                }
+                const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+                if (!document.hidden) { this.t += dt; this.step(dt); this.draw(); }
                 requestAnimationFrame(t2 => this.loop(t2));
             }
-            govern() { // trade pixels, never particles
-                const LADDER = [1, .75, .5, .35, .25];
-                const i = LADDER.indexOf(this.renderScale);
-                if (this.frameEMA > 24 && i < LADDER.length - 1) { this.renderScale = LADDER[i + 1]; this.applyScale(); this.frameEMA = 16; }
-                else if (this.frameEMA < 11 && i > 0)            { this.renderScale = LADDER[i - 1]; this.applyScale(); this.frameEMA = 16; }
-            }
             step(dt) {
-                const N = HALO.N, t = this.t, g = this.gtmp || (this.gtmp = new Float32Array(4));
-                const gatherR = .15 * Math.min(innerWidth, innerHeight);
-                this.hover += (this.hoverTarget - this.hover) * Math.min(1, dt / .4);
-                if (this.pulse < 1.6) this.pulse += dt / 1.2;
-                const px = this.pointer.x, py = this.pointer.y, hov = this.hover;
-                for (let i = 0; i < N; i++) {
-                    const lt = (this.sd[i] * 100 + t * .5) % this.lf[i];
-                    let target = this.smooth(.01, .5, lt) - this.smooth(.5, 1, lt / this.lf[i]);
-                    this.sampleGrid(this.hx[i], this.hy[i], g);
-                    this.wb[i] = g[2]; this.cn[i] = g[3];
-                    let tx = this.hx[i] + g[0], ty = this.hy[i] + g[1];
-                    if (hov > .01) {
-                        const dxp = px - this.x[i], dyp = py - this.y[i];
-                        const pd = Math.sqrt(dxp * dxp + dyp * dyp);
-                        const pull = this.smooth(gatherR, 0, pd) * hov;
-                        if (pull > .001) {
-                            tx = this.mix(tx, px, pull * .6); ty = this.mix(ty, py, pull * .6);
-                            target += pull * 1.5;
-                        }
-                        this.ht[i] += (pull - this.ht[i]) * .1;
-                    } else if (this.ht[i] > .001) this.ht[i] *= .9;
+                const n = this.noise, t = this.t, R = this.R;
+                const gatherR = 0.15 * Math.min(innerWidth, innerHeight);
+                this.hover += ((this.pointer.over ? 1 : 0) - this.hover) * Math.min(1, dt / 0.4);
+                if (this.pulse < 1) this.pulse += dt / 1.2;
+                for (const p of this.pts) {
+                    // life cycle: respawn at home, ease scale in/out
+                    const lt = ((p.seed * 100 + t * 0.5) % p.life);
+                    let target = this.smooth(0.01, 0.5, lt) - this.smooth(0.5, 1, lt / p.life);
+                    // layered simplex displacement (mid swirl + fine tremor + ambient drift)
+                    const k = 1 / R;
+                    let dx = n.n3(p.hx * k * 4, p.hy * k * 4, t * 0.35) * 0.03 * R
+                           + n.n3(p.hx * k * 20, p.hy * k * 20, t * 0.5) * 0.005 * R
+                           + n.n3(p.hx * k * 0.5, p.hy * k * 0.5, t * 0.15) * 0.025 * R;
+                    let dy = n.n3(p.hx * k * 4 + 33, p.hy * k * 4 + 33, t * 0.35) * 0.03 * R
+                           + n.n3(p.hx * k * 20 + 71, p.hy * k * 20 + 71, t * 0.5) * 0.005 * R
+                           + n.n3(p.hx * k * 0.5 + 87, p.hy * k * 0.5 + 87, t * 0.15) * 0.025 * R;
+                    let tx = p.hx + dx, ty = p.hy + dy;
+                    // cursor gather
+                    const pd = Math.hypot(this.pointer.x - p.x, this.pointer.y - p.y);
+                    const pull = this.smooth(gatherR, 0, pd) * this.hover;
+                    if (pull > 0.001) {
+                        tx = this.mix(tx, this.pointer.x, pull * 0.6);
+                        ty = this.mix(ty, this.pointer.y, pull * 0.6);
+                        target += pull * 1.5;
+                    }
+                    p.heat += (pull - p.heat) * 0.1;
+                    // click pulse shockwave
                     if (this.pulse < 1) {
-                        const dr = Math.hypot(this.hx[i] - this.cx, this.hy[i] - this.cy) / this.R;
-                        const w = (this.smooth(this.pulse - .25, this.pulse, dr)
-                                 - this.smooth(this.pulse, this.pulse + .25, dr))
-                                 * this.smooth(1, 0, dr) * .02;
+                        const dr = Math.hypot(p.hx - this.cx, p.hy - this.cy) / R;
+                        const w = (this.smooth(this.pulse - 0.25, this.pulse, dr)
+                                 - this.smooth(this.pulse, this.pulse + 0.25, dr))
+                                 * this.smooth(1, 0, dr) * 0.02;
                         tx = this.cx + (tx - this.cx) * (1 + w);
                         ty = this.cy + (ty - this.cy) * (1 + w);
                     }
-                    this.x[i] += (tx - this.x[i]) * .2; this.y[i] += (ty - this.y[i]) * .2;
-                    this.sc[i] += (target - this.sc[i]) * .1;
+                    p.x += (tx - p.x) * 0.2; p.y += (ty - p.y) * 0.2;
+                    p.scale += (target - p.scale) * 0.1;
                 }
             }
             draw() {
-                const { ctx } = this, N = HALO.N, s0 = this.pxScale;
+                const { ctx, dpr } = this;
                 ctx.setTransform(1, 0, 0, 1, 0, 0);
                 ctx.clearRect(0, 0, this.cv.width, this.cv.height);
-                const CELL = this.CELL, A = this.ANGLES, B = this.BUCKETS, PI = Math.PI;
-                for (let i = 0; i < N; i++) {
-                    const sc = this.sc[i];
-                    if (sc < .06) continue;
-                    let prog = Math.min(1, this.cn[i] + this.ht[i]);
-                    let ang = Math.atan2(this.y[i] - this.cy, this.x[i] - this.cx) + this.wb[i];
-                    ang = ((ang % PI) + PI) % PI;
-                    const bi = (prog * (B - 1) + .5) | 0;
-                    const ai = (ang / PI * A) | 0;
-                    const sz = (sc * 7 * this.dpr * .5 * this.pScale + .5) / 9;
-                    const w = CELL * sz * s0 / this.dpr;
-                    ctx.globalAlpha = Math.min(1, sc) * .55;
-                    ctx.drawImage(this.atlas, bi * CELL, (ai === A ? 0 : ai) * CELL, CELL, CELL,
-                                  this.x[i] * s0 - w / 2, this.y[i] * s0 - w / 2, w, w);
+                const n = this.noise, t = this.t;
+                for (const p of this.pts) {
+                    if (p.scale < 0.05) continue;
+                    let prog = this.smooth(0, 0.75, ((n.n3(p.hx * 0.008, p.hy * 0.008, t * 0.5) + 1) / 2) ** 2);
+                    prog = Math.min(1, prog + p.heat);            // gathered grains heat toward C3
+                    const spr = this.sprites[Math.round(prog * (this.BUCKETS - 1))];
+                    const ang = Math.atan2(p.y - this.cy, p.x - this.cx)
+                              + n.n3(p.hx * 0.02, p.hy * 0.02, t * 0.85) * 0.5;
+                    const s = (p.scale * 7 * dpr * 0.5 + 0.5) / 9; // sprite height 9px
+                    ctx.setTransform(Math.cos(ang) * s, Math.sin(ang) * s,
+                                     -Math.sin(ang) * s, Math.cos(ang) * s,
+                                     p.x * dpr, p.y * dpr);
+                    ctx.globalAlpha = Math.min(1, p.scale) * 0.9;
+                    ctx.drawImage(spr, -11, -4.5);
                 }
                 ctx.globalAlpha = 1;
             }
-        }
-
-        // ════════════════════════════════════════════
-        // 4c. TIER SELECTOR (resilient)
-        // ════════════════════════════════════════════
-        function createHalo(canvas) {
-            const force2d = new URLSearchParams(location.search).get('halo') === '2d';
-            if (!force2d && window.THREE) {
-                try {
-                    const gl = new HaloGL(canvas);
-                    gl.onContextLost = () => { console.warn('WebGL context lost — Canvas tier takes over');
-                        // a canvas that has held a GL context can never yield a 2D context: swap in a fresh one
-                        const fresh = canvas.cloneNode(); canvas.replaceWith(fresh);
-                        APP.halo = new HaloCanvas(fresh); };
-                    return gl;
-                } catch (e) { console.warn('HaloGL unavailable — Canvas tier', e); }
-            }
-            return new HaloCanvas(canvas);
         }
 
         // ════════════════════════════════════════════
@@ -2173,16 +1769,9 @@
                 this.initPanel();
                 this.updateThaiDates();
 
-                // Halo — wait for the three importmap settlement (4 s cap), then pick a tier
-                const THREE_READY = new Promise(res => {
-                    if (window.THREE || window.HALO_SETTLED) return res();
-                    addEventListener('halo-libs-settled', () => res(), { once: true });
-                    setTimeout(res, 4000);
-                });
-                THREE_READY.then(() => {
-                    try { this.halo = createHalo(document.getElementById('halo-canvas')); }
-                    catch (e) { console.warn('Halo disabled', e); }
-                });
+                // Halo — Protocol v18 single-tier Canvas 2D engine (no three.js)
+                try { this.halo = new HaloEngine(document.getElementById('halo-canvas')); }
+                catch (e) { console.warn('Halo disabled', e); }
 
                 const overlay = document.getElementById('loading-overlay');
                 overlay.classList.add('fade-out'); overlay.style.pointerEvents = 'none';
@@ -2210,6 +1799,7 @@
             setLang(lang) {
                 this.lang = lang === 'th' ? 'th' : 'en';
                 document.body.dataset.lang = this.lang;
+                // safe: i18n CSS rules are scoped under body (v3 root-cause fix)
                 document.documentElement.lang = this.lang;
                 document.querySelectorAll('.lang-btn').forEach(b =>
                     b.classList.toggle('active', b.dataset.lang === this.lang));
@@ -2280,7 +1870,7 @@
                 if (host) io.observe(host);
             },
 
-            /* — Filter-Flow (Protocol v19 Rule 3) — */
+            /* — Filter-Flow (Protocol v18 Rule 3) — */
             syncSliderFill(el) {
                 el.style.setProperty('--fill', `${(el.value - el.min) / (el.max - el.min) * 100}%`);
             },
@@ -2316,7 +1906,7 @@
                     (this.state.type === 'all' || d.type === this.state.type));
             },
 
-            /* — Charts (Protocol v19 §3 theming) — */
+            /* — Charts (Protocol v18 §3 theming) — */
             initCharts() {
                 if (typeof Chart === 'undefined') {
                     document.querySelectorAll('.h-chart, .h-radar').forEach(el =>
@@ -2486,7 +2076,7 @@
                      ${metrics}<div style="margin-top:1.1rem;">${tags}</div>`);
             },
 
-            /* — D3 polymorphic topology (Protocol v19 Rule 4) — */
+            /* — D3 polymorphic topology (Protocol v18 Rule 4) — */
             initNetwork() {
                 const host = document.getElementById('expertise-network');
                 if (typeof d3 === 'undefined' || !host) {
