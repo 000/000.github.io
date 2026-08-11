@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>งบประมาณ กยศ. — เงินให้กู้ยืม เทียบ แหล่งเงิน (ปี 2560–2574)</title>
+<style>
+:root{
+  --bg:#f4f4f2; --surface:#fcfcfb; --header-bg:#22232b; --header-ink:#ffffff;
+  --ink:#20211f; --ink-2:#5f6058; --ink-3:#8a8b82; --line:#e4e4df; --grid:#ecece7;
+  --c-loan:#C62828; --c-repay:#EE7E72; --c-budget:#2E6DB4; --c-fund:#C99700;
+  --lbl-on-loan:#ffffff; --lbl-on-repay:#33110d; --lbl-on-budget:#ffffff; --lbl-on-fund:#332600;
+  --shadow:0 1px 3px rgba(0,0,0,.08);
+  --radius:10px; --gap:16px;
+}
+[data-theme="dark"]{
+  --bg:#121211; --surface:#1a1a19; --header-bg:#101014; --header-ink:#f2f2ef;
+  --ink:#ecece8; --ink-2:#a4a49c; --ink-3:#7c7c74; --line:#2c2c2a; --grid:#262624;
+  --c-loan:#B02E24; --c-repay:#DE6F65; --c-budget:#5B96D6; --c-fund:#B08608;
+  --lbl-on-loan:#ffffff; --lbl-on-repay:#210b08; --lbl-on-budget:#0e1b2a; --lbl-on-fund:#211800;
+  --shadow:0 1px 3px rgba(0,0,0,.4);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:'Sukhumvit Set','Noto Sans Thai','Leelawadee UI','Thonburi',Tahoma,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.55; font-size:15px;
+}
+.wrap{max-width:1280px;margin:0 auto;padding:var(--gap)}
+/* ---------- header ---------- */
+.hdr{background:var(--header-bg);color:var(--header-ink);border-radius:var(--radius);
+  padding:18px 22px;margin-bottom:var(--gap);display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:12px;box-shadow:var(--shadow)}
+.hdr h1{font-size:19px;font-weight:700;letter-spacing:.1px}
+.hdr .sub{font-size:13px;opacity:.75;margin-top:2px}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ctl{display:flex;align-items:center;gap:6px;font-size:13px}
+.ctl label{opacity:.75}
+.ctl select{
+  padding:6px 26px 6px 10px;border:1px solid rgba(255,255,255,.25);border-radius:6px;
+  background:rgba(255,255,255,.08);color:var(--header-ink);font-size:13px;font-family:inherit;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M1 1l4 4 4-4' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");
+  background-repeat:no-repeat;background-position:right 9px center;cursor:pointer}
+.ctl select option{background:#22232b;color:#fff}
+.theme-btn{padding:6px 12px;border:1px solid rgba(255,255,255,.25);border-radius:6px;
+  background:rgba(255,255,255,.08);color:var(--header-ink);font-size:13px;font-family:inherit;cursor:pointer}
+.theme-btn:hover,.ctl select:hover{background:rgba(255,255,255,.16)}
+/* ---------- KPI ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:var(--gap);margin-bottom:var(--gap)}
+.kpi{background:var(--surface);border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow);
+  border-top:3px solid var(--kc,var(--line))}
+.kpi .lb{font-size:12.5px;color:var(--ink-2);display:flex;align-items:center;gap:7px}
+.kpi .lb .chip{width:10px;height:10px;border-radius:3px;background:var(--kc);flex:none}
+.kpi .v{font-size:26px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+.kpi .u{font-size:12px;color:var(--ink-3)}
+/* ---------- chart card ---------- */
+.card{background:var(--surface);border-radius:var(--radius);padding:18px 22px;box-shadow:var(--shadow);margin-bottom:var(--gap)}
+.card h2{font-size:15.5px;font-weight:700}
+.card .cap{font-size:13px;color:var(--ink-2);margin-top:1px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin:12px 0 4px;font-size:13px;color:var(--ink-2)}
+.legend .it{display:flex;align-items:center;gap:7px}
+.legend .sw{width:13px;height:13px;border-radius:3.5px;flex:none}
+.chart-box{position:relative;margin-top:4px}
+.chart-box svg{display:block;width:100%;height:auto}
+.chart-box svg text{font-family:inherit}
+.grp-hit{cursor:default}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);
+  border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.18);padding:10px 13px;font-size:13px;
+  min-width:230px;opacity:0;transition:opacity .12s;z-index:5}
+.tip.show{opacity:1}
+.tip .ty{font-weight:700;margin-bottom:5px}
+.tip .tr{display:flex;justify-content:space-between;gap:16px;padding:1.5px 0}
+.tip .tr .nm{display:flex;align-items:center;gap:6px;color:var(--ink-2)}
+.tip .tr .nm i{width:9px;height:9px;border-radius:2.5px;display:inline-block}
+.tip .tr .vl{font-variant-numeric:tabular-nums;font-weight:600}
+.tip .sep{border-top:1px dashed var(--line);margin:5px 0}
+.tip .nt{font-size:12px;color:var(--ink-2);margin-top:5px;max-width:250px}
+/* ---------- table ---------- */
+.tbl-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:760px}
+thead th{text-align:right;padding:9px 12px;border-bottom:2px solid var(--line);color:var(--ink-2);
+  font-weight:600;font-size:12.5px;white-space:nowrap;user-select:none;cursor:pointer}
+thead th:first-child{text-align:left}
+thead th:hover{color:var(--ink)}
+tbody td{padding:8px 12px;border-bottom:1px solid var(--grid);text-align:right;font-variant-numeric:tabular-nums}
+tbody td:first-child,tfoot td:first-child{text-align:left;font-weight:600}
+tbody tr:hover{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+tfoot td{padding:9px 12px;border-top:2px solid var(--line);text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+td.note-cell{text-align:left;font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+/* ---------- footer ---------- */
+.foot{font-size:12.5px;color:var(--ink-3);padding:2px 6px 12px;display:flex;flex-direction:column;gap:3px}
+@media (max-width:760px){
+  .hdr{flex-direction:column;align-items:flex-start}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+}
+@media print{
+  body{background:#fff}
+  .controls{display:none}
+  .card,.kpi{box-shadow:none;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hdr">
+    <div>
+      <h1>งบประมาณ กยศ. — เปรียบเทียบ เงินให้กู้ยืม กับ แหล่งเงิน</h1>
+      <div class="sub">แผ่น Budget · ปีงบประมาณ 2560–2574 · หน่วย: ล้านบาท</div>
+    </div>
+    <div class="controls">
+      <div class="ctl"><label for="yFrom">ตั้งแต่ปี</label><select id="yFrom"></select></div>
+      <div class="ctl"><label for="yTo">ถึงปี</label><select id="yTo"></select></div>
+      <button class="theme-btn" id="themeBtn" type="button">โหมดมืด</button>
+    </div>
+  </header>
+
+  <section class="kpis">
+    <div class="kpi" style="--kc:var(--c-loan)"><div class="lb"><span class="chip"></span>เงินให้กู้ยืมรวม (C)</div><div class="v" id="k1">–</div><div class="u">ล้านบาท</div></div>
+    <div class="kpi" style="--kc:var(--c-repay)"><div class="lb"><span class="chip"></span>เงินรับชำระหนี้รวม (D)</div><div class="v" id="k2">–</div><div class="u">ล้านบาท</div></div>
+    <div class="kpi" style="--kc:var(--c-budget)"><div class="lb"><span class="chip"></span>งบประมาณรวม (E)</div><div class="v" id="k3">–</div><div class="u">ล้านบาท</div></div>
+    <div class="kpi" style="--kc:var(--c-fund)"><div class="lb"><span class="chip"></span>เงินสะสมของ กยศ. รวม (F)</div><div class="v" id="k4">–</div><div class="u">ล้านบาท</div></div>
+  </section>
+
+  <section class="card">
+    <h2>แท่งที่ 1: เงินให้กู้ยืม (C) เทียบกับ แท่งที่ 2: เงินรับชำระหนี้ + งบประมาณ + เงินสะสมของ กยศ. (D + E + F)</h2>
+    <div class="cap">แท่งที่ 2 แยกส่วนประกอบตามแหล่งเงิน — ตัวเลขแสดงภายในแท่งกราฟ (ล้านบาท)</div>
+    <div class="legend" id="legend"></div>
+    <div class="chart-box" id="chartBox">
+      <div id="chartHost"></div>
+      <div class="tip" id="tip"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>ตารางข้อมูล</h2>
+    <div class="cap">คลิกหัวตารางเพื่อเรียงลำดับ · หน่วย: ล้านบาท</div>
+    <div class="tbl-scroll" style="margin-top:10px">
+      <table id="tbl">
+        <thead><tr>
+          <th data-k="y">ปีงบประมาณ</th>
+          <th data-k="c">เงินให้กู้ยืม (C)</th>
+          <th data-k="d">เงินรับชำระหนี้ (D)</th>
+          <th data-k="e">งบประมาณ (E)</th>
+          <th data-k="f">เงินสะสมของ กยศ. (F)</th>
+          <th data-k="sum">รวม D + E + F</th>
+          <th data-k="gap">ส่วนต่าง C − (D+E+F)</th>
+          <th data-k="note">หมายเหตุ</th>
+        </tr></thead>
+        <tbody></tbody>
+        <tfoot></tfoot>
+      </table>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>* ปีงบประมาณ 2569 อยู่ระหว่างของบประมาณเพิ่มเติมในส่วนที่ยังขาด 12,900 ล้านบาท</span>
+    <span>แหล่งข้อมูล: Present_IT_11082569.xlsx (แผ่น Budget) · จัดทำเมื่อ 11 สิงหาคม 2569</span>
+  </footer>
+
+</div>
+
+<script>
+'use strict';
+/* ---------------- data (แผ่น Budget, B2:H18) ---------------- */
+const DATA = [
+  {y:2560, c:38113, d:25978, e:6400,  f:5735,  note:null},
+  {y:2561, c:35206, d:25889, e:0,     f:9317,  note:null},
+  {y:2562, c:30193, d:30960, e:0,     f:0,     note:null},
+  {y:2563, c:37133, d:27647, e:0,     f:9486,  note:null},
+  {y:2564, c:38587, d:32066, e:0,     f:6521,  note:null},
+  {y:2565, c:40044, d:28490, e:0,     f:11554, note:null},
+  {y:2566, c:46168, d:26840, e:0,     f:19328, note:null},
+  {y:2567, c:51278, d:25177, e:0,     f:26101, note:null},
+  {y:2568, c:50222, d:27455, e:19000, f:3767,  note:null},
+  {y:2569, c:48000, d:30000, e:5100,  f:0,     note:'อยู่ระหว่างของบประมาณเพิ่มเติมในส่วนที่ยังขาด 12,900 ล้านบาท'},
+  {y:2570, c:48475, d:33000, e:15475, f:0,     note:null},
+  {y:2571, c:46572, d:36300, e:10272, f:0,     note:null},
+  {y:2572, c:45626, d:39930, e:5696,  f:0,     note:null},
+  {y:2573, c:44786, d:43923, e:863,   f:0,     note:null},
+  {y:2574, c:44083, d:48315, e:0,     f:0,     note:null},
+];
+const SERIES = [
+  {k:'c', name:'เงินให้กู้ยืม (C)',        cv:'--c-loan',   lv:'--lbl-on-loan'},
+  {k:'d', name:'เงินรับชำระหนี้ (D)',      cv:'--c-repay',  lv:'--lbl-on-repay'},
+  {k:'e', name:'งบประมาณ (E)',            cv:'--c-budget', lv:'--lbl-on-budget'},
+  {k:'f', name:'เงินสะสมของ กยศ. (F)',    cv:'--c-fund',   lv:'--lbl-on-fund'},
+];
+const fmt = n => Math.round(n).toLocaleString('en-US');
+const cssv = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* ---------------- state ---------------- */
+let yFrom = 2560, yTo = 2574;
+const rows = () => DATA.filter(r => r.y >= yFrom && r.y <= yTo);
+
+/* ---------------- theme ---------------- */
+const themeBtn = document.getElementById('themeBtn');
+function setTheme(dark){
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  themeBtn.textContent = dark ? 'โหมดสว่าง' : 'โหมดมืด';
+  renderAll();
+}
+themeBtn.addEventListener('click', () =>
+  setTheme(document.documentElement.getAttribute('data-theme') !== 'dark'));
+
+/* ---------------- filters ---------------- */
+const selFrom = document.getElementById('yFrom'), selTo = document.getElementById('yTo');
+for (const r of DATA){
+  selFrom.add(new Option(r.y, r.y));
+  selTo.add(new Option(r.y, r.y));
+}
+selFrom.value = yFrom; selTo.value = yTo;
+function onRange(){
+  let a = +selFrom.value, b = +selTo.value;
+  if (a > b) [a, b] = [b, a];
+  yFrom = a; yTo = b;
+  selFrom.value = a; selTo.value = b;
+  renderAll();
+}
+selFrom.addEventListener('change', onRange);
+selTo.addEventListener('change', onRange);
+
+/* ---------------- legend ---------------- */
+function renderLegend(){
+  document.getElementById('legend').innerHTML = SERIES.map((s,i) =>
+    `<span class="it"><span class="sw" style="background:var(${s.cv})"></span>${i===0?'แท่งที่ 1 — ':(i===1?'แท่งที่ 2 — ':'')}${s.name}</span>`
+  ).join('');
+}
+
+/* ---------------- KPI ---------------- */
+function renderKPIs(){
+  const rs = rows();
+  const t = k => rs.reduce((a,r) => a + r[k], 0);
+  document.getElementById('k1').textContent = fmt(t('c'));
+  document.getElementById('k2').textContent = fmt(t('d'));
+  document.getElementById('k3').textContent = fmt(t('e'));
+  document.getElementById('k4').textContent = fmt(t('f'));
+}
+
+/* ---------------- chart ---------------- */
+const host = document.getElementById('chartHost');
+const box  = document.getElementById('chartBox');
+const tip  = document.getElementById('tip');
+const H = 560, M = {t:18, r:14, b:44, l:64};
+
+function niceMax(v){ const s = 5000; return Math.ceil((v * 1.05) / s) * s; }
+
+function barPath(x, yTop, w, h, r){
+  r = Math.min(r, h, w / 2);
+  return `M${x} ${yTop+h} L${x} ${yTop+r} Q${x} ${yTop} ${x+r} ${yTop} L${x+w-r} ${yTop} Q${x+w} ${yTop} ${x+w} ${yTop+r} L${x+w} ${yTop+h} Z`;
+}
+/* rotated number inside a bar — only if it fits */
+function innerLabel(cx, top, hPx, txt, ink, barW){
+  const need = [...txt].reduce((a, ch) => a + (ch === ',' ? 3 : 6.15), 0) + 6;
+  if (hPx < need || barW < 14) return '';
+  return `<text x="${cx}" y="${top + hPx/2}" transform="rotate(-90 ${cx} ${top + hPx/2})" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="${ink}">${txt}</text>`;
+}
+
+function renderChart(){
+  const rs = rows();
+  const W = Math.max(560, host.clientWidth || 1100);
+  const pw = W - M.l - M.r, ph = H - M.t - M.b;
+  const ymax = niceMax(Math.max(...rs.map(r => Math.max(r.c, r.d + r.e + r.f))));
+  const sy = v => M.t + ph - (v / ymax) * ph;
+  const hy = v => (v / ymax) * ph;
+  const base = M.t + ph;
+
+  const col = {
+    c: cssv('--c-loan'), d: cssv('--c-repay'), e: cssv('--c-budget'), f: cssv('--c-fund'),
+    lc: cssv('--lbl-on-loan'), ld: cssv('--lbl-on-repay'), le: cssv('--lbl-on-budget'), lf: cssv('--lbl-on-fund'),
+    ink: cssv('--ink'), ink2: cssv('--ink-2'), grid: cssv('--grid'), line: cssv('--line')
+  };
+
+  const gw = pw / rs.length;
+  const barW = Math.min(40, Math.max(14, gw * 0.36));
+  const inner = 3;                      /* gap between the pair */
+  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="กราฟแท่งเปรียบเทียบเงินให้กู้ยืมกับแหล่งเงินรายปีงบประมาณ">`;
+
+  /* grid + y ticks */
+  const step = ymax > 30000 ? 10000 : 5000;
+  for (let v = 0; v <= ymax; v += step){
+    const y = sy(v);
+    svg += `<line x1="${M.l}" y1="${y}" x2="${W - M.r}" y2="${y}" stroke="${v === 0 ? col.line : col.grid}" stroke-width="1"/>`;
+    svg += `<text x="${M.l - 10}" y="${y}" text-anchor="end" dominant-baseline="central" font-size="12" fill="${col.ink2}">${fmt(v)}</text>`;
+  }
+  svg += `<text x="${M.l - 10}" y="${M.t - 8}" text-anchor="start" font-size="11.5" fill="${col.ink2}">ล้านบาท</text>`;
+
+  const groups = [];
+  rs.forEach((r, i) => {
+    const gx = M.l + i * gw + gw / 2;
+    const x1 = gx - barW - inner / 2;
+    const x2 = gx + inner / 2;
+
+    /* bar 1 — Column C, red, rounded top */
+    let g = `<path d="${barPath(x1, sy(r.c), barW, hy(r.c), 4)}" fill="${col.c}"/>`;
+    g += innerLabel(x1 + barW / 2, sy(r.c), hy(r.c), fmt(r.c), col.lc, barW);
+
+    /* bar 2 — stacked D → E → F with 2px surface gaps, rounded top on topmost */
+    const segs = [['d', col.d, col.ld], ['e', col.e, col.le], ['f', col.f, col.lf]].filter(s => r[s[0]] > 0);
+    let cum = 0;
+    segs.forEach((s, si) => {
+      const v = r[s[0]];
+      const topY = sy(cum + v), botY = sy(cum);
+      const isTop = si === segs.length - 1;
+      const gapUp = isTop ? 0 : 2;                 /* 2px surface gap above this segment */
+      const h = Math.max(1.5, botY - topY - gapUp);
+      const yTop = botY - h;
+      if (isTop) g += `<path d="${barPath(x2, yTop, barW, h, 4)}" fill="${s[1]}"/>`;
+      else       g += `<rect x="${x2}" y="${yTop}" width="${barW}" height="${h}" fill="${s[1]}"/>`;
+      g += innerLabel(x2 + barW / 2, yTop, h, fmt(v), s[2], barW);
+      cum += v;
+    });
+
+    /* x label */
+    g += `<text x="${gx}" y="${base + 20}" text-anchor="middle" font-size="12.5" fill="${col.ink}">${r.y}${r.note ? ' *' : ''}</text>`;
+
+    /* hover hit band */
+    g += `<rect class="grp-hit" data-i="${i}" x="${M.l + i * gw}" y="${M.t}" width="${gw}" height="${ph}" fill="transparent" tabindex="0" aria-label="ปี ${r.y}"/>`;
+    svg += `<g>${g}</g>`;
+    groups.push({r, gx});
+  });
+
+  svg += `<text x="${M.l + pw / 2}" y="${H - 6}" text-anchor="middle" font-size="12.5" fill="${col.ink2}">ปีงบประมาณ (พ.ศ.)</text>`;
+  svg += `</svg>`;
+  host.innerHTML = svg;
+
+  /* tooltip wiring */
+  host.querySelectorAll('.grp-hit').forEach(el => {
+    const show = () => {
+      const i = +el.dataset.i, r = groups[i].r, sum = r.d + r.e + r.f;
+      const row = (nm, cv, v) => `<div class="tr"><span class="nm"><i style="background:var(${cv})"></i>${nm}</span><span class="vl">${fmt(v)}</span></div>`;
+      tip.innerHTML =
+        `<div class="ty">ปีงบประมาณ ${r.y}</div>` +
+        row('เงินให้กู้ยืม (C)', '--c-loan', r.c) +
+        `<div class="sep"></div>` +
+        row('เงินรับชำระหนี้ (D)', '--c-repay', r.d) +
+        row('งบประมาณ (E)', '--c-budget', r.e) +
+        row('เงินสะสมของ กยศ. (F)', '--c-fund', r.f) +
+        `<div class="tr"><span class="nm">รวม D + E + F</span><span class="vl">${fmt(sum)}</span></div>` +
+        `<div class="tr"><span class="nm">ส่วนต่าง C − (D+E+F)</span><span class="vl">${sum > r.c ? '−' : ''}${fmt(Math.abs(r.c - sum))}</span></div>` +
+        (r.note ? `<div class="nt">* ${r.note}</div>` : '');
+      tip.classList.add('show');
+      const bb = box.getBoundingClientRect();
+      const scale = bb.width / W;
+      let lx = groups[i].gx * scale + 14;
+      if (lx + 260 > bb.width) lx = groups[i].gx * scale - 260 - 14;
+      tip.style.left = Math.max(4, lx) + 'px';
+      tip.style.top = '30px';
+    };
+    el.addEventListener('mouseenter', show);
+    el.addEventListener('focus', show);
+    el.addEventListener('mouseleave', () => tip.classList.remove('show'));
+    el.addEventListener('blur', () => tip.classList.remove('show'));
+  });
+}
+
+/* ---------------- table ---------------- */
+let sortK = 'y', sortDir = 'asc';
+function renderTable(){
+  const rs = rows().map(r => ({...r, sum: r.d + r.e + r.f, gap: r.c - (r.d + r.e + r.f)}));
+  rs.sort((a, b) => {
+    const av = a[sortK] ?? '', bv = b[sortK] ?? '';
+    const cmp = av < bv ? -1 : av > bv ? 1 : 0;
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
+  const tb = document.querySelector('#tbl tbody');
+  tb.innerHTML = rs.map(r =>
+    `<tr><td>${r.y}</td><td>${fmt(r.c)}</td><td>${fmt(r.d)}</td><td>${fmt(r.e)}</td><td>${fmt(r.f)}</td>` +
+    `<td>${fmt(r.sum)}</td><td>${r.gap < 0 ? '−' : ''}${fmt(Math.abs(r.gap))}</td>` +
+    `<td class="note-cell">${r.note ? '* ของบเพิ่มเติม 12,900' : ''}</td></tr>`
+  ).join('');
+  const t = k => rs.reduce((a, r) => a + r[k], 0);
+  const gapT = t('c') - t('sum');
+  document.querySelector('#tbl tfoot').innerHTML =
+    `<tr><td>รวม</td><td>${fmt(t('c'))}</td><td>${fmt(t('d'))}</td><td>${fmt(t('e'))}</td><td>${fmt(t('f'))}</td>` +
+    `<td>${fmt(t('sum'))}</td><td>${gapT < 0 ? '−' : ''}${fmt(Math.abs(gapT))}</td><td></td></tr>`;
+  document.querySelectorAll('#tbl thead th').forEach(th => {
+    const k = th.dataset.k;
+    th.textContent = th.textContent.replace(/ [▲▼]$/, '') + (k === sortK ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '');
+  });
+}
+document.querySelectorAll('#tbl thead th').forEach(th => th.addEventListener('click', () => {
+  const k = th.dataset.k;
+  if (sortK === k) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  else { sortK = k; sortDir = k === 'y' ? 'asc' : 'desc'; }
+  renderTable();
+}));
+
+/* ---------------- boot ---------------- */
+function renderAll(){ renderLegend(); renderKPIs(); renderChart(); renderTable(); }
+let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(renderChart, 120); });
+setTheme(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+</script>
+</body>
+</html>
