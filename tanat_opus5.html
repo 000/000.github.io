@@ -1,0 +1,2628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#f5f5f7">
+    <title>Tanat Tonguthaisri | Cybersecurity Visionary & Cognitive Architecture Pioneer</title>
+    <meta name="description" content="Tanat Tonguthaisri — Cognitive SOAR architect and cybersecurity leader defending Thailand's Financial Critical Infrastructure. Independent C-SOAR research ahead of future doctoral studies.">
+    <meta name="keywords" content="Tanat Tonguthaisri, Cognitive SOAR, Cybersecurity, Case-Based Reasoning, AI/ML, Data Engineering, Financial Critical Infrastructure, Thailand, กยศ, Independent Researcher">
+    <meta name="author" content="Tanat Tonguthaisri">
+
+    <!-- Social / link-preview metadata (ADR-10) -->
+    <meta property="og:type" content="profile">
+    <meta property="og:title" content="Tanat Tonguthaisri | Cognitive SOAR Architect & Cybersecurity Leader">
+    <meta property="og:description" content="Cognitive SOAR architect and cybersecurity leader defending Thailand's Financial Critical Infrastructure. Independent C-SOAR research ahead of future doctoral studies.">
+    <meta property="og:image" content="https://defense.engineer/Tanat-FullBody.jpg">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="th_TH">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!--
+      ═══════════════════════════════════════════════════════════════════
+      TANAT TONGUTHAISRI — PROFILE ARTIFACT  v3.1.0  ("Aurora-Zenith")
+      Built to the Nexus-Architect Web Development Protocol v18.0
+      ───────────────────────────────────────────────────────────────────
+      v3.0 → v3.1 changelog — architecture hardening, behaviour-preserving.
+      Look, copy, data model and every Protocol v18 rule are unchanged;
+      each item below is an accepted decision (ADR) with its rationale.
+
+      ADR-01 Fault isolation at boot. APP.init() runs every module inside
+             its own bulkhead (try/catch + boot record). In v3 a single
+             thrown error — e.g. one missing DOM node after a future edit —
+             aborted every module queued after it. The loading overlay is
+             now dismissed unconditionally. `?debug=1` prints the boot table
+             and the live Halo budget to the console.
+      ADR-02 Halo frame-time governor. The engine keeps an EMA of frame
+             time and adapts its ACTIVE particle budget: sustained < 38 fps
+             sheds 20 % (floor 1,200 grains), sustained ≥ 57 fps recovers
+             10 % toward the seeded N. Because the seeded set is uniform,
+             using a prefix of it is an unbiased subsample — no spatial
+             artefacts. Low-end devices get a smooth Halo instead of jank.
+      ADR-03 Hot-path cost. SimplexNoise now uses a 12-entry gradient
+             lookup table (removes six trig calls and three array
+             allocations per sample) and replaces pow(t,4) with two
+             squarings; Math.hypot → sqrt in the per-particle loop. The
+             noise function measured ~7× faster on V8, and the field is
+             the same one: an A/B over 400,000 samples against the v3
+             implementation on a shared permutation table gives a maximum
+             deviation of 4.4e-16 — one ULP, contributed solely by
+             pow(t,4) vs (t·t)², and ~1e-14 px once scaled into a
+             displacement. Not bit-exact, and deliberately so: keeping
+             Math.pow for bit-exactness costs the speedup (1.24× instead
+             of 7×) to defend a difference no pixel can express.
+             ~8 noise samples × N grains run every frame.
+      ADR-04 Resize storms. `resize` used to reseed all N grains on EVERY
+             event — mobile URL-bar show/hide and window drags fired it
+             continuously (visible flicker, CPU spikes). Now the bitmap is
+             re-dimensioned immediately (nothing stretches) and topology is
+             updated after a 200 ms quiet period: a full reseed only when
+             either axis changes by > 25 %, otherwise home positions are
+             rescaled about the ring centre. Also fixes the reduced-motion
+             blank-canvas-after-resize latent bug.
+      ADR-05 Supply chain. d3 moved from the floating `@7` tag to the pinned
+             7.9.0 it resolves to today (byte-identical), both CDN scripts
+             carry SRI `integrity` + `crossorigin`, and load with `defer`
+             so HTML parsing is no longer blocked. `preconnect` hints for
+             fonts and CDNs. The existing empty-state degradation already
+             covers an SRI/CDN failure.
+      ADR-06 Build identity. `BUILD` is the single source of truth for
+             version / codename / protocol / date; it stamps the footer
+             (EN + TH) and <html data-build>. The footer text in markup is
+             a no-JS fallback only.
+      ADR-07 Coherence / dead code. (a) The timeline grid carried an inline
+             `grid-template-columns:1fr` that made its `md:grid-2` class
+             dead code — replaced by `.timeline-grid` (auto-fill, 300 px
+             minimum). (b) The trajectory legend drew the Research type as
+             a leaf while Chart.js draws a triangle — swatch is now a CSS
+             triangle. (c) Five identical inline icon-chip style blobs →
+             `.icon-chip` base + `.icon-chip-sm`. (d) Two inline auto-fit
+             grids → `.grid-auto-250`. (e) Script sections renumbered 1–6
+             (v2→v3 left a gap where three.js was removed). (f) The
+             "Since 2015" special case keyed on a literal year → `data-since`.
+             (g) TikTok link http → https.
+      ADR-08 Accessibility. Skip link; slide panel is a labelled dialog
+             whose closed state leaves the tab order (visibility), focus
+             moves to Close on open and returns to the invoking element on
+             close; `aria-controls` on the menu toggle.
+      ADR-09 Robustness hygiene. <noscript> removes the overlay and reveals
+             content; IntersectionObserver feature-detect fallback; `esc()`
+             HTML-escapes every data-model field before template injection
+             (defence in depth should the model ever be externalised); the
+             only inline event handler (img onerror) replaced by a bound
+             listener that also covers an already-failed load.
+      ADR-10 Discoverability. color-scheme / theme-color, Open Graph, and
+             a JSON-LD Person record (placeholder social URLs omitted).
+
+      Release checklist (one cycle ≈ 5 minutes)
+        1. Bump BUILD (one place) and prepend a changelog entry here.
+        2. Open with `?debug=1` → boot table all "ok"; Halo stats print.
+        3. Switch to TH, hard-reload twice (regression for the v2 blank page).
+        4. DevTools: emulate prefers-reduced-motion + a 360 px viewport.
+        5. When a CDN version changes, recompute SRI:
+           curl -sL URL | openssl dgst -sha384 -binary | openssl base64 -A
+      ───────────────────────────────────────────────────────────────────
+      v2 → v3 changelog (retained for provenance)
+      • ROOT-CAUSE FIX for the "brief flash then permanently blank page"
+        failure seen on defense.engineer: v2 mirrored the persisted UI
+        language onto <html lang="...">, and the unscoped i18n rule
+        [lang="th"] { display: none; } then hid the <html> element itself
+        — unrecoverable across reloads because the choice lived in
+        localStorage. All i18n rules are now scoped under `body`.
+      • Retargeted from Protocol v19 to v18 ("somewhat lower spec"):
+        three.js / importmap / GPGPU Tier A removed entirely; the
+        Antigravity Halo is the v18 dependency-free Canvas 2D engine at
+        N = clamp(area/300, 2200, 6000) grains, DPR cap 2.
+      • Halo home-position rejection sampler is attempt-capped.
+      • Profile photo loads over https; onerror fallback retained.
+      • The doctoral programme is described as planned for the future
+        and NOT yet commenced.
+      ═══════════════════════════════════════════════════════════════════
+    -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Sarabun:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- ADR-05: pinned versions, SRI, deferred (the loader below waits for both) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"
+            integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i"
+            crossorigin="anonymous"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"
+            integrity="sha384-bs/nf9FbdNouRbMiFcrcZfLXYPKiPaGVGplVbv7dLGECccEXDW+S3zjqSKR5ZEaD"
+            crossorigin="anonymous"></script>
+
+    <!-- ADR-09: without JavaScript, drop the overlay and show everything -->
+    <noscript><style>#loading-overlay{display:none}#halo-canvas{display:none}.scroll-reveal,.stagger-children>*{opacity:1!important;transform:none!important}</style></noscript>
+
+    <!-- ADR-10: structured data for search and link previews -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Tanat Tonguthaisri",
+      "alternateName": "ธนัท ทองอุทัยศรี",
+      "jobTitle": "Cognitive SOAR Architect",
+      "worksFor": { "@type": "Organization", "name": "Student Loan Fund (กยศ.)" },
+      "alumniOf": { "@type": "CollegeOrUniversity", "name": "RMIT University" },
+      "image": "https://defense.engineer/Tanat-FullBody.jpg",
+      "email": "mailto:la@defense.engineer",
+      "address": { "@type": "PostalAddress", "addressLocality": "Bangkok", "addressCountry": "TH" },
+      "knowsAbout": ["Cognitive SOAR", "Case-Based Reasoning", "Cybersecurity", "AI/ML", "Data Engineering", "Vector Embeddings", "Formal Verification"],
+      "hasCredential": [
+        { "@type": "EducationalOccupationalCredential", "credentialCategory": "certification", "name": "CISSP" },
+        { "@type": "EducationalOccupationalCredential", "credentialCategory": "certification", "name": "CEH v12" },
+        { "@type": "EducationalOccupationalCredential", "credentialCategory": "certification", "name": "CHFI v11" },
+        { "@type": "EducationalOccupationalCredential", "credentialCategory": "degree", "name": "Master of Engineering, RMIT University" }
+      ],
+      "sameAs": [
+        "https://linkedin.com/in/epicure",
+        "https://www.facebook.com/epicure",
+        "https://www.instagram.com/malware/",
+        "https://x.com/gastronomy",
+        "https://www.youtube.com/@CyberOps",
+        "https://www.tiktok.com/@dataops",
+        "https://cnx.medium.com/",
+        "https://vsco.co/epicure/gallery"
+      ]
+    }
+    </script>
+
+    <style>
+        @layer base, layout, components, utilities, animations;
+
+        /* ══════════════ BASE ══════════════ */
+        @layer base {
+            :root {
+                --canvas: #f5f5f7; --canvas-deep: #ffffff; --panel: #ffffff;
+                --ink: #1d1d1f; --ink-soft: #6e6e73; --hairline: rgba(0,0,0,.08);
+                --blue: #0071e3; --indigo: #5e5ce6; --purple: #bf5af2; --pink: #ff375f;
+                --orange: #ff9f0a; --yellow: #ffd60a; --green: #30d158; --mint: #00c7be;
+                --spectrum: linear-gradient(135deg, #0071e3 0%, #bf5af2 50%, #ff375f 100%);
+                --glass: rgba(255,255,255,.72); --glass-strong: rgba(255,255,255,.85);
+                --shadow-soft: 0 8px 32px rgba(29,29,31,.08);
+                --shadow-lift: 0 16px 48px rgba(29,29,31,.14);
+                --ease: cubic-bezier(0.16, 1, 0.3, 1); --radius: 18px;
+            }
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            html { scroll-behavior: smooth; }
+            body {
+                background: var(--canvas); color: var(--ink);
+                font-family: 'Inter', 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+                overflow-x: hidden; -webkit-font-smoothing: antialiased;
+            }
+            body::before { /* Halo bloom */
+                content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+                background: radial-gradient(circle at 50% 42%,
+                    rgba(0,113,227,.10), rgba(191,90,242,.05) 40%, transparent 65%);
+            }
+            ::selection { background: rgba(0,113,227,.2); }
+            img { max-width: 100%; display: block; }
+            a { color: inherit; text-decoration: none; }
+            button { font: inherit; }
+            h1, h2, h3, h4 { line-height: 1.15; }
+            @media (prefers-reduced-motion: reduce) {
+                html { scroll-behavior: auto; }
+                *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+            }
+
+            /* i18n — CSS-based language toggling (Protocol v18 Rule 6).
+               v3 ROOT-CAUSE FIX: every rule is scoped under `body`, so the
+               <html>/<body> elements' own lang attributes can never match
+               the hide rule. (v2's unscoped [lang="th"] hid <html> itself
+               once setLang() mirrored the saved language onto the root
+               element — a permanently blank page on every reload.) */
+            body [lang="th"] { display: none; }
+            body[data-lang="th"] [lang="en"] { display: none; }
+            body[data-lang="th"] [lang="th"] { display: revert; }
+        }
+
+        /* ══════════════ LAYOUT ══════════════ */
+        @layer layout {
+            .container { max-width: 1200px; margin-inline: auto; padding-inline: 1.5rem; }
+            main { position: relative; z-index: 10; }
+            section { padding: 5.5rem 0 2rem; scroll-margin-top: 5rem; }
+            .section-header { text-align: center; max-width: 760px; margin: 0 auto 3rem; }
+
+            .site-header {
+                position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+                background: var(--glass); backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border-bottom: 1px solid var(--hairline);
+            }
+            .site-header nav {
+                max-width: 1200px; margin-inline: auto; padding: .9rem 1.5rem;
+                display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+            }
+            .nav-links { display: flex; align-items: center; gap: 1.4rem; }
+            @media (max-width: 900px) {
+                .nav-links {
+                    position: fixed; top: 61px; left: 0; right: 0; z-index: 49;
+                    flex-direction: column; align-items: stretch; gap: 0; padding: .5rem 1.5rem 1rem;
+                    background: var(--glass-strong); backdrop-filter: blur(30px) saturate(180%);
+                    border-bottom: 1px solid var(--hairline);
+                    transform: translateY(-130%); transition: transform .4s var(--ease);
+                }
+                .nav-links.open { transform: translateY(0); }
+                .nav-links a { padding: .7rem 0; }
+            }
+
+            .hero-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; align-items: center; padding-top: 3.5rem; }
+            @media (min-width: 960px) { .hero-grid { grid-template-columns: 7fr 5fr; } }
+
+            .cards-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+            @media (min-width: 700px)  { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
+            @media (min-width: 1024px) { .cards-grid { grid-template-columns: repeat(3, 1fr); } }
+
+            /* ADR-07a — timeline cards flow into as many 300 px columns as the
+               journey column allows (v3 pinned this to one column inline) */
+            .timeline-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+
+            .grid-2 { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+            @media (min-width: 900px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } }
+
+            .grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+            @media (min-width: 900px) { .grid-4 { grid-template-columns: repeat(4, 1fr); } }
+
+            .journey-layout { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+            @media (min-width: 1024px) { .journey-layout { grid-template-columns: 5fr 7fr; align-items: start; } }
+
+            footer {
+                position: relative; z-index: 10; margin-top: 4rem;
+                background: var(--glass); backdrop-filter: blur(20px) saturate(180%);
+                border-top: 1px solid var(--hairline);
+                padding: 3rem 1.5rem 2.5rem; text-align: center;
+            }
+        }
+
+        /* ══════════════ COMPONENTS ══════════════ */
+        @layer components {
+            .glass-panel {
+                background: var(--glass); backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border: 1px solid var(--hairline); border-radius: var(--radius);
+                box-shadow: var(--shadow-soft);
+                transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s;
+            }
+            .glass-panel:hover {
+                border-color: rgba(0,113,227,.35); transform: translateY(-4px);
+                box-shadow: var(--shadow-lift);
+            }
+            .glass-static:hover { transform: none; }
+
+            .hero-title {
+                background: var(--spectrum); -webkit-background-clip: text;
+                background-clip: text; color: transparent;
+                font-weight: 800; letter-spacing: -0.02em;
+            }
+
+            /* ADR-08 — keyboard users can bypass the fixed header */
+            .skip-link {
+                position: fixed; top: .6rem; left: .6rem; z-index: 60;
+                padding: .55rem 1rem; border-radius: 980px; background: var(--blue); color: #fff;
+                font-weight: 600; font-size: .85rem; box-shadow: var(--shadow-soft);
+                transform: translateY(-300%); transition: transform .25s var(--ease);
+            }
+            .skip-link:focus { transform: translateY(0); outline: 2px solid #fff; outline-offset: 2px; }
+
+            /* Icon chips — one base rule plus size modifiers (ADR-07c replaced
+               five identical inline style blobs); context rules only override
+               what differs */
+            .icon-chip {
+                width: 46px; height: 46px; border-radius: 13px; flex: 0 0 auto;
+                display: inline-flex; align-items: center; justify-content: center;
+                color: #fff; background: var(--spectrum);
+            }
+            .icon-chip-sm { width: 40px; height: 40px; border-radius: 11px; }
+
+            /* Custom Range Slider — Apple style (Filter-Flow) */
+            input[type=range] {
+                -webkit-appearance: none; appearance: none; width: 100%; height: 4px;
+                border-radius: 2px; outline: none; cursor: pointer;
+                background: linear-gradient(90deg, var(--blue) var(--fill, 50%), #d2d2d7 var(--fill, 50%));
+            }
+            input[type=range]::-webkit-slider-thumb {
+                -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+                background: #ffffff; border: none; margin-top: -8px;
+                box-shadow: 0 1px 4px rgba(0,0,0,.25); transition: transform .2s var(--ease);
+            }
+            input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+            input[type=range]::-moz-range-thumb {
+                width: 20px; height: 20px; border-radius: 50%; background: #ffffff; border: none;
+                box-shadow: 0 1px 4px rgba(0,0,0,.25);
+            }
+
+            /* Progress Bar */
+            .progress-track { height: 6px; background: #e8e8ed; border-radius: 3px; overflow: hidden; }
+            .progress-fill { height: 100%; width: 0; background: var(--spectrum); border-radius: 3px; transition: width .8s var(--ease); }
+
+            /* Apple pill buttons */
+            .btn {
+                display: inline-flex; align-items: center; gap: .5rem; padding: .6rem 1.4rem;
+                background: var(--blue); color: #ffffff; border-radius: 980px;
+                font-weight: 600; font-family: 'Inter', 'Sarabun', sans-serif; font-size: .85rem;
+                cursor: pointer; border: none; transition: all .3s var(--ease);
+            }
+            .btn:hover { background: #0077ed; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,113,227,.35); }
+            .btn-spectrum { background: var(--spectrum); }
+            .btn-spectrum:hover { box-shadow: 0 6px 24px rgba(191,90,242,.45); filter: saturate(1.15); }
+            .btn-ghost { background: transparent; color: var(--blue); border: 1px solid var(--blue); }
+            .btn-ghost:hover { background: rgba(0,113,227,.08); box-shadow: none; }
+
+            /* Slide-over panel — ADR-08: closed state is also visibility:hidden so
+               its Close button leaves the tab order; the delay keeps the exit
+               transition visible */
+            .slide-panel {
+                position: fixed; top: 0; right: 0; width: 100%; max-width: 450px; height: 100%;
+                background: var(--glass-strong); backdrop-filter: blur(30px) saturate(180%);
+                -webkit-backdrop-filter: blur(30px) saturate(180%);
+                border-left: 1px solid var(--hairline); box-shadow: -12px 0 40px rgba(29,29,31,.10);
+                transform: translateX(100%); visibility: hidden;
+                transition: transform .5s var(--ease), visibility 0s linear .5s; z-index: 2000;
+                padding: 2rem; overflow-y: auto;
+            }
+            .slide-panel.open { transform: translateX(0); visibility: visible; transition: transform .5s var(--ease), visibility 0s; }
+            .slide-panel-close {
+                position: absolute; top: 1rem; right: 1rem; font-size: 1.1rem; line-height: 1;
+                background: none; border: none; cursor: pointer; color: var(--ink-soft); padding: .4rem;
+            }
+            .slide-panel-close:hover { color: var(--ink); }
+
+            .toast {
+                position: fixed; bottom: 2rem; left: 50%; transform: translate(-50%, 150%);
+                background: var(--glass-strong); backdrop-filter: blur(20px) saturate(180%);
+                border: 1px solid var(--hairline); border-radius: 980px; padding: .7rem 1.4rem;
+                font-size: .85rem; font-weight: 600; color: var(--ink);
+                box-shadow: var(--shadow-lift); z-index: 3000; transition: transform .4s var(--ease);
+            }
+            .toast.show { transform: translate(-50%, 0); }
+
+            .spinner {
+                width: 44px; height: 44px; border-radius: 50%;
+                background: conic-gradient(from 0deg, #0071e3, #bf5af2, #ff375f, #0071e3);
+                -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 0);
+                mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 0);
+                animation: spin 1s linear infinite;
+            }
+
+            /* Nav */
+            .nav-brand { display: flex; align-items: center; gap: .6rem; font-weight: 800; letter-spacing: .06em; }
+            .nav-brand .icon { color: var(--blue); display: inline-flex; }
+            .nav-links a { font-size: .85rem; font-weight: 600; color: var(--ink-soft); transition: color .25s; }
+            .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+            .lang-switcher { display: inline-flex; border: 1px solid var(--hairline); border-radius: 980px; overflow: hidden; background: var(--panel); }
+            .lang-btn {
+                padding: .35rem .8rem; font-size: .75rem; font-weight: 700; border: none;
+                background: transparent; color: var(--ink-soft); cursor: pointer; transition: all .25s;
+            }
+            .lang-btn.active { background: var(--blue); color: #fff; }
+            .menu-toggle { display: none; background: none; border: none; color: var(--ink); cursor: pointer; padding: .3rem; }
+            @media (max-width: 900px) { .menu-toggle { display: inline-flex; } }
+
+            /* Section headers */
+            .section-badge {
+                display: inline-flex; align-items: center; gap: .45rem; padding: .35rem 1rem;
+                border-radius: 980px; background: rgba(0,113,227,.08); color: var(--blue);
+                font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+                margin-bottom: 1rem;
+            }
+            .section-title { font-size: clamp(1.9rem, 4vw, 2.7rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: .9rem; }
+            .section-subtitle { color: var(--ink-soft); font-size: 1.05rem; line-height: 1.6; }
+
+            /* Hero */
+            .hero-badge {
+                display: inline-flex; align-items: center; gap: .55rem; padding: .45rem 1.1rem;
+                border-radius: 980px; background: var(--glass); border: 1px solid var(--hairline);
+                font-size: .8rem; font-weight: 600; color: var(--ink-soft); margin-bottom: 1.4rem;
+                box-shadow: var(--shadow-soft);
+            }
+            .hero-badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(48,209,88,.18); animation: pulse-soft 2s var(--ease) infinite; }
+            .hero-name { font-size: clamp(2.6rem, 6vw, 4.2rem); margin-bottom: 1.1rem; }
+            .hero-subtitle { font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 600; color: var(--ink); margin-bottom: 1.1rem; }
+            .hero-description { color: var(--ink-soft); font-size: 1.02rem; line-height: 1.75; max-width: 620px; margin-bottom: 1.8rem; }
+            .hero-stats { display: flex; flex-wrap: wrap; gap: 2.2rem; margin-top: 2.4rem; }
+            .stat-number { display: block; font-family: 'JetBrains Mono', monospace; font-size: 1.9rem; font-weight: 700;
+                background: var(--spectrum); -webkit-background-clip: text; background-clip: text; color: transparent; }
+            .stat-label { font-size: .8rem; color: var(--ink-soft); font-weight: 600; }
+
+            .hero-photo-wrap { position: relative; max-width: 420px; margin-inline: auto; }
+            .hero-photo {
+                border-radius: 28px; overflow: hidden; border: 1px solid var(--hairline);
+                box-shadow: var(--shadow-lift); background: var(--panel); aspect-ratio: 4 / 5;
+            }
+            .hero-photo img { width: 100%; height: 100%; object-fit: cover; }
+            .hero-photo-fallback {
+                width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+                font-size: 5rem; font-weight: 800; letter-spacing: -.02em;
+                background: linear-gradient(135deg, rgba(0,113,227,.10), rgba(191,90,242,.10), rgba(255,55,95,.10));
+            }
+            .float-badge {
+                position: absolute; display: flex; align-items: center; gap: .6rem;
+                background: var(--glass-strong); backdrop-filter: blur(20px) saturate(180%);
+                border: 1px solid var(--hairline); border-radius: 16px; padding: .65rem .95rem;
+                box-shadow: var(--shadow-soft); font-size: .8rem;
+            }
+            .float-badge .icon { color: var(--blue); display: inline-flex; }
+            .float-badge strong { display: block; font-size: .85rem; }
+            .float-badge span { color: var(--ink-soft); font-size: .72rem; }
+            .float-badge-1 { top: 6%; left: -8%; animation: floaty 6s ease-in-out infinite; }
+            .float-badge-2 { bottom: 18%; right: -8%; animation: floaty 7s ease-in-out infinite 1s; }
+            .float-badge-3 { bottom: -4%; left: 4%; animation: floaty 8s ease-in-out infinite 2s; }
+            @media (max-width: 500px) { .float-badge-1 { left: 0; } .float-badge-2 { right: 0; } }
+
+            /* Cards */
+            .card { padding: 1.75rem; }
+            .card .icon-chip { margin-bottom: 1.1rem; box-shadow: 0 6px 16px rgba(191,90,242,.25); }
+            .card h3 { font-size: 1.15rem; margin-bottom: .7rem; }
+            .card p { color: var(--ink-soft); font-size: .92rem; line-height: 1.7; }
+
+            .summary-card { padding: 1.4rem 1.2rem; text-align: center; }
+            .summary-card .icon { color: var(--blue); margin-bottom: .5rem; display: inline-flex; }
+            .summary-card-value { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700;
+                background: var(--spectrum); -webkit-background-clip: text; background-clip: text; color: transparent; }
+            .summary-card-label { font-size: .8rem; color: var(--ink-soft); font-weight: 600; margin-top: .25rem; }
+
+            .affirmation {
+                text-align: center; max-width: 820px; margin: 3rem auto 0; padding: 2.2rem;
+            }
+            .affirmation-text { font-size: 1.12rem; line-height: 1.8; font-style: italic; color: var(--ink); }
+            .affirmation-author { margin-top: 1.1rem; font-weight: 700; color: var(--blue); font-size: .9rem; }
+
+            /* KPI cards */
+            .kpi-card { padding: 1.4rem; }
+            .kpi-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .8rem; }
+            .kpi-head .icon { color: var(--blue); display: inline-flex; }
+            .kpi-trend { font-size: .75rem; font-weight: 700; color: var(--green); background: rgba(48,209,88,.12); padding: .2rem .6rem; border-radius: 980px; }
+            .kpi-value { font-family: 'JetBrains Mono', monospace; font-size: 1.75rem; font-weight: 700; }
+            .kpi-label { font-size: .8rem; color: var(--ink-soft); font-weight: 600; margin: .2rem 0 .9rem; }
+            .kpi-spark { display: flex; align-items: flex-end; gap: 4px; height: 38px; }
+            .kpi-spark i { flex: 1; border-radius: 3px 3px 0 0; background: linear-gradient(180deg, var(--blue), rgba(0,113,227,.25)); min-height: 8%; }
+
+            /* Skill bars */
+            .skill-row { margin-bottom: 1.35rem; }
+            .skill-row-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: .5rem; }
+            .skill-name { font-weight: 600; font-size: .92rem; display: inline-flex; align-items: center; gap: .5rem; }
+            .skill-name .icon { color: var(--blue); display: inline-flex; }
+            .skill-pct { font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--blue); font-weight: 700; }
+
+            /* Filter-Flow controls */
+            .filter-pills { display: flex; flex-wrap: wrap; gap: .5rem; }
+            .filter-pill {
+                padding: .42rem 1.05rem; border-radius: 980px; border: 1px solid var(--hairline);
+                background: var(--panel); color: var(--ink-soft); font-size: .8rem; font-weight: 600;
+                cursor: pointer; transition: all .25s var(--ease);
+            }
+            .filter-pill:hover { border-color: rgba(0,113,227,.4); color: var(--blue); }
+            .filter-pill.active { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 4px 14px rgba(0,113,227,.3); }
+            .slider-label { display: flex; justify-content: space-between; font-size: .75rem; font-weight: 700;
+                letter-spacing: .08em; color: var(--blue); margin-bottom: .55rem; }
+
+            /* Timeline cards */
+            .tl-card { padding: 1.4rem; cursor: pointer; position: relative; }
+            .tl-year { font-family: 'JetBrains Mono', monospace; font-size: .78rem; font-weight: 700; color: var(--blue); }
+            .tl-role { font-size: 1.02rem; font-weight: 700; margin: .3rem 0 .15rem; }
+            .tl-org { font-size: .82rem; color: var(--ink-soft); margin-bottom: .9rem; }
+            .tl-type {
+                position: absolute; top: 1.15rem; right: 1.15rem; font-size: .68rem; font-weight: 700;
+                letter-spacing: .06em; text-transform: uppercase; padding: .22rem .65rem; border-radius: 980px;
+            }
+            .tl-impact-row { display: flex; align-items: center; gap: .7rem; }
+            .tl-impact-row .progress-track { flex: 1; }
+            .tl-impact-val { font-family: 'JetBrains Mono', monospace; font-size: .78rem; font-weight: 700; color: var(--ink-soft); }
+            .type-milestone   { background: rgba(0,113,227,.10);  color: var(--blue); }
+            .type-achievement { background: rgba(48,209,88,.14);  color: #1d8f42; }
+            .type-conflict    { background: rgba(255,55,95,.10);  color: var(--pink); }
+            .type-research    { background: rgba(191,90,242,.12); color: var(--purple); }
+
+            /* Chart legend (HTML, color-independent labels) */
+            .chart-legend { display: flex; flex-wrap: wrap; gap: 1.1rem; margin-top: 1rem; font-size: .8rem; color: var(--ink-soft); }
+            .chart-legend .key { display: inline-flex; align-items: center; gap: .45rem; font-weight: 600; }
+            .legend-swatch { width: 11px; height: 11px; border-radius: 3px; display: inline-block; border: 1.5px solid #fff; box-shadow: 0 0 0 1px var(--hairline); }
+            .legend-swatch.diamond { transform: rotate(45deg); border-radius: 2px; }
+            .legend-swatch.round { border-radius: 50%; }
+            /* ADR-07b — matches Chart.js pointStyle 'triangle' used for the Research type */
+            .legend-swatch.triangle { clip-path: polygon(50% 0, 100% 100%, 0 100%); border: 0; border-radius: 0; box-shadow: none; width: 13px; height: 12px; }
+
+            .viz-panel { padding: 1.5rem; }
+            .viz-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
+            .viz-title { font-size: 1.15rem; font-weight: 700; }
+            .viz-hint { font-size: .75rem; color: var(--ink-soft); }
+
+            .data-table-wrap { overflow-x: auto; margin-top: 1rem; }
+            .data-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+            .data-table th, .data-table td { text-align: left; padding: .5rem .8rem; border-bottom: 1px solid var(--hairline); }
+            .data-table th { color: var(--ink-soft); font-weight: 700; }
+            .data-table td:first-child { font-family: 'JetBrains Mono', monospace; }
+            details > summary { cursor: pointer; font-size: .8rem; font-weight: 600; color: var(--blue); margin-top: 1rem; }
+
+            /* Empty state */
+            .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--ink-soft); }
+            .empty-state .icon { display: inline-flex; margin-bottom: .8rem; color: #c7c7cc; }
+            .empty-state h4 { font-size: 1.05rem; color: var(--ink); margin-bottom: .3rem; }
+
+            /* Severity / conflict */
+            .severity-badge { font-size: .68rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: .22rem .65rem; border-radius: 980px; }
+            .severity-high   { background: rgba(255,55,95,.12); color: var(--pink); }
+            .severity-medium { background: rgba(255,159,10,.14); color: #c47a00; }
+            .conflict-item { padding: 1.3rem; }
+            .conflict-item-head { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .6rem; }
+            .conflict-item-title { font-weight: 700; font-size: .95rem; }
+            .conflict-item p { color: var(--ink-soft); font-size: .87rem; line-height: 1.65; }
+
+            /* Research cards */
+            .research-card { padding: 1.6rem; position: relative; overflow: hidden; }
+            .research-number { font-family: 'JetBrains Mono', monospace; font-size: 2.2rem; font-weight: 700; opacity: .14;
+                position: absolute; top: .8rem; right: 1.1rem; }
+            .research-card h4 { font-size: 1.05rem; margin-bottom: .6rem; padding-right: 3rem; }
+            .research-card p { color: var(--ink-soft); font-size: .88rem; line-height: 1.7; }
+
+            /* Cert + insight */
+            .cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.1rem; margin-top: 2rem; }
+            .cert-badge { padding: 1.25rem 1rem; text-align: center; }
+            .cert-badge .icon { color: var(--blue); display: inline-flex; margin-bottom: .5rem; }
+            .cert-name { font-weight: 800; font-size: 1rem; }
+            .cert-org { font-size: .74rem; color: var(--ink-soft); margin-top: .2rem; }
+            .insight-card { display: flex; gap: 1rem; padding: 1.3rem; align-items: flex-start; }
+            .insight-card .icon-chip { width: 42px; height: 42px; border-radius: 12px; }
+            .insight-card h4 { font-size: .98rem; margin-bottom: .3rem; }
+            .insight-card p { color: var(--ink-soft); font-size: .84rem; line-height: 1.6; }
+
+            /* Carousel */
+            .carousel-wrap { position: relative; margin-bottom: 2.5rem; }
+            .snap-row { display: flex; gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: .5rem .25rem 1rem; scrollbar-width: thin; }
+            .snap-row > article { flex: 0 0 min(280px, 78vw); scroll-snap-align: start; padding: 1.5rem; }
+            .carousel-btn {
+                position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+                width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--hairline);
+                background: var(--glass-strong); color: var(--ink); cursor: pointer; box-shadow: var(--shadow-soft);
+                display: flex; align-items: center; justify-content: center;
+            }
+            .carousel-btn:hover { color: var(--blue); border-color: rgba(0,113,227,.4); }
+            .carousel-btn.prev { left: -12px; } .carousel-btn.next { right: -12px; }
+
+            /* Contact */
+            .contact-item { display: flex; gap: 1rem; align-items: flex-start; padding: .9rem 0; border-bottom: 1px solid var(--hairline); }
+            .contact-item:last-child { border-bottom: none; }
+            .contact-item .icon-chip { width: 40px; height: 40px; border-radius: 11px; color: var(--blue); background: rgba(0,113,227,.08); }
+            .contact-label { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+            .contact-value { font-size: .95rem; font-weight: 600; margin-top: .15rem; line-height: 1.55; }
+            .copy-chip {
+                display: inline-flex; align-items: center; gap: .3rem; margin-left: .5rem; padding: .15rem .55rem;
+                border-radius: 980px; border: 1px solid var(--hairline); background: var(--panel);
+                font-size: .68rem; font-weight: 700; color: var(--blue); cursor: pointer; transition: all .25s;
+                vertical-align: middle;
+            }
+            .copy-chip:hover { border-color: var(--blue); background: rgba(0,113,227,.06); }
+            .engagement-list { list-style: none; }
+            .engagement-list li { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--hairline); }
+            .engagement-list li:last-child { border-bottom: none; }
+            .engagement-title { font-weight: 700; font-size: .95rem; }
+            .engagement-desc { color: var(--ink-soft); font-size: .84rem; line-height: 1.6; margin-top: .2rem; }
+
+            /* Footer */
+            .footer-brand { font-weight: 800; letter-spacing: .18em; font-size: 1.05rem; margin-bottom: .6rem; }
+            .footer-tagline { color: var(--ink-soft); font-size: .9rem; }
+            .footer-credentials { font-family: 'JetBrains Mono', monospace; font-size: .72rem; color: var(--ink-soft); margin-top: 1rem; }
+            .social-links { display: flex; flex-wrap: wrap; gap: .7rem; justify-content: center; margin-top: 1.5rem; }
+            .social-link {
+                width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+                border: 1px solid var(--hairline); background: var(--panel); color: var(--ink-soft); transition: all .3s var(--ease);
+            }
+            .social-link:hover { color: var(--blue); border-color: rgba(0,113,227,.4); transform: translateY(-3px); box-shadow: var(--shadow-soft); }
+            .footer-note { margin-top: 1.6rem; font-size: .72rem; color: var(--ink-soft); }
+
+            /* D3 chrome */
+            .d3-stage { width: 100%; }
+            .d3-stage svg { display: block; width: 100%; height: auto; }
+            .d3-node { cursor: pointer; }
+            .d3-node text { font-family: 'Inter', 'Sarabun', sans-serif; font-weight: 600; fill: var(--ink); pointer-events: none; }
+            .d3-link { stroke: rgba(29,29,31,.12); }
+        }
+
+        /* ══════════════ UTILITIES ══════════════ */
+        @layer utilities {
+            .fixed { position: fixed; } .relative { position: relative; } .absolute { position: absolute; }
+            .inset-0 { inset: 0; }
+            .z-bg { z-index: 0; } .z-content { z-index: 10; } .z-nav { z-index: 50; } .z-top { z-index: 9999; }
+            .flex { display: flex; } .flex-col { flex-direction: column; } .flex-1 { flex: 1; }
+            .flex-wrap { flex-wrap: wrap; }
+            .items-center { align-items: center; } .justify-between { justify-content: space-between; }
+            .justify-center { justify-content: center; } .gap-2 { gap: .5rem; } .gap-3 { gap: .75rem; }
+            .gap-6 { gap: 1.5rem; } .gap-8 { gap: 2rem; }
+            .grid { display: grid; } .grid-1 { grid-template-columns: 1fr; }
+            .grid-auto-250 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); } /* ADR-07d */
+            .pointer-none { pointer-events: none; }
+            .text-center { text-align: center; }
+            .text-soft { color: var(--ink-soft); } .text-blue { color: var(--blue); }
+            .font-mono { font-family: 'JetBrains Mono', monospace; }
+            .w-full { width: 100%; } .overflow-hidden { overflow: hidden; }
+            /* canvas is a replaced element: inset-0 positions it but does NOT stretch it — size it explicitly */
+            .w-screen { width: 100vw; } .h-screen { height: 100vh; }
+            .mt-4 { margin-top: 1rem; } .mt-8 { margin-top: 2rem; } .mt-12 { margin-top: 3rem; }
+            .mb-2 { margin-bottom: .5rem; } .mb-4 { margin-bottom: 1rem; } .mb-6 { margin-bottom: 1.5rem; } .mb-8 { margin-bottom: 2rem; }
+            .p-6 { padding: 1.5rem; }
+            .text-xs { font-size: .75rem; } .text-sm { font-size: .875rem; }
+            .text-lg { font-size: 1.125rem; } .tracking-wide { letter-spacing: .08em; }
+            .font-bold { font-weight: 700; }
+            .h-chart { position: relative; height: 340px; }
+            .h-radar { position: relative; height: 400px; max-width: 640px; margin-inline: auto; }
+            @media (min-width: 768px) { .md\:flex-row { flex-direction: row; } .md\:grid-2 { grid-template-columns: repeat(2, 1fr); } }
+            @media (min-width: 1024px) { .lg\:grid-3 { grid-template-columns: repeat(3, 1fr); } .lg\:col-span-2 { grid-column: span 2; } }
+        }
+
+        /* ══════════════ ANIMATIONS ══════════════ */
+        @layer animations {
+            @keyframes spin { to { transform: rotate(1turn); } }
+            @keyframes pulse-soft { 50% { opacity: .5; } }
+            @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+            .animate-pulse { animation: pulse-soft 2s var(--ease) infinite; }
+            .fade-out { opacity: 0 !important; transition: opacity .8s; }
+            .scroll-reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+            .scroll-reveal.revealed { opacity: 1; transform: none; }
+            .stagger-children > * { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+            .stagger-children.revealed > * { opacity: 1; transform: none; }
+            .stagger-children.revealed > *:nth-child(2) { transition-delay: .08s; }
+            .stagger-children.revealed > *:nth-child(3) { transition-delay: .16s; }
+            .stagger-children.revealed > *:nth-child(4) { transition-delay: .24s; }
+            .stagger-children.revealed > *:nth-child(5) { transition-delay: .32s; }
+            .stagger-children.revealed > *:nth-child(6) { transition-delay: .4s; }
+            @media (prefers-reduced-motion: reduce) {
+                .scroll-reveal, .stagger-children > * { opacity: 1 !important; transform: none !important; }
+            }
+        }
+    </style>
+</head>
+<body data-lang="en">
+    <!-- ADR-08: first tab stop skips the fixed header -->
+    <a href="#about" class="skip-link"><span lang="en">Skip to content</span><span lang="th">ข้ามไปยังเนื้อหา</span></a>
+
+    <!-- Antigravity Halo — Canvas 2D engine (Protocol v18) -->
+    <canvas id="halo-canvas" class="fixed inset-0 w-screen h-screen z-bg pointer-none" aria-hidden="true"></canvas>
+
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="fixed inset-0 z-top flex flex-col items-center justify-center" style="background: var(--canvas-deep); transition: opacity .8s;">
+        <div class="spinner mb-4"></div>
+        <div class="text-sm text-soft tracking-wide animate-pulse">
+            <span lang="en">INITIALIZING COGNITIVE ARCHITECTURE…</span>
+            <span lang="th">กำลังเริ่มต้นสถาปัตยกรรมปัญญาประดิษฐ์…</span>
+        </div>
+    </div>
+
+    <!-- Slide-over detail panel (ADR-08: labelled dialog, focus managed in JS) -->
+    <aside id="slide-panel" class="slide-panel" role="dialog" aria-modal="false" aria-labelledby="slide-panel-title">
+        <button class="slide-panel-close" id="slide-panel-close" aria-label="Close panel"></button>
+        <div class="flex items-center gap-3 mb-6">
+            <div class="icon-chip" id="slide-panel-icon"></div>
+            <div>
+                <h4 id="slide-panel-title" class="text-lg font-bold">
+                    <span lang="en">Select an Event</span>
+                    <span lang="th">เลือกเหตุการณ์</span>
+                </h4>
+                <p id="slide-panel-subtitle" class="text-xs text-soft">
+                    <span lang="en">Click a card or node to view details</span>
+                    <span lang="th">คลิกการ์ดหรือโหนดเพื่อดูรายละเอียด</span>
+                </p>
+            </div>
+        </div>
+        <div id="slide-panel-body" class="text-sm" style="line-height:1.7;color:var(--ink-soft);"></div>
+    </aside>
+
+    <!-- Toast -->
+    <div id="toast" class="toast" role="status">Copied to clipboard</div>
+
+    <!-- Header -->
+    <header class="site-header z-nav">
+        <nav>
+            <div class="nav-brand">
+                <span class="icon" id="logo-slot"></span>
+                <span>TANAT <span class="hero-title">// TONGUTHAISRI</span></span>
+            </div>
+            <div class="nav-links" id="nav-links">
+                <a href="#about" data-section="about"><span lang="en">About</span><span lang="th">เกี่ยวกับ</span></a>
+                <a href="#journey" data-section="journey"><span lang="en">Journey</span><span lang="th">เส้นทาง</span></a>
+                <a href="#expertise" data-section="expertise"><span lang="en">Expertise</span><span lang="th">ความเชี่ยวชาญ</span></a>
+                <a href="#research" data-section="research"><span lang="en">Research</span><span lang="th">งานวิจัย</span></a>
+                <a href="#achievements" data-section="achievements"><span lang="en">Recognition</span><span lang="th">ผลงาน</span></a>
+                <a href="#contact" data-section="contact"><span lang="en">Contact</span><span lang="th">ติดต่อ</span></a>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="lang-switcher" role="group" aria-label="Language">
+                    <button class="lang-btn active" data-lang="en" aria-label="Switch to English">EN</button>
+                    <button class="lang-btn" data-lang="th" aria-label="เปลี่ยนเป็นภาษาไทย">TH</button>
+                </div>
+                <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links"></button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container z-content relative">
+        <!-- ═══════════ HERO ═══════════ -->
+        <section id="hero">
+            <div class="hero-grid">
+                <div>
+                    <div class="hero-badge">
+                        <span class="hero-badge-dot" aria-hidden="true"></span>
+                        <span lang="en">Independent Researcher · Doctoral studies planned for the future</span>
+                        <span lang="th">นักวิจัยอิสระ · วางแผนศึกษาปริญญาเอกในอนาคต</span>
+                    </div>
+                    <h1 class="hero-name hero-title">
+                        <span lang="en">Tanat Tonguthaisri</span>
+                        <span lang="th">ธนัท ทองอุทัยศรี</span>
+                    </h1>
+                    <div class="hero-subtitle">
+                        <span lang="en">Cognitive SOAR Architect | Cybersecurity Visionary | Prospective Doctoral Researcher</span>
+                        <span lang="th">สถาปนิก Cognitive SOAR | ผู้นำด้านความมั่นคงปลอดภัยไซเบอร์ | ผู้เตรียมศึกษาปริญญาเอก</span>
+                    </div>
+                    <p class="hero-description">
+                        <span lang="en">Two decades of systematic mastery culminating in revolutionary adaptive security architecture. Defending Thailand's Financial Critical Infrastructure processing 200+ billion baht through Vectorized Case-Based Reasoning, Transformer Embeddings, and Formal Logic Verification.</span>
+                        <span lang="th">สองทศวรรษแห่งการพัฒนาอย่างเป็นระบบ นำไปสู่สถาปัตยกรรมความปลอดภัยที่ปรับตัวได้อย่างปฏิวัติวงการ ปกป้องโครงสร้างพื้นฐานทางการเงินสำคัญของไทยที่มีมูลค่ากว่า 200,000 ล้านบาท</span>
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="#research" class="btn btn-spectrum">
+                            <span lang="en">Explore Research</span>
+                            <span lang="th">สำรวจงานวิจัย</span>
+                            <span class="icon" data-icon="arrowRight"></span>
+                        </a>
+                        <a href="#contact" class="btn btn-ghost">
+                            <span lang="en">Connect</span>
+                            <span lang="th">ติดต่อ</span>
+                        </a>
+                    </div>
+                    <div class="hero-stats" id="hero-stats">
+                        <div>
+                            <span class="stat-number" data-count="20">0</span>
+                            <span class="stat-label"><span lang="en">Years Elite Experience</span><span lang="th">ปีประสบการณ์ระดับสูง</span></span>
+                        </div>
+                        <div>
+                            <span class="stat-number" data-count="7" data-suffix="M+">0</span>
+                            <span class="stat-label"><span lang="en">Accounts Protected</span><span lang="th">บัญชีที่ได้รับการปกป้อง</span></span>
+                        </div>
+                        <div>
+                            <span class="stat-number" data-count="200" data-prefix="฿" data-suffix="B+">0</span>
+                            <span class="stat-label"><span lang="en">Assets Secured</span><span lang="th">สินทรัพย์ที่ได้รับการรักษาความปลอดภัย</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-photo-wrap">
+                    <div class="hero-photo">
+                        <!-- ADR-09: fallback bound in JS (also catches an already-failed load) -->
+                        <img id="hero-photo-img" src="https://defense.engineer/Tanat-FullBody.jpg"
+                             alt="Tanat Tonguthaisri — Cybersecurity Visionary" loading="eager">
+                    </div>
+                    <div class="float-badge float-badge-1">
+                        <span class="icon" data-icon="shield"></span>
+                        <span><strong>CISSP</strong><span>Since 2015</span></span>
+                    </div>
+                    <div class="float-badge float-badge-2">
+                        <span class="icon" data-icon="grad"></span>
+                        <span><strong>M.Eng</strong><span>RMIT University</span></span>
+                    </div>
+                    <div class="float-badge float-badge-3">
+                        <span class="icon" data-icon="bank"></span>
+                        <span><strong>FCI Defense</strong><span>฿200B+ Protected</span></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ ABOUT ═══════════ -->
+        <section id="about" class="scroll-reveal">
+            <div class="section-header">
+                <span class="section-badge"><span lang="en">About</span><span lang="th">เกี่ยวกับ</span></span>
+                <h2 class="section-title">
+                    <span lang="en">The Architect's Foundation</span>
+                    <span lang="th">รากฐานของสถาปนิก</span>
+                </h2>
+                <p class="section-subtitle">
+                    <span lang="en">A deliberate convergence of AI mastery, data engineering excellence, and cybersecurity leadership</span>
+                    <span lang="th">การบรรจบกันอย่างมีเป้าหมายของความเชี่ยวชาญด้าน AI วิศวกรรมข้อมูล และภาวะผู้นำด้านความมั่นคงปลอดภัยไซเบอร์</span>
+                </p>
+            </div>
+
+            <div class="glass-panel glass-static viz-panel">
+                <div class="viz-head">
+                    <h3 class="viz-title">
+                        <span lang="en">Executive Summary</span>
+                        <span lang="th">สรุปผู้บริหาร</span>
+                    </h3>
+                </div>
+                <div class="grid-4 stagger-children">
+                    <div class="summary-card glass-panel">
+                        <span class="icon" data-icon="grad"></span>
+                        <div class="summary-card-value" data-count="3">0</div>
+                        <div class="summary-card-label"><span lang="en">Degrees Earned</span><span lang="th">ปริญญาที่ได้รับ</span></div>
+                    </div>
+                    <div class="summary-card glass-panel">
+                        <span class="icon" data-icon="shield"></span>
+                        <div class="summary-card-value" data-count="4">0</div>
+                        <div class="summary-card-label"><span lang="en">Elite Certifications</span><span lang="th">ใบรับรองระดับสูง</span></div>
+                    </div>
+                    <div class="summary-card glass-panel">
+                        <span class="icon" data-icon="building"></span>
+                        <div class="summary-card-value" data-count="8">0</div>
+                        <div class="summary-card-label"><span lang="en">Organizations Served</span><span lang="th">องค์กรที่ให้บริการ</span></div>
+                    </div>
+                    <div class="summary-card glass-panel">
+                        <span class="icon" data-icon="globe"></span>
+                        <div class="summary-card-value" data-count="5">0</div>
+                        <div class="summary-card-label"><span lang="en">Years ITPEC Rep</span><span lang="th">ปีตัวแทน ITPEC</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="affirmation glass-panel glass-static">
+                <p class="affirmation-text">
+                    <span lang="en">"The C-SOAR framework isn't speculative—it's the crystallization of two decades systematically building toward this contribution. The doctoral chapter is still ahead of me, but the research itself is already alive in production."</span>
+                    <span lang="th">"กรอบงาน C-SOAR ไม่ใช่แค่ทฤษฎี แต่เป็นผลลัพธ์ของการสร้างความเชี่ยวชาญอย่างเป็นระบบกว่า 20 ปี แม้เส้นทางปริญญาเอกจะยังอยู่ข้างหน้า แต่งานวิจัยนี้มีชีวิตอยู่แล้วในระบบจริง"</span>
+                </p>
+                <div class="affirmation-author">Tanat Tonguthaisri</div>
+            </div>
+
+            <div class="cards-grid stagger-children mt-8">
+                <div class="card glass-panel">
+                    <div class="icon-chip"><span class="icon" data-icon="grad"></span></div>
+                    <h3><span lang="en">Academic Excellence</span><span lang="th">ความเป็นเลิศทางวิชาการ</span></h3>
+                    <p>
+                        <span lang="en">Master of Engineering from RMIT University, pioneering Case-Based Reasoning research (2004) that presciently established the foundations of today's Cognitive SOAR framework. Double Bachelor's in Computer Engineering and Computer Science provided the dual systems-algorithmic perspective essential for cognitive architecture design.</span>
+                        <span lang="th">ปริญญาโทวิศวกรรมศาสตร์จาก RMIT University วิจัยบุกเบิก Case-Based Reasoning (2004) ที่วางรากฐานของ Cognitive SOAR framework ในปัจจุบัน ปริญญาตรี 2 ใบในวิศวกรรมคอมพิวเตอร์และวิทยาการคอมพิวเตอร์</span>
+                    </p>
+                </div>
+                <div class="card glass-panel">
+                    <div class="icon-chip"><span class="icon" data-icon="shield"></span></div>
+                    <h3><span lang="en">Critical Infrastructure Defense</span><span lang="th">การป้องกันโครงสร้างพื้นฐานสำคัญ</span></h3>
+                    <p>
+                        <span lang="en">Currently managing cybersecurity for Thailand's Student Loan Fund—Financial Critical Infrastructure processing 7+ million accounts and 200+ billion baht. Architecting production-grade vector pipelines (50M+ daily events) and deploying sub-10ms similarity search across 10M+ records.</span>
+                        <span lang="th">ปัจจุบันบริหารความมั่นคงปลอดภัยไซเบอร์ให้กองทุน กยศ. ซึ่งเป็นโครงสร้างพื้นฐานทางการเงินสำคัญที่ประมวลผลบัญชีกว่า 7 ล้านบัญชีและมูลค่ากว่า 200,000 ล้านบาท</span>
+                    </p>
+                </div>
+                <div class="card glass-panel">
+                    <div class="icon-chip"><span class="icon" data-icon="rocket"></span></div>
+                    <h3><span lang="en">Research Mission</span><span lang="th">ภารกิจการวิจัย</span></h3>
+                    <p>
+                        <span lang="en">Formalizing the Cognitive SOAR framework as an independent research programme—transcending static automation through Vectorized Case-Based Reasoning, LLM-powered synthesis, and Formal Verification. Formal doctoral studies are planned for the future (not yet commenced); the mission today is solving the catastrophic 70% failure rate of traditional SOAR against novel threats.</span>
+                        <span lang="th">พัฒนา Cognitive SOAR framework ในฐานะงานวิจัยอิสระ เพื่อแก้ปัญหาอัตราความล้มเหลว 70% ของ SOAR แบบดั้งเดิมต่อภัยคุกคามรูปแบบใหม่ โดยวางแผนเข้าศึกษาปริญญาเอกอย่างเป็นทางการในอนาคต (ยังไม่เริ่มการศึกษา)</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ JOURNEY (Filter-Flow) ═══════════ -->
+        <section id="journey" class="scroll-reveal">
+            <div class="section-header">
+                <span class="section-badge"><span lang="en">Career</span><span lang="th">อาชีพ</span></span>
+                <h2 class="section-title">
+                    <span lang="en">Professional Evolution</span>
+                    <span lang="th">วิวัฒนาการทางอาชีพ</span>
+                </h2>
+                <p class="section-subtitle">
+                    <span lang="en">Each role strategically selected to build convergent expertise for cognitive security automation</span>
+                    <span lang="th">แต่ละบทบาทได้รับการคัดเลือกอย่างมีกลยุทธ์เพื่อสร้างความเชี่ยวชาญที่บรรจบกัน</span>
+                </p>
+            </div>
+
+            <!-- Filter-Flow control deck -->
+            <div class="glass-panel glass-static viz-panel mb-6">
+                <div class="flex flex-col md:flex-row gap-8 mb-6">
+                    <div class="w-full">
+                        <div class="slider-label">
+                            <span><span lang="en">FROM YEAR</span><span lang="th">ตั้งแต่ปี</span></span>
+                            <span id="val-year" class="font-mono">2004</span>
+                        </div>
+                        <input type="range" id="input-year" min="2004" max="2025" value="2004" step="1"
+                               aria-label="Filter timeline from year">
+                    </div>
+                    <div class="w-full">
+                        <div class="slider-label">
+                            <span><span lang="en">MIN IMPACT</span><span lang="th">ผลกระทบขั้นต่ำ</span></span>
+                            <span id="val-impact" class="font-mono">0</span>
+                        </div>
+                        <input type="range" id="input-impact" min="0" max="100" value="0" step="5"
+                               aria-label="Filter timeline by minimum impact score">
+                    </div>
+                </div>
+                <div class="filter-pills" id="timeline-filters">
+                    <button class="filter-pill active" data-type="all"><span lang="en">All</span><span lang="th">ทั้งหมด</span></button>
+                    <button class="filter-pill" data-type="milestone"><span lang="en">Milestones</span><span lang="th">เหตุการณ์สำคัญ</span></button>
+                    <button class="filter-pill" data-type="achievement"><span lang="en">Achievements</span><span lang="th">ความสำเร็จ</span></button>
+                    <button class="filter-pill" data-type="conflict"><span lang="en">Challenges</span><span lang="th">ความท้าทาย</span></button>
+                    <button class="filter-pill" data-type="research"><span lang="en">Research</span><span lang="th">งานวิจัย</span></button>
+                </div>
+            </div>
+
+            <div class="journey-layout">
+                <!-- Trajectory chart -->
+                <div class="glass-panel glass-static viz-panel">
+                    <div class="viz-head">
+                        <h3 class="viz-title">
+                            <span lang="en">Career Trajectory</span>
+                            <span lang="th">เส้นทางอาชีพ</span>
+                        </h3>
+                        <span class="viz-hint">
+                            <span lang="en">Impact score per role · filtered live</span>
+                            <span lang="th">คะแนนผลกระทบต่อบทบาท · กรองแบบเรียลไทม์</span>
+                        </span>
+                    </div>
+                    <div class="h-chart"><canvas id="trajectoryChart" aria-label="Career impact trajectory chart" role="img"></canvas></div>
+                    <div class="chart-legend" id="trajectory-legend">
+                        <span class="key"><span class="legend-swatch round" style="background:#0071e3"></span><span lang="en">Milestone</span><span lang="th">เหตุการณ์สำคัญ</span></span>
+                        <span class="key"><span class="legend-swatch" style="background:#30d158"></span><span lang="en">Achievement</span><span lang="th">ความสำเร็จ</span></span>
+                        <span class="key"><span class="legend-swatch diamond" style="background:#ff375f"></span><span lang="en">Challenge</span><span lang="th">ความท้าทาย</span></span>
+                        <span class="key"><span class="legend-swatch triangle" style="background:#bf5af2"></span><span lang="en">Research</span><span lang="th">งานวิจัย</span></span>
+                    </div>
+                    <details>
+                        <summary><span lang="en">View as table</span><span lang="th">ดูเป็นตาราง</span></summary>
+                        <div class="data-table-wrap">
+                            <table class="data-table" id="trajectory-table">
+                                <thead><tr>
+                                    <th><span lang="en">Year</span><span lang="th">ปี</span></th>
+                                    <th><span lang="en">Role</span><span lang="th">บทบาท</span></th>
+                                    <th><span lang="en">Type</span><span lang="th">ประเภท</span></th>
+                                    <th><span lang="en">Impact</span><span lang="th">ผลกระทบ</span></th>
+                                </tr></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </details>
+                </div>
+
+                <!-- Filtered card grid (ADR-07a: .timeline-grid, no inline override) -->
+                <div>
+                    <div class="timeline-grid" id="timeline-grid"></div>
+                    <div class="empty-state glass-panel glass-static" id="timeline-empty" hidden>
+                        <span class="icon" data-icon="search"></span>
+                        <h4><span lang="en">No Matches Found</span><span lang="th">ไม่พบรายการที่ตรงกัน</span></h4>
+                        <p><span lang="en">Relax the year, impact, or type filters to see more of the journey.</span><span lang="th">ลองปรับตัวกรองปี ผลกระทบ หรือประเภท เพื่อดูเส้นทางเพิ่มเติม</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ EXPERTISE ═══════════ -->
+        <section id="expertise" class="scroll-reveal">
+            <div class="section-header">
+                <span class="section-badge"><span lang="en">Skills</span><span lang="th">ทักษะ</span></span>
+                <h2 class="section-title">
+                    <span lang="en">Technical Dominance</span>
+                    <span lang="th">การครองความเชี่ยวชาญทางเทคนิค</span>
+                </h2>
+                <p class="section-subtitle">
+                    <span lang="en">Elite-level proficiency across the convergent domains of Cognitive SOAR</span>
+                    <span lang="th">ความชำนาญระดับสูงสุดในทุกด้านที่บรรจบกันของ Cognitive SOAR</span>
+                </p>
+            </div>
+
+            <!-- KPI cards -->
+            <div class="grid-4 stagger-children mb-6">
+                <div class="kpi-card glass-panel">
+                    <div class="kpi-head"><span class="icon" data-icon="shield"></span><span class="kpi-trend">↑ 23%</span></div>
+                    <div class="kpi-value">93%</div>
+                    <div class="kpi-label"><span lang="en">Threat Detection Rate</span><span lang="th">อัตราการตรวจจับภัยคุกคาม</span></div>
+                    <div class="kpi-spark" aria-hidden="true"><i style="height:40%"></i><i style="height:55%"></i><i style="height:45%"></i><i style="height:70%"></i><i style="height:65%"></i><i style="height:80%"></i><i style="height:93%"></i></div>
+                </div>
+                <div class="kpi-card glass-panel">
+                    <div class="kpi-head"><span class="icon" data-icon="zap"></span><span class="kpi-trend">↑ 85%</span></div>
+                    <div class="kpi-value">&lt;10ms</div>
+                    <div class="kpi-label"><span lang="en">Vector Query Latency</span><span lang="th">ความหน่วงการค้นหาเวกเตอร์</span></div>
+                    <div class="kpi-spark" aria-hidden="true"><i style="height:90%"></i><i style="height:75%"></i><i style="height:60%"></i><i style="height:45%"></i><i style="height:30%"></i><i style="height:20%"></i><i style="height:10%"></i></div>
+                </div>
+                <div class="kpi-card glass-panel">
+                    <div class="kpi-head"><span class="icon" data-icon="target"></span><span class="kpi-trend">↑ 47%</span></div>
+                    <div class="kpi-value">30s</div>
+                    <div class="kpi-label"><span lang="en">Zero-Day Response</span><span lang="th">การตอบสนอง Zero-Day</span></div>
+                    <div class="kpi-spark" aria-hidden="true"><i style="height:95%"></i><i style="height:80%"></i><i style="height:65%"></i><i style="height:50%"></i><i style="height:40%"></i><i style="height:35%"></i><i style="height:30%"></i></div>
+                </div>
+                <div class="kpi-card glass-panel">
+                    <div class="kpi-head"><span class="icon" data-icon="chart"></span><span class="kpi-trend">↑ 12%</span></div>
+                    <div class="kpi-value">10M+</div>
+                    <div class="kpi-label"><span lang="en">Records Processed</span><span lang="th">รายการที่ประมวลผล</span></div>
+                    <div class="kpi-spark" aria-hidden="true"><i style="height:30%"></i><i style="height:45%"></i><i style="height:55%"></i><i style="height:70%"></i><i style="height:80%"></i><i style="height:90%"></i><i style="height:100%"></i></div>
+                </div>
+            </div>
+
+            <div class="grid-2 mb-6">
+                <!-- Radar -->
+                <div class="glass-panel glass-static viz-panel">
+                    <div class="viz-head">
+                        <h3 class="viz-title">
+                            <span lang="en">Expertise Radar</span>
+                            <span lang="th">เรดาร์ความเชี่ยวชาญ</span>
+                        </h3>
+                    </div>
+                    <div class="h-radar"><canvas id="radarChart" aria-label="Multi-domain expertise radar chart" role="img"></canvas></div>
+                </div>
+
+                <!-- Core competencies -->
+                <div class="glass-panel glass-static viz-panel">
+                    <div class="viz-head">
+                        <h3 class="viz-title">
+                            <span lang="en">Core Competencies</span>
+                            <span lang="th">ความสามารถหลัก</span>
+                        </h3>
+                    </div>
+                    <div id="skill-bars">
+                        <div class="skill-row">
+                            <div class="skill-row-head">
+                                <span class="skill-name"><span class="icon" data-icon="brain"></span> Case-Based Reasoning</span>
+                                <span class="skill-pct">95%</span>
+                            </div>
+                            <div class="progress-track"><div class="progress-fill" data-width="95"></div></div>
+                        </div>
+                        <div class="skill-row">
+                            <div class="skill-row-head">
+                                <span class="skill-name"><span class="icon" data-icon="chip"></span> AI/ML Engineering</span>
+                                <span class="skill-pct">92%</span>
+                            </div>
+                            <div class="progress-track"><div class="progress-fill" data-width="92"></div></div>
+                        </div>
+                        <div class="skill-row">
+                            <div class="skill-row-head">
+                                <span class="skill-name"><span class="icon" data-icon="shield"></span> Cybersecurity</span>
+                                <span class="skill-pct">93%</span>
+                            </div>
+                            <div class="progress-track"><div class="progress-fill" data-width="93"></div></div>
+                        </div>
+                        <div class="skill-row">
+                            <div class="skill-row-head">
+                                <span class="skill-name"><span class="icon" data-icon="chart"></span> Data Engineering</span>
+                                <span class="skill-pct">90%</span>
+                            </div>
+                            <div class="progress-track"><div class="progress-fill" data-width="90"></div></div>
+                        </div>
+                        <div class="skill-row">
+                            <div class="skill-row-head">
+                                <span class="skill-name"><span class="icon" data-icon="database"></span> Vector Embeddings</span>
+                                <span class="skill-pct">88%</span>
+                            </div>
+                            <div class="progress-track"><div class="progress-fill" data-width="88"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Polymorphic network topology -->
+            <div class="glass-panel glass-static viz-panel">
+                <div class="viz-head">
+                    <h3 class="viz-title">
+                        <span lang="en">Knowledge Network: Interconnected Competencies</span>
+                        <span lang="th">เครือข่ายความรู้: ความสามารถที่เชื่อมโยงกัน</span>
+                    </h3>
+                    <span class="viz-hint">
+                        <span lang="en">Drag nodes · scroll to zoom · click for details</span>
+                        <span lang="th">ลากโหนด · เลื่อนเพื่อซูม · คลิกเพื่อดูรายละเอียด</span>
+                    </span>
+                </div>
+                <div class="d3-stage" id="expertise-network"></div>
+                <div class="chart-legend">
+                    <span class="key"><span class="legend-swatch round" style="background:#0071e3"></span><span lang="en">Framework hub (circle)</span><span lang="th">แกนกรอบงาน (วงกลม)</span></span>
+                    <span class="key"><span class="legend-swatch round" style="background:#bf5af2"></span><span lang="en">Pillar (circle)</span><span lang="th">เสาหลัก (วงกลม)</span></span>
+                    <span class="key"><span class="legend-swatch" style="background:#ff9f0a"></span><span lang="en">Tooling (square)</span><span lang="th">เครื่องมือ (สี่เหลี่ยม)</span></span>
+                    <span class="key"><span class="legend-swatch diamond" style="background:#30d158"></span><span lang="en">Governance (diamond)</span><span lang="th">การกำกับดูแล (ข้าวหลามตัด)</span></span>
+                </div>
+            </div>
+
+            <!-- Certifications -->
+            <div class="cert-grid stagger-children">
+                <div class="cert-badge glass-panel">
+                    <span class="icon" data-icon="shield"></span>
+                    <div class="cert-name">CISSP</div>
+                    <div class="cert-org">(ISC)² | <span class="thai-date" data-year="2015" data-since="true">Since 2015</span></div>
+                </div>
+                <div class="cert-badge glass-panel">
+                    <span class="icon" data-icon="search"></span>
+                    <div class="cert-name">CEH v12</div>
+                    <div class="cert-org">EC-Council | <span class="thai-date" data-year="2025">2025</span></div>
+                </div>
+                <div class="cert-badge glass-panel">
+                    <span class="icon" data-icon="eye"></span>
+                    <div class="cert-name">CHFI v11</div>
+                    <div class="cert-org">EC-Council | <span class="thai-date" data-year="2025">2025</span></div>
+                </div>
+                <div class="cert-badge glass-panel">
+                    <span class="icon" data-icon="doc"></span>
+                    <div class="cert-name">Project+</div>
+                    <div class="cert-org">CompTIA | Current</div>
+                </div>
+                <div class="cert-badge glass-panel">
+                    <span class="icon" data-icon="grad"></span>
+                    <div class="cert-name">M.Eng</div>
+                    <div class="cert-org">RMIT | <span class="thai-date" data-year="2004">2004</span></div>
+                </div>
+            </div>
+
+            <!-- Key insights -->
+            <div class="cards-grid grid-auto-250 stagger-children mt-8">
+                <div class="insight-card glass-panel">
+                    <div class="icon-chip"><span class="icon" data-icon="brain"></span></div>
+                    <div>
+                        <h4><span lang="en">Case-Based Reasoning Pioneer</span><span lang="th">ผู้บุกเบิก Case-Based Reasoning</span></h4>
+                        <p><span lang="en">20 years of CBR expertise from academic research to production systems</span><span lang="th">20 ปีของความเชี่ยวชาญ CBR จากงานวิจัยสู่ระบบการผลิต</span></p>
+                    </div>
+                </div>
+                <div class="insight-card glass-panel">
+                    <div class="icon-chip"><span class="icon" data-icon="zap"></span></div>
+                    <div>
+                        <h4><span lang="en">Sub-10ms Vector Search</span><span lang="th">การค้นหาเวกเตอร์ต่ำกว่า 10ms</span></h4>
+                        <p><span lang="en">Production-grade similarity search across 10M+ records</span><span lang="th">การค้นหาความคล้ายคลึงระดับการผลิตในบันทึกกว่า 10 ล้านรายการ</span></p>
+                    </div>
+                </div>
+                <div class="insight-card glass-panel">
+                    <div class="icon-chip"><span class="icon" data-icon="lock"></span></div>
+                    <div>
+                        <h4><span lang="en">FCI Security Leadership</span><span lang="th">ผู้นำด้านความปลอดภัย FCI</span></h4>
+                        <p><span lang="en">Protecting ฿200B+ in financial critical infrastructure</span><span lang="th">ปกป้องโครงสร้างพื้นฐานทางการเงินมูลค่ากว่า 200,000 ล้านบาท</span></p>
+                    </div>
+                </div>
+                <div class="insight-card glass-panel">
+                    <div class="icon-chip"><span class="icon" data-icon="chip"></span></div>
+                    <div>
+                        <h4><span lang="en">AI/ML Integration</span><span lang="th">การบูรณาการ AI/ML</span></h4>
+                        <p><span lang="en">Transformer embeddings and local LLM deployment expertise</span><span lang="th">ความเชี่ยวชาญด้าน Transformer embeddings และการติดตั้ง LLM ในเครื่อง</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ RESEARCH ═══════════ -->
+        <section id="research" class="scroll-reveal">
+            <div class="section-header">
+                <span class="section-badge"><span lang="en">Innovation</span><span lang="th">นวัตกรรม</span></span>
+                <h2 class="section-title">
+                    <span lang="en">Cognitive SOAR Framework</span>
+                    <span lang="th">กรอบงาน Cognitive SOAR</span>
+                </h2>
+                <p class="section-subtitle">
+                    <span lang="en">The culmination of 20 years: transcending static automation through cognitive architecture — developed today as independent research, destined for future doctoral formalization</span>
+                    <span lang="th">จุดสุดยอดของ 20 ปี: ก้าวข้ามระบบอัตโนมัติแบบคงที่ผ่านสถาปัตยกรรมปัญญาประดิษฐ์ — พัฒนาเป็นงานวิจัยอิสระในวันนี้ เพื่อต่อยอดสู่ปริญญาเอกในอนาคต</span>
+                </p>
+            </div>
+
+            <!-- C-SOAR triadic architecture (D3) -->
+            <div class="glass-panel glass-static viz-panel mb-6">
+                <div class="viz-head">
+                    <h3 class="viz-title">
+                        <span lang="en">C-SOAR Triadic Architecture</span>
+                        <span lang="th">สถาปัตยกรรมสามเหลี่ยม C-SOAR</span>
+                    </h3>
+                    <span class="viz-hint">
+                        <span lang="en">Drag nodes · click for details</span>
+                        <span lang="th">ลากโหนด · คลิกเพื่อดูรายละเอียด</span>
+                    </span>
+                </div>
+                <div class="d3-stage" id="csoar-architecture"></div>
+            </div>
+
+            <!-- Problem analysis -->
+            <div class="glass-panel glass-static viz-panel mb-6">
+                <div class="viz-head">
+                    <h3 class="viz-title">
+                        <span lang="en">The Problem: Traditional SOAR Failure</span>
+                        <span lang="th">ปัญหา: ความล้มเหลวของ SOAR แบบดั้งเดิม</span>
+                    </h3>
+                </div>
+                <div class="grid-2">
+                    <div class="conflict-item glass-panel">
+                        <div class="conflict-item-head">
+                            <span class="conflict-item-title"><span lang="en">Novel Threat Failure</span><span lang="th">ความล้มเหลวต่อภัยคุกคามใหม่</span></span>
+                            <span class="severity-badge severity-high">Critical</span>
+                        </div>
+                        <p><span lang="en">70% of traditional SOAR systems fail against novel threats (Gartner 2024)</span><span lang="th">70% ของระบบ SOAR แบบดั้งเดิมล้มเหลวต่อภัยคุกคามรูปแบบใหม่</span></p>
+                    </div>
+                    <div class="conflict-item glass-panel">
+                        <div class="conflict-item-head">
+                            <span class="conflict-item-title"><span lang="en">Manual Response Delay</span><span lang="th">ความล่าช้าในการตอบสนองด้วยตนเอง</span></span>
+                            <span class="severity-badge severity-high">Critical</span>
+                        </div>
+                        <p><span lang="en">47-minute manual response during March 2024 zero-day APT attack</span><span lang="th">การตอบสนองด้วยตนเอง 47 นาทีระหว่างการโจมตี APT zero-day มีนาคม 2024</span></p>
+                    </div>
+                    <div class="conflict-item glass-panel">
+                        <div class="conflict-item-head">
+                            <span class="conflict-item-title"><span lang="en">Black-Box AI Rejection</span><span lang="th">การปฏิเสธ AI แบบกล่องดำ</span></span>
+                            <span class="severity-badge severity-medium">High</span>
+                        </div>
+                        <p><span lang="en">Regulatory requirements (PDPA, State Audit) mandate explainable decisions</span><span lang="th">ข้อกำหนดด้านกฎระเบียบ (PDPA, สตง.) กำหนดให้ต้องมีการตัดสินใจที่อธิบายได้</span></p>
+                    </div>
+                    <div class="conflict-item glass-panel">
+                        <div class="conflict-item-head">
+                            <span class="conflict-item-title"><span lang="en">Alert Fatigue</span><span lang="th">ความเหนื่อยล้าจากการแจ้งเตือน</span></span>
+                            <span class="severity-badge severity-medium">High</span>
+                        </div>
+                        <p><span lang="en">50K+ daily alerts with 94% false positive rate overwhelming analysts</span><span lang="th">การแจ้งเตือนกว่า 50,000 รายการต่อวันพร้อมอัตราผลบวกลวง 94%</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Research areas -->
+            <div class="cards-grid stagger-children">
+                <div class="research-card glass-panel">
+                    <div class="research-number">01</div>
+                    <h4><span lang="en">Vectorized Case-Based Reasoning</span><span lang="th">Vectorized Case-Based Reasoning</span></h4>
+                    <p><span lang="en">Transforming 20 years of CBR expertise into production-grade 768-dimensional embeddings achieving sub-10ms similarity search across millions of incidents. O(n²) → O(log n) breakthrough.</span><span lang="th">แปลงความเชี่ยวชาญ CBR 20 ปีเป็น embeddings 768 มิติระดับการผลิตที่ค้นหาความคล้ายคลึงได้ต่ำกว่า 10ms</span></p>
+                </div>
+                <div class="research-card glass-panel">
+                    <div class="research-number">02</div>
+                    <h4><span lang="en">LLM-Powered Synthesis</span><span lang="th">การสังเคราะห์ด้วย LLM</span></h4>
+                    <p><span lang="en">Local transformer models generating contextual response strategies by synthesizing multiple historical cases. 30-second zero-day response vs. 47-minute manual intervention.</span><span lang="th">โมเดล transformer ในเครื่องสร้างกลยุทธ์การตอบสนองตามบริบทโดยสังเคราะห์จากหลายกรณีในอดีต</span></p>
+                </div>
+                <div class="research-card glass-panel">
+                    <div class="research-number">03</div>
+                    <h4><span lang="en">Formal Logic Verification</span><span lang="th">การตรวจสอบตรรกะเชิงรูปนัย</span></h4>
+                    <p><span lang="en">Mathematical proof of safety invariants learned from Bank of Thailand compliance requirements. Ensuring "do no harm" guarantees for autonomous actions in FCI.</span><span lang="th">การพิสูจน์ทางคณิตศาสตร์ของค่าคงที่ด้านความปลอดภัยที่เรียนรู้จากข้อกำหนดของธนาคารแห่งประเทศไทย</span></p>
+                </div>
+                <div class="research-card glass-panel">
+                    <div class="research-number">04</div>
+                    <h4><span lang="en">Production Data Engineering</span><span lang="th">วิศวกรรมข้อมูลระดับการผลิต</span></h4>
+                    <p><span lang="en">Apache Airflow orchestration (3hrs → 12min optimization), dbt transformations, Cassandra/vector DB deployment at 50M+ events/day.</span><span lang="th">การจัดการ Apache Airflow (เพิ่มประสิทธิภาพ 3 ชม. → 12 นาที), การแปลง dbt, การติดตั้ง Cassandra/vector DB ที่ 50M+ events/day</span></p>
+                </div>
+                <div class="research-card glass-panel">
+                    <div class="research-number">05</div>
+                    <h4><span lang="en">Explainable Autonomous Actions</span><span lang="th">การดำเนินการอัตโนมัติที่อธิบายได้</span></h4>
+                    <p><span lang="en">Precedent-based transparency inherited from CBR foundation—every automated decision traceable to historical cases. Meeting regulatory audit requirements.</span><span lang="th">ความโปร่งใสตามแบบอย่างที่สืบทอดจากรากฐาน CBR—ทุกการตัดสินใจอัตโนมัติสามารถติดตามไปยังกรณีในอดีตได้</span></p>
+                </div>
+                <div class="research-card glass-panel">
+                    <div class="research-number">06</div>
+                    <h4><span lang="en">Empirical Validation</span><span lang="th">การตรวจสอบเชิงประจักษ์</span></h4>
+                    <p><span lang="en">Real-world testing against captured APT campaigns, simulated zero-day attacks, and comparative benchmarking against traditional SOAR.</span><span lang="th">การทดสอบในโลกจริงกับแคมเปญ APT ที่จับได้ การโจมตี zero-day จำลอง และการเปรียบเทียบกับ SOAR แบบดั้งเดิม</span></p>
+                </div>
+            </div>
+
+            <!-- Doctoral road ahead (programme NOT yet started) -->
+            <div class="affirmation glass-panel glass-static mt-12">
+                <h3 class="hero-title" style="font-size: 1.5rem; margin-bottom: 1rem;">
+                    <span lang="en">The Doctoral Road Ahead</span>
+                    <span lang="th">เส้นทางปริญญาเอกที่รออยู่ข้างหน้า</span>
+                </h3>
+                <p class="affirmation-text" style="font-style: normal; font-size: 1.05rem;">
+                    <span lang="en">Formal doctoral studies remain a deliberate next chapter—planned for the future and not yet begun. Programmes that value <strong>practitioner-scholars</strong>, such as Capitol Technology University's Doctor of Science, are the natural destination for this work: a career spent <strong>identifying SOAR's failure</strong> through operational experience at scale, <strong>recognizing theoretical solutions</strong> through academic study, and <strong>building the technical depth</strong> to validate them empirically. When the time is right, C-SOAR will arrive at the doctorate already battle-tested.</span>
+                    <span lang="th">การศึกษาปริญญาเอกอย่างเป็นทางการคือบทต่อไปที่วางแผนไว้สำหรับอนาคต และยังไม่ได้เริ่มต้น หลักสูตรที่ให้คุณค่ากับ<strong>นักวิชาการ-ผู้ปฏิบัติ</strong> เช่น Doctor of Science ของ Capitol Technology University คือจุดหมายโดยธรรมชาติของงานนี้ เมื่อถึงเวลาที่เหมาะสม C-SOAR จะเข้าสู่ปริญญาเอกในสภาพที่ผ่านการทดสอบจากสนามจริงแล้ว</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- ═══════════ RECOGNITION ═══════════ -->
+        <section id="achievements" class="scroll-reveal">
+            <div class="section-header">
+                <span class="section-badge"><span lang="en">Recognition</span><span lang="th">การยอมรับ</span></span>
+                <h2 class="section-title">
+                    <span lang="en">Recognition &amp; Impact</span>
+                    <span lang="th">การยอมรับและผลกระทบ</span>
+                </h2>
+                <p class="section-subtitle">
+                    <span lang="en">Validated expertise through competitive innovation, strategic advisory, and thought leadership</span>
+                    <span lang="th">ความเชี่ยวชาญที่ได้รับการรับรองผ่านนวัตกรรม การให้คำปรึกษาเชิงกลยุทธ์ และภาวะผู้นำทางความคิด</span>
+                </p>
+            </div>
+
+            <!-- Featured projects (scroll-snap carousel) -->
+            <div class="carousel-wrap">
+                <button class="carousel-btn prev" id="carousel-prev" aria-label="Previous" type="button"><span class="icon" data-icon="chevLeft"></span></button>
+                <div class="snap-row" id="featured-carousel" role="region" aria-label="Featured projects">
+                    <article class="glass-panel">
+                        <div class="icon-chip"><span class="icon" data-icon="brain"></span></div>
+                        <h4 class="mb-2 mt-4"><span lang="en">C-SOAR Framework</span><span lang="th">กรอบงาน C-SOAR</span></h4>
+                        <p class="text-sm text-soft"><span lang="en">Cognitive SOAR architecture with sub-10ms retrieval</span><span lang="th">สถาปัตยกรรม Cognitive SOAR ด้วยการดึงข้อมูลต่ำกว่า 10ms</span></p>
+                    </article>
+                    <article class="glass-panel">
+                        <div class="icon-chip"><span class="icon" data-icon="trophy"></span></div>
+                        <h4 class="mb-2 mt-4">Siam RegTech</h4>
+                        <p class="text-sm text-soft"><span lang="en">Top 10 Finalist — SEC/BOT/OIC AML Challenge</span><span lang="th">ผู้เข้ารอบ 10 อันดับแรก — การแข่งขัน AML ก.ล.ต./ธปท./คปภ.</span></p>
+                    </article>
+                    <article class="glass-panel">
+                        <div class="icon-chip"><span class="icon" data-icon="grad"></span></div>
+                        <h4 class="mb-2 mt-4">Learn Sabai</h4>
+                        <p class="text-sm text-soft"><span lang="en">Top 100 SIPA — Swarm Intelligence Learning</span><span lang="th">100 อันดับแรก SIPA — การเรียนรู้ Swarm Intelligence</span></p>
+                    </article>
+                    <article class="glass-panel">
+                        <div class="icon-chip"><span class="icon" data-icon="shield"></span></div>
+                        <h4 class="mb-2 mt-4"><span lang="en">CISSP Certified</span><span lang="th">ได้รับการรับรอง CISSP</span></h4>
+                        <p class="text-sm text-soft"><span lang="en">Elite cybersecurity professional certification</span><span lang="th">ใบรับรองความปลอดภัยไซเบอร์ระดับสูง</span></p>
+                    </article>
+                    <article class="glass-panel">
+                        <div class="icon-chip"><span class="icon" data-icon="database"></span></div>
+                        <h4 class="mb-2 mt-4"><span lang="en">Vector Search</span><span lang="th">การค้นหาเวกเตอร์</span></h4>
+                        <p class="text-sm text-soft"><span lang="en">Optimized 10M+ record processing pipeline</span><span lang="th">ท่อส่งข้อมูล 10M+ รายการที่ปรับปรุงแล้ว</span></p>
+                    </article>
+                </div>
+                <button class="carousel-btn next" id="carousel-next" aria-label="Next" type="button"><span class="icon" data-icon="chevRight"></span></button>
+            </div>
+
+            <div class="cards-grid stagger-children">
+                <div class="card glass-panel">
+                    <div class="icon-chip"><span class="icon" data-icon="trophy"></span></div>
+                    <h3><span lang="en">Competitive Innovation</span><span lang="th">นวัตกรรมการแข่งขัน</span></h3>
+                    <p>
+                        <span lang="en"><strong>Siam RegTech:</strong> Top 10 finalist (SEC/BOT/OIC) — Advanced ML for Anti-Money Laundering.<br><br><strong>Learn Sabai:</strong> Top 100 (SIPA) — Swarm Intelligence for adaptive learning systems.</span>
+                        <span lang="th"><strong>Siam RegTech:</strong> ผู้เข้ารอบ 10 อันดับแรก (ก.ล.ต./ธปท./คปภ.) — ML ขั้นสูงสำหรับการต่อต้านการฟอกเงิน<br><br><strong>Learn Sabai:</strong> 100 อันดับแรก (SIPA) — Swarm Intelligence สำหรับระบบการเรียนรู้แบบปรับตัว</span>
+                    </p>
+                </div>
+                <div class="card glass-panel">
+                    <div class="icon-chip"><span class="icon" data-icon="briefcase"></span></div>
+                    <h3><span lang="en">Strategic Advisory</span><span lang="th">ที่ปรึกษาเชิงกลยุทธ์</span></h3>
+                    <p>
+                        <span lang="en"><strong>Graduate Scholarship Committees:</strong> Selected by Bank of Thailand, Civil Service Commission, NESDB (2022, 2024) to evaluate candidates for advanced Cybersecurity &amp; Data Analytics specialization.</span>
+                        <span lang="th"><strong>คณะกรรมการทุนการศึกษาระดับบัณฑิตศึกษา:</strong> ได้รับเลือกจากธนาคารแห่งประเทศไทย สำนักงาน ก.พ. สภาพัฒน์ (2565, 2567) เพื่อประเมินผู้สมัครสาขาความมั่นคงปลอดภัยไซเบอร์และการวิเคราะห์ข้อมูลขั้นสูง</span>
+                    </p>
+                </div>
+                <div class="card glass-panel">
+                    <div class="icon-chip"><span class="icon" data-icon="mic"></span></div>
+                    <h3><span lang="en">Thought Leadership</span><span lang="th">ภาวะผู้นำทางความคิด</span></h3>
+                    <p>
+                        <span lang="en"><strong>Cloud Security Alliance ASEAN Summit 2021:</strong> Panelist on Zero Trust<br><br><strong>Israel Homeland Security 2019:</strong> Keynote on Thailand's national security architecture<br><br><strong>TechSauce Global Summit 2019:</strong> Autonomous Vehicle security panel</span>
+                        <span lang="th"><strong>Cloud Security Alliance ASEAN Summit 2021:</strong> ผู้ร่วมอภิปราย Zero Trust<br><br><strong>Israel Homeland Security 2019:</strong> ปาฐกถาเรื่องสถาปัตยกรรมความมั่นคงแห่งชาติของไทย</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- International recognition -->
+            <div class="glass-panel glass-static viz-panel mt-8">
+                <div class="viz-head">
+                    <h3 class="viz-title">
+                        <span lang="en">International Recognition</span>
+                        <span lang="th">การยอมรับระดับนานาชาติ</span>
+                    </h3>
+                </div>
+                <div class="cards-grid grid-auto-250">
+                    <div class="insight-card glass-panel">
+                        <div class="icon-chip"><span class="icon" data-icon="globe"></span></div>
+                        <div>
+                            <h4><span lang="en">ITPEC Representative</span><span lang="th">ตัวแทน ITPEC</span></h4>
+                            <p><span lang="en">5 consecutive years representing Thailand at international IT professional examination councils</span><span lang="th">5 ปีติดต่อกันเป็นตัวแทนประเทศไทยในสภาการสอบวิชาชีพไอทีระหว่างประเทศ</span></p>
+                        </div>
+                    </div>
+                    <div class="insight-card glass-panel">
+                        <div class="icon-chip"><span class="icon" data-icon="mic"></span></div>
+                        <div>
+                            <h4><span lang="en">JICA Keynote</span><span lang="th">ปาฐกถา JICA</span></h4>
+                            <p><span lang="en">Delivered special lecture to executive-level audience from Japan, Bangladesh, Indonesia, Brunei, Cambodia (2014)</span><span lang="th">บรรยายพิเศษให้ผู้บริหารระดับสูงจากญี่ปุ่น บังกลาเทศ อินโดนีเซีย บรูไน กัมพูชา (2557)</span></p>
+                        </div>
+                    </div>
+                    <div class="insight-card glass-panel">
+                        <div class="icon-chip"><span class="icon" data-icon="key"></span></div>
+                        <div>
+                            <h4><span lang="en">National PKI Authority</span><span lang="th">หน่วยงาน PKI แห่งชาติ</span></h4>
+                            <p><span lang="en">Led modernization of Thailand's critical digital identity infrastructure to international standards</span><span lang="th">นำการปรับปรุงโครงสร้างพื้นฐานอัตลักษณ์ดิจิทัลสำคัญของไทยให้เป็นไปตามมาตรฐานสากล</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ CONTACT ═══════════ -->
+        <section id="contact" class="scroll-reveal">
+            <div class="section-header">
+                <span class="section-badge"><span lang="en">Connect</span><span lang="th">ติดต่อ</span></span>
+                <h2 class="section-title">
+                    <span lang="en">Get in Touch</span>
+                    <span lang="th">ติดต่อ</span>
+                </h2>
+                <p class="section-subtitle">
+                    <span lang="en">Open to research collaboration, strategic advisory, and thought leadership opportunities</span>
+                    <span lang="th">เปิดรับความร่วมมือด้านการวิจัย การให้คำปรึกษาเชิงกลยุทธ์ และโอกาสด้านภาวะผู้นำทางความคิด</span>
+                </p>
+            </div>
+
+            <div class="grid-2">
+                <div class="glass-panel glass-static viz-panel">
+                    <h3 class="viz-title mb-4"><span lang="en">Contact Information</span><span lang="th">ข้อมูลการติดต่อ</span></h3>
+                    <div class="contact-item">
+                        <div class="icon-chip icon-chip-sm"><span class="icon" data-icon="mail"></span></div>
+                        <div>
+                            <p class="contact-label">Email</p>
+                            <p class="contact-value">ii@ieee.org
+                                <button class="copy-chip" data-copy="ii@ieee.org"><span class="icon" data-icon="copy"></span><span lang="en">Copy</span><span lang="th">คัดลอก</span></button><br>
+                                la@defense.engineer
+                                <button class="copy-chip" data-copy="la@defense.engineer"><span class="icon" data-icon="copy"></span><span lang="en">Copy</span><span lang="th">คัดลอก</span></button>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="icon-chip icon-chip-sm"><span class="icon" data-icon="phone"></span></div>
+                        <div>
+                            <p class="contact-label"><span lang="en">Phone</span><span lang="th">โทรศัพท์</span></p>
+                            <p class="contact-value">+66 89-936-5955
+                                <button class="copy-chip" data-copy="+66899365955"><span class="icon" data-icon="copy"></span><span lang="en">Copy</span><span lang="th">คัดลอก</span></button>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="icon-chip icon-chip-sm"><span class="icon" data-icon="building"></span></div>
+                        <div>
+                            <p class="contact-label"><span lang="en">Organization</span><span lang="th">องค์กร</span></p>
+                            <p class="contact-value">
+                                <span lang="en">Student Loan Fund (กยศ.)<br>Financial Critical Infrastructure</span>
+                                <span lang="th">กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)<br>โครงสร้างพื้นฐานทางการเงินสำคัญ</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="icon-chip icon-chip-sm"><span class="icon" data-icon="pin"></span></div>
+                        <div>
+                            <p class="contact-label"><span lang="en">Location</span><span lang="th">ที่ตั้ง</span></p>
+                            <p class="contact-value">
+                                <span lang="en">Bangkok, Thailand</span>
+                                <span lang="th">กรุงเทพมหานคร ประเทศไทย</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-panel glass-static viz-panel">
+                    <h3 class="viz-title mb-4"><span lang="en">Engagement Opportunities</span><span lang="th">โอกาสในการมีส่วนร่วม</span></h3>
+                    <ul class="engagement-list">
+                        <li>
+                            <div class="icon-chip icon-chip-sm"><span class="icon" data-icon="flask"></span></div>
+                            <div>
+                                <p class="engagement-title"><span lang="en">Research Collaboration</span><span lang="th">ความร่วมมือด้านการวิจัย</span></p>
+                                <p class="engagement-desc"><span lang="en">Cognitive SOAR framework development, empirical validation, joint publications — laying the groundwork ahead of future doctoral studies</span><span lang="th">การพัฒนา Cognitive SOAR framework การตรวจสอบเชิงประจักษ์ การตีพิมพ์ร่วม — เพื่อปูทางสู่การศึกษาปริญญาเอกในอนาคต</span></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="icon-chip icon-chip-sm"><span class="icon" data-icon="briefcase"></span></div>
+                            <div>
+                                <p class="engagement-title"><span lang="en">Strategic Advisory</span><span lang="th">ที่ปรึกษาเชิงกลยุทธ์</span></p>
+                                <p class="engagement-desc"><span lang="en">FCI security, AI/ML implementation, data governance</span><span lang="th">ความปลอดภัย FCI การนำ AI/ML ไปใช้ การกำกับดูแลข้อมูล</span></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="icon-chip icon-chip-sm"><span class="icon" data-icon="mic"></span></div>
+                            <div>
+                                <p class="engagement-title"><span lang="en">Keynote Speaking</span><span lang="th">การบรรยายพิเศษ</span></p>
+                                <p class="engagement-desc"><span lang="en">Cognitive security automation, case-based reasoning, adaptive defense</span><span lang="th">ระบบอัตโนมัติด้านความปลอดภัยแบบปัญญาประดิษฐ์ การให้เหตุผลตามกรณี การป้องกันแบบปรับตัว</span></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="icon-chip icon-chip-sm"><span class="icon" data-icon="wrench"></span></div>
+                            <div>
+                                <p class="engagement-title"><span lang="en">Technical Consulting</span><span lang="th">ที่ปรึกษาด้านเทคนิค</span></p>
+                                <p class="engagement-desc"><span lang="en">Modern data stack, Apache Airflow, vector databases, cybersecurity architecture</span><span lang="th">Modern data stack, Apache Airflow, vector databases, สถาปัตยกรรมความมั่นคงปลอดภัยไซเบอร์</span></p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer>
+        <div class="footer-brand">TANAT TONGUTHAISRI</div>
+        <p class="footer-tagline">
+            <span lang="en">Bridging Theory and Practice in Cognitive Security</span>
+            <span lang="th">เชื่อมทฤษฎีกับการปฏิบัติในด้านความปลอดภัยแบบปัญญาประดิษฐ์</span>
+        </p>
+        <p class="footer-credentials">CISSP | CEH v12 | CHFI v11 | Project+ | M.Eng (RMIT)</p>
+        <div class="social-links">
+            <a href="https://linkedin.com/in/epicure" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            </a>
+            <a href="https://github.com/000" class="social-link" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            </a>
+            <a href="https://www.facebook.com/epicure" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/malware/" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="https://x.com/gastronomy" class="social-link" aria-label="X (Twitter)" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="https://www.credly.com/users/x" class="social-link" aria-label="Credly" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@CyberOps" class="social-link" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@dataops" class="social-link" aria-label="TikTok" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+            </a>
+            <a href="https://cnx.medium.com/" class="social-link" aria-label="Medium" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>
+            </a>
+            <a href="https://vsco.co/epicure/gallery" class="social-link" aria-label="VSCO" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.824c5.062 0 9.176 4.114 9.176 9.176s-4.114 9.176-9.176 9.176S2.824 17.062 2.824 12 6.938 2.824 12 2.824zM12 5.647A6.353 6.353 0 005.647 12 6.353 6.353 0 0012 18.353 6.353 6.353 0 0018.353 12 6.353 6.353 0 0012 5.647z"/></svg>
+            </a>
+            <a href="https://www.pinterest.com/xxx/" class="social-link" aria-label="Pinterest" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
+            </a>
+            <a href="https://dribbble.com/xxx/shots" class="social-link" aria-label="Dribbble" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 24C5.385 24 0 18.615 0 12S5.385 0 12 0s12 5.385 12 12-5.385 12-12 12zm10.12-10.358c-.35-.11-3.17-.953-6.384-.438 1.34 3.684 1.887 6.684 1.992 7.308 2.3-1.555 3.936-4.02 4.395-6.87zm-6.115 7.808c-.153-.9-.75-4.032-2.19-7.77l-.066.02c-5.79 2.015-7.86 6.025-8.04 6.4 1.73 1.358 3.92 2.166 6.29 2.166 1.42 0 2.77-.29 4-.814zm-11.62-2.58c.232-.4 3.045-5.055 8.332-6.765.135-.045.27-.084.405-.12-.26-.585-.54-1.167-.832-1.74C7.17 11.775 2.206 11.71 1.756 11.7l-.004.312c0 2.633.998 5.037 2.634 6.855zm-2.42-8.955c.46.008 4.683.026 9.477-1.248-1.698-3.018-3.53-5.558-3.8-5.928-2.868 1.35-5.01 3.99-5.676 7.17zM9.6 2.052c.282.38 2.145 2.914 3.822 6 3.645-1.365 5.19-3.44 5.373-3.702-1.81-1.61-4.19-2.586-6.795-2.586-.825 0-1.63.1-2.4.285zm10.335 3.483c-.218.29-1.935 2.493-5.724 4.04.24.49.47.985.68 1.486.08.18.15.36.22.53 3.41-.43 6.8.26 7.14.33-.02-2.42-.88-4.64-2.31-6.38z"/></svg>
+            </a>
+        </div>
+        <!-- ADR-06: stamped from BUILD at runtime; this markup is the no-JS fallback -->
+        <p class="footer-note" id="footer-build">
+            <span lang="en">© 2026 Tanat Tonguthaisri · Profile artifact v3.1.0 · Built to Nexus-Architect Protocol v18.0 ("Aurora-Zenith")</span>
+            <span lang="th">© 2569 ธนัท ทองอุทัยศรี · Profile artifact v3.1.0 · สร้างตาม Nexus-Architect Protocol v18.0 ("Aurora-Zenith")</span>
+        </p>
+    </footer>
+    <script>
+        'use strict';
+
+        // ════════════════════════════════════════════
+        // 0. BUILD IDENTITY (ADR-06)
+        //    Single source of truth. Bump here only; the footer,
+        //    <html data-build> and the debug banner all read from it.
+        // ════════════════════════════════════════════
+        const BUILD = {
+            version:  '3.1.0',
+            codename: 'Aurora-Zenith',
+            protocol: 'Nexus-Architect Protocol v18.0',
+            date:     '2026-09-02',
+            yearEn:   '2026',
+            yearTh:   '2569'
+        };
+        const DEBUG = new URLSearchParams(location.search).has('debug');
+
+        // ════════════════════════════════════════════
+        // 1. ASSETS — Native inline SVG icon registry
+        //    (Protocol v18 Iron Rule 1: no icon frameworks;
+        //     stroke="currentColor", 1.5px, SF-Symbols feel)
+        // ════════════════════════════════════════════
+        const svg = (inner, vb = '0 0 24 24') =>
+            `<svg viewBox="${vb}" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">${inner}</svg>`;
+        const ICONS = {
+            logo:      svg('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/>'),
+            shield:    svg('<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9.5 12l2 2 3.5-4"/>'),
+            brain:     svg('<path d="M9.5 4a2.7 2.7 0 0 0-2.7 2.7c-1.6.3-2.8 1.7-2.8 3.4 0 .9.3 1.7.9 2.3-.6.6-.9 1.4-.9 2.3 0 1.9 1.5 3.4 3.4 3.4.2 1.4 1.4 2.4 2.8 2.4 1 0 1.9-.5 2.4-1.3V5.4A2.9 2.9 0 0 0 9.5 4z"/><path d="M14.5 4a2.7 2.7 0 0 1 2.7 2.7c1.6.3 2.8 1.7 2.8 3.4 0 .9-.3 1.7-.9 2.3.6.6.9 1.4.9 2.3 0 1.9-1.5 3.4-3.4 3.4-.2 1.4-1.4 2.4-2.8 2.4-1 0-1.9-.5-2.4-1.3"/>'),
+            chip:      svg('<rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/>'),
+            database:  svg('<ellipse cx="12" cy="5.5" rx="7" ry="2.8"/><path d="M5 5.5v13c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-13"/><path d="M5 12c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8"/>'),
+            chart:     svg('<path d="M4 20h16"/><path d="M7 20v-6M12 20V9M17 20v-9"/>'),
+            lock:      svg('<rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.3"/>'),
+            grad:      svg('<path d="M3 9.5 12 5l9 4.5-9 4.5z"/><path d="M7 11.7V16c0 1.2 2.2 2.5 5 2.5s5-1.3 5-2.5v-4.3"/><path d="M21 9.5V15"/>'),
+            rocket:    svg('<path d="M12 15c-1.5-4.5 0-9 6.5-11 .5 6.5-2 10.5-6.5 11z"/><path d="M12 15 9 12c-2.3.4-3.7 1.6-4.5 4 2.4-.8 3.6-.5 4.5.5.9 1 1.3 2.1.5 4.5 2.4-.8 3.6-2.2 4-4.5z"/><circle cx="15.2" cy="8.8" r="1.2"/>'),
+            briefcase: svg('<rect x="3" y="8" width="18" height="12" rx="2.5"/><path d="M9 8V6.5A2.5 2.5 0 0 1 11.5 4h1A2.5 2.5 0 0 1 15 6.5V8M3 13h18"/>'),
+            search:    svg('<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/>'),
+            globe:     svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18"/>'),
+            mail:      svg('<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="m4 7.5 8 6 8-6"/>'),
+            phone:     svg('<path d="M6 3.5h3l1.5 4.5-2 1.5a12 12 0 0 0 6 6l1.5-2 4.5 1.5v3a2 2 0 0 1-2 2A16.5 16.5 0 0 1 4 5.5a2 2 0 0 1 2-2z"/>'),
+            pin:       svg('<path d="M12 21s-6.5-5.2-6.5-10.2A6.5 6.5 0 0 1 12 4.5a6.5 6.5 0 0 1 6.5 6.3C18.5 15.8 12 21 12 21z"/><circle cx="12" cy="10.8" r="2.2"/>'),
+            building:  svg('<rect x="5" y="4" width="14" height="16" rx="1.5"/><path d="M9 8h2M13 8h2M9 12h2M13 12h2M10 20v-3.5h4V20"/>'),
+            mic:       svg('<rect x="9.5" y="3.5" width="5" height="10" rx="2.5"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3.5M9 20.5h6"/>'),
+            trophy:    svg('<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 5.5H5.5A1.5 1.5 0 0 0 4 7c0 2 1.5 3.5 4 3.8M16 5.5h2.5A1.5 1.5 0 0 1 20 7c0 2-1.5 3.5-4 3.8"/><path d="M12 13v3M8.5 20.5h7M10 16.5h4l.7 4h-5.4z"/>'),
+            wrench:    svg('<path d="M14.5 6.5a4 4 0 0 0-5.6 4.9L4 16.3a2 2 0 1 0 2.8 2.8l4.9-4.9a4 4 0 0 0 4.9-5.6L14 11.2l-2-2z"/>'),
+            doc:       svg('<path d="M7 3.5h7L18.5 8v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z"/><path d="M14 3.5V8h4.5M9 12.5h6M9 15.5h6"/>'),
+            copy:      svg('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4.5A1.5 1.5 0 0 1 3 13.5v-9A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V5"/>', '0 0 24 24'),
+            check:     svg('<path d="m5 13 4.5 4.5L19 7"/>'),
+            close:     svg('<path d="M6 6l12 12M18 6 6 18"/>'),
+            arrowRight:svg('<path d="M4 12h16M14 6l6 6-6 6"/>'),
+            zap:       svg('<path d="M13 3 5 13.5h5.5L11 21l8-10.5h-5.5z"/>'),
+            bank:      svg('<path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v7M9.5 10v7M14.5 10v7M19 10v7M3.5 20.5h17M3 17h18"/>'),
+            key:       svg('<circle cx="8" cy="15.5" r="4.5"/><path d="m11.5 12.5 8-8M16 7.5l2.5 2.5M13.5 10l2 2"/>'),
+            flask:     svg('<path d="M10 3.5h4M10.5 3.5v5L5 18a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18L13.5 8.5v-5"/><path d="M7.5 14.5h9"/>'),
+            target:    svg('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4"/>'),
+            eye:       svg('<path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>'),
+            users:     svg('<circle cx="9" cy="8.5" r="3.5"/><path d="M3.5 19.5c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="16.8" cy="9.5" r="2.7"/><path d="M16 14.7c2.3.2 4 1.8 4.5 4.3"/>'),
+            layers:    svg('<path d="m12 3.5 8.5 4.7L12 12.9 3.5 8.2z"/><path d="m3.5 12.5 8.5 4.7 8.5-4.7M3.5 16.5 12 21.2l8.5-4.7"/>'),
+            menu:      svg('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+            chevLeft:  svg('<path d="m14 6-6 6 6 6"/>'),
+            chevRight: svg('<path d="m10 6 6 6-6 6"/>')
+        };
+
+        // ADR-09 — escape every data-model string before it enters innerHTML
+        const esc = s => String(s == null ? '' : s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+        // ════════════════════════════════════════════
+        // 2. NOISE (Simplex — powers the Halo fields)
+        //    ADR-03: gradients precomputed into a 12-entry table
+        //    (was two trig calls per corner, three corners per sample)
+        //    and t⁴ by squaring twice. Same field, ~3× cheaper.
+        // ════════════════════════════════════════════
+        class SimplexNoise {
+            constructor() {
+                this.p = new Uint8Array(256);
+                for (let i = 0; i < 256; i++) this.p[i] = Math.floor(256 * Math.random());
+                this.perm = new Uint8Array(512);
+                for (let i = 0; i < 512; i++) this.perm[i] = this.p[i & 255];
+                // gradient g_k = (cos k, sin k), k ∈ [0,12) — identical to v3's inline form
+                this.gx = new Float64Array(12); this.gy = new Float64Array(12);
+                for (let k = 0; k < 12; k++) { this.gx[k] = Math.cos(k); this.gy[k] = Math.sin(k); }
+                this.F2 = 0.5 * (Math.sqrt(3) - 1);
+                this.G2 = (3 - Math.sqrt(3)) / 6;
+            }
+            noise(xin, yin) {
+                const F2 = this.F2, G2 = this.G2, perm = this.perm, gx = this.gx, gy = this.gy;
+                const s = (xin + yin) * F2;
+                const i = Math.floor(xin + s), j = Math.floor(yin + s);
+                const t = (i + j) * G2;
+                const x0 = xin - (i - t), y0 = yin - (j - t);
+                const i1 = x0 > y0 ? 1 : 0, j1 = x0 > y0 ? 0 : 1;
+                const x1 = x0 - i1 + G2,     y1 = y0 - j1 + G2;
+                const x2 = x0 - 1 + 2 * G2,  y2 = y0 - 1 + 2 * G2;
+                const ii = i & 255, jj = j & 255;
+                const gi0 = perm[ii + perm[jj]] % 12;
+                const gi1 = perm[ii + i1 + perm[jj + j1]] % 12;
+                const gi2 = perm[ii + 1 + perm[jj + 1]] % 12;
+                let n0 = 0, n1 = 0, n2 = 0, t0, t1, t2, q;
+                t0 = 0.5 - x0 * x0 - y0 * y0;
+                if (t0 > 0) { q = t0 * t0; n0 = q * q * (gx[gi0] * x0 + gy[gi0] * y0); }
+                t1 = 0.5 - x1 * x1 - y1 * y1;
+                if (t1 > 0) { q = t1 * t1; n1 = q * q * (gx[gi1] * x1 + gy[gi1] * y1); }
+                t2 = 0.5 - x2 * x2 - y2 * y2;
+                if (t2 > 0) { q = t2 * t2; n2 = q * q * (gx[gi2] * x2 + gy[gi2] * y2); }
+                return 70 * (n0 + n1 + n2);
+            }
+            n3(x, y, z) { return this.noise(x + z * 0.7, y - z * 0.7); }
+        }
+
+        // ════════════════════════════════════════════
+        // 3. THE ANTIGRAVITY HALO ENGINE (Protocol v18 §5 —
+        //    dependency-free Canvas 2D port of antigravity.google's
+        //    GPGPU sim)
+        //
+        //    v3.1 adds two control loops around the same simulation:
+        //    • ADR-02 frame-time governor — `active` (the prefix of the
+        //      seeded set actually simulated) tracks the device's real
+        //      budget. Seeding is uniform rejection sampling, so a prefix
+        //      is an unbiased subsample: the ring just gets sparser, never
+        //      lopsided.
+        //    • ADR-04 debounced resize — the bitmap resizes immediately
+        //      (nothing stretches); topology settles 200 ms later, and
+        //      only reseeds on a large change.
+        // ════════════════════════════════════════════
+        class HaloEngine {
+            constructor(canvas) {
+                this.cv = canvas; this.ctx = canvas.getContext('2d');
+                this.noise = new SimplexNoise();
+                this.C1 = [0,113,227]; this.C2 = [191,90,242]; this.C3 = [255,55,95]; // spectrum ramp
+                this.BUCKETS = 24; this.hover = 0; this.pulse = 1e9;
+                this.MIN_ACTIVE = 1200;          // governor floor — still reads as a ring
+                this.ftEMA = 1 / 60; this.govAcc = 0; this.dbgAcc = 0;
+                this.pointer = { x: -1e4, y: -1e4, over: false };
+                this.reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+                this.resize(); this.buildSprites(); this.seed();
+                this.lastW = innerWidth; this.lastH = innerHeight;
+
+                addEventListener('resize', () => this.onResize(), { passive: true });
+                addEventListener('pointermove', e => {
+                    this.pointer.x = e.clientX; this.pointer.y = e.clientY;
+                    this.pointer.over = e.clientY < innerHeight;
+                }, { passive: true });
+                addEventListener('pointerleave', () => this.pointer.over = false);
+                addEventListener('click', () => this.pulse = 0);
+                document.addEventListener('visibilitychange', () => { this.last = performance.now(); });
+
+                this.t = 0; this.last = performance.now();
+                if (this.reduced) { this.step(1 / 60); this.draw(); }
+                else requestAnimationFrame(ts => this.loop(ts));
+            }
+
+            /* — viewport — */
+            resize() {
+                this.dpr = Math.min(devicePixelRatio || 1, 2);
+                this.cv.width = innerWidth * this.dpr; this.cv.height = innerHeight * this.dpr;
+                this.R = Math.min(innerWidth, innerHeight) * 0.36;
+                this.cx = innerWidth * 0.5; this.cy = innerHeight * 0.44;
+            }
+            onResize() {                                   // ADR-04
+                this.resize();                             // bitmap now, so nothing stretches
+                clearTimeout(this._resizeTimer);
+                this._resizeTimer = setTimeout(() => this.settleResize(), 200);
+            }
+            settleResize() {
+                const dw = Math.abs(innerWidth - this.lastW) / Math.max(1, this.lastW);
+                const dh = Math.abs(innerHeight - this.lastH) / Math.max(1, this.lastH);
+                if (dw > 0.25 || dh > 0.25) {
+                    this.seed();                           // genuinely new viewport
+                } else {                                   // URL-bar nudge, window drag
+                    const sx = innerWidth / this.lastW, sy = innerHeight / this.lastH;
+                    for (const p of this.pts) {
+                        p.hx = this.cx + (p.hx - this.cx) * sx;
+                        p.hy = this.cy + (p.hy - this.cy) * sy;
+                    }
+                }
+                this.lastW = innerWidth; this.lastH = innerHeight;
+                if (this.reduced) { this.step(1 / 60); this.draw(); }  // ADR-04: reduced-motion repaint
+            }
+
+            /* — helpers — */
+            mix(a, b, t) { return a + (b - a) * t; }
+            smooth(e0, e1, x) { const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); }
+            ramp(p) { // 3-stop, mid-stop h = 0.8 (as original shader)
+                const h = 0.8, [A, B] = p < h ? [this.C1, this.C2] : [this.C2, this.C3];
+                const t = p < h ? p / h : (p - h) / (1 - h);
+                return A.map((c, i) => Math.round(this.mix(c, B[i], t)));
+            }
+            buildSprites() { // pre-rendered pill grains, one per color bucket
+                this.sprites = [];
+                const W = 22, H = 9;
+                for (let b = 0; b < this.BUCKETS; b++) {
+                    const s = document.createElement('canvas'); s.width = W; s.height = H;
+                    const c = s.getContext('2d'), [r, g, bl] = this.ramp(b / (this.BUCKETS - 1));
+                    c.fillStyle = `rgb(${r},${g},${bl})`;
+                    c.beginPath();
+                    if (c.roundRect) c.roundRect(1, 1, W - 2, H - 2, H / 2);
+                    else c.rect(1, 1, W - 2, H - 2);       // pre-2023 Safari/Firefox
+                    c.fill();
+                    this.sprites.push(s);
+                }
+            }
+            density(x, y) { // ring-mask density field from the original sim shader
+                const dx = x - this.cx, dy = y - this.cy, d = Math.sqrt(dx * dx + dy * dy), R = this.R;
+                const j = this.noise.noise(x * 0.002, y * 0.002) * 0.005 * R;
+                const w1 = 0.12 * R, w2 = 0.05 * R;
+                let t1 = this.smooth(R - 2 * w1, R, d) - this.smooth(R, R + w1, d + j);
+                let t2 = this.smooth(R - 2 * w2, R, d) - this.smooth(R, R + w2, d + j);
+                const t3 = this.smooth(R + w2, R, d) * 0.15;
+                t1 = Math.max(0, t1) ** 2; t2 = Math.max(0, t2) ** 3 * 3;
+                const field = Math.pow((this.noise.noise(x * 0.004, y * 0.004) + 1.5) * 0.5, 2) * 0.04;
+                return t1 + t2 + t3 + field;
+            }
+            seed() { // rejection-sample home positions (attempt-capped so a
+                     // degenerate viewport can never spin this loop forever)
+                const N = Math.round(Math.min(6000, Math.max(2200, innerWidth * innerHeight / 300)));
+                this.pts = [];
+                let guard = N * 400;
+                while (this.pts.length < N && guard-- > 0) {
+                    const x = Math.random() * innerWidth, y = Math.random() * innerHeight;
+                    if (Math.random() < this.density(x, y) * 0.9) {
+                        this.pts.push({ hx: x, hy: y, x, y, scale: 0, seed: Math.random(),
+                                        life: 3 + (Math.random() * 2 - 1), heat: 0 });
+                    }
+                }
+                this.N = this.pts.length;
+                // keep the governor's verdict across a reseed, clamped to the new N
+                this.active = Math.min(this.N, this.active || this.N);
+            }
+
+            /* — ADR-02: adapt the simulated budget to the measured frame time — */
+            governor() {
+                const fps = 1 / Math.max(this.ftEMA, 1e-4);
+                if (fps < 38 && this.active > this.MIN_ACTIVE) {
+                    this.active = Math.max(this.MIN_ACTIVE, Math.floor(this.active * 0.8));
+                } else if (fps >= 57 && this.active < this.N) {
+                    this.active = Math.min(this.N, Math.ceil(this.active * 1.1));
+                }
+            }
+
+            loop(ts) {
+                const dt = Math.min(0.05, (ts - this.last) / 1000); this.last = ts;
+                if (!document.hidden) {
+                    this.t += dt; this.step(dt); this.draw();
+                    this.ftEMA = this.ftEMA * 0.9 + dt * 0.1;
+                    this.govAcc += dt;
+                    if (this.govAcc >= 0.5) { this.govAcc = 0; this.governor(); }
+                    if (DEBUG) {
+                        this.dbgAcc += dt;
+                        if (this.dbgAcc >= 2) {
+                            this.dbgAcc = 0;
+                            console.log(`[halo] ${(1 / this.ftEMA).toFixed(0)} fps · ${this.active}/${this.N} grains · dpr ${this.dpr}`);
+                        }
+                    }
+                }
+                requestAnimationFrame(t2 => this.loop(t2));
+            }
+
+            step(dt) {
+                const n = this.noise, t = this.t, R = this.R, pts = this.pts;
+                const gatherR = 0.15 * Math.min(innerWidth, innerHeight);
+                this.hover += ((this.pointer.over ? 1 : 0) - this.hover) * Math.min(1, dt / 0.4);
+                if (this.pulse < 1) this.pulse += dt / 1.2;
+                const k = 1 / R, count = Math.min(this.active, pts.length);
+                for (let idx = 0; idx < count; idx++) {
+                    const p = pts[idx];
+                    // life cycle: respawn at home, ease scale in/out
+                    const lt = ((p.seed * 100 + t * 0.5) % p.life);
+                    let target = this.smooth(0.01, 0.5, lt) - this.smooth(0.5, 1, lt / p.life);
+                    // layered simplex displacement (mid swirl + fine tremor + ambient drift)
+                    const dx = n.n3(p.hx * k * 4, p.hy * k * 4, t * 0.35) * 0.03 * R
+                             + n.n3(p.hx * k * 20, p.hy * k * 20, t * 0.5) * 0.005 * R
+                             + n.n3(p.hx * k * 0.5, p.hy * k * 0.5, t * 0.15) * 0.025 * R;
+                    const dy = n.n3(p.hx * k * 4 + 33, p.hy * k * 4 + 33, t * 0.35) * 0.03 * R
+                             + n.n3(p.hx * k * 20 + 71, p.hy * k * 20 + 71, t * 0.5) * 0.005 * R
+                             + n.n3(p.hx * k * 0.5 + 87, p.hy * k * 0.5 + 87, t * 0.15) * 0.025 * R;
+                    let tx = p.hx + dx, ty = p.hy + dy;
+                    // cursor gather
+                    const ox = this.pointer.x - p.x, oy = this.pointer.y - p.y;
+                    const pull = this.smooth(gatherR, 0, Math.sqrt(ox * ox + oy * oy)) * this.hover;
+                    if (pull > 0.001) {
+                        tx = this.mix(tx, this.pointer.x, pull * 0.6);
+                        ty = this.mix(ty, this.pointer.y, pull * 0.6);
+                        target += pull * 1.5;
+                    }
+                    p.heat += (pull - p.heat) * 0.1;
+                    // click pulse shockwave
+                    if (this.pulse < 1) {
+                        const rx = p.hx - this.cx, ry = p.hy - this.cy;
+                        const dr = Math.sqrt(rx * rx + ry * ry) / R;
+                        const w = (this.smooth(this.pulse - 0.25, this.pulse, dr)
+                                 - this.smooth(this.pulse, this.pulse + 0.25, dr))
+                                 * this.smooth(1, 0, dr) * 0.02;
+                        tx = this.cx + (tx - this.cx) * (1 + w);
+                        ty = this.cy + (ty - this.cy) * (1 + w);
+                    }
+                    p.x += (tx - p.x) * 0.2; p.y += (ty - p.y) * 0.2;
+                    p.scale += (target - p.scale) * 0.1;
+                }
+            }
+
+            draw() {
+                const { ctx, dpr } = this;
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+                ctx.clearRect(0, 0, this.cv.width, this.cv.height);
+                const n = this.noise, t = this.t, pts = this.pts;
+                const count = Math.min(this.active, pts.length);
+                for (let idx = 0; idx < count; idx++) {
+                    const p = pts[idx];
+                    if (p.scale < 0.05) continue;
+                    let prog = this.smooth(0, 0.75, ((n.n3(p.hx * 0.008, p.hy * 0.008, t * 0.5) + 1) / 2) ** 2);
+                    prog = Math.min(1, prog + p.heat);            // gathered grains heat toward C3
+                    const spr = this.sprites[Math.round(prog * (this.BUCKETS - 1))];
+                    const ang = Math.atan2(p.y - this.cy, p.x - this.cx)
+                              + n.n3(p.hx * 0.02, p.hy * 0.02, t * 0.85) * 0.5;
+                    const s = (p.scale * 7 * dpr * 0.5 + 0.5) / 9; // sprite height 9px
+                    ctx.setTransform(Math.cos(ang) * s, Math.sin(ang) * s,
+                                     -Math.sin(ang) * s, Math.cos(ang) * s,
+                                     p.x * dpr, p.y * dpr);
+                    ctx.globalAlpha = Math.min(1, p.scale) * 0.9;
+                    ctx.drawImage(spr, -11, -4.5);
+                }
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        // ════════════════════════════════════════════
+        // 4. DATA MODEL
+        //    (doctoral programme NOT yet commenced — the 2025 entry
+        //     and every copy string reflect that)
+        // ════════════════════════════════════════════
+        const TYPE_META = {
+            milestone:   { color: '#0071e3', point: 'circle',   en: 'Milestone',   th: 'เหตุการณ์สำคัญ' },
+            achievement: { color: '#30d158', point: 'rect',     en: 'Achievement', th: 'ความสำเร็จ' },
+            conflict:    { color: '#ff375f', point: 'rectRot',  en: 'Challenge',   th: 'ความท้าทาย' },
+            research:    { color: '#bf5af2', point: 'triangle', en: 'Research',    th: 'งานวิจัย' }
+        };
+
+        const timelineData = [
+            {
+                year: 2004, yearThai: 2547,
+                roleEn: "Master's Thesis — CBR Pioneer", roleTh: "วิทยานิพนธ์ปริญญาโท — ผู้บุกเบิก CBR",
+                org: "RMIT University", orgTh: "มหาวิทยาลัย RMIT",
+                impact: 95, type: "research", iconKey: "grad",
+                description: "Enhancing Academic Advisement using Case-Based Reasoning (87% accuracy). Proved expertise-as-experiences, similarity-based retrieval, and precedent transparency—the three principles that define C-SOAR 20 years later.",
+                descriptionTh: "การปรับปรุงการให้คำปรึกษาทางวิชาการโดยใช้ Case-Based Reasoning (ความแม่นยำ 87%) พิสูจน์ความเชี่ยวชาญเป็นประสบการณ์ การดึงข้อมูลตามความคล้ายคลึง และความโปร่งใสตามแบบอย่าง",
+                tags: ["CBR", "AI", "Research", "Academic"],
+                metrics: { accuracy: "87%", cases: "500+", duration: "2 years" }
+            },
+            {
+                year: 2009, yearThai: 2552,
+                roleEn: "E-Business Consultant", roleTh: "ที่ปรึกษา E-Business",
+                org: "Melbourne IT Ltd.", orgTh: "Melbourne IT Ltd.",
+                impact: 85, type: "milestone", iconKey: "briefcase",
+                description: "7 years deploying Case-Based Reasoning for IT service desk (73% first-call resolution). Scaled case libraries to 100,000+ incidents, encountering O(n²) performance degradation—the motivation for C-SOAR's vectorized O(log n) approach.",
+                descriptionTh: "7 ปีในการติดตั้ง Case-Based Reasoning สำหรับ IT service desk (แก้ปัญหาได้ 73% ในการโทรครั้งแรก) ขยาย case libraries เป็นกว่า 100,000 incidents",
+                tags: ["CBR", "Production", "IT Service", "Australia"],
+                metrics: { resolution: "73%", cases: "100K+", years: "7" }
+            },
+            {
+                year: 2010, yearThai: 2553,
+                roleEn: "Researcher", roleTh: "นักวิจัย",
+                org: "NECTEC/NSTDA", orgTh: "เนคเทค/สวทช.",
+                impact: 75, type: "milestone", iconKey: "flask",
+                description: "8 Years Deep AI Research: Swarm Intelligence (Bee's Algorithm), evolutionary algorithms, reinforcement learning. Published research on multi-objective optimization—balancing competing constraints critical for C-SOAR's formal verification.",
+                descriptionTh: "8 ปีวิจัย AI เชิงลึก: Swarm Intelligence (Bee's Algorithm) อัลกอริทึมวิวัฒนาการ การเรียนรู้แบบเสริมกำลัง ตีพิมพ์งานวิจัยเรื่องการเพิ่มประสิทธิภาพหลายวัตถุประสงค์",
+                tags: ["AI", "Research", "Swarm Intelligence", "NSTDA"],
+                metrics: { publications: "5+", algorithms: "3", years: "8" }
+            },
+            {
+                year: 2018, yearThai: 2561,
+                roleEn: "Innovation Manager", roleTh: "ผู้จัดการนวัตกรรม",
+                org: "NSTDA", orgTh: "สวทช.",
+                impact: 88, type: "achievement", iconKey: "rocket",
+                description: "Led R&D for autonomous systems, counter-terrorism financing, OSINT using transformer-based Thai NLP. Explored dual-use AI, predictive maintenance, WMD proliferation controls.",
+                descriptionTh: "นำ R&D สำหรับระบบอัตโนมัติ การต่อต้านการเงินก่อการร้าย OSINT โดยใช้ Thai NLP แบบ transformer สำรวจ AI แบบใช้งานคู่ การบำรุงรักษาเชิงพยากรณ์",
+                tags: ["AI", "NLP", "Transformers", "National Security"],
+                metrics: { projects: "10+", team: "15", budget: "฿50M" }
+            },
+            {
+                year: 2019, yearThai: 2562,
+                roleEn: "Innovation Manager — National Security AI", roleTh: "ผู้จัดการนวัตกรรม — AI ความมั่นคงแห่งชาติ",
+                org: "NSTDA", orgTh: "สวทช.",
+                impact: 90, type: "achievement", iconKey: "shield",
+                description: "AI for National Security: Led R&D for autonomous systems, counter-terrorism financing, OSINT using transformer-based Thai NLP. Built transformer expertise (embeddings) and multi-modal fusion.",
+                descriptionTh: "AI สำหรับความมั่นคงแห่งชาติ: นำ R&D สำหรับระบบอัตโนมัติ การต่อต้านการเงินก่อการร้าย OSINT โดยใช้ Thai NLP แบบ transformer",
+                tags: ["AI", "National Security", "Transformers", "OSINT"],
+                metrics: { accuracy: "92%", languages: "2", models: "5" }
+            },
+            {
+                year: 2020, yearThai: 2563,
+                roleEn: "Advisor & Senior Programmer", roleTh: "ที่ปรึกษาและโปรแกรมเมอร์อาวุโส",
+                org: "Royal Thai Army Cyber Center", orgTh: "ศูนย์ไซเบอร์กองทัพบก",
+                impact: 92, type: "conflict", iconKey: "zap",
+                description: "The Epiphany: Advised AI-augmented defense against 50K+ daily alerts (94% false positives). Observed expert analysts defeating APTs through analogical reasoning—'this reminds me of the 2017 campaign.' This human case-based cognitive process became C-SOAR's architectural blueprint.",
+                descriptionTh: "การตระหนักรู้: ให้คำปรึกษาการป้องกันด้วย AI ต่อการแจ้งเตือนกว่า 50,000 รายการต่อวัน (ผลบวกลวง 94%) สังเกตนักวิเคราะห์ผู้เชี่ยวชาญเอาชนะ APT ผ่านการให้เหตุผลแบบเปรียบเทียบ",
+                tags: ["Military", "Cyber Defense", "APT", "Alert Fatigue"],
+                metrics: { alerts: "50K/day", falsePositive: "94%", APTs: "12" }
+            },
+            {
+                year: 2022, yearThai: 2565,
+                roleEn: "Project Manager — National PKI", roleTh: "ผู้จัดการโครงการ — PKI แห่งชาติ",
+                org: "ETDA", orgTh: "สพธอ.",
+                impact: 87, type: "milestone", iconKey: "key",
+                description: "National PKI Architecture: Led gap analysis for Thailand's CA infrastructure against WebTrust/Chrome Root Program. Mastered formal architectural assessment—identifying deficiencies and validating solutions.",
+                descriptionTh: "สถาปัตยกรรม PKI แห่งชาติ: นำการวิเคราะห์ช่องว่างสำหรับโครงสร้างพื้นฐาน CA ของไทยเทียบกับ WebTrust/Chrome Root Program",
+                tags: ["PKI", "Digital Identity", "WebTrust", "ETDA"],
+                metrics: { CAs: "5", standards: "3", compliance: "100%" }
+            },
+            {
+                year: 2023, yearThai: 2566,
+                roleEn: "Information Technology Specialist", roleTh: "ผู้เชี่ยวชาญเทคโนโลยีสารสนเทศ",
+                org: "Student Loan Fund (กยศ.)", orgTh: "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)",
+                impact: 98, type: "conflict", iconKey: "bank",
+                description: "The Crucible: Managing security for 200B+ baht infrastructure where the March 2024 zero-day APT exposed complete SOAR failure (47-minute manual response). Architected production vector pipelines (Airflow DAGs: 3hrs → 12min), deployed 768-dimensional fraud detection (sub-10ms on 10M+ records).",
+                descriptionTh: "การทดสอบ: บริหารความปลอดภัยสำหรับโครงสร้างพื้นฐานมูลค่ากว่า 200,000 ล้านบาท ที่ APT zero-day มีนาคม 2567 เปิดเผยความล้มเหลวของ SOAR อย่างสมบูรณ์ (การตอบสนองด้วยตนเอง 47 นาที)",
+                tags: ["FCI", "Vector DB", "Fraud Detection", "Production"],
+                metrics: { assets: "฿200B+", accounts: "7M+", latency: "<10ms" }
+            },
+            {
+                year: 2025, yearThai: 2568,
+                roleEn: "Independent C-SOAR Research", roleTh: "งานวิจัย C-SOAR อิสระ",
+                org: "Self-directed — pre-doctoral", orgTh: "วิจัยด้วยตนเอง — ก่อนเข้าศึกษาปริญญาเอก",
+                impact: 100, type: "research", iconKey: "target",
+                description: "Formalizing the Cognitive SOAR framework as independent research—transcending static automation through Vectorized Case-Based Reasoning, LLM-powered synthesis, and Formal Verification. Formal doctoral studies are planned as a future milestone and have not yet commenced.",
+                descriptionTh: "พัฒนา Cognitive SOAR framework อย่างเป็นระบบในฐานะงานวิจัยอิสระ—ก้าวข้ามระบบอัตโนมัติแบบคงที่ผ่าน Vectorized Case-Based Reasoning โดยการศึกษาปริญญาเอกอย่างเป็นทางการเป็นแผนในอนาคตและยังไม่ได้เริ่มต้น",
+                tags: ["C-SOAR", "Research", "Pre-doctoral", "Roadmap"],
+                metrics: { framework: "C-SOAR", target: "70%→95%", status: "Pre-doctoral" }
+            }
+        ];
+
+        const skillsData = [
+            { axis: 'Case-Based Reasoning', value: 95 },
+            { axis: 'AI/ML', value: 92 },
+            { axis: 'Data Engineering', value: 90 },
+            { axis: 'Cybersecurity', value: 93 },
+            { axis: 'Vector Embeddings', value: 88 },
+            { axis: 'Formal Verification', value: 85 },
+            { axis: 'Production Systems', value: 91 },
+            { axis: 'Research', value: 87 }
+        ];
+
+        // Polymorphic topology: shape encodes group (hub/pillar circle, tool square, governance diamond)
+        const networkNodes = [
+            { id: 'C-SOAR',       group: 'hub',        size: 34, description: 'Cognitive SOAR Framework — the convergence point of two decades of expertise.', descriptionTh: 'กรอบงาน Cognitive SOAR — จุดบรรจบของความเชี่ยวชาญกว่าสองทศวรรษ' },
+            { id: 'CBR',          group: 'pillar',     size: 24, description: 'Case-Based Reasoning: expertise-as-experiences, precedent transparency.', descriptionTh: 'Case-Based Reasoning: ความเชี่ยวชาญในรูปประสบการณ์ ความโปร่งใสตามแบบอย่าง' },
+            { id: 'Vector DB',    group: 'pillar',     size: 21, description: 'Vector databases powering sub-10ms similarity search across 10M+ records.', descriptionTh: 'ฐานข้อมูลเวกเตอร์สำหรับการค้นหาความคล้ายคลึงต่ำกว่า 10ms' },
+            { id: 'LLM',          group: 'pillar',     size: 21, description: 'Large Language Models for contextual response synthesis.', descriptionTh: 'โมเดลภาษาขนาดใหญ่สำหรับการสังเคราะห์การตอบสนองตามบริบท' },
+            { id: 'Formal Logic', group: 'pillar',     size: 20, description: 'Formal verification of safety invariants for autonomous actions.', descriptionTh: 'การตรวจสอบเชิงรูปนัยของค่าคงที่ด้านความปลอดภัย' },
+            { id: 'Python',       group: 'tool',       size: 16, description: 'Primary engineering language across the C-SOAR stack.', descriptionTh: 'ภาษาหลักด้านวิศวกรรมของ C-SOAR' },
+            { id: 'Airflow',      group: 'tool',       size: 15, description: 'Apache Airflow orchestration — 3hrs → 12min DAG optimization.', descriptionTh: 'การจัดการ Apache Airflow — ปรับปรุง DAG จาก 3 ชม. เหลือ 12 นาที' },
+            { id: 'Transformers', group: 'tool',       size: 16, description: '768-dimensional transformer embeddings, Thai NLP.', descriptionTh: 'Transformer embeddings 768 มิติ และ Thai NLP' },
+            { id: 'SIEM',         group: 'tool',       size: 15, description: 'Security Information & Event Management at 50M+ events/day.', descriptionTh: 'SIEM ที่ 50M+ เหตุการณ์ต่อวัน' },
+            { id: 'FCI',          group: 'governance', size: 14, description: 'Financial Critical Infrastructure — ฿200B+, 7M+ accounts.', descriptionTh: 'โครงสร้างพื้นฐานทางการเงินสำคัญ — ฿200B+, 7M+ บัญชี' },
+            { id: 'CISSP',        group: 'governance', size: 14, description: 'CISSP certification held since 2015.', descriptionTh: 'ใบรับรอง CISSP ตั้งแต่ปี 2015' },
+            { id: 'PDPA',         group: 'governance', size: 12, description: 'Personal Data Protection Act compliance.', descriptionTh: 'การปฏิบัติตาม PDPA' },
+            { id: 'Audit',        group: 'governance', size: 12, description: 'Security auditing and explainability obligations.', descriptionTh: 'การตรวจสอบความปลอดภัยและความสามารถอธิบายได้' }
+        ];
+        const networkLinks = [
+            { source: 'C-SOAR', target: 'CBR', value: 10 },
+            { source: 'C-SOAR', target: 'Vector DB', value: 10 },
+            { source: 'C-SOAR', target: 'LLM', value: 10 },
+            { source: 'C-SOAR', target: 'Formal Logic', value: 10 },
+            { source: 'CBR', target: 'Python', value: 5 },
+            { source: 'CBR', target: 'Transformers', value: 5 },
+            { source: 'Vector DB', target: 'Airflow', value: 5 },
+            { source: 'LLM', target: 'Transformers', value: 5 },
+            { source: 'Formal Logic', target: 'Audit', value: 5 },
+            { source: 'C-SOAR', target: 'FCI', value: 8 },
+            { source: 'C-SOAR', target: 'SIEM', value: 8 },
+            { source: 'FCI', target: 'PDPA', value: 3 },
+            { source: 'FCI', target: 'CISSP', value: 3 }
+        ];
+
+        // C-SOAR triadic architecture
+        const csoarNodes = [
+            { id: 'csoar',  label: 'C-SOAR',         labelTh: 'C-SOAR',              group: 'hub',    size: 52,
+              description: 'The Cognitive SOAR hub: adaptive, explainable, formally safe security automation — under active independent development ahead of future doctoral formalization.',
+              descriptionTh: 'ศูนย์กลาง Cognitive SOAR: ระบบอัตโนมัติด้านความปลอดภัยที่ปรับตัวได้ อธิบายได้ และปลอดภัยเชิงรูปนัย — พัฒนาเป็นงานวิจัยอิสระก่อนต่อยอดสู่ปริญญาเอกในอนาคต' },
+            { id: 'vcbr',   label: 'Vectorized CBR', labelTh: 'Vectorized CBR',      group: 'pillar', size: 38,
+              description: '768-dimensional embeddings turn O(n²) case retrieval into O(log n) — sub-10ms across millions of incidents.',
+              descriptionTh: 'Embeddings 768 มิติเปลี่ยนการดึงกรณีจาก O(n²) เป็น O(log n) — ต่ำกว่า 10ms ในหลายล้านเหตุการณ์' },
+            { id: 'llm',    label: 'LLM Synthesis',  labelTh: 'การสังเคราะห์ LLM',    group: 'pillar', size: 38,
+              description: 'Local transformer models synthesize response strategies from multiple historical cases: 30-second zero-day response.',
+              descriptionTh: 'โมเดล transformer ในเครื่องสังเคราะห์กลยุทธ์จากหลายกรณีในอดีต: ตอบสนอง zero-day ใน 30 วินาที' },
+            { id: 'formal', label: 'Formal Logic',   labelTh: 'ตรรกะเชิงรูปนัย',      group: 'pillar', size: 38,
+              description: 'Mathematically proven safety invariants guarantee "do no harm" for every autonomous action.',
+              descriptionTh: 'ค่าคงที่ด้านความปลอดภัยที่พิสูจน์ทางคณิตศาสตร์รับประกัน "ไม่ก่ออันตราย" ในทุกการดำเนินการอัตโนมัติ' }
+        ];
+        const csoarLinks = [
+            { source: 'csoar', target: 'vcbr', type: 'core' },
+            { source: 'csoar', target: 'llm', type: 'core' },
+            { source: 'csoar', target: 'formal', type: 'core' },
+            { source: 'vcbr', target: 'llm', type: 'supply' },
+            { source: 'llm', target: 'formal', type: 'supply' },
+            { source: 'formal', target: 'vcbr', type: 'supply' }
+        ];
+
+        // ════════════════════════════════════════════
+        // 5. APP CONTROLLER
+        //    ADR-01: every module boots inside its own bulkhead, so one
+        //    failure degrades one feature instead of the whole page.
+        // ════════════════════════════════════════════
+        const APP = {
+            lang: 'en',
+            state: { fromYear: 2004, minImpact: 0, type: 'all' },
+            charts: {},
+            boot: [],
+
+            /* — ADR-01 bulkhead — */
+            run(name, fn) {
+                const t0 = performance.now();
+                try {
+                    fn();
+                    this.boot.push({ module: name, status: 'ok', ms: +(performance.now() - t0).toFixed(1) });
+                } catch (e) {
+                    this.boot.push({ module: name, status: 'failed', error: e && e.message });
+                    console.error(`[boot] ${name} failed —`, e);
+                }
+            },
+
+            init() {
+                this.run('build',      () => this.stampBuild());
+                this.run('icons',      () => this.hydrateIcons());
+                this.run('heroPhoto',  () => this.initHeroPhoto());
+                this.run('language',   () => this.initLanguage());
+                this.run('menu',       () => this.initMenu());
+                this.run('scrollFX',   () => this.initScrollFX());
+                this.run('counters',   () => this.initCounters());
+                this.run('skillBars',  () => this.initSkillBars());
+                this.run('sliders',    () => this.initSliders());
+                this.run('pills',      () => this.initPills());
+                this.run('charts',     () => this.initCharts());
+                this.run('timeline',   () => this.renderTimeline());
+                this.run('network',    () => this.initNetwork());
+                this.run('csoar',      () => this.initCsoar());
+                this.run('carousel',   () => this.initCarousel());
+                this.run('copy',       () => this.initCopy());
+                this.run('panel',      () => this.initPanel());
+                this.run('thaiDates',  () => this.updateThaiDates());
+                this.run('halo',       () => { this.halo = new HaloEngine(document.getElementById('halo-canvas')); });
+
+                this.dismissOverlay();   // ADR-01: unconditional — never strand the page behind it
+                if (DEBUG) {
+                    console.log(`%cProfile artifact v${BUILD.version} "${BUILD.codename}" · ${BUILD.protocol}`,
+                                'font-weight:bold');
+                    console.table(this.boot);
+                }
+            },
+
+            dismissOverlay() {
+                const overlay = document.getElementById('loading-overlay');
+                if (!overlay) return;
+                overlay.classList.add('fade-out');
+                overlay.style.pointerEvents = 'none';
+                setTimeout(() => overlay.remove(), 900);
+            },
+
+            /* — ADR-06: one build constant drives every visible stamp — */
+            stampBuild() {
+                document.documentElement.dataset.build = `${BUILD.version}+${BUILD.date}`;
+                const el = document.getElementById('footer-build');
+                if (!el) return;
+                const tail = `Profile artifact v${BUILD.version} · `;
+                el.innerHTML =
+                    `<span lang="en">© ${BUILD.yearEn} Tanat Tonguthaisri · ${tail}Built to ${BUILD.protocol} ("${BUILD.codename}")</span>` +
+                    `<span lang="th">© ${BUILD.yearTh} ธนัท ทองอุทัยศรี · ${tail}สร้างตาม ${BUILD.protocol} ("${BUILD.codename}")</span>`;
+            },
+
+            hydrateIcons() {
+                const set = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+                set('logo-slot', ICONS.logo);
+                set('menu-toggle', ICONS.menu);
+                set('slide-panel-close', ICONS.close);
+                document.querySelectorAll('[data-icon]').forEach(el => {
+                    const k = el.dataset.icon;
+                    if (ICONS[k]) el.innerHTML = ICONS[k];
+                });
+            },
+
+            /* — ADR-09: monogram fallback without an inline handler; also
+                 covers an image that already failed before this ran — */
+            initHeroPhoto() {
+                const img = document.getElementById('hero-photo-img');
+                if (!img) return;
+                const fallback = () => {
+                    if (!img.parentNode) return;
+                    const div = document.createElement('div');
+                    div.className = 'hero-photo-fallback hero-title';
+                    div.textContent = 'TT';
+                    img.replaceWith(div);
+                };
+                img.addEventListener('error', fallback, { once: true });
+                if (img.complete && img.naturalWidth === 0) fallback();
+            },
+
+            /* — i18n — */
+            initLanguage() {
+                let saved = 'en';
+                try { saved = localStorage.getItem('language') || 'en'; } catch (e) {}
+                this.setLang(saved);
+                document.querySelectorAll('.lang-btn').forEach(btn =>
+                    btn.addEventListener('click', () => this.setLang(btn.dataset.lang)));
+            },
+            setLang(lang) {
+                this.lang = lang === 'th' ? 'th' : 'en';
+                document.body.dataset.lang = this.lang;
+                // safe: i18n CSS rules are scoped under body (v3 root-cause fix)
+                document.documentElement.lang = this.lang;
+                document.querySelectorAll('.lang-btn').forEach(b =>
+                    b.classList.toggle('active', b.dataset.lang === this.lang));
+                try { localStorage.setItem('language', this.lang); } catch (e) {}
+                this.updateThaiDates();
+                this.renderTimeline();   // re-render grid + chart tooltips in active language
+            },
+            updateThaiDates() {
+                document.querySelectorAll('.thai-date').forEach(el => {
+                    const y = parseInt(el.dataset.year, 10);
+                    if (!y) return;
+                    // ADR-07f: "since" is a data flag, not a hard-coded year
+                    el.textContent = this.lang === 'th'
+                        ? 'พ.ศ. ' + (y + 543)
+                        : (el.dataset.since ? `Since ${y}` : String(y));
+                });
+            },
+            t(en, th) { return this.lang === 'th' && th ? th : en; },
+
+            /* — chrome — */
+            initMenu() {
+                const toggle = document.getElementById('menu-toggle');
+                const links = document.getElementById('nav-links');
+                if (!toggle || !links) return;
+                toggle.addEventListener('click', () => {
+                    const open = links.classList.toggle('open');
+                    toggle.setAttribute('aria-expanded', open);
+                });
+                links.querySelectorAll('a').forEach(a =>
+                    a.addEventListener('click', () => links.classList.remove('open')));
+            },
+            initScrollFX() {
+                const revealables = document.querySelectorAll('.scroll-reveal, .stagger-children');
+                if (!('IntersectionObserver' in window)) {          // ADR-09 fallback
+                    revealables.forEach(el => el.classList.add('revealed'));
+                    return;
+                }
+                const io = new IntersectionObserver(entries => entries.forEach(en => {
+                    if (en.isIntersecting) { en.target.classList.add('revealed'); io.unobserve(en.target); }
+                }), { threshold: .12 });
+                revealables.forEach(el => io.observe(el));
+                // active nav
+                const navLinks = document.querySelectorAll('.nav-links a');
+                const so = new IntersectionObserver(entries => entries.forEach(en => {
+                    if (en.isIntersecting) navLinks.forEach(l =>
+                        l.classList.toggle('active', l.dataset.section === en.target.id));
+                }), { rootMargin: '-40% 0px -55% 0px' });
+                document.querySelectorAll('main section[id]').forEach(s => so.observe(s));
+            },
+            initCounters() {
+                const counters = document.querySelectorAll('[data-count]');
+                const paint = el => {
+                    el.textContent = (el.dataset.prefix || '') + el.dataset.count + (el.dataset.suffix || '');
+                };
+                if (!('IntersectionObserver' in window)) { counters.forEach(paint); return; }
+                const io = new IntersectionObserver(entries => entries.forEach(en => {
+                    if (!en.isIntersecting) return;
+                    io.unobserve(en.target);
+                    const el = en.target, target = parseInt(el.dataset.count, 10);
+                    const prefix = el.dataset.prefix || '', suffix = el.dataset.suffix || '';
+                    const t0 = performance.now(), dur = 1800;
+                    const tick = now => {
+                        const p = Math.min(1, (now - t0) / dur), eased = 1 - Math.pow(1 - p, 3);
+                        el.textContent = prefix + Math.round(target * eased) + suffix;
+                        if (p < 1) requestAnimationFrame(tick);
+                    };
+                    requestAnimationFrame(tick);
+                }), { threshold: .6 });
+                counters.forEach(el => io.observe(el));
+            },
+            initSkillBars() {
+                const host = document.getElementById('skill-bars');
+                if (!host) return;
+                const fill = () => host.querySelectorAll('.progress-fill[data-width]')
+                    .forEach((bar, i) => setTimeout(() => bar.style.width = bar.dataset.width + '%', i * 120));
+                if (!('IntersectionObserver' in window)) { fill(); return; }
+                const io = new IntersectionObserver(entries => entries.forEach(en => {
+                    if (!en.isIntersecting) return;
+                    io.unobserve(en.target);
+                    fill();
+                }), { threshold: .3 });
+                io.observe(host);
+            },
+
+            /* — Filter-Flow (Protocol v18 Rule 3) — */
+            syncSliderFill(el) {
+                el.style.setProperty('--fill', `${(el.value - el.min) / (el.max - el.min) * 100}%`);
+            },
+            initSliders() {
+                const year = document.getElementById('input-year');
+                const impact = document.getElementById('input-impact');
+                if (!year || !impact) return;
+                [year, impact].forEach(el => { this.syncSliderFill(el);
+                    el.addEventListener('input', () => this.syncSliderFill(el)); });
+                year.addEventListener('input', e => {
+                    this.state.fromYear = +e.target.value;
+                    document.getElementById('val-year').textContent = e.target.value;
+                    this.renderTimeline();
+                });
+                impact.addEventListener('input', e => {
+                    this.state.minImpact = +e.target.value;
+                    document.getElementById('val-impact').textContent = e.target.value;
+                    this.renderTimeline();
+                });
+            },
+            initPills() {
+                document.querySelectorAll('#timeline-filters .filter-pill').forEach(pill =>
+                    pill.addEventListener('click', () => {
+                        document.querySelectorAll('#timeline-filters .filter-pill').forEach(p => p.classList.remove('active'));
+                        pill.classList.add('active');
+                        this.state.type = pill.dataset.type;
+                        this.renderTimeline();
+                    }));
+            },
+            filteredEvents() {
+                return timelineData.filter(d =>
+                    d.year >= this.state.fromYear &&
+                    d.impact >= this.state.minImpact &&
+                    (this.state.type === 'all' || d.type === this.state.type));
+            },
+
+            /* — Charts (Protocol v18 §3 theming) — */
+            initCharts() {
+                if (typeof Chart === 'undefined') {
+                    document.querySelectorAll('.h-chart, .h-radar').forEach(el =>
+                        el.innerHTML = '<div class="empty-state"><h4>Chart library unavailable</h4><p>Data remains available in the table view below.</p></div>');
+                    return;
+                }
+                Chart.defaults.color = '#6e6e73';
+                Chart.defaults.font.family = "'Inter','Sarabun',sans-serif";
+                const glassTooltip = {
+                    backgroundColor: 'rgba(255,255,255,.9)',
+                    titleColor: '#1d1d1f', bodyColor: '#6e6e73',
+                    borderColor: 'rgba(0,0,0,.08)', borderWidth: 1,
+                    cornerRadius: 12, padding: 12, displayColors: false
+                };
+
+                // Trajectory (single series, one axis; identity via point shape + color + legend + table)
+                const tctx = document.getElementById('trajectoryChart').getContext('2d');
+                this.charts.trajectory = new Chart(tctx, {
+                    type: 'line',
+                    data: { labels: [], datasets: [{
+                        label: 'Impact',
+                        data: [],
+                        borderColor: '#0071e3', borderWidth: 2, tension: .35,
+                        fill: true,
+                        backgroundColor: c => {
+                            const { ctx, chartArea } = c.chart;
+                            if (!chartArea) return 'rgba(0,113,227,.15)';
+                            const g = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                            g.addColorStop(0, 'rgba(0,113,227,.35)'); g.addColorStop(1, 'rgba(0,113,227,0)');
+                            return g;
+                        },
+                        pointRadius: 7, pointHoverRadius: 10,
+                        pointBorderColor: '#ffffff', pointBorderWidth: 2,
+                        pointBackgroundColor: c => TYPE_META[(c.raw && c.raw.type) || 'milestone'].color,
+                        pointStyle: c => TYPE_META[(c.raw && c.raw.type) || 'milestone'].point,
+                        parsing: { xAxisKey: 'year', yAxisKey: 'impact' }
+                    }]},
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: {
+                            x: { grid: { color: 'rgba(29,29,31,.06)' } },
+                            y: { min: 0, max: 105, grid: { color: 'rgba(29,29,31,.06)' },
+                                 ticks: { callback: v => v <= 100 ? v : '' } }
+                        },
+                        plugins: {
+                            legend: { display: false },   // single series — HTML type legend below the plot
+                            tooltip: { ...glassTooltip, callbacks: {
+                                title: items => items.map(i => `${i.raw.year} — ${APP.t(i.raw.roleEn, i.raw.roleTh)}`),
+                                label: i => [`${APP.t(i.raw.org, i.raw.orgTh)}`,
+                                             `${APP.t('Impact', 'ผลกระทบ')}: ${i.raw.impact}/100`,
+                                             `${APP.t(TYPE_META[i.raw.type].en, TYPE_META[i.raw.type].th)}`]
+                            }}
+                        },
+                        onClick: (e, els) => {
+                            if (!els.length) return;
+                            const raw = this.charts.trajectory.data.datasets[0].data[els[0].index];
+                            this.openEventPanel(raw);
+                        }
+                    }
+                });
+
+                // Radar (single dataset — no legend box; the panel title names it)
+                const rctx = document.getElementById('radarChart').getContext('2d');
+                this.charts.radar = new Chart(rctx, {
+                    type: 'radar',
+                    data: {
+                        labels: skillsData.map(s => s.axis),
+                        datasets: [{
+                            label: 'Proficiency',
+                            data: skillsData.map(s => s.value),
+                            borderColor: '#0071e3', borderWidth: 2,
+                            backgroundColor: 'rgba(0,113,227,.16)',
+                            pointRadius: 4, pointHoverRadius: 7,
+                            pointBackgroundColor: '#0071e3',
+                            pointBorderColor: '#ffffff', pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: { r: {
+                            min: 0, max: 100,
+                            grid: { color: 'rgba(29,29,31,.06)' },
+                            angleLines: { color: 'rgba(29,29,31,.06)' },
+                            pointLabels: { font: { size: 11, weight: 600 }, color: '#6e6e73' },
+                            ticks: { display: false }
+                        }},
+                        plugins: { legend: { display: false }, tooltip: { ...glassTooltip,
+                            callbacks: { label: i => ` ${i.formattedValue}/100` } } }
+                    }
+                });
+            },
+
+            renderTimeline() {
+                const events = this.filteredEvents();
+                // grid — ADR-09: every model field escaped on the way into innerHTML
+                const grid = document.getElementById('timeline-grid');
+                const empty = document.getElementById('timeline-empty');
+                if (grid) {
+                    grid.innerHTML = events.map(d => `
+                        <div class="tl-card glass-panel" data-index="${timelineData.indexOf(d)}" role="button" tabindex="0"
+                             aria-label="${esc(d.roleEn)}, ${d.year}">
+                            <span class="tl-type type-${d.type}"><span lang="en">${TYPE_META[d.type].en}</span><span lang="th">${TYPE_META[d.type].th}</span></span>
+                            <div class="tl-year font-mono"><span lang="en">${d.year}</span><span lang="th">พ.ศ. ${d.yearThai}</span></div>
+                            <div class="tl-role"><span lang="en">${esc(d.roleEn)}</span><span lang="th">${esc(d.roleTh)}</span></div>
+                            <div class="tl-org"><span lang="en">${esc(d.org)}</span><span lang="th">${esc(d.orgTh)}</span></div>
+                            <div class="tl-impact-row">
+                                <div class="progress-track"><div class="progress-fill" style="width:${d.impact}%"></div></div>
+                                <span class="tl-impact-val">${d.impact}</span>
+                            </div>
+                        </div>`).join('');
+                    grid.querySelectorAll('.tl-card').forEach(card => {
+                        const open = () => this.openEventPanel(timelineData[+card.dataset.index], card);
+                        card.addEventListener('click', open);
+                        card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+                    });
+                    if (empty) empty.hidden = events.length > 0;
+                }
+                // chart
+                if (this.charts.trajectory) {
+                    this.charts.trajectory.data.labels = events.map(d => d.year);
+                    this.charts.trajectory.data.datasets[0].data = events;
+                    this.charts.trajectory.update();
+                }
+                // table view (accessibility relief for the contrast WARN on green)
+                const tbody = document.querySelector('#trajectory-table tbody');
+                if (tbody) tbody.innerHTML = events.map(d => `
+                    <tr><td>${d.year}</td>
+                        <td><span lang="en">${esc(d.roleEn)}</span><span lang="th">${esc(d.roleTh)}</span></td>
+                        <td><span lang="en">${TYPE_META[d.type].en}</span><span lang="th">${TYPE_META[d.type].th}</span></td>
+                        <td>${d.impact}/100</td></tr>`).join('')
+                    || `<tr><td colspan="4"><span lang="en">No matches</span><span lang="th">ไม่พบรายการ</span></td></tr>`;
+            },
+
+            /* — Slide panel (ADR-08: focus moves in and comes back) — */
+            initPanel() {
+                const close = document.getElementById('slide-panel-close');
+                if (close) close.addEventListener('click', () => this.closePanel());
+                addEventListener('keydown', e => { if (e.key === 'Escape') this.closePanel(); });
+            },
+            closePanel() {
+                const p = document.getElementById('slide-panel');
+                if (!p || !p.classList.contains('open')) return;
+                p.classList.remove('open');
+                const back = this._panelReturn;
+                this._panelReturn = null;
+                if (back && document.contains(back)) back.focus();
+            },
+            openPanel(iconKey, title, titleTh, subtitle, subtitleTh, bodyHTML, invoker) {
+                const p = document.getElementById('slide-panel');
+                if (!p) return;
+                document.getElementById('slide-panel-icon').innerHTML = ICONS[iconKey] || ICONS.doc;
+                document.getElementById('slide-panel-title').innerHTML =
+                    `<span lang="en">${title}</span><span lang="th">${titleTh || title}</span>`;
+                document.getElementById('slide-panel-subtitle').innerHTML =
+                    `<span lang="en">${subtitle}</span><span lang="th">${subtitleTh || subtitle}</span>`;
+                document.getElementById('slide-panel-body').innerHTML = bodyHTML;
+                this._panelReturn = invoker || (document.activeElement !== document.body ? document.activeElement : null);
+                p.classList.add('open');
+                const close = document.getElementById('slide-panel-close');
+                if (close) close.focus();
+            },
+            openEventPanel(d, invoker) {
+                if (!d) return;
+                const metrics = Object.entries(d.metrics || {}).map(([k, v]) =>
+                    `<div style="display:flex;justify-content:space-between;padding:.45rem 0;border-bottom:1px solid var(--hairline);">
+                        <span style="font-weight:600;text-transform:capitalize;">${esc(k)}</span>
+                        <span class="font-mono text-blue">${esc(v)}</span></div>`).join('');
+                const tags = (d.tags || []).map(t =>
+                    `<span style="display:inline-block;margin:.2rem .3rem .2rem 0;padding:.2rem .7rem;border-radius:980px;background:rgba(0,113,227,.08);color:var(--blue);font-size:.72rem;font-weight:700;">${esc(t)}</span>`).join('');
+                this.openPanel(d.iconKey, esc(d.roleEn), esc(d.roleTh),
+                    `${d.year} · ${esc(d.org)}`, `พ.ศ. ${d.yearThai} · ${esc(d.orgTh)}`,
+                    `<p style="margin-bottom:1.2rem;"><span lang="en">${esc(d.description)}</span><span lang="th">${esc(d.descriptionTh)}</span></p>
+                     <div style="margin-bottom:1.2rem;">
+                        <div class="tl-impact-row"><div class="progress-track"><div class="progress-fill" style="width:${d.impact}%"></div></div>
+                        <span class="tl-impact-val">${d.impact}/100</span></div></div>
+                     ${metrics}<div style="margin-top:1.1rem;">${tags}</div>`,
+                    invoker);
+            },
+
+            /* — D3 polymorphic topology (Protocol v18 Rule 4) — */
+            initNetwork() {
+                const host = document.getElementById('expertise-network');
+                if (typeof d3 === 'undefined' || !host) {
+                    if (host) host.innerHTML = '<div class="empty-state"><h4>Network view unavailable</h4><p>The D3 library could not be loaded.</p></div>';
+                    return;
+                }
+                const W = 820, H = 520;
+                const COLOR = { hub: '#0071e3', pillar: '#bf5af2', tool: '#ff9f0a', governance: '#30d158' };
+                const svgEl = d3.select(host).append('svg')
+                    .attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img')
+                    .attr('aria-label', 'Knowledge network of interconnected competencies');
+                const stage = svgEl.append('g');
+                svgEl.call(d3.zoom().scaleExtent([.5, 2.5])
+                    .on('zoom', e => stage.attr('transform', e.transform)));
+
+                const nodes = networkNodes.map(d => ({ ...d }));
+                const links = networkLinks.map(d => ({ ...d }));
+                const sim = d3.forceSimulation(nodes)
+                    .force('link', d3.forceLink(links).id(d => d.id).distance(d => 130 - d.value * 4))
+                    .force('charge', d3.forceManyBody().strength(-380))
+                    .force('center', d3.forceCenter(W / 2, H / 2))
+                    .force('collide', d3.forceCollide().radius(d => d.size + 16));
+
+                const link = stage.selectAll('line').data(links).join('line')
+                    .attr('class', 'd3-link').attr('stroke-width', d => Math.sqrt(d.value));
+
+                const node = stage.selectAll('g.d3-node').data(nodes).join('g')
+                    .attr('class', 'd3-node')
+                    .call(d3.drag()
+                        .on('start', (e, d) => { if (!e.active) sim.alphaTarget(.25).restart(); d.fx = d.x; d.fy = d.y; })
+                        .on('drag', (e, d) => { d.fx = e.x; d.fy = e.y; })
+                        .on('end', (e, d) => { if (!e.active) sim.alphaTarget(0); d.fx = d.fy = null; }))
+                    .on('click', (e, d) => this.openPanel(
+                        d.group === 'tool' ? 'wrench' : d.group === 'governance' ? 'shield' : 'brain',
+                        esc(d.id), esc(d.id), 'Knowledge network node', 'โหนดเครือข่ายความรู้',
+                        `<p><span lang="en">${esc(d.description)}</span><span lang="th">${esc(d.descriptionTh)}</span></p>`));
+
+                // polymorphic shapes: circle (hub/pillar) / rounded square (tool) / diamond (governance)
+                node.each(function (d) {
+                    const g = d3.select(this), c = COLOR[d.group];
+                    if (d.group === 'tool') {
+                        g.append('rect').attr('x', -d.size).attr('y', -d.size)
+                         .attr('width', d.size * 2).attr('height', d.size * 2).attr('rx', 6)
+                         .attr('fill', c).attr('stroke', '#fff').attr('stroke-width', 2);
+                    } else if (d.group === 'governance') {
+                        g.append('polygon')
+                         .attr('points', `0,${-d.size * 1.25} ${d.size * 1.25},0 0,${d.size * 1.25} ${-d.size * 1.25},0`)
+                         .attr('fill', c).attr('stroke', '#fff').attr('stroke-width', 2);
+                    } else {
+                        g.append('circle').attr('r', d.size)
+                         .attr('fill', c).attr('stroke', '#fff').attr('stroke-width', 2);
+                        if (d.group === 'hub') g.append('circle').attr('r', d.size + 6)
+                         .attr('fill', 'none').attr('stroke', c).attr('stroke-opacity', .3).attr('stroke-width', 1.5);
+                    }
+                    g.append('text').text(d.id).attr('text-anchor', 'middle')
+                     .attr('y', d.size + 16).attr('font-size', 11);
+                });
+
+                sim.on('tick', () => {
+                    link.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+                        .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+                    node.attr('transform', d => `translate(${d.x},${d.y})`);
+                });
+            },
+
+            initCsoar() {
+                const host = document.getElementById('csoar-architecture');
+                if (typeof d3 === 'undefined' || !host) {
+                    if (host) host.innerHTML = '<div class="empty-state"><h4>Architecture view unavailable</h4><p>The D3 library could not be loaded.</p></div>';
+                    return;
+                }
+                const W = 820, H = 440, cx = W / 2, cy = H / 2 + 10;
+                const POS = { csoar: [cx, cy - 10], vcbr: [cx - 240, cy - 110], llm: [cx + 240, cy - 110], formal: [cx, cy + 150] };
+                const nodes = csoarNodes.map(d => ({ ...d, x: POS[d.id][0], y: POS[d.id][1] }));
+                const byId = Object.fromEntries(nodes.map(d => [d.id, d]));
+                const svgEl = d3.select(host).append('svg')
+                    .attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img')
+                    .attr('aria-label', 'C-SOAR triadic architecture diagram');
+                const stage = svgEl.append('g');
+
+                const link = stage.selectAll('line').data(csoarLinks).join('line')
+                    .attr('class', 'd3-link')
+                    .attr('stroke-width', d => d.type === 'core' ? 2.5 : 1.5)
+                    .attr('stroke-dasharray', d => d.type === 'core' ? null : '6 6');
+                const redraw = () => link
+                    .attr('x1', d => byId[d.source].x).attr('y1', d => byId[d.source].y)
+                    .attr('x2', d => byId[d.target].x).attr('y2', d => byId[d.target].y);
+
+                const node = stage.selectAll('g.d3-node').data(nodes).join('g')
+                    .attr('class', 'd3-node')
+                    .attr('transform', d => `translate(${d.x},${d.y})`)
+                    .call(d3.drag().on('drag', function (e, d) {
+                        d.x = Math.max(60, Math.min(W - 60, e.x));
+                        d.y = Math.max(45, Math.min(H - 45, e.y));
+                        d3.select(this).attr('transform', `translate(${d.x},${d.y})`);
+                        redraw();
+                    }))
+                    .on('click', (e, d) => this.openPanel('brain', esc(d.label), esc(d.labelTh),
+                        'C-SOAR architecture component', 'องค์ประกอบสถาปัตยกรรม C-SOAR',
+                        `<p><span lang="en">${esc(d.description)}</span><span lang="th">${esc(d.descriptionTh)}</span></p>`));
+
+                node.each(function (d) {
+                    const g = d3.select(this);
+                    if (d.group === 'hub') {
+                        g.append('circle').attr('r', d.size).attr('fill', '#0071e3')
+                         .attr('stroke', '#fff').attr('stroke-width', 2);
+                        g.append('circle').attr('r', d.size + 8).attr('fill', 'none')
+                         .attr('stroke', '#0071e3').attr('stroke-opacity', .3).attr('stroke-width', 1.5);
+                        g.append('text').text(d.label).attr('text-anchor', 'middle')
+                         .attr('dy', 5).attr('font-size', 14).attr('font-weight', 800)
+                         .style('fill', '#fff');
+                    } else {
+                        const colors = { vcbr: '#bf5af2', llm: '#ff9f0a', formal: '#30d158' };
+                        g.append('circle').attr('r', d.size).attr('fill', colors[d.id])
+                         .attr('stroke', '#fff').attr('stroke-width', 2);
+                        g.append('text').text(d.label).attr('text-anchor', 'middle')
+                         .attr('y', d.size + 18).attr('font-size', 12);
+                    }
+                });
+                redraw();
+            },
+
+            /* — misc interactions — */
+            initCarousel() {
+                const row = document.getElementById('featured-carousel');
+                const prev = document.getElementById('carousel-prev');
+                const next = document.getElementById('carousel-next');
+                if (!row || !prev || !next) return;
+                const step = () => Math.min(320, row.clientWidth * .8);
+                prev.addEventListener('click', () => row.scrollBy({ left: -step(), behavior: 'smooth' }));
+                next.addEventListener('click', () => row.scrollBy({ left: step(), behavior: 'smooth' }));
+            },
+            initCopy() {
+                document.querySelectorAll('.copy-chip').forEach(btn =>
+                    btn.addEventListener('click', () => this.copyToClipboard(btn.dataset.copy)));
+            },
+            copyToClipboard(text) {
+                const done = () => this.showToast(this.t('Copied to clipboard', 'คัดลอกไปยังคลิปบอร์ดแล้ว'));
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(done).catch(() => this.copyFallback(text, done));
+                } else this.copyFallback(text, done);
+            },
+            copyFallback(text, done) {
+                const ta = document.createElement('textarea');
+                ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                document.body.appendChild(ta); ta.select();
+                try { document.execCommand('copy'); done(); } catch (e) {}
+                ta.remove();
+            },
+            showToast(msg) {
+                const toast = document.getElementById('toast');
+                if (!toast) return;
+                toast.textContent = msg;
+                toast.classList.add('show');
+                clearTimeout(this._toastTimer);
+                this._toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+            }
+        };
+
+        // ════════════════════════════════════════════
+        // 6. RESILIENT LOADER — retry loop for the deferred CDN libs;
+        //    after 5 s the app boots anyway and each view that needs a
+        //    missing library renders its own empty state (ADR-01/05).
+        // ════════════════════════════════════════════
+        function waitForLibs(r = 0) {
+            if ((typeof d3 !== 'undefined' && typeof Chart !== 'undefined') || r >= 50) {
+                if (r >= 50) console.warn('[boot] CDN libraries did not arrive within 5s — degrading gracefully');
+                APP.init();
+            } else {
+                setTimeout(() => waitForLibs(r + 1), 100);
+            }
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => waitForLibs());
+        } else {
+            waitForLibs();
+        }
+    </script>
+</body>
+</html>
