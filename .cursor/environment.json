@@ -1,0 +1,11 @@
+{
+  "name": "defense.engineer",
+  "install": "bash .cursor/install.sh",
+  "terminals": [
+    {
+      "name": "static-site",
+      "command": "python3 -m http.server 8000 --bind 0.0.0.0"
+    }
+  ],
+  "ports": [8000]
+}
