@@ -322,10 +322,12 @@
 
         /* ============================================
            ANTIGRAVITY FIELD - Unified Background Canvas
-           One Canvas 2D engine draws aurora orbs, stars, the cursor halo,
-           constellation links and three depth layers of particles.
-           Inspired by antigravity.google
+           One Canvas 2D engine draws the hero capsule ring, stars,
+           constellation links and three depth layers of particles; soft
+           aurora orbs and the cursor glow go to a quarter-resolution aura
+           canvas behind it. Inspired by antigravity.google
            ============================================ */
+        #antigravity-aura,
         #antigravity-canvas {
             position: fixed;
             inset: 0;
@@ -886,6 +888,7 @@
 
         /* High-contrast / forced-colours users get a plain background */
         @media (forced-colors: active), (prefers-contrast: more) {
+            #antigravity-aura,
             #antigravity-canvas,
             .motion-toggle {
                 display: none;
@@ -3577,7 +3580,7 @@
            PRINT STYLES
            ============================================ */
         @media print {
-            header, #antigravity-canvas, .motion-toggle, .theme-toggle, .lang-switcher,
+            header, #antigravity-aura, #antigravity-canvas, .motion-toggle, .theme-toggle, .lang-switcher,
             .slide-panel, .slide-panel-overlay {
                 display: none !important;
             }
@@ -3687,7 +3690,8 @@
         </div>
     </div>
 
-    <!-- Antigravity Field: single unified background canvas -->
+    <!-- Antigravity Field: unified background (aura layer + main canvas, one engine) -->
+    <canvas id="antigravity-aura" aria-hidden="true"></canvas>
     <canvas id="antigravity-canvas" aria-hidden="true"></canvas>
 
     <!-- Slide-Over Detail Panel -->
@@ -5587,7 +5591,11 @@
                     const tmp = p[i]; p[i] = p[j]; p[j] = tmp;
                 }
                 this.perm = new Uint8Array(512);
-                for (let i = 0; i < 512; i++) this.perm[i] = p[i & 255];
+                this.perm12 = new Uint8Array(512);
+                for (let i = 0; i < 512; i++) {
+                    this.perm[i] = p[i & 255];
+                    this.perm12[i] = this.perm[i] % 12;
+                }
             }
 
             noise2D(x, y) {
@@ -5612,7 +5620,7 @@
             }
 
             noise3D(x, y, z) {
-                const perm = this.perm;
+                const perm = this.perm, perm12 = this.perm12;
                 const s = (x + y + z) * SIMPLEX_F3;
                 const i = Math.floor(x + s), j = Math.floor(y + s), k = Math.floor(z + s);
                 const t = (i + j + k) * SIMPLEX_G3;
@@ -5633,13 +5641,13 @@
                 const ii = i & 255, jj = j & 255, kk = k & 255;
                 let n = 0;
                 let t0 = 0.6 - x0 * x0 - y0 * y0 - z0 * z0;
-                if (t0 > 0) { const g = SIMPLEX_GRAD3[perm[ii + perm[jj + perm[kk]]] % 12]; t0 *= t0; n += t0 * t0 * (g[0] * x0 + g[1] * y0 + g[2] * z0); }
+                if (t0 > 0) { const g = SIMPLEX_GRAD3[perm12[ii + perm[jj + perm[kk]]]]; t0 *= t0; n += t0 * t0 * (g[0] * x0 + g[1] * y0 + g[2] * z0); }
                 let t1 = 0.6 - x1 * x1 - y1 * y1 - z1 * z1;
-                if (t1 > 0) { const g = SIMPLEX_GRAD3[perm[ii + i1 + perm[jj + j1 + perm[kk + k1]]] % 12]; t1 *= t1; n += t1 * t1 * (g[0] * x1 + g[1] * y1 + g[2] * z1); }
+                if (t1 > 0) { const g = SIMPLEX_GRAD3[perm12[ii + i1 + perm[jj + j1 + perm[kk + k1]]]]; t1 *= t1; n += t1 * t1 * (g[0] * x1 + g[1] * y1 + g[2] * z1); }
                 let t2 = 0.6 - x2 * x2 - y2 * y2 - z2 * z2;
-                if (t2 > 0) { const g = SIMPLEX_GRAD3[perm[ii + i2 + perm[jj + j2 + perm[kk + k2]]] % 12]; t2 *= t2; n += t2 * t2 * (g[0] * x2 + g[1] * y2 + g[2] * z2); }
+                if (t2 > 0) { const g = SIMPLEX_GRAD3[perm12[ii + i2 + perm[jj + j2 + perm[kk + k2]]]]; t2 *= t2; n += t2 * t2 * (g[0] * x2 + g[1] * y2 + g[2] * z2); }
                 let t3 = 0.6 - x3 * x3 - y3 * y3 - z3 * z3;
-                if (t3 > 0) { const g = SIMPLEX_GRAD3[perm[ii + 1 + perm[jj + 1 + perm[kk + 1]]] % 12]; t3 *= t3; n += t3 * t3 * (g[0] * x3 + g[1] * y3 + g[2] * z3); }
+                if (t3 > 0) { const g = SIMPLEX_GRAD3[perm12[ii + 1 + perm[jj + 1 + perm[kk + 1]]]]; t3 *= t3; n += t3 * t3 * (g[0] * x3 + g[1] * y3 + g[2] * z3); }
                 return 32 * n;
             }
         }
@@ -5702,9 +5710,14 @@
         }
 
         class AntigravityField {
-            constructor(canvas) {
+            constructor(canvas, auraCanvas) {
                 this.canvas = canvas;
                 this.ctx = canvas.getContext('2d');
+                // Orbs and cursor glow are soft, large and low-alpha: drawn at quarter resolution on a
+                // separate canvas behind the main one (CSS scales it up), they cost a fraction of the fill
+                this.auraCanvas = auraCanvas || null;
+                this.auraCtx = auraCanvas ? auraCanvas.getContext('2d') : null;
+                this.dprCap = FIELD.maxDpr;
                 this.noise = new SimplexNoise();
                 this.particles = [];
                 this.stars = [];
@@ -5717,7 +5730,6 @@
                 this.frameId = null;
                 this.staticPending = false;
                 this.quality = 2;              // 2 = full, 1 = reduced, 0 = minimal
-                this.qualityTimer = 0;
                 this.slowFrames = 0;
                 this.sampledFrames = 0;
                 this.linksDrawn = 0;
@@ -5823,7 +5835,7 @@
                     this.particles.splice(Math.floor(Math.random() * this.particles.length), 1);
                 }
                 // Back-to-front draw order without per-frame sorting
-                this.particles.sort((a, b) => a.layer - b.layer);
+                this.particles.sort((a, b) => a.layer - b.layer || a.color - b.color);
 
                 const starTarget = Math.min(FIELD.maxStars, Math.floor((this.width * this.height) / FIELD.starDensity));
                 while (this.stars.length < starTarget) {
@@ -5923,10 +5935,15 @@
                 this.height = window.innerHeight;
                 if (!this.width || !this.height) return;          // zero-size viewport: wait for a real size
                 if (!oldW || !oldH) initial = true;               // first real size: seed instead of rescaling
-                this.dpr = Math.min(window.devicePixelRatio || 1, FIELD.maxDpr);
+                this.dpr = Math.min(window.devicePixelRatio || 1, this.dprCap);
                 this.canvas.width = Math.round(this.width * this.dpr);
                 this.canvas.height = Math.round(this.height * this.dpr);
                 this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+                if (this.auraCtx) {
+                    this.auraCanvas.width = Math.ceil(this.width / 4);
+                    this.auraCanvas.height = Math.ceil(this.height / 4);
+                    this.auraCtx.setTransform(0.25, 0, 0, 0.25, 0, 0);
+                }
 
                 if (!initial) {
                     // Rescale instead of reseeding so mobile URL-bar resizes don't reshuffle the field
@@ -5949,7 +5966,6 @@
             refreshHeroGeometry() {
                 // Layout can shift after fonts/images load; rebuild the capsule field if the hero changed size
                 if (!this.width || !this.height) return;
-                if (Math.min(window.devicePixelRatio || 1, FIELD.maxDpr) !== this.dpr) { this.resize(); return; }   // moved to another display
                 const next = this.measureHero();
                 const rebuild = Math.abs(next.height - this.hero.height) > 40;
                 this.hero = next;
@@ -5994,6 +6010,24 @@
 
                 window.addEventListener('resize', debounce(() => this.resize(), CONFIG.debounceDelay));
                 window.addEventListener('load', () => this.refreshHeroGeometry());
+
+                // Hero geometry changes (image/font loads, language switch, wrapping) arrive as resize
+                // notifications instead of per-frame polling, which forced layout every 15 frames
+                if ('ResizeObserver' in window) {
+                    const observer = new ResizeObserver(() => this.refreshHeroGeometry());
+                    [document.getElementById('hero'), document.querySelector('.hero-image'), ...document.querySelectorAll(HERO_TEXT_SELECTOR)]
+                        .filter(Boolean).forEach(el => observer.observe(el));
+                    this.observingLayout = true;
+                }
+                if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.refreshHeroGeometry());
+
+                // Moving the window to a display with another pixel ratio fires no resize event
+                const watchResolution = () => {
+                    const query = window.matchMedia(`(resolution: ${window.devicePixelRatio || 1}dppx)`);
+                    if (!query.addEventListener) return;
+                    query.addEventListener('change', () => { this.resize(); watchResolution(); }, { once: true });
+                };
+                watchResolution();
 
                 document.addEventListener('visibilitychange', () => {
                     if (document.hidden) this.stop(); else this.start();
@@ -6059,6 +6093,9 @@
                 if (!this.isAnimated()) { this.renderStatic(); return; }
                 this.scrollDelta = 0;                             // drop scroll accumulated while paused
                 this.lastFrame = performance.now();
+                if (this.governorStart === undefined) this.governorStart = this.lastFrame;
+                this.windowStart = this.lastFrame;
+                this.slowFrames = this.sampledFrames = 0;
                 this.frameId = requestAnimationFrame(now => this.frame(now));
             }
 
@@ -6069,7 +6106,8 @@
 
             frame(now) {
                 // The first frame after start() can carry a timestamp slightly before lastFrame
-                const dt = Math.max(0, Math.min((now - this.lastFrame) / 1000, 0.05));
+                const interval = Math.max(0, (now - this.lastFrame) / 1000);
+                const dt = Math.min(interval, 0.05);
                 this.lastFrame = now;
                 if (this.width && this.height) {
                     this.time += dt;
@@ -6077,26 +6115,33 @@
                     const workStart = performance.now();
                     this.update(dt);
                     this.render();
-                    this.adaptQuality(dt, performance.now() - workStart);
+                    this.adaptQuality(interval, performance.now() - workStart);
                 }
                 this.frameId = requestAnimationFrame(next => this.frame(next));
             }
 
-            adaptQuality(dt, workMs) {
-                // After a warm-up (page load work is not representative), step quality down when the
-                // engine's own work is heavy in most frames of a 3 s window. Timing the work rather than
-                // the frame interval keeps 30 Hz displays / power-saving modes from reading as "slow".
-                // Never step back up, to avoid oscillation.
-                if (this.time < 5) return;
+            adaptQuality(interval, workMs) {
+                // Most of the cost is canvas fill (GPU / raster), which the engine's JS timing cannot see,
+                // so a frame counts as slow when its own work is heavy OR the frame interval overshoots the
+                // display's refresh period (measured during a 5 s warm-up, so 30 Hz panels stay "fast").
+                // After most frames of a 3 s window are slow, step down: fewer particles and a lower pixel
+                // ratio (the step that actually helps phones). Never step back up, to avoid oscillation.
+                const now = performance.now();
+                if (now - this.governorStart < 5000) {
+                    if (interval > 0.004) this.vsync = Math.min(this.vsync || Infinity, interval);
+                    this.windowStart = now;
+                    return;
+                }
                 this.sampledFrames++;
-                if (workMs > 10) this.slowFrames++;
-                this.qualityTimer += dt;
-                if (this.qualityTimer < 3) return;
+                if (workMs > 10 || interval > Math.max(0.025, 1.75 * (this.vsync || 1 / 60))) this.slowFrames++;
+                if (now - this.windowStart < 3000) return;
                 const degrade = this.slowFrames / this.sampledFrames > 0.5 && this.quality > 0;
-                this.qualityTimer = this.slowFrames = this.sampledFrames = 0;
+                this.windowStart = now;
+                this.slowFrames = this.sampledFrames = 0;
                 if (degrade) {
                     this.quality--;
-                    this.syncPopulation();
+                    this.dprCap = [1, 1.5, FIELD.maxDpr][this.quality];
+                    this.resize();
                     if (this.quality === 0) this.buildCapsules();
                 }
             }
@@ -6109,7 +6154,7 @@
                 const t = this.time;
 
                 this.themeMix += ((isDarkMode() ? 1 : 0) - this.themeMix) * Math.min(1, dt * FIELD.themeFadeRate);
-                if (this.frameCount % 15 === 0) this.refreshHeroGeometry();
+                if (!this.observingLayout && this.frameCount % 30 === 0) this.refreshHeroGeometry();   // no ResizeObserver
 
                 // Focus point for the ambient field: follows the pointer, idles around the portrait
                 if (pointer.releaseAt !== null && t >= pointer.releaseAt) { pointer.active = false; pointer.releaseAt = null; }
@@ -6276,14 +6321,17 @@
                 const additive = this.themeMix > 0.5;
                 // Let the hero ring own the stage; the ambient field steps back while it is visible
                 const ambient = 1 - 0.55 * this.ringVisibility;
-                ctx.globalCompositeOperation = additive ? 'lighter' : 'source-over';
-                this.drawOrbs(ctx);
-                ctx.globalCompositeOperation = 'source-over';
+                const aura = this.auraCtx || ctx;
+                if (this.auraCtx) this.auraCtx.clearRect(0, 0, this.width, this.height);
+                aura.globalCompositeOperation = additive ? 'lighter' : 'source-over';
+                this.drawOrbs(aura);
+                this.drawGlow(aura, ambient);
+                aura.globalCompositeOperation = 'source-over';
+                aura.globalAlpha = 1;
                 this.drawStars(ctx);
                 this.drawRing(ctx);
                 this.drawLinks(ctx, ambient);
                 ctx.globalCompositeOperation = additive ? 'lighter' : 'source-over';
-                this.drawGlow(ctx, ambient);
                 this.drawParticles(ctx, ambient);
                 ctx.globalCompositeOperation = 'source-over';
                 this.drawRipples(ctx);
@@ -6302,8 +6350,9 @@
             renderStatic() {
                 // Reduced motion / hidden tab: one calm frame — no pointer tracking, no fade-ins
                 if (!this.width || !this.height) return;
-                if (this.highContrast.matches) {           // canvas is hidden by CSS; keep it empty too
+                if (this.highContrast.matches) {           // canvases are hidden by CSS; keep them empty too
                     this.ctx.clearRect(0, 0, this.width, this.height);
+                    if (this.auraCtx) this.auraCtx.clearRect(0, 0, this.width, this.height);
                     return;
                 }
                 this.themeMix = isDarkMode() ? 1 : 0;
@@ -6355,7 +6404,7 @@
                 const dark = this.themeMix > 0.5;
                 const unit = Math.max(this.width * 0.0013, 1.2);          // px per unit of capsule scale
                 const ox = hero.cx, oy = hero.cy - this.scrollY;
-                const skipSpecks = this.quality === 0;
+                const skipSpecks = this.quality === 0 && this.width > 600;
                 const colors = dark ? this.ringColors.dark : this.ringColors.light;
                 ctx.lineCap = 'round';
 
@@ -6374,7 +6423,8 @@
                     const md = Math.min(d, 1);
                     let px = ax + c.dx[i] + 0.02 * Math.sin(20 * ax + 2 * t) * md;
                     let py = ay + c.dy[i] + 0.02 * Math.cos(20 * ay + 1.5 * t) * md;
-                    const push = 0.25 * FIELD.ring.push * Math.pow(Math.max(0, tBraw), 2.25);
+                    const tb = Math.max(0, tBraw);
+                    const push = 0.25 * FIELD.ring.push * tb * tb * Math.sqrt(Math.sqrt(tb));     // tb^2.25
                     px += push * (px - rcx);
                     py += push * (py - rcy);
                     const sx = ox + px * k, sy = oy + py * k;
@@ -6515,6 +6565,8 @@
                     orbs: this.orbs.length,
                     linksDrawn: this.linksDrawn,
                     quality: this.quality,
+                    dpr: this.dpr,
+                    vsyncMs: this.vsync ? +(this.vsync * 1000).toFixed(1) : null,
                     ringVisibility: +this.ringVisibility.toFixed(2),
                     themeMix: +this.themeMix.toFixed(2),
                     running: this.frameId !== null,
@@ -6528,13 +6580,15 @@
         function initAntigravityField() {
             // Decorative only: any failure removes the canvas instead of aborting init()
             const canvas = document.getElementById('antigravity-canvas');
+            const aura = document.getElementById('antigravity-aura');
             if (!canvas || !canvas.getContext || !canvas.getContext('2d')) return;
             try {
-                antigravityField = new AntigravityField(canvas);
+                antigravityField = new AntigravityField(canvas, aura);
                 window.antigravityField = antigravityField;
             } catch (e) {
                 console.warn('Antigravity Field disabled:', e);
                 canvas.remove();
+                if (aura) aura.remove();
             }
         }
 
