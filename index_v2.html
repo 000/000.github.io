@@ -838,6 +838,109 @@
             background: rgba(14, 165, 233, 0.2);
         }
 
+        /* Background Motion Toggle - pauses the Antigravity Field (WCAG 2.2.2) */
+        .motion-toggle {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted-light);
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid transparent;
+            transition: border-color var(--animation-fast) ease, color var(--animation-fast) ease, transform var(--animation-fast) ease;
+        }
+
+        body.dark .motion-toggle {
+            color: var(--text-muted-dark);
+        }
+
+        .motion-toggle:hover {
+            border-color: var(--neon-core);
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .motion-toggle svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .motion-toggle .icon-play,
+        .motion-toggle[aria-pressed="true"] .icon-pause {
+            display: none;
+        }
+
+        .motion-toggle[aria-pressed="true"] .icon-play {
+            display: block;
+        }
+
+        /* Nothing to pause when the OS already asks for reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .motion-toggle {
+                display: none;
+            }
+        }
+
+        /* High-contrast / forced-colours users get a plain background */
+        @media (forced-colors: active), (prefers-contrast: more) {
+            #antigravity-canvas,
+            .motion-toggle {
+                display: none;
+            }
+        }
+
+        /* Small phones: tighten the header so the brand and all controls (incl. the pause button) fit */
+        @media (max-width: 480px) {
+            nav {
+                padding: 0 1rem;
+            }
+
+            .nav-controls {
+                gap: 0.5rem;
+            }
+
+            .lang-btn {
+                padding: 0.35rem 0.6rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .nav-brand {
+                font-size: 1.3rem;
+            }
+
+            .nav-controls {
+                gap: 0.35rem;
+            }
+
+            .lang-btn {
+                padding: 0.3rem 0.45rem;
+            }
+
+            .motion-toggle {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        /* Narrowest phones: slimmer theme pill (selectors outrank the base theme-toggle rules below) */
+        @media (max-width: 340px) {
+            nav {
+                padding: 0 0.75rem;
+            }
+
+            .nav-controls .theme-toggle {
+                width: 56px;
+            }
+
+            body.dark .theme-toggle .toggle-knob {
+                transform: translateX(24px);
+            }
+        }
+
         /* Enhanced Theme Toggle - Pill Design */
         .theme-toggle {
             width: 64px;
@@ -3474,7 +3577,7 @@
            PRINT STYLES
            ============================================ */
         @media print {
-            header, #antigravity-canvas, .theme-toggle, .lang-switcher,
+            header, #antigravity-canvas, .motion-toggle, .theme-toggle, .lang-switcher,
             .slide-panel, .slide-panel-overlay {
                 display: none !important;
             }
@@ -3652,6 +3755,16 @@
                     <button class="lang-btn" data-lang="th" aria-label="เปลี่ยนเป็นภาษาไทย">TH</button>
                 </div>
                 
+                <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false" aria-label="Pause background animation" title="Pause background animation">
+                    <svg class="icon-pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <rect x="6" y="5" width="4" height="14" rx="1"></rect>
+                        <rect x="14" y="5" width="4" height="14" rx="1"></rect>
+                    </svg>
+                    <svg class="icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"></path>
+                    </svg>
+                </button>
+
                 <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
                     <div class="toggle-knob">
                         <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -5425,7 +5538,7 @@
             pointerForce: 0.45,
             velocityTransfer: 0.05,
             haloRadius: 92,            // front-layer orbit radius around the cursor
-            idleAfter: 2.5,            // seconds without pointer movement before the field idles
+            touchLinger: 2.5,          // seconds a tap keeps steering the field after the finger lifts
             rippleRadius: 280,
             themeFadeRate: 4,          // 1/s
             layers: [                  // 0 = back, 1 = mid, 2 = front
@@ -5531,6 +5644,17 @@
             }
         }
 
+        const HERO_TEXT_SELECTOR = '#hero h1, #hero .hero-badge, #hero .hero-subtitle, #hero .hero-description, #hero .cta-buttons .btn';
+        const RIPPLE_EXCLUDED_TARGETS = 'a, button, input, select, textarea, label, summary, svg, [role="button"], [tabindex]';
+
+        function readMotionPreference() {
+            try { return localStorage.getItem('backgroundMotion'); } catch (e) { return null; }
+        }
+
+        function writeMotionPreference(value) {
+            try { localStorage.setItem('backgroundMotion', value); } catch (e) { /* private mode: session-only */ }
+        }
+
         function smoothstep(edge0, edge1, x) {
             const t = Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0)));
             return t * t * (3 - 2 * t);
@@ -5591,6 +5715,7 @@
                 this.frameCount = 0;
                 this.lastFrame = 0;
                 this.frameId = null;
+                this.staticPending = false;
                 this.quality = 2;              // 2 = full, 1 = reduced, 0 = minimal
                 this.qualityTimer = 0;
                 this.slowFrames = 0;
@@ -5604,10 +5729,15 @@
                 this.scrollDelta = 0;
                 this.scrollVelocity = 0;     // smoothed px per 60 Hz frame
                 this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+                this.highContrast = window.matchMedia('(forced-colors: active), (prefers-contrast: more)');
+                this.paused = readMotionPreference() === 'paused';
+                this.wasIdle = true;
+                this.idleX = window.innerWidth / 2;
+                this.idleY = window.innerHeight / 2;
                 this.pointer = {
                     x: window.innerWidth / 2, y: window.innerHeight / 2,     // eased focus point
                     tx: window.innerWidth / 2, ty: window.innerHeight / 2,   // raw target
-                    vx: 0, vy: 0, active: false, lastMove: -Infinity, energy: 0
+                    vx: 0, vy: 0, active: false, releaseAt: null, energy: 0
                 };
                 this.ring = { x: 0, y: 0 };    // ring centre in ring units, relative to the hero centre
                 this.sprites = FIELD.palette.map(rgb => this.createGlowSprite(rgb));
@@ -5688,7 +5818,10 @@
             syncPopulation() {
                 const target = this.targetParticleCount();
                 while (this.particles.length < target) this.particles.push(this.createParticle());
-                if (this.particles.length > target) this.particles.length = target;
+                while (this.particles.length > target) {
+                    // Drop random particles (not the tail) so shrinking keeps the back/mid/front mix
+                    this.particles.splice(Math.floor(Math.random() * this.particles.length), 1);
+                }
                 // Back-to-front draw order without per-frame sorting
                 this.particles.sort((a, b) => a.layer - b.layer);
 
@@ -5724,8 +5857,13 @@
                 const top = rect.top + window.scrollY;
                 const heroImage = document.querySelector('.hero-image');
                 const img = heroImage ? heroImage.getBoundingClientRect() : null;
+                const textRects = [...document.querySelectorAll(HERO_TEXT_SELECTOR)]
+                    .map(el => el.getBoundingClientRect())
+                    .filter(r => r.width && r.height)
+                    .map(r => [r.left - 8, r.top + window.scrollY - 8, r.right + 8, r.bottom + window.scrollY + 8]);
                 return {
                     top,
+                    textRects,
                     height: rect.height || this.height,
                     cx: this.width / 2,
                     cy: top + (rect.height || this.height) / 2,
@@ -5739,8 +5877,12 @@
                 // Static field covering the hero (page coordinates) plus a margin for displacement
                 const hero = this.hero;
                 const margin = 60;
-                const minDist = Math.max(20, Math.min(36, FIELD.ring.spacing * this.height)) * (this.quality === 0 ? 1.3 : 1);
-                const field = poissonDisk(this.width + margin * 2, hero.height + margin * 2, minDist, FIELD.ring.maxCapsules);
+                const fieldW = this.width + margin * 2, fieldH = hero.height + margin * 2;
+                let minDist = Math.max(20, Math.min(36, FIELD.ring.spacing * this.height)) * (this.quality === 0 ? 1.3 : 1);
+                // Bridson grows outward from one seed, so a cap hit mid-growth leaves a blob: widen the
+                // spacing until the expected count (≈ area / 1.65 d²) fits under the cap
+                minDist = Math.max(minDist, Math.sqrt((fieldW * fieldH) / (1.5 * FIELD.ring.maxCapsules)));
+                const field = poissonDisk(fieldW, fieldH, minDist, FIELD.ring.maxCapsules);
                 const n = field.xs.length;
                 const k = this.ringUnit;
                 const c = {
@@ -5754,10 +5896,12 @@
                 for (let i = 0; i < n; i++) {
                     c.rx[i] = (field.xs[i] - margin - hero.cx) / k;
                     c.ry[i] = (field.ys[i] - margin + hero.top - hero.cy) / k;
-                    this.updateCapsuleNoise(c, i, 0);
+                    this.updateCapsuleNoise(c, i, this.time);
                     c.scale[i] = c.base[i];
                 }
                 this.capsules = c;
+                this.capsuleUnit = k;
+                if (!Number.isFinite(this.ring.x) || !Number.isFinite(this.ring.y)) this.ring.x = this.ring.y = 0;
             }
 
             updateCapsuleNoise(c, i, t) {
@@ -5777,12 +5921,14 @@
                 const oldW = this.width, oldH = this.height;
                 this.width = window.innerWidth;
                 this.height = window.innerHeight;
+                if (!this.width || !this.height) return;          // zero-size viewport: wait for a real size
+                if (!oldW || !oldH) initial = true;               // first real size: seed instead of rescaling
                 this.dpr = Math.min(window.devicePixelRatio || 1, FIELD.maxDpr);
                 this.canvas.width = Math.round(this.width * this.dpr);
                 this.canvas.height = Math.round(this.height * this.dpr);
                 this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
 
-                if (!initial && oldW && oldH) {
+                if (!initial) {
                     // Rescale instead of reseeding so mobile URL-bar resizes don't reshuffle the field
                     const sx = this.width / oldW, sy = this.height / oldH;
                     for (const p of this.particles) { p.x *= sx; p.bx *= sx; p.y *= sy; p.by *= sy; }
@@ -5795,17 +5941,20 @@
                 const reference = Math.min(this.height, this.width * 0.9);
                 this.ringUnit = (FIELD.ring.radiusScale * reference) / 0.175;
                 this.hero = this.measureHero();
-                const widthChanged = !this.capsules || Math.abs(this.width - (oldW || 0)) > 1;
-                if (initial || widthChanged) this.buildCapsules();
+                const unitChanged = !this.capsules || Math.abs(this.ringUnit / this.capsuleUnit - 1) > 0.01;
+                if (initial || unitChanged || Math.abs(this.width - oldW) > 1) this.buildCapsules();
                 if (!this.isAnimated()) this.renderStatic();
             }
 
             refreshHeroGeometry() {
                 // Layout can shift after fonts/images load; rebuild the capsule field if the hero changed size
+                if (!this.width || !this.height) return;
+                if (Math.min(window.devicePixelRatio || 1, FIELD.maxDpr) !== this.dpr) { this.resize(); return; }   // moved to another display
                 const next = this.measureHero();
                 const rebuild = Math.abs(next.height - this.hero.height) > 40;
                 this.hero = next;
                 if (rebuild) this.buildCapsules();
+                if (!this.isAnimated()) this.requestStaticRender();
             }
 
             bindEvents() {
@@ -5813,27 +5962,34 @@
                 const activate = (x, y) => {
                     pointer.tx = x; pointer.ty = y;
                     pointer.active = true;
-                    pointer.lastMove = this.time;
+                    pointer.releaseAt = null;
                 };
-                const deactivate = () => { pointer.active = false; };
+                const deactivate = () => { pointer.active = false; pointer.releaseAt = null; };
+                const releaseTouch = () => { pointer.releaseAt = this.time + FIELD.touchLinger; };
 
                 window.addEventListener('pointermove', e => activate(e.clientX, e.clientY), { passive: true });
                 window.addEventListener('touchmove', e => {
                     if (e.touches.length) activate(e.touches[0].clientX, e.touches[0].clientY);
                 }, { passive: true });
-                window.addEventListener('pointerdown', e => {
-                    activate(e.clientX, e.clientY);
-                    if (this.isAnimated()) this.addRipple(e.clientX, e.clientY);
+                window.addEventListener('pointerdown', e => activate(e.clientX, e.clientY), { passive: true });
+                window.addEventListener('click', e => {
+                    // Ripples answer real pointer clicks on empty background — not keyboard activation,
+                    // text selection, touch-scroll swipes, controls or the interactive charts
+                    if (!this.isAnimated() || e.detail === 0) return;
+                    const selection = window.getSelection();
+                    if (selection && !selection.isCollapsed) return;
+                    if (e.target.closest && e.target.closest(RIPPLE_EXCLUDED_TARGETS)) return;
+                    this.addRipple(e.clientX, e.clientY);
                 }, { passive: true });
-                window.addEventListener('touchend', deactivate, { passive: true });
-                window.addEventListener('touchcancel', deactivate, { passive: true });
+                window.addEventListener('touchend', releaseTouch, { passive: true });
+                window.addEventListener('touchcancel', releaseTouch, { passive: true });
                 document.documentElement.addEventListener('mouseleave', deactivate);
                 window.addEventListener('blur', deactivate);
 
                 window.addEventListener('scroll', () => {
                     this.scrollDelta += window.scrollY - this.scrollY;
                     this.scrollY = window.scrollY;
-                    if (!this.isAnimated()) this.renderStatic();
+                    if (!this.isAnimated()) this.requestStaticRender();
                 }, { passive: true });
 
                 window.addEventListener('resize', debounce(() => this.resize(), CONFIG.debounceDelay));
@@ -5843,15 +5999,38 @@
                     if (document.hidden) this.stop(); else this.start();
                 });
 
-                this.reducedMotion.addEventListener('change', () => {
-                    this.stop();
-                    this.start();
-                });
+                const onMotionPreference = () => { this.stop(); this.start(); };
+                for (const query of [this.reducedMotion, this.highContrast]) {
+                    if (query.addEventListener) query.addEventListener('change', onMotionPreference);
+                    else query.addListener(onMotionPreference);     // Safari ≤ 13
+                }
 
-                // The theme toggle only flips body.dark; animated frames crossfade, static frames redraw
+                // In-page pause control (WCAG 2.2.2): a static frame stays visible while paused
+                const toggle = document.getElementById('motion-toggle');
+                if (toggle) {
+                    this.syncMotionToggle(toggle);
+                    toggle.addEventListener('click', () => {
+                        this.paused = !this.paused;
+                        writeMotionPreference(this.paused ? 'paused' : 'running');
+                        this.syncMotionToggle(toggle);
+                        this.stop();
+                        this.start();
+                    });
+                }
+
+                // The theme toggle only flips body.dark; animated frames crossfade, static frames redraw.
+                // The language switcher flips data-lang; the pause button's label follows it.
                 new MutationObserver(() => {
-                    if (!this.isAnimated()) this.renderStatic();
-                }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+                    if (toggle) this.syncMotionToggle(toggle);
+                    if (!this.isAnimated()) this.requestStaticRender();
+                }).observe(document.body, { attributes: true, attributeFilter: ['class', 'data-lang'] });
+            }
+
+            syncMotionToggle(toggle) {
+                const label = getCurrentLang() === 'th' ? 'หยุดภาพเคลื่อนไหวพื้นหลังชั่วคราว' : 'Pause background animation';
+                toggle.setAttribute('aria-pressed', String(this.paused));
+                toggle.setAttribute('aria-label', label);
+                toggle.title = label;
             }
 
             addRipple(x, y) {
@@ -5872,12 +6051,13 @@
             // ---------- lifecycle ----------
 
             isAnimated() {
-                return !this.reducedMotion.matches && !document.hidden;
+                return !this.paused && !this.reducedMotion.matches && !this.highContrast.matches && !document.hidden;
             }
 
             start() {
                 if (this.frameId !== null) return;
                 if (!this.isAnimated()) { this.renderStatic(); return; }
+                this.scrollDelta = 0;                             // drop scroll accumulated while paused
                 this.lastFrame = performance.now();
                 this.frameId = requestAnimationFrame(now => this.frame(now));
             }
@@ -5888,22 +6068,28 @@
             }
 
             frame(now) {
-                const dt = Math.min((now - this.lastFrame) / 1000, 0.05);
+                // The first frame after start() can carry a timestamp slightly before lastFrame
+                const dt = Math.max(0, Math.min((now - this.lastFrame) / 1000, 0.05));
                 this.lastFrame = now;
-                this.time += dt;
-                this.frameCount++;
-                this.adaptQuality(dt);
-                this.update(dt);
-                this.render();
+                if (this.width && this.height) {
+                    this.time += dt;
+                    this.frameCount++;
+                    const workStart = performance.now();
+                    this.update(dt);
+                    this.render();
+                    this.adaptQuality(dt, performance.now() - workStart);
+                }
                 this.frameId = requestAnimationFrame(next => this.frame(next));
             }
 
-            adaptQuality(dt) {
-                // After a warm-up (page load work is not representative), step quality down when most
-                // frames in a 3 s window run long. Never step back up, to avoid oscillation.
+            adaptQuality(dt, workMs) {
+                // After a warm-up (page load work is not representative), step quality down when the
+                // engine's own work is heavy in most frames of a 3 s window. Timing the work rather than
+                // the frame interval keeps 30 Hz displays / power-saving modes from reading as "slow".
+                // Never step back up, to avoid oscillation.
                 if (this.time < 5) return;
                 this.sampledFrames++;
-                if (dt > 0.028) this.slowFrames++;
+                if (workMs > 10) this.slowFrames++;
                 this.qualityTimer += dt;
                 if (this.qualityTimer < 3) return;
                 const degrade = this.slowFrames / this.sampledFrames > 0.5 && this.quality > 0;
@@ -5926,11 +6112,21 @@
                 if (this.frameCount % 15 === 0) this.refreshHeroGeometry();
 
                 // Focus point for the ambient field: follows the pointer, idles around the portrait
-                const idle = !pointer.active || t - pointer.lastMove > FIELD.idleAfter;
+                if (pointer.releaseAt !== null && t >= pointer.releaseAt) { pointer.active = false; pointer.releaseAt = null; }
+                const idle = !pointer.active;
+                if (idle && !this.wasIdle) {
+                    this.idleX = Math.max(0, Math.min(this.width, pointer.x));
+                    this.idleY = Math.max(0, Math.min(this.height, pointer.y));
+                }
+                this.wasIdle = idle;
                 let fx = pointer.tx, fy = pointer.ty;
                 if (idle) {
-                    fx = this.hero.restX + this.noise.noise2D(t * 0.08, 7.3) * 120;
-                    fy = this.hero.restY - this.scrollY + this.noise.noise2D(t * 0.08, 19.1) * 90;
+                    // Drift around the portrait while it is near the viewport; elsewhere stay where the
+                    // pointer left, so going idle deep in the page never sweeps the whole field
+                    const restY = this.hero.restY - this.scrollY;
+                    const nearPortrait = restY > -this.height * 0.5 && restY < this.height * 1.5;
+                    fx = (nearPortrait ? this.hero.restX : this.idleX) + this.noise.noise2D(t * 0.08, 7.3) * 120;
+                    fy = (nearPortrait ? restY : this.idleY) + this.noise.noise2D(t * 0.08, 19.1) * 90;
                 }
                 const ease = 1 - Math.pow(1 - (idle ? 0.025 : 0.08), f);
                 const prevX = pointer.x, prevY = pointer.y;
@@ -5944,7 +6140,7 @@
                 this.updateRing(dt, f, idle);
                 this.updateParticles(dt, f, idle);
 
-                const offX = pointer.x - this.width / 2, offY = pointer.y - this.height / 2;
+                const { offX, offY } = this.parallaxOffset();
                 for (const o of this.orbs) {
                     o.x = o.bx + this.noise.noise2D(o.noise + t * 0.005, t * 0.003) * 220 - offX * 0.02;
                     o.y = o.by + this.noise.noise2D(o.noise + 500 + t * 0.005, t * 0.003 + 500) * 220 - offY * 0.02;
@@ -5962,6 +6158,14 @@
 
                 for (const r of this.ripples) r.age += dt;
                 this.ripples = this.ripples.filter(r => r.age < 1.1);
+            }
+
+            parallaxOffset() {
+                const halfW = this.width / 2, halfH = this.height / 2;
+                return {
+                    offX: Math.max(-halfW, Math.min(halfW, this.pointer.x - halfW)),
+                    offY: Math.max(-halfH, Math.min(halfH, this.pointer.y - halfH))
+                };
             }
 
             updateRing(dt, f, idle) {
@@ -6004,13 +6208,14 @@
                 const pointer = this.pointer;
                 const t = this.time;
                 const strength = idle ? 0.35 : 1;
-                const offX = pointer.x - this.width / 2, offY = pointer.y - this.height / 2;
+                const { offX, offY } = this.parallaxOffset();
                 const radius = FIELD.influenceRadius, radius2 = radius * radius;
                 const halo = FIELD.haloRadius * (1 + Math.sin(t * 0.9) * 0.12);
                 const damping = Math.pow(0.95, f);
-                // Scrolling makes each layer lag behind by an amount proportional to (smoothed, capped)
-                // scroll speed, deeper layers less; the field settles back as soon as scrolling stops
+                // Scrolling drags each layer along with the page by an amount proportional to (smoothed,
+                // capped) scroll speed — deeper layers less — and the field floats back once scrolling stops
                 this.scrollVelocity += (this.scrollDelta / Math.max(f, 0.001) - this.scrollVelocity) * Math.min(1, 0.15 * f);
+                this.scrollVelocity = Math.max(-200, Math.min(200, this.scrollVelocity));
                 this.scrollDelta = 0;
                 const scrollLag = Math.max(-80, Math.min(80, this.scrollVelocity));
 
@@ -6019,7 +6224,7 @@
                     const nx = this.noise.noise2D(p.nox + t * p.speed * 0.018, t * 0.006);
                     const ny = this.noise.noise2D(p.noy + t * p.speed * 0.018, t * 0.006 + 100);
                     const tx = p.bx + nx * layer.amplitude - offX * layer.parallax;
-                    const ty = p.by + ny * layer.amplitude - offY * layer.parallax + scrollLag * layer.scrollLag;
+                    const ty = p.by + ny * layer.amplitude - offY * layer.parallax - scrollLag * layer.scrollLag;
 
                     const dx = p.x - pointer.x, dy = p.y - pointer.y;
                     const d2 = dx * dx + dy * dy;
@@ -6085,9 +6290,24 @@
                 ctx.globalAlpha = 1;
             }
 
+            requestStaticRender() {
+                if (this.staticPending) return;
+                this.staticPending = true;
+                requestAnimationFrame(() => {
+                    this.staticPending = false;
+                    if (!this.isAnimated()) this.renderStatic();
+                });
+            }
+
             renderStatic() {
                 // Reduced motion / hidden tab: one calm frame — no pointer tracking, no fade-ins
+                if (!this.width || !this.height) return;
+                if (this.highContrast.matches) {           // canvas is hidden by CSS; keep it empty too
+                    this.ctx.clearRect(0, 0, this.width, this.height);
+                    return;
+                }
                 this.themeMix = isDarkMode() ? 1 : 0;
+                this.ripples = [];
                 for (const o of this.orbs) { o.x = o.bx; o.y = o.by; o.r = o.radius; }
                 for (const p of this.particles) { p.x = p.bx; p.y = p.by; p.vx = p.vy = 0; }
                 this.pointer.energy = 0;
@@ -6102,7 +6322,7 @@
             }
 
             drawOrbs(ctx) {
-                const k = this.mix(0.55, 1);
+                const k = this.mix(0.35, 1);
                 for (const o of this.orbs) {
                     ctx.globalAlpha = o.alpha * k;
                     ctx.drawImage(this.sprites[o.color], o.x - o.r, o.y - o.r, o.r * 2, o.r * 2);
@@ -6164,9 +6384,11 @@
                     const shade = Math.min(1, 0.5 * scale);
                     const speck = size < 1.8;
                     if (speck && skipSpecks) continue;
+                    const overText = this.overHeroText(sx, sy + this.scrollY);
+                    if (speck && overText) continue;                 // specks over copy read as punctuation
                     // Light: shade darkens resting specks toward black; dark: shade dims them instead
                     const color = dark ? colors[c.color[i]] : colors[c.color[i]][Math.min(7, Math.floor(shade * 8))];
-                    ctx.globalAlpha = dark ? alpha * Math.max(0.18, shade) : alpha;
+                    ctx.globalAlpha = (dark ? alpha * Math.max(0.18, shade) : alpha) * (overText ? 0.2 : 1);
                     if (speck) {
                         const dot = Math.max(1, size * 0.8);
                         ctx.fillStyle = color;
@@ -6185,6 +6407,15 @@
                     }
                     this.capsulesDrawn++;
                 }
+            }
+
+            overHeroText(x, pageY) {
+                const rects = this.hero.textRects;
+                for (let i = 0; i < rects.length; i++) {
+                    const r = rects[i];
+                    if (x > r[0] && x < r[2] && pageY > r[1] && pageY < r[3]) return true;
+                }
+                return false;
             }
 
             drawGlow(ctx, ambient) {
@@ -6232,8 +6463,10 @@
                 const k = this.mix(0.75, 1) * ambient;
                 const glow = this.quality > 0;
                 ctx.lineCap = 'round';
+                const maskText = this.ringVisibility > 0.01;
                 for (const p of this.particles) {
-                    const alpha = p.alpha * (0.8 + Math.sin(t * 0.12 + p.phase) * 0.2) * k;
+                    const alpha = p.alpha * (0.8 + Math.sin(t * 0.12 + p.phase) * 0.2) * k
+                        * (maskText && this.overHeroText(p.x, p.y + this.scrollY) ? 0.25 : 1);
                     if (glow) {
                         const g = p.size * 6;
                         ctx.globalAlpha = alpha * 0.55;
@@ -6293,10 +6526,16 @@
 
         let antigravityField = null;
         function initAntigravityField() {
+            // Decorative only: any failure removes the canvas instead of aborting init()
             const canvas = document.getElementById('antigravity-canvas');
-            if (!canvas || !canvas.getContext) return;
-            antigravityField = new AntigravityField(canvas);
-            window.antigravityField = antigravityField;
+            if (!canvas || !canvas.getContext || !canvas.getContext('2d')) return;
+            try {
+                antigravityField = new AntigravityField(canvas);
+                window.antigravityField = antigravityField;
+            } catch (e) {
+                console.warn('Antigravity Field disabled:', e);
+                canvas.remove();
+            }
         }
 
         // ============================================
