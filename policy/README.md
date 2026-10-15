@@ -32,3 +32,7 @@ App Store developer: **Tanat Tonguthaisri**. Google Play developer display name:
 Copyright field text prepared from the supplied owner name and this2026 app project: `2026 Tanat Tonguthaisri`. This is plain text, not a URL, and does not claim ownership of third-party software or fonts.
 
 Effective policy version: **2026-10-15**, covering the version1.0 app practices described on the pages. Reassess both policy and store declarations when SDKs or app behavior change.
+
+## Readable contact details without JavaScript
+
+The HTML uses Cloudflare-documented `email_off` comment markers so the public support email and mailto links remain readable without a decoder script. This changes only these pages, not the domain-wide setting. A restrictive Content Security Policy blocks client-side scripts, including any analytics beacon added by the hosting provider. Hosting/security request metadata is still covered in the privacy policy.
