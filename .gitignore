@@ -1,0 +1,10 @@
+# Python virtual environment created by the Cloud Agent environment install step
+.venv/
+
+# Python caches
+__pycache__/
+*.pyc
+
+# Local reconciliation output folders
+/results/
+/out/
