@@ -1,6 +1,6 @@
 # Borrow to Learn — mobile app information and policies
 
-This directory publishes the English/Thai information pages for **Borrow to Learn (B2L)**, iOS and Android identifier `com.tanatt.borrowtolearn`. The app uses invented teaching measures and is intended for ages 13 and above.
+This directory publishes the English/Thai information pages for **Borrow to Learn (B2L)**, iOS and Android identifier `com.tanatt.borrowtolearn`. The bundled teaching examples use invented measures and are intended for ages 13 and above. Optional Microsoft report features, where available in the installed version, have separate data, permissions and provider processing.
 
 The repository's existing GitHub Pages custom domain is **defense.engineer**. Use the direct HTTPS URLs below in store fields. The `000.github.io` address currently redirects to the custom domain; it is not the preferred direct policy URL. `index.html` explicitly provides the directory landing page, so publication does not depend on README rendering.
 
@@ -31,8 +31,18 @@ App Store developer: **Tanat Tonguthaisri**. Google Play developer display name:
 
 Copyright field text prepared from the supplied owner name and this2026 app project: `2026 Tanat Tonguthaisri`. This is plain text, not a URL, and does not claim ownership of third-party software or fonts.
 
-Effective policy version: **2026-10-15**, covering the version1.0 app practices described on the pages. Reassess both policy and store declarations when SDKs or app behavior change.
+Effective policy version: **2026-10-24**, covering bundled teaching content and optional Microsoft report features where available in the installed version. The pages do not announce a new public release; the report-enabled journey is described as a new testing version on the marketing page. Reassess both policy and store declarations when SDKs or app behavior change.
 
 ## Readable contact details without JavaScript
 
 The HTML uses Cloudflare-documented `email_off` comment markers so the public support email and mailto links remain readable without a decoder script. This changes only these pages, not the domain-wide setting. A restrictive Content Security Policy blocks client-side scripts, including any analytics beacon added by the hosting provider. Hosting/security request metadata is still covered in the privacy policy.
+
+
+## Optional Microsoft report update (2026-10-24)
+
+- Core bundled teaching content remains offline and requires no B2L account or Microsoft sign-in. External Power BI access requires internet and an authorized Microsoft account; the SharePoint package can require separate sign-in and permissions.
+- External figures are separate from the fictional teaching dataset. Microsoft and the relevant organization govern their service processing, retention and access. Deleting B2L app data is not a provider deletion request.
+- The HTML keeps the existing Android Firebase disclosures, no-JavaScript CSP, inline styling, public identities and readable contact markers.
+- Marketing describes the five-chapter/report-enabled experience as a new testing version. No completed test, store approval or new public-release claim is made.
+- The historical 2026-10-15 data-practice records and generator were not rewritten. The old generator does not contain this update; do not run it over these reviewed pages. Reconcile a future generator against this policy directory before generating again.
+- Local publication preparation and validation are recorded in the coordinating app's `docs/release-20261024/POLICY_PUBLICATION_PREP.md`. Commit and push remain the coordinating host's responsibility after review.
