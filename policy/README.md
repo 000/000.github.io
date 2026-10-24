@@ -46,3 +46,12 @@ The HTML uses Cloudflare-documented `email_off` comment markers so the public su
 - Marketing describes the five-chapter/report-enabled experience as a new testing version. No completed test, store approval or new public-release claim is made.
 - The historical 2026-10-15 data-practice records and generator were not rewritten. The old generator does not contain this update; do not run it over these reviewed pages. Reconcile a future generator against this policy directory before generating again.
 - Local publication preparation and validation are recorded in the coordinating app's `docs/release-20261024/POLICY_PUBLICATION_PREP.md`. Commit and push remain the coordinating host's responsibility after review.
+
+
+## Update-enabled native builds (2026-10-24)
+
+The policy now distinguishes older builds with Expo updates disabled from update-enabled builds. Both platforms can automatically contact Expo at startup, using a persistent random client ID, platform/runtime and update metadata, with limited prior fatal-error information when relevant. Offline reading is not a promise of no network requests when connected.
+
+Expo retention and deletion are separate from local bookmarks, Microsoft accounts and Firebase identifiers. No fixed Expo deletion deadline, anonymous-data promise or official store-label decision is asserted. The existing Firebase and optional Microsoft disclosures remain.
+
+This directory still uses self-contained HTML, inline CSS, a no-script CSP and readable-email markers. The coordinating app's `docs/ota-native-build-20261024/POLICY_DELTA.md` records source basis, local validation and final hashes. The coordinator owns commit, push and live verification; preparation is not publication. The historical generator has not been updated and must not overwrite these reviewed files.
