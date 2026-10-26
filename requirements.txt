@@ -1,0 +1,9 @@
+# Python dependencies for compare_init.py (RECALC reconciliation engine).
+# numpy is mandatory; polars/pandas/pyarrow power the data pipeline;
+# rich renders the console UI and psutil reports resource usage.
+numpy==2.5.3
+polars==1.44.2
+pandas==3.0.6
+pyarrow==25.0.1
+rich==15.0.0
+psutil==7.2.2
